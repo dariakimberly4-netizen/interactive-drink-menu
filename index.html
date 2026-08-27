@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#073b32">
+  <title>Interactive 3D Drink Menu</title>
+  <style>
+    :root{--ink:#f8f2df;--muted:#c9d8d0;--emerald:#063d34;--deep:#021d19;--gold:#e7bd69;--panel:rgba(9,70,59,.68);--line:rgba(231,189,105,.27);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:dark}
+    *{box-sizing:border-box}html{background:var(--deep)}body{margin:0;min-height:100vh;color:var(--ink);background:radial-gradient(circle at 50% -12%,#126856 0,transparent 43%),linear-gradient(145deg,#042f29,#021814 75%);overflow-x:hidden}
+    button{font:inherit}.shell{width:min(1180px,100%);margin:auto;padding:clamp(18px,4vw,46px)}
+    header{display:flex;gap:20px;justify-content:space-between;align-items:end;margin-bottom:24px}.eyebrow{color:var(--gold);letter-spacing:.19em;text-transform:uppercase;font-size:.76rem;font-weight:800}.title{font-family:Georgia,serif;font-size:clamp(2rem,6vw,4.7rem);line-height:.92;margin:9px 0 5px;font-weight:500}.sub{max-width:590px;color:var(--muted);margin:0;line-height:1.5}.motion-toggle{min-height:48px;border:1px solid var(--line);border-radius:999px;padding:0 18px;color:var(--ink);background:rgba(0,0,0,.2);cursor:pointer;font-weight:750;white-space:nowrap}
+    .menu{display:grid;grid-template-columns:repeat(6,minmax(148px,1fr));gap:12px;margin:22px 0}.menu-card{position:relative;min-height:190px;border:1px solid var(--line);border-radius:22px;padding:0;overflow:hidden;background:#073c33;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s}.menu-card:hover,.menu-card:focus-visible{transform:translateY(-5px);border-color:var(--gold);box-shadow:0 18px 35px rgba(0,0,0,.28)}.menu-card.active{border:2px solid var(--gold);box-shadow:0 0 0 3px rgba(231,189,105,.12)}.menu-card img{width:100%;height:190px;display:block;object-fit:cover}.card-label{position:absolute;left:10px;right:10px;bottom:10px;padding:9px 12px;border-radius:13px;background:rgba(1,23,19,.76);backdrop-filter:blur(10px);font-weight:800;text-align:left}.card-label small{display:block;color:var(--gold);font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;margin-bottom:2px}
+    .experience{position:relative;min-height:min(650px,68vh);border:1px solid var(--line);border-radius:32px;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,rgba(53,137,111,.32),transparent 35%),linear-gradient(180deg,rgba(8,68,57,.78),rgba(1,22,19,.96));box-shadow:0 38px 90px rgba(0,0,0,.32)}.experience:before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 18%,rgba(255,255,255,.035) 34%,transparent 46%);pointer-events:none}.stage{position:absolute;inset:0 0 84px;display:grid;place-items:center;perspective:1200px;touch-action:none;cursor:grab;user-select:none}.stage.dragging{cursor:grabbing}.spotlight{position:absolute;width:min(64vw,560px);height:55px;bottom:8%;border-radius:50%;background:rgba(0,0,0,.52);filter:blur(16px);transform:translateY(22px)}
+    .drink{position:relative;width:min(72vw,430px);height:min(54vh,490px);transform-style:preserve-3d;will-change:transform;filter:drop-shadow(22px 24px 17px rgba(0,0,0,.35));transition:transform .1s linear,filter .35s}.drink.reveal{animation:reveal 1.05s cubic-bezier(.2,.9,.2,1)}.drink img{width:100%;height:100%;display:block;object-fit:contain;pointer-events:none;transform:translateZ(8px)}.drink:after{content:"";position:absolute;inset:6% 18% 8%;border-radius:48%;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.27) 40%,transparent 58%);mix-blend-mode:screen;opacity:.55;transform:translateZ(14px);pointer-events:none}.glint{position:absolute;inset:15% 29% 18% 31%;border-radius:50%;background:linear-gradient(95deg,transparent,rgba(255,255,255,.36),transparent);filter:blur(6px);transform:translateZ(20px);opacity:.38;pointer-events:none}
+    @keyframes reveal{0%{transform:scale(.64) rotateX(62deg) rotateY(-12deg);opacity:.16;filter:blur(5px) drop-shadow(0 2px 0 transparent)}55%{opacity:1}78%{transform:scale(1.05) rotateX(-4deg) rotateY(6deg)}100%{transform:scale(1) rotateX(0) rotateY(0)}}
+    .hint{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:4;padding:9px 16px;border:1px solid rgba(255,255,255,.11);border-radius:999px;background:rgba(0,23,19,.64);backdrop-filter:blur(10px);color:var(--muted);font-size:.84rem;font-weight:700;text-align:center;pointer-events:none}.badge{position:absolute;left:20px;bottom:103px;z-index:4;padding:8px 11px;border-radius:10px;background:rgba(0,23,19,.7);color:var(--gold);letter-spacing:.11em;text-transform:uppercase;font-size:.67rem;font-weight:850}
+    .controls{position:absolute;z-index:5;left:0;right:0;bottom:0;min-height:84px;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:rgba(0,22,18,.76);border-top:1px solid var(--line);backdrop-filter:blur(16px)}.control{min-height:52px;min-width:112px;border:1px solid var(--line);border-radius:16px;padding:0 17px;color:var(--ink);background:#0a4b3f;cursor:pointer;font-weight:800}.control:hover,.control:focus-visible{border-color:var(--gold);background:#0d5b4c}.control.primary{background:var(--gold);color:#18352e;border-color:var(--gold)}.control[aria-pressed="true"]{box-shadow:inset 0 0 0 2px #fff2c9}
+    footer{padding:18px 5px 2px;color:#91aaa1;font-size:.78rem;text-align:center}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:900px){header{align-items:start}.menu{grid-template-columns:repeat(3,1fr)}.menu-card,.menu-card img{min-height:145px;height:145px}.experience{min-height:620px}.stage{inset:0 0 148px}.controls{min-height:148px;display:grid;grid-template-columns:1fr 1fr}.control{min-width:0}.badge{bottom:165px}}
+    @media(max-width:540px){.shell{padding:18px 12px}.title{font-size:2.45rem}header{display:block}.motion-toggle{margin-top:14px;width:100%}.menu{grid-template-columns:repeat(3,1fr);gap:7px}.menu-card{border-radius:16px}.menu-card,.menu-card img{min-height:112px;height:112px}.card-label{font-size:.72rem;left:6px;right:6px;bottom:6px;padding:6px 8px}.card-label small{font-size:.55rem}.experience{border-radius:24px;min-height:570px}.drink{width:92vw;height:350px}.hint{width:max-content;max-width:92%;font-size:.75rem}.badge{left:12px}.control{min-height:54px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.001ms!important;transition-duration:.001ms!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div><div class="eyebrow">Emerald Collection</div><h1 class="title">Choose your drink.<br>Bring it to life.</h1><p class="sub">Tap any drink for a cinematic reveal. Drag or swipe to inspect, then pinch or scroll to zoom.</p></div>
+      <button class="motion-toggle" id="motionBtn" type="button" aria-pressed="false">Reduce motion: Off</button>
+    </header>
+
+    <nav class="menu" aria-label="Choose a drink" id="menu"></nav>
+
+    <section class="experience" aria-label="Interactive simulated 3D drink viewer">
+      <div class="hint" id="hint">↔ Drag to rotate · Pinch or scroll to zoom</div>
+      <div class="stage" id="stage" tabindex="0" aria-label="Drag or use arrow keys to rotate the selected drink">
+        <div class="spotlight"></div>
+        <div class="drink reveal" id="drink"><img id="hero" alt="Selected drink"><span class="glint"></span></div>
+      </div>
+      <div class="badge">Simulated 3D</div>
+      <div class="controls">
+        <button class="control primary" id="revealBtn" type="button">Replay reveal</button>
+        <button class="control" id="autoBtn" type="button" aria-pressed="false">Auto rotate</button>
+        <button class="control" id="minusBtn" type="button" aria-label="Zoom out">− Zoom</button>
+        <button class="control" id="resetBtn" type="button">Reset view</button>
+        <button class="control" id="plusBtn" type="button" aria-label="Zoom in">+ Zoom</button>
+      </div>
+      <p class="sr" aria-live="polite" id="status"></p>
+    </section>
+    <footer>Interactive preview created from single product photographs. Unseen angles are artistically simulated.</footer>
+  </main>
+  <script>
+    const drinks=[
+      {name:'Drink 01',src:'assets/drink-01.jpg'},
+      {name:'Drink 02',src:'assets/drink-02.jpg'},
+      {name:'Drink 03',src:'assets/drink-03.jpg'},
+      {name:'Drink 04',src:'assets/drink-04.jpg'},
+      {name:'Drink 05',src:'assets/drink-05.jpg'},
+      {name:'Drink 06',src:'assets/drink-06.jpg'}
+    ];
+    const menu=document.querySelector('#menu'),stage=document.querySelector('#stage'),drink=document.querySelector('#drink'),hero=document.querySelector('#hero'),status=document.querySelector('#status');
+    let selected=0,rotX=0,rotY=0,scale=1,dragging=false,lastX=0,lastY=0,auto=false,raf=0,reduced=false,pinch=0;
+    drinks.forEach((item,i)=>{const b=document.createElement('button');b.className='menu-card'+(i===0?' active':'');b.type='button';b.innerHTML=`<img src="${item.src}" alt=""><span class="card-label"><small>Tap to reveal</small>${item.name}</span>`;b.setAttribute('aria-label',`Select ${item.name}`);b.addEventListener('click',()=>select(i));menu.appendChild(b)});
+    function select(i){selected=i;hero.src=drinks[i].src;hero.alt=drinks[i].name;[...menu.children].forEach((c,n)=>c.classList.toggle('active',n===i));reset(false);reveal();status.textContent=`${drinks[i].name} selected and revealed.`}
+    function render(){drink.style.transform=`scale(${scale}) rotateX(${rotX}deg) rotateY(${rotY}deg)`}
+    function reveal(){drink.classList.remove('reveal');void drink.offsetWidth;if(!reduced)drink.classList.add('reveal');else render()}
+    function reset(announce=true){rotX=0;rotY=0;scale=1;auto=false;document.querySelector('#autoBtn').setAttribute('aria-pressed','false');cancelAnimationFrame(raf);render();if(announce)status.textContent='View reset.'}
+    function zoom(by){scale=Math.min(1.75,Math.max(.68,scale+by));render();status.textContent=`Zoom ${Math.round(scale*100)} percent.`}
+    stage.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;stage.setPointerCapture(e.pointerId);stage.classList.add('dragging')});
+    stage.addEventListener('pointermove',e=>{if(!dragging)return;rotY+=(e.clientX-lastX)*.45;rotX=Math.max(-28,Math.min(28,rotX-(e.clientY-lastY)*.28));lastX=e.clientX;lastY=e.clientY;render()});
+    const stopDrag=()=>{dragging=false;stage.classList.remove('dragging')};stage.addEventListener('pointerup',stopDrag);stage.addEventListener('pointercancel',stopDrag);
+    stage.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?.08:-.08)},{passive:false});
+    stage.addEventListener('touchstart',e=>{if(e.touches.length===2)pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY)},{passive:true});
+    stage.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(pinch)zoom((d-pinch)*.003);pinch=d}},{passive:true});
+    stage.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')rotY-=8;else if(e.key==='ArrowRight')rotY+=8;else if(e.key==='ArrowUp')zoom(.08);else if(e.key==='ArrowDown')zoom(-.08);else return;e.preventDefault();render()});
+    function spin(){if(!auto)return;rotY+=reduced?.12:.32;render();raf=requestAnimationFrame(spin)}
+    document.querySelector('#autoBtn').onclick=e=>{auto=!auto;e.currentTarget.setAttribute('aria-pressed',String(auto));cancelAnimationFrame(raf);if(auto)spin();status.textContent=auto?'Auto rotation started.':'Auto rotation stopped.'};
+    document.querySelector('#revealBtn').onclick=reveal;document.querySelector('#minusBtn').onclick=()=>zoom(-.12);document.querySelector('#plusBtn').onclick=()=>zoom(.12);document.querySelector('#resetBtn').onclick=()=>reset();
+    document.querySelector('#motionBtn').onclick=e=>{reduced=!reduced;e.currentTarget.setAttribute('aria-pressed',String(reduced));e.currentTarget.textContent=`Reduce motion: ${reduced?'On':'Off'}`;if(reduced){auto=false;document.querySelector('#autoBtn').setAttribute('aria-pressed','false');cancelAnimationFrame(raf)}status.textContent=`Reduced motion ${reduced?'enabled':'disabled'}.`};
+    select(0);
+  </script>
+</body>
+</html>
