@@ -1,0 +1,20 @@
+name: Setup Menu Orbit Demo Staff
+
+on:
+  push:
+    paths:
+      - '.github/workflows/setup-demo-staff.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create demo staff user
+        run: |
+          set -euo pipefail
+          response=$(curl --fail --silent --show-error "https://hknjlixpgznqqxxjffwi.supabase.co/functions/v1/setup-demo-staff?token=mo-setup-7Qf4N2x9-20260829")
+          echo "$response"
+          echo "$response" | grep '"ok":true'
