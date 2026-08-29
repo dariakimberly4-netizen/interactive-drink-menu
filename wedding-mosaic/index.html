@@ -3,201 +3,60 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#15110f">
-<title>Wedding Memory Mosaic</title>
+<meta name="theme-color" content="#130f0c">
+<title>Wedding Time Capsule</title>
 <style>
-:root {
-  --paper:#fbf7f0; --ink:#261d18; --gold:#b69259; --wine:#6d3438;
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:#15110f;color:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
-body{overflow-x:hidden}
-.bg{position:fixed;inset:0;z-index:-3;background:
-radial-gradient(circle at 20% 15%,rgba(182,146,89,.22),transparent 28%),
-radial-gradient(circle at 82% 78%,rgba(109,52,56,.26),transparent 32%),
-linear-gradient(135deg,#15110f,#251d19 48%,#110f0e)}
-.grain{position:fixed;inset:0;z-index:-2;opacity:.22;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E")}
-main{min-height:100svh;display:grid;place-items:center;padding:24px 14px 38px}
-.wrap{width:min(1100px,100%);text-align:center}
-.eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:11px;color:#d9c6a8;margin-bottom:8px}
-h1{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,7vw,76px);line-height:.98;margin:0 auto 10px;max-width:900px}
-.sub{margin:0 auto 22px;color:#d8cdc3;font-size:clamp(14px,2.5vw,18px);max-width:670px;line-height:1.55}
-.frame{position:relative;width:min(920px,96vw);aspect-ratio:4/3;margin:0 auto;border-radius:26px;padding:clamp(8px,1.2vw,13px);background:linear-gradient(145deg,#fffdf8,#e6d9c8);box-shadow:0 30px 90px rgba(0,0,0,.48);transform:rotate(-.35deg)}
-.inner{position:relative;width:100%;height:100%;overflow:hidden;border-radius:17px;background:#2c2420}
-.hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.06;transform:scale(1.07);filter:saturate(.88) contrast(1.03);transition:opacity 1.6s ease, transform 2s cubic-bezier(.2,.75,.2,1)}
-.tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(5,1fr);gap:2px;padding:2px;z-index:2}
-.tile{position:relative;border:0;padding:0;min-width:0;cursor:pointer;background-image:url('assets/memories.webp');background-repeat:no-repeat;background-size:600% 500%;background-position:var(--sx) var(--sy);box-shadow:0 4px 14px rgba(0,0,0,.28);opacity:0;transform:translate(calc((var(--i) - 14) * 3vw),calc((14 - var(--i)) * 1.8vh)) rotate(calc((var(--i) - 13) * 1.25deg)) scale(.7);transition:transform 1s cubic-bezier(.17,.84,.24,1),opacity .65s ease,filter 1.3s ease;transition-delay:calc(var(--i) * 65ms);filter:saturate(.9) contrast(1.02)}
-.tile:focus-visible{outline:3px solid white;outline-offset:-3px;z-index:8}
-.playing .tile{opacity:1;transform:translate(0,0) rotate(0) scale(1)}
-.revealed .hero{opacity:1;transform:scale(1)}
-.revealed .tile{opacity:.22;filter:saturate(.65) sepia(.08) brightness(.9)}
-.revealed .tile:hover,.revealed .tile:focus-visible{opacity:.72;filter:none}
-.vignette{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(to bottom,transparent 64%,rgba(16,12,10,.48)),radial-gradient(ellipse at center,transparent 57%,rgba(12,9,8,.34) 100%)}
-.caption{position:absolute;z-index:4;bottom:16px;left:18px;right:18px;display:flex;align-items:end;justify-content:space-between;gap:12px;opacity:0;transform:translateY(8px);transition:.9s ease}
-.revealed .caption{opacity:1;transform:none;transition-delay:.65s}
-.caption .line1{font-family:Georgia,serif;font-size:clamp(17px,3vw,30px);text-align:left;text-shadow:0 2px 12px #000}
-.caption .line2{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#e6d7c3;text-align:right}
-.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px}
-button.ctrl{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;padding:12px 18px;border-radius:999px;font:600 14px/1 system-ui;backdrop-filter:blur(10px);cursor:pointer;transition:.2s}
-button.ctrl.primary{background:#f3eadc;color:#281f1a;border-color:#f3eadc}
-button.ctrl:active{transform:scale(.98)}
-.progress{height:3px;width:min(520px,80vw);margin:15px auto 0;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
-.bar{height:100%;width:0;background:#d7b986;border-radius:99px}
-.playing .bar{animation:load 7.1s linear forwards}
-.revealed .bar{width:100%}
-@keyframes load{to{width:100%}}
-.spark{position:fixed;pointer-events:none;z-index:10;font-size:18px;animation:float 2.8s ease-out forwards}
-@keyframes float{0%{opacity:0;transform:translateY(0) scale(.7) rotate(0)}18%{opacity:.8}100%{opacity:0;transform:translateY(-140px) scale(1.25) rotate(16deg)}}
-.modal{position:fixed;inset:0;z-index:20;display:none;place-items:center;background:rgba(10,8,7,.82);backdrop-filter:blur(10px);padding:22px}
-.modal.open{display:grid}
-.modal-card{width:min(760px,94vw);aspect-ratio:4/3;background:#f5ede2;padding:11px 11px 46px;border-radius:5px;box-shadow:0 30px 100px #000;transform:rotate(-.6deg);position:relative}
-.modal-photo{width:100%;height:100%;background-image:url('assets/memories.webp');background-size:600% 500%;background-repeat:no-repeat;background-position:var(--mx) var(--my);border-radius:2px}
-.modal-label{position:absolute;bottom:14px;left:16px;right:16px;color:#3b2c23;font-family:Georgia,serif;font-size:18px;text-align:center}
-.close{position:fixed;top:max(14px,env(safe-area-inset-top));right:14px;border:0;border-radius:50%;width:44px;height:44px;background:#fff;color:#1a1512;font-size:22px;cursor:pointer}
-@media(max-width:650px){
- html,body{width:100%;height:100%;overflow:hidden}
- body{min-height:100dvh}
- main{width:100vw;height:100svh;height:100dvh;min-height:0;padding:0 0 calc(88px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center}
- .wrap{position:relative;width:100vw;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
- .frame{position:relative;width:100vw;max-width:100vw;height:auto;aspect-ratio:4/3;margin:0;border-radius:0;padding:0;transform:none;box-shadow:none;background:#171310}
- .inner{border-radius:0}
- .hero{object-fit:contain;background:#171310;transform:scale(1)}
- .tiles{gap:1px;padding:0}
- .caption{bottom:10px;left:12px;right:12px}
- .caption .line1{font-size:clamp(15px,4.5vw,22px)}
- .caption .line2{display:none}
- .controls{position:fixed;z-index:8;left:8px;right:8px;bottom:calc(30px + env(safe-area-inset-bottom));margin:0;display:flex;flex-wrap:nowrap;gap:6px}
- button.ctrl{flex:1 1 0;min-width:0;padding:10px 5px;font-size:clamp(9px,2.65vw,12px);white-space:nowrap}
- .progress{position:fixed;z-index:8;left:8%;bottom:calc(14px + env(safe-area-inset-bottom));width:84%;margin:0}
-}
-@media(prefers-reduced-motion:reduce){
- .tile,.hero,.caption{transition:none!important}
- .spark{display:none}
-}
+:root{--cream:#f6efe5;--paper:#fffaf2;--ink:#281e19;--gold:#c7a46d;--wine:#6d3438;--deep:#130f0c}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--deep);color:var(--cream);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}button{font:inherit}.bg{position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 20% 15%,rgba(199,164,109,.22),transparent 30%),radial-gradient(circle at 82% 78%,rgba(109,52,56,.28),transparent 34%),linear-gradient(145deg,#100d0b,#261b17 55%,#120f0d)}.grain{position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.18;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E")}
+main{min-height:100svh;display:grid;place-items:center;padding:18px}.app{width:min(900px,100%);text-align:center}.kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#d9c2a0;margin-bottom:7px}.title{font-family:Georgia,'Times New Roman',serif;font-size:clamp(34px,6vw,66px);font-weight:500;line-height:1;margin:0 0 8px}.intro{max-width:650px;margin:0 auto 18px;color:#d9cec5;font-size:14px;line-height:1.5}
+.scene{perspective:1500px;width:min(760px,96vw);margin:0 auto}.box-wrap{position:relative;aspect-ratio:1.35/1;transform-style:preserve-3d}.lid{position:absolute;left:4%;right:4%;top:2%;height:31%;z-index:8;transform-origin:50% 100%;transform:rotateX(-16deg) translateZ(18px);transition:transform 1.1s cubic-bezier(.2,.8,.2,1);background:linear-gradient(145deg,#724b31,#4a2d20);border:1px solid rgba(255,255,255,.15);border-radius:22px 22px 12px 12px;box-shadow:0 18px 35px rgba(0,0,0,.35),inset 0 2px rgba(255,255,255,.08)}.lid:before{content:"Wedding Time Capsule";position:absolute;inset:0;display:grid;place-items:center;font-family:Georgia,serif;font-size:clamp(20px,4vw,34px);color:#f1dec0;text-shadow:0 2px 8px #26150d}.lid:after{content:"♡";position:absolute;bottom:18%;left:50%;transform:translateX(-50%);font-size:25px;color:#d7b682}.box-wrap.open .lid{transform:rotateX(-74deg) translateZ(28px) translateY(-8px)}
+.box{position:absolute;left:2%;right:2%;bottom:0;top:25%;background:linear-gradient(155deg,#8a6042,#5b3827 62%,#3c241a);border-radius:14px 14px 28px 28px;border:1px solid rgba(255,255,255,.12);box-shadow:0 35px 70px rgba(0,0,0,.55),inset 0 8px 24px rgba(0,0,0,.22);overflow:hidden}.lining{position:absolute;inset:14px;border-radius:12px 12px 22px 22px;background:linear-gradient(180deg,#cdb897,#b29a79);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25),inset 0 10px 20px rgba(255,255,255,.12)}.compartments{position:absolute;inset:26px;display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:1fr 1fr;gap:10px}.slot{border:0;position:relative;border-radius:14px;background:rgba(54,34,25,.56);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 5px 15px rgba(0,0,0,.18);color:#fff;overflow:hidden;cursor:pointer;text-align:left;padding:12px;transition:transform .2s,background .2s}.slot:active{transform:scale(.985)}.slot.photos{grid-row:1/3;background:#2c211b}.photo-stack{position:absolute;inset:12px 12px 54px;display:grid;grid-template-columns:repeat(2,1fr);gap:5px}.mini{border-radius:7px;background-image:url('assets/memories.webp');background-repeat:no-repeat;background-size:600% 500%;background-position:var(--x) var(--y);box-shadow:0 2px 8px rgba(0,0,0,.28)}.slot-label{position:absolute;left:12px;right:12px;bottom:10px}.slot-label strong{display:block;font-family:Georgia,serif;font-size:18px}.slot-label span{display:block;font-size:11px;color:#e0d0ba;margin-top:2px}.icon{font-size:25px;margin-bottom:6px}.slot:not(.photos){display:flex;flex-direction:column;justify-content:center}.slot:not(.photos) strong{font-family:Georgia,serif;font-size:18px}.slot:not(.photos) span{font-size:11px;color:#e0d0ba;margin-top:3px;line-height:1.35}
+.actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:17px}.action{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:11px 17px;font-weight:700;cursor:pointer;backdrop-filter:blur(8px)}.action.primary{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+.overlay{position:fixed;inset:0;z-index:30;display:none;place-items:center;padding:18px;background:rgba(10,7,6,.86);backdrop-filter:blur(12px)}.overlay.show{display:grid}.panel{position:relative;width:min(760px,96vw);max-height:86dvh;overflow:auto;border-radius:24px;padding:22px;background:linear-gradient(160deg,#fffaf1,#eadbc6);color:var(--ink);box-shadow:0 30px 100px rgba(0,0,0,.6)}.close{position:sticky;float:right;top:0;border:0;background:#2b211c;color:white;width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer}.panel h2{font-family:Georgia,serif;font-size:32px;margin:4px 50px 6px 0}.panel p{color:#66564a;line-height:1.55;margin-top:0}.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.memory{aspect-ratio:4/3;border-radius:10px;background-image:url('assets/memories.webp');background-size:600% 500%;background-repeat:no-repeat;background-position:var(--x) var(--y);box-shadow:0 6px 18px rgba(70,45,30,.18)}.paper-card{margin-top:14px;border:1px solid #d5c2a6;background:rgba(255,255,255,.7);padding:18px;border-radius:14px;text-align:left;min-height:130px;display:flex;align-items:center;justify-content:center;color:#7a695c;font-family:Georgia,serif;font-size:18px;line-height:1.45}.video-card{margin-top:14px;aspect-ratio:16/9;border-radius:14px;background:linear-gradient(135deg,#302621,#171310);display:grid;place-items:center;color:white}.video-card .play{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.16);font-size:26px}.hint{font-size:12px;color:#7c6859;margin-top:10px}
+.final{position:fixed;inset:0;z-index:40;display:none;place-items:center;text-align:center;padding:24px;background:radial-gradient(circle at center,rgba(109,52,56,.35),transparent 35%),linear-gradient(150deg,#120e0c,#251a16 60%,#0e0b0a)}.final.show{display:grid}.final-card{max-width:620px}.seal{width:92px;height:92px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;background:linear-gradient(145deg,#8d3e45,#5c2429);border:7px solid rgba(255,255,255,.08);box-shadow:0 14px 40px rgba(0,0,0,.4);font-family:Georgia,serif;font-size:42px}.final h2{font-family:Georgia,serif;font-size:clamp(40px,8vw,74px);font-weight:500;line-height:.98;margin:0 0 14px}.final p{color:#d9cabe;line-height:1.6;max-width:520px;margin:0 auto 20px}.final .action{min-width:145px}
+@media(max-width:650px){main{min-height:100dvh;padding:10px 10px 14px}.app{height:100%;display:flex;flex-direction:column;justify-content:center}.kicker{margin-bottom:4px}.title{font-size:clamp(31px,10vw,47px)}.intro{font-size:12px;margin-bottom:10px}.scene{width:100%}.box-wrap{aspect-ratio:1.02/1}.lid{left:2%;right:2%;height:27%;border-radius:17px 17px 10px 10px}.lid:before{font-size:23px}.box{left:0;right:0;top:22%;border-radius:12px 12px 22px 22px}.lining{inset:9px}.compartments{inset:16px;grid-template-columns:1.08fr .92fr;gap:7px}.slot{padding:9px;border-radius:11px}.photo-stack{inset:8px 8px 46px;gap:4px}.slot-label{left:9px;right:9px;bottom:8px}.slot-label strong,.slot:not(.photos) strong{font-size:16px}.slot-label span,.slot:not(.photos) span{font-size:10px}.icon{font-size:21px}.actions{margin-top:10px;gap:6px}.action{padding:10px 14px;font-size:12px}.panel{max-height:90dvh;padding:17px;border-radius:18px}.panel h2{font-size:28px}.gallery{grid-template-columns:repeat(2,1fr);gap:6px}.paper-card{min-height:145px;font-size:16px}.final h2{font-size:clamp(39px,12vw,60px)}}
+@media(max-height:680px) and (max-width:650px){.kicker,.intro{display:none}.title{font-size:31px;margin-bottom:6px}.box-wrap{aspect-ratio:1.25/1}.actions{margin-top:6px}.action{padding:8px 12px}}
 </style>
 </head>
 <body>
 <div class="bg"></div><div class="grain"></div>
-<main>
-  <section class="wrap">
-    <div class="frame" id="frame">
-      <div class="inner">
-        <img class="hero" src="assets/couple.webp" alt="Newlyweds sharing a kiss">
-        <div class="tiles" id="tiles">
-<button class="tile" style="--i:0;--sx:0.0000%;--sy:0.0000%;" data-src="0" aria-label="Open wedding memory 1"></button>
-<button class="tile" style="--i:1;--sx:20.0000%;--sy:0.0000%;" data-src="1" aria-label="Open wedding memory 2"></button>
-<button class="tile" style="--i:2;--sx:40.0000%;--sy:0.0000%;" data-src="2" aria-label="Open wedding memory 3"></button>
-<button class="tile" style="--i:3;--sx:60.0000%;--sy:0.0000%;" data-src="3" aria-label="Open wedding memory 4"></button>
-<button class="tile" style="--i:4;--sx:80.0000%;--sy:0.0000%;" data-src="4" aria-label="Open wedding memory 5"></button>
-<button class="tile" style="--i:5;--sx:100.0000%;--sy:0.0000%;" data-src="5" aria-label="Open wedding memory 6"></button>
-<button class="tile" style="--i:6;--sx:0.0000%;--sy:25.0000%;" data-src="6" aria-label="Open wedding memory 7"></button>
-<button class="tile" style="--i:7;--sx:20.0000%;--sy:25.0000%;" data-src="7" aria-label="Open wedding memory 8"></button>
-<button class="tile" style="--i:8;--sx:40.0000%;--sy:25.0000%;" data-src="8" aria-label="Open wedding memory 9"></button>
-<button class="tile" style="--i:9;--sx:60.0000%;--sy:25.0000%;" data-src="9" aria-label="Open wedding memory 10"></button>
-<button class="tile" style="--i:10;--sx:80.0000%;--sy:25.0000%;" data-src="10" aria-label="Open wedding memory 11"></button>
-<button class="tile" style="--i:11;--sx:100.0000%;--sy:25.0000%;" data-src="11" aria-label="Open wedding memory 12"></button>
-<button class="tile" style="--i:12;--sx:0.0000%;--sy:50.0000%;" data-src="12" aria-label="Open wedding memory 13"></button>
-<button class="tile" style="--i:13;--sx:20.0000%;--sy:50.0000%;" data-src="13" aria-label="Open wedding memory 14"></button>
-<button class="tile" style="--i:14;--sx:40.0000%;--sy:50.0000%;" data-src="14" aria-label="Open wedding memory 15"></button>
-<button class="tile" style="--i:15;--sx:60.0000%;--sy:50.0000%;" data-src="15" aria-label="Open wedding memory 16"></button>
-<button class="tile" style="--i:16;--sx:80.0000%;--sy:50.0000%;" data-src="16" aria-label="Open wedding memory 17"></button>
-<button class="tile" style="--i:17;--sx:100.0000%;--sy:50.0000%;" data-src="17" aria-label="Open wedding memory 18"></button>
-<button class="tile" style="--i:18;--sx:0.0000%;--sy:75.0000%;" data-src="18" aria-label="Open wedding memory 19"></button>
-<button class="tile" style="--i:19;--sx:20.0000%;--sy:75.0000%;" data-src="19" aria-label="Open wedding memory 20"></button>
-<button class="tile" style="--i:20;--sx:40.0000%;--sy:75.0000%;" data-src="20" aria-label="Open wedding memory 21"></button>
-<button class="tile" style="--i:21;--sx:60.0000%;--sy:75.0000%;" data-src="21" aria-label="Open wedding memory 22"></button>
-<button class="tile" style="--i:22;--sx:80.0000%;--sy:75.0000%;" data-src="22" aria-label="Open wedding memory 23"></button>
-<button class="tile" style="--i:23;--sx:100.0000%;--sy:75.0000%;" data-src="23" aria-label="Open wedding memory 24"></button>
-<button class="tile" style="--i:24;--sx:0.0000%;--sy:100.0000%;" data-src="24" aria-label="Open wedding memory 25"></button>
-<button class="tile" style="--i:25;--sx:20.0000%;--sy:100.0000%;" data-src="25" aria-label="Open wedding memory 26"></button>
-<button class="tile" style="--i:26;--sx:0.0000%;--sy:0.0000%;" data-src="0" aria-label="Open wedding memory 1"></button>
-<button class="tile" style="--i:27;--sx:20.0000%;--sy:0.0000%;" data-src="1" aria-label="Open wedding memory 2"></button>
-<button class="tile" style="--i:28;--sx:40.0000%;--sy:0.0000%;" data-src="2" aria-label="Open wedding memory 3"></button>
-<button class="tile" style="--i:29;--sx:60.0000%;--sy:0.0000%;" data-src="3" aria-label="Open wedding memory 4"></button>
-        </div>
-        <div class="vignette"></div>
-        <div class="caption">
-          <div class="line1">Two hearts. One beautiful beginning.</div>
-          <div class="line2">Made from the moments around “I do”</div>
-        </div>
-      </div>
-    </div>
+<main><section class="app">
+<div class="kicker">A box of moments worth keeping</div>
+<h1 class="title">Wedding Time Capsule</h1>
+<p class="intro">Open the box, revisit the memories, then seal everything for the next chapter.</p>
+<div class="scene"><div class="box-wrap" id="boxWrap">
+  <div class="lid"></div>
+  <div class="box"><div class="lining"></div><div class="compartments">
+    <button class="slot photos" data-open="photos" aria-label="Open selected wedding photos">
+      <div class="photo-stack">
+        <div class="mini" style="--x:0%;--y:0%"></div><div class="mini" style="--x:40%;--y:0%"></div>
+        <div class="mini" style="--x:80%;--y:25%"></div><div class="mini" style="--x:20%;--y:50%"></div>
+        <div class="mini" style="--x:60%;--y:75%"></div><div class="mini" style="--x:20%;--y:100%"></div>
+      </div><div class="slot-label"><strong>Selected Photos</strong><span>Tap to revisit the day</span></div>
+    </button>
+    <button class="slot" data-open="letters"><div class="icon">✉</div><strong>Letters</strong><span>A place for words to your future selves</span></button>
+    <button class="slot" data-open="vows"><div class="icon">♡</div><strong>Vows</strong><span>Keep your promises close</span></button>
+    <button class="slot" data-open="videos"><div class="icon">▶</div><strong>Videos</strong><span>Wedding clips can live here</span></button>
+  </div></div>
+</div></div>
+<div class="actions"><button class="action primary" id="openBox">Open the Capsule</button><button class="action" id="sealBox">Seal for Anniversary</button></div>
+</section></main>
 
-    <div class="controls">
-      <button class="ctrl primary" id="play">Play the Mosaic</button>
-      <button class="ctrl" id="reveal">Reveal the Couple</button>
-      <button class="ctrl" id="replay">Replay</button>
-    </div>
-    <div class="progress"><div class="bar"></div></div>
-  </section>
-</main>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Wedding memory">
-  <button class="close" id="close" aria-label="Close memory">×</button>
-  <div class="modal-card">
-    <div class="modal-photo" id="modalPhoto"></div>
-    <div class="modal-label" id="modalLabel">A wedding memory</div>
-  </div>
-</div>
-
+<div class="overlay" id="overlay"><section class="panel"><button class="close" id="close" aria-label="Close">×</button><div id="panelContent"></div></section></div>
+<div class="final" id="final"><div class="final-card"><div class="seal">♡</div><h2>Open again on our first anniversary.</h2><p>The photos are tucked away, and there is room for your letters, vows, and videos whenever you are ready to add them.</p><button class="action primary" id="reopen">Reopen Capsule</button></div></div>
 <script>
-const body=document.body;
-const play=document.getElementById('play');
-const reveal=document.getElementById('reveal');
-const replay=document.getElementById('replay');
-const frame=document.getElementById('frame');
-const modal=document.getElementById('modal');
-const modalPhoto=document.getElementById('modalPhoto');
-const modalLabel=document.getElementById('modalLabel');
-let revealTimer;
-
-function sparkles(){
-  const symbols=['♡','✦','·','✧'];
-  for(let i=0;i<18;i++){
-    setTimeout(()=>{
-      const s=document.createElement('span'); s.className='spark';
-      s.textContent=symbols[Math.floor(Math.random()*symbols.length)];
-      s.style.left=(10+Math.random()*80)+'vw';
-      s.style.top=(55+Math.random()*25)+'vh';
-      s.style.color=Math.random()>.5?'#e8d4b5':'#fff8ed';
-      document.body.appendChild(s); setTimeout(()=>s.remove(),3000);
-    },i*90);
-  }
-}
-function start(){
-  clearTimeout(revealTimer);
-  body.classList.remove('revealed','playing');
-  void body.offsetWidth;
-  body.classList.add('playing');
-  play.textContent='Memories gathering…';
-  revealTimer=setTimeout(()=>{ body.classList.add('revealed'); play.textContent='Mosaic Complete'; sparkles(); },7100);
-}
-function revealNow(){
-  clearTimeout(revealTimer); body.classList.add('playing','revealed'); play.textContent='Mosaic Complete'; sparkles();
-}
-function reset(){
-  clearTimeout(revealTimer); body.classList.remove('playing','revealed'); play.textContent='Play the Mosaic';
-  setTimeout(start,250);
-}
-play.addEventListener('click',start);
-reveal.addEventListener('click',revealNow);
-replay.addEventListener('click',reset);
-
-document.querySelectorAll('.tile').forEach(tile=>{
-  tile.addEventListener('click',()=>{
-    const n=+tile.dataset.src, col=n%6,row=Math.floor(n/6);
-    const x=(col/5*100), y=(row/4*100);
-    modalPhoto.style.setProperty('--mx',x+'%');
-    modalPhoto.style.setProperty('--my',y+'%');
-    modalLabel.textContent='Wedding memory '+String(n+1).padStart(2,'0');
-    modal.classList.add('open');
-  });
-});
-document.getElementById('close').onclick=()=>modal.classList.remove('open');
-modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('open')});
-
-window.addEventListener('load',()=>setTimeout(start,550));
+const box=document.getElementById('boxWrap'),openBtn=document.getElementById('openBox'),sealBtn=document.getElementById('sealBox'),overlay=document.getElementById('overlay'),panelContent=document.getElementById('panelContent'),final=document.getElementById('final');
+const positions=[[0,0],[20,0],[40,0],[60,0],[80,0],[100,0],[0,25],[20,25],[40,25],[60,25],[80,25],[100,25],[0,50],[20,50],[40,50],[60,50],[80,50],[100,50],[0,75],[20,75],[40,75],[60,75],[80,75],[100,75]];
+function openBox(){box.classList.add('open');openBtn.textContent='Capsule Open'}
+openBtn.onclick=openBox;setTimeout(openBox,550);
+function galleryHTML(){return `<h2>Selected Photos</h2><p>A small collection of moments from the wedding day.</p><div class="gallery">${positions.slice(0,12).map(([x,y])=>`<div class="memory" style="--x:${x}%;--y:${y}%"></div>`).join('')}</div><div class="hint">These photos are already inside the capsule.</div>`}
+function lettersHTML(){return `<h2>Letters</h2><p>This compartment is reserved for personal letters to each other.</p><div class="paper-card">Your letters can be placed here when you are ready.</div><div class="hint">No letter text has been invented or added.</div>`}
+function vowsHTML(){return `<h2>Vows</h2><p>Keep the exact words you promised each other on your wedding day.</p><div class="paper-card">Your real wedding vows can be added here.</div><div class="hint">This space is waiting for the original vows.</div>`}
+function videosHTML(){return `<h2>Videos</h2><p>Add wedding clips, greetings, or a private message for your future selves.</p><div class="video-card"><div class="play">▶</div></div><div class="hint">A video file has not been added yet.</div>`}
+document.querySelectorAll('[data-open]').forEach(btn=>btn.addEventListener('click',()=>{openBox();const type=btn.dataset.open;panelContent.innerHTML=type==='photos'?galleryHTML():type==='letters'?lettersHTML():type==='vows'?vowsHTML():videosHTML();overlay.classList.add('show')}));
+document.getElementById('close').onclick=()=>overlay.classList.remove('show');overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('show')});
+sealBtn.onclick=()=>{overlay.classList.remove('show');box.classList.remove('open');setTimeout(()=>final.classList.add('show'),850)};
+document.getElementById('reopen').onclick=()=>{final.classList.remove('show');setTimeout(openBox,180)};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){overlay.classList.remove('show');final.classList.remove('show')}});
 </script>
-</body>
-</html>
+</body></html>
