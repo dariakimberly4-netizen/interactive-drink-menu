@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#160f1a" />
+  <title>43rd Birthday Photo Mosaic</title>
+  <meta name="description" content="Forty-three memories become one unforgettable birthday portrait." />
+  <style>
+    :root {
+      --night: #100b14;
+      --wine: #3a182d;
+      --rose: #e7a5ad;
+      --gold: #efcc85;
+      --cream: #fff5ea;
+      --muted: #cdbac9;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      color: var(--cream);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(203, 91, 132, .22), transparent 26rem),
+        radial-gradient(circle at 85% 10%, rgba(239, 204, 133, .15), transparent 24rem),
+        linear-gradient(155deg, var(--night), #201020 48%, #0d0910);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    button { font: inherit; }
+    .app { min-height: 100svh; display: grid; place-items: center; position: relative; isolation: isolate; }
+    .grain {
+      position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: .09;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+    }
+    .orb { position: fixed; border-radius: 50%; filter: blur(2px); opacity: .45; z-index: -1; animation: drift 8s ease-in-out infinite alternate; }
+    .orb.one { width: 12rem; height: 12rem; left: -4rem; bottom: 10%; background: rgba(219, 105, 142, .2); }
+    .orb.two { width: 9rem; height: 9rem; right: -2rem; top: 18%; background: rgba(240, 200, 125, .18); animation-delay: -3s; }
+    @keyframes drift { to { transform: translate3d(1.5rem, -1rem, 0) scale(1.08); } }
+
+    .intro {
+      position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 1.5rem;
+      background: radial-gradient(circle at 50% 38%, #4a1f3a 0, #1c101e 43%, #0c080e 100%);
+      transition: opacity .8s ease, visibility .8s ease;
+    }
+    .intro.hidden { opacity: 0; visibility: hidden; }
+    .intro-card { width: min(92vw, 540px); text-align: center; }
+    .eyebrow { margin: 0 0 .9rem; color: var(--gold); text-transform: uppercase; letter-spacing: .28em; font-size: .76rem; font-weight: 800; }
+    .age {
+      margin: 0 auto .8rem; font-family: Georgia, "Times New Roman", serif; font-size: clamp(6rem, 24vw, 10rem);
+      line-height: .82; color: transparent; -webkit-text-stroke: 1px rgba(239, 204, 133, .85);
+      text-shadow: 0 0 44px rgba(231, 165, 173, .22);
+    }
+    .intro h1, .final-title { margin: 0; font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
+    .intro h1 { font-size: clamp(2rem, 8vw, 4rem); }
+    .intro-copy { max-width: 31rem; margin: 1rem auto 1.6rem; color: var(--muted); line-height: 1.65; }
+    .primary, .ghost {
+      min-height: 3.2rem; border-radius: 999px; padding: .82rem 1.25rem; cursor: pointer; transition: transform .2s ease, background .2s ease;
+    }
+    .primary { border: 1px solid var(--gold); background: linear-gradient(135deg, #f3d996, #d98f9d); color: #25111f; font-weight: 900; box-shadow: 0 12px 40px rgba(0,0,0,.28); }
+    .ghost { border: 1px solid rgba(255,255,255,.24); background: rgba(255,255,255,.08); color: var(--cream); font-weight: 750; backdrop-filter: blur(8px); }
+    .primary:hover, .ghost:hover { transform: translateY(-2px); }
+    .primary:focus-visible, .ghost:focus-visible, .memory:focus-visible, .icon-button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+
+    .experience { width: 100%; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; gap: .8rem; padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom)); }
+    .topbar { display: flex; align-items: center; justify-content: space-between; width: min(100%, 1100px); margin: 0 auto; }
+    .mark { display: flex; align-items: center; gap: .7rem; }
+    .mark-badge { width: 2.55rem; height: 2.55rem; display: grid; place-items: center; border: 1px solid rgba(239,204,133,.6); border-radius: 50%; color: var(--gold); font-family: Georgia, serif; font-size: 1.12rem; }
+    .mark strong { display: block; font-family: Georgia, serif; font-size: 1.05rem; }
+    .mark small { display: block; color: var(--muted); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+    .icon-button { width: 2.8rem; height: 2.8rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); color: white; background: rgba(255,255,255,.07); cursor: pointer; }
+
+    .stage { position: relative; display: grid; place-items: center; min-height: 0; }
+    .mosaic-wrap {
+      position: relative; width: min(78vw, 50vh, 450px); aspect-ratio: 3 / 4; border-radius: 1.35rem; padding: .4rem;
+      background: linear-gradient(145deg, rgba(239,204,133,.9), rgba(231,165,173,.45), rgba(255,255,255,.12));
+      box-shadow: 0 28px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.12);
+      transform: translateY(.2rem);
+    }
+    .mosaic { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(8, 1fr); width: 100%; height: 100%; overflow: hidden; border-radius: 1rem; background: #1a1119; }
+    .memory, .year-tile {
+      position: relative; min-width: 0; min-height: 0; border: 0; padding: 0; overflow: hidden;
+      opacity: 0; transform: translate(var(--fly-x), var(--fly-y)) rotate(var(--spin)) scale(.4);
+      transition: transform 1.1s cubic-bezier(.16,.85,.2,1), opacity .55s ease, filter .45s ease;
+      transition-delay: var(--delay); background: #281827;
+    }
+    .memory { cursor: pointer; }
+    .memory img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.05); transition: transform .35s ease; }
+    .memory:hover img { transform: scale(1.16); }
+    .memory::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.13); }
+    .year-tile { display: grid; place-items: center; color: #24121e; background: linear-gradient(135deg, var(--gold), var(--rose)); font-family: Georgia, serif; font-weight: 800; font-size: clamp(1rem, 4vw, 2rem); }
+    .assembling .memory, .assembling .year-tile, .revealed .memory, .revealed .year-tile { opacity: 1; transform: translate(0,0) rotate(0) scale(1); }
+    .portrait {
+      position: absolute; inset: .4rem; border-radius: 1rem; overflow: hidden; pointer-events: none; opacity: 0;
+      transition: opacity 1.8s ease, filter .8s ease; background: #24121e;
+    }
+    .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; filter: contrast(1.08) brightness(1.04); mix-blend-mode: luminosity; }
+    .portrait::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(16,11,20,.5), transparent 35%); }
+    .revealed .portrait { opacity: .88; }
+    .exploring .portrait { opacity: 0; }
+    .shine { position: absolute; inset: 0; border-radius: 1.35rem; overflow: hidden; pointer-events: none; }
+    .shine::before { content: ""; position: absolute; inset: -50%; background: linear-gradient(110deg, transparent 42%, rgba(255,255,255,.35) 50%, transparent 58%); transform: translateX(-80%) rotate(12deg); }
+    .revealed .shine::before { animation: shine 1.4s 1.1s ease forwards; }
+    @keyframes shine { to { transform: translateX(80%) rotate(12deg); } }
+
+    .caption { min-height: 7.4rem; display: grid; place-items: center; text-align: center; }
+    .caption-inner { opacity: 0; transform: translateY(1rem); transition: .9s ease; }
+    .revealed .caption-inner { opacity: 1; transform: translateY(0); }
+    .final-title { font-size: clamp(1.75rem, 7vw, 3.2rem); background: linear-gradient(90deg, var(--cream), var(--gold), var(--rose)); -webkit-background-clip: text; color: transparent; }
+    .final-copy { margin: .4rem 0 .85rem; color: var(--muted); font-size: .92rem; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; }
+
+    canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }
+    .modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 1rem; background: rgba(8,5,9,.86); backdrop-filter: blur(14px); opacity: 0; visibility: hidden; transition: .3s ease; }
+    .modal.open { opacity: 1; visibility: visible; }
+    .modal-card { position: relative; width: min(94vw, 760px); max-height: 90svh; display: grid; gap: .75rem; place-items: center; }
+    .modal img { max-width: 100%; max-height: 78svh; object-fit: contain; border-radius: 1rem; box-shadow: 0 24px 70px rgba(0,0,0,.55); }
+    .modal p { margin: 0; color: var(--gold); letter-spacing: .12em; text-transform: uppercase; font-size: .76rem; }
+    .modal-close { position: absolute; right: 0; top: -3.1rem; }
+
+    @media (min-width: 800px) {
+      .experience { grid-template-rows: auto 1fr; grid-template-columns: minmax(16rem, .7fr) minmax(350px, 1fr); align-items: center; padding: 1.5rem 6vw; }
+      .topbar { grid-column: 1 / -1; }
+      .stage { grid-column: 2; grid-row: 2; }
+      .mosaic-wrap { width: min(45vw, 56vh, 500px); }
+      .caption { grid-column: 1; grid-row: 2; text-align: left; justify-items: start; padding-right: 2rem; }
+      .caption-inner { max-width: 34rem; }
+      .actions { justify-content: flex-start; }
+      .final-title { font-size: clamp(3rem, 5vw, 5.5rem); line-height: .98; }
+      .final-copy { font-size: 1.05rem; line-height: 1.65; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="orb one" aria-hidden="true"></div>
+  <div class="orb two" aria-hidden="true"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <div class="intro" id="intro">
+    <div class="intro-card">
+      <p class="eyebrow">A celebration in 43 memories</p>
+      <div class="age" aria-hidden="true">43</div>
+      <h1>One beautiful life.<br />One unforgettable mosaic.</h1>
+      <p class="intro-copy">Every little picture holds a story. Watch forty-three memories come together for one very special birthday.</p>
+      <button class="primary" id="begin">Begin the celebration ✦</button>
+    </div>
+  </div>
+
+  <main class="app" id="app">
+    <section class="experience" aria-label="43rd birthday photo mosaic">
+      <header class="topbar">
+        <div class="mark">
+          <span class="mark-badge">43</span>
+          <span><strong>Made of Memories</strong><small>A birthday mosaic</small></span>
+        </div>
+        <button class="icon-button" id="sound" type="button" aria-label="Turn gentle birthday sound on" aria-pressed="false">♪</button>
+      </header>
+
+      <div class="stage">
+        <div class="mosaic-wrap" id="mosaicWrap">
+          <div class="mosaic" id="mosaic" aria-label="43 clickable memory photos"></div>
+          <div class="portrait" aria-hidden="true"><img src="assets/main-portrait.jpg" alt="" /></div>
+          <div class="shine" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="caption">
+        <div class="caption-inner">
+          <p class="eyebrow">Chapter forty-three</p>
+          <h2 class="final-title">Happy 43rd Birthday!</h2>
+          <p class="final-copy">Forty-three years of laughter, courage, adventures, and love—and so many beautiful moments still waiting ahead.</p>
+          <div class="actions">
+            <button class="primary" id="explore" type="button">Explore the memories</button>
+            <button class="ghost" id="replay" type="button">Replay mosaic</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Memory photo">
+    <div class="modal-card">
+      <button class="icon-button modal-close" id="modalClose" type="button" aria-label="Close photo">×</button>
+      <img id="modalImage" src="" alt="Selected birthday memory" />
+      <p id="modalLabel">Memory 1 of 43</p>
+    </div>
+  </div>
+
+  <script>
+    const app = document.getElementById('app');
+    const intro = document.getElementById('intro');
+    const mosaic = document.getElementById('mosaic');
+    const explore = document.getElementById('explore');
+    const modal = document.getElementById('modal');
+    const modalImage = document.getElementById('modalImage');
+    const modalLabel = document.getElementById('modalLabel');
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const photoCount = 43;
+    const photoPaths = Array.from({ length: photoCount }, (_, i) => `assets/memory-${String(i + 1).padStart(2, '0')}.jpg`);
+    const accents = ['4', '3', '♡', '✦', '43'];
+    const accentSlots = new Map([[4, '4'], [11, '♡'], [24, '43'], [36, '✦'], [43, '3']]);
+    let photoIndex = 0;
+    let revealTimer;
+    let exploreTimer;
+
+    for (let slot = 0; slot < 48; slot++) {
+      const accent = accentSlots.get(slot);
+      if (accent) {
+        const tile = document.createElement('div');
+        tile.className = 'year-tile';
+        tile.textContent = accent;
+        setFlight(tile, slot);
+        mosaic.appendChild(tile);
+        continue;
+      }
+      const button = document.createElement('button');
+      button.className = 'memory';
+      button.type = 'button';
+      button.dataset.index = String(photoIndex);
+      button.setAttribute('aria-label', `Open birthday memory ${photoIndex + 1} of ${photoCount}`);
+      const img = document.createElement('img');
+      img.src = photoPaths[photoIndex];
+      img.alt = '';
+      img.loading = photoIndex < 12 ? 'eager' : 'lazy';
+      button.appendChild(img);
+      setFlight(button, slot);
+      button.addEventListener('click', () => openMemory(Number(button.dataset.index)));
+      mosaic.appendChild(button);
+      photoIndex++;
+    }
+
+    function setFlight(el, i) {
+      const angle = (i / 48) * Math.PI * 4 + (i % 3);
+      const distance = 38 + (i % 6) * 15;
+      el.style.setProperty('--fly-x', `${Math.cos(angle) * distance}vw`);
+      el.style.setProperty('--fly-y', `${Math.sin(angle) * distance}vh`);
+      el.style.setProperty('--spin', `${(i % 2 ? 1 : -1) * (35 + (i % 5) * 14)}deg`);
+      el.style.setProperty('--delay', `${reducedMotion ? 0 : (i % 12) * 55}ms`);
+    }
+
+    function beginSequence() {
+      clearTimeout(revealTimer);
+      clearTimeout(exploreTimer);
+      app.classList.remove('revealed', 'exploring');
+      app.classList.add('assembling');
+      revealTimer = setTimeout(() => {
+        app.classList.add('revealed');
+        burstConfetti();
+      }, reducedMotion ? 50 : 2600);
+    }
+
+    function replaySequence() {
+      app.classList.remove('assembling', 'revealed', 'exploring');
+      void mosaic.offsetWidth;
+      beginSequence();
+    }
+
+    document.getElementById('begin').addEventListener('click', () => {
+      intro.classList.add('hidden');
+      beginSequence();
+    });
+    document.getElementById('replay').addEventListener('click', replaySequence);
+    explore.addEventListener('click', () => {
+      const exploring = app.classList.toggle('exploring');
+      explore.textContent = exploring ? 'Return to portrait' : 'Explore the memories';
+    });
+
+    function openMemory(index) {
+      if (!app.classList.contains('exploring')) app.classList.add('exploring');
+      modalImage.src = photoPaths[index];
+      modalLabel.textContent = `Memory ${index + 1} of ${photoCount}`;
+      modal.classList.add('open');
+      document.getElementById('modalClose').focus();
+    }
+    function closeModal() { modal.classList.remove('open'); }
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    const confettiCanvas = document.getElementById('confetti');
+    const ctx = confettiCanvas.getContext('2d');
+    let pieces = [];
+    function resizeCanvas() { confettiCanvas.width = innerWidth * devicePixelRatio; confettiCanvas.height = innerHeight * devicePixelRatio; ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
+    addEventListener('resize', resizeCanvas); resizeCanvas();
+    function burstConfetti() {
+      if (reducedMotion) return;
+      const colors = ['#efcc85', '#e7a5ad', '#fff5ea', '#c95d86', '#ffffff'];
+      pieces = Array.from({length: 120}, (_, i) => ({
+        x: innerWidth / 2, y: innerHeight * .42, vx: (Math.random() - .5) * 12, vy: -Math.random() * 10 - 3,
+        g: .17 + Math.random() * .08, r: 3 + Math.random() * 4, rot: Math.random() * Math.PI, vr: (Math.random() - .5) * .28,
+        color: colors[i % colors.length], life: 150 + Math.random() * 40
+      }));
+      requestAnimationFrame(drawConfetti);
+    }
+    function drawConfetti() {
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      pieces.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += p.g; p.rot += p.vr; p.life--; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.color; ctx.fillRect(-p.r, -p.r/2, p.r*2, p.r); ctx.restore(); });
+      pieces = pieces.filter(p => p.life > 0 && p.y < innerHeight + 20);
+      if (pieces.length) requestAnimationFrame(drawConfetti); else ctx.clearRect(0,0,innerWidth,innerHeight);
+    }
+
+    let audioCtx, audioTimer, sounding = false;
+    const soundButton = document.getElementById('sound');
+    const notes = [261.63, 329.63, 392, 523.25, 392, 329.63];
+    function chime() {
+      if (!sounding || !audioCtx) return;
+      const now = audioCtx.currentTime;
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, now + i * .42); gain.gain.linearRampToValueAtTime(.055, now + i * .42 + .03); gain.gain.exponentialRampToValueAtTime(.001, now + i * .42 + .7);
+        osc.connect(gain).connect(audioCtx.destination); osc.start(now + i * .42); osc.stop(now + i * .42 + .75);
+      });
+      audioTimer = setTimeout(chime, 4200);
+    }
+    soundButton.addEventListener('click', () => {
+      sounding = !sounding;
+      soundButton.setAttribute('aria-pressed', String(sounding));
+      soundButton.textContent = sounding ? '♫' : '♪';
+      soundButton.setAttribute('aria-label', sounding ? 'Turn gentle birthday sound off' : 'Turn gentle birthday sound on');
+      if (sounding) { audioCtx ||= new (window.AudioContext || window.webkitAudioContext)(); audioCtx.resume(); chime(); }
+      else clearTimeout(audioTimer);
+    });
+  </script>
+</body>
+</html>
