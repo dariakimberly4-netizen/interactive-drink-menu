@@ -6,46 +6,191 @@
 <meta name="theme-color" content="#15110f">
 <title>Wedding Memory Mosaic</title>
 <style>
-:root {--paper:#fbf7f0;--ink:#261d18;--gold:#b69259;--wine:#6d3438}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#15110f;color:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}body{overflow-x:hidden}
-.bg{position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 20% 15%,rgba(182,146,89,.22),transparent 28%),radial-gradient(circle at 82% 78%,rgba(109,52,56,.26),transparent 32%),linear-gradient(135deg,#15110f,#251d19 48%,#110f0e)}
+:root {
+  --paper:#fbf7f0; --ink:#261d18; --gold:#b69259; --wine:#6d3438;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#15110f;color:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+body{overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:-3;background:
+radial-gradient(circle at 20% 15%,rgba(182,146,89,.22),transparent 28%),
+radial-gradient(circle at 82% 78%,rgba(109,52,56,.26),transparent 32%),
+linear-gradient(135deg,#15110f,#251d19 48%,#110f0e)}
 .grain{position:fixed;inset:0;z-index:-2;opacity:.22;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E")}
-main{min-height:100svh;display:grid;place-items:center;padding:24px 14px 38px}.wrap{width:min(1100px,100%);text-align:center}.eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:11px;color:#d9c6a8;margin-bottom:8px}h1{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,7vw,76px);line-height:.98;margin:0 auto 10px;max-width:900px}.sub{margin:0 auto 22px;color:#d8cdc3;font-size:clamp(14px,2.5vw,18px);max-width:670px;line-height:1.55}
-.frame{position:relative;width:min(920px,96vw);aspect-ratio:4/3;margin:0 auto;border-radius:26px;padding:clamp(8px,1.2vw,13px);background:linear-gradient(145deg,#fffdf8,#e6d9c8);box-shadow:0 30px 90px rgba(0,0,0,.48);transform:rotate(-.35deg)}.inner{position:relative;width:100%;height:100%;overflow:hidden;border-radius:17px;background:#2c2420}.hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.06;transform:scale(1.07);filter:saturate(.88) contrast(1.03);transition:opacity 1.6s ease,transform 2s cubic-bezier(.2,.75,.2,1)}
-.tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(5,1fr);gap:2px;padding:2px;z-index:2}.tile{position:relative;border:0;padding:0;min-width:0;cursor:pointer;background-image:url('assets/memories.webp');background-repeat:no-repeat;background-size:600% 500%;background-position:var(--sx) var(--sy);box-shadow:0 4px 14px rgba(0,0,0,.28);opacity:0;transform:translate(calc((var(--i) - 14) * 3vw),calc((14 - var(--i)) * 1.8vh)) rotate(calc((var(--i) - 13) * 1.25deg)) scale(.7);transition:transform 1s cubic-bezier(.17,.84,.24,1),opacity .65s ease,filter 1.3s ease;transition-delay:calc(var(--i) * 65ms);filter:saturate(.9) contrast(1.02)}.tile:focus-visible{outline:3px solid white;outline-offset:-3px;z-index:8}.playing .tile{opacity:1;transform:translate(0,0) rotate(0) scale(1)}.revealed .hero{opacity:1;transform:scale(1)}.revealed .tile{opacity:.22;filter:saturate(.65) sepia(.08) brightness(.9)}.revealed .tile:hover,.revealed .tile:focus-visible{opacity:.72;filter:none}
-.vignette{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(to bottom,transparent 64%,rgba(16,12,10,.48)),radial-gradient(ellipse at center,transparent 57%,rgba(12,9,8,.34) 100%)}.caption{position:absolute;z-index:4;bottom:16px;left:18px;right:18px;display:flex;align-items:end;justify-content:space-between;gap:12px;opacity:0;transform:translateY(8px);transition:.9s ease}.revealed .caption{opacity:1;transform:none;transition-delay:.65s}.caption .line1{font-family:Georgia,serif;font-size:clamp(17px,3vw,30px);text-align:left;text-shadow:0 2px 12px #000}.caption .line2{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#e6d7c3;text-align:right}
-.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px}button.ctrl{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;padding:12px 18px;border-radius:999px;font:600 14px/1 system-ui;backdrop-filter:blur(10px);cursor:pointer;transition:.2s}button.ctrl.primary{background:#f3eadc;color:#281f1a;border-color:#f3eadc}button.ctrl:active{transform:scale(.98)}.progress{height:3px;width:min(520px,80vw);margin:15px auto 0;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:#d7b986;border-radius:99px}.playing .bar{animation:load 7.1s linear forwards}.revealed .bar{width:100%}@keyframes load{to{width:100%}}
-.spark{position:fixed;pointer-events:none;z-index:10;font-size:18px;animation:float 2.8s ease-out forwards}@keyframes float{0%{opacity:0;transform:translateY(0) scale(.7) rotate(0)}18%{opacity:.8}100%{opacity:0;transform:translateY(-140px) scale(1.25) rotate(16deg)}}
-.modal{position:fixed;inset:0;z-index:20;display:none;place-items:center;background:rgba(10,8,7,.82);backdrop-filter:blur(10px);padding:22px}.modal.open{display:grid}.modal-card{width:min(760px,94vw);aspect-ratio:4/3;background:#f5ede2;padding:11px 11px 46px;border-radius:5px;box-shadow:0 30px 100px #000;transform:rotate(-.6deg);position:relative}.modal-photo{width:100%;height:100%;background-image:url('assets/memories.webp');background-size:600% 500%;background-repeat:no-repeat;background-position:var(--mx) var(--my);border-radius:2px}.modal-label{position:absolute;bottom:14px;left:16px;right:16px;color:#3b2c23;font-family:Georgia,serif;font-size:18px;text-align:center}.close{position:fixed;top:max(14px,env(safe-area-inset-top));right:14px;border:0;border-radius:50%;width:44px;height:44px;background:#fff;color:#1a1512;font-size:22px;cursor:pointer}
-@media(max-width:650px){main{padding-top:18px}.frame{width:96vw;border-radius:18px;padding:7px}.inner{border-radius:12px}.tiles{gap:1px;padding:1px}.caption{bottom:10px;left:12px;right:12px}.caption .line2{display:none}.controls{margin-top:16px}}@media(prefers-reduced-motion:reduce){.tile,.hero,.caption{transition:none!important}.spark{display:none}}
+main{min-height:100svh;display:grid;place-items:center;padding:24px 14px 38px}
+.wrap{width:min(1100px,100%);text-align:center}
+.eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:11px;color:#d9c6a8;margin-bottom:8px}
+h1{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,7vw,76px);line-height:.98;margin:0 auto 10px;max-width:900px}
+.sub{margin:0 auto 22px;color:#d8cdc3;font-size:clamp(14px,2.5vw,18px);max-width:670px;line-height:1.55}
+.frame{position:relative;width:min(920px,96vw);aspect-ratio:4/3;margin:0 auto;border-radius:26px;padding:clamp(8px,1.2vw,13px);background:linear-gradient(145deg,#fffdf8,#e6d9c8);box-shadow:0 30px 90px rgba(0,0,0,.48);transform:rotate(-.35deg)}
+.inner{position:relative;width:100%;height:100%;overflow:hidden;border-radius:17px;background:#2c2420}
+.hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.06;transform:scale(1.07);filter:saturate(.88) contrast(1.03);transition:opacity 1.6s ease, transform 2s cubic-bezier(.2,.75,.2,1)}
+.tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(5,1fr);gap:2px;padding:2px;z-index:2}
+.tile{position:relative;border:0;padding:0;min-width:0;cursor:pointer;background-image:url('assets/memories.webp');background-repeat:no-repeat;background-size:600% 500%;background-position:var(--sx) var(--sy);box-shadow:0 4px 14px rgba(0,0,0,.28);opacity:0;transform:translate(calc((var(--i) - 14) * 3vw),calc((14 - var(--i)) * 1.8vh)) rotate(calc((var(--i) - 13) * 1.25deg)) scale(.7);transition:transform 1s cubic-bezier(.17,.84,.24,1),opacity .65s ease,filter 1.3s ease;transition-delay:calc(var(--i) * 65ms);filter:saturate(.9) contrast(1.02)}
+.tile:focus-visible{outline:3px solid white;outline-offset:-3px;z-index:8}
+.playing .tile{opacity:1;transform:translate(0,0) rotate(0) scale(1)}
+.revealed .hero{opacity:1;transform:scale(1)}
+.revealed .tile{opacity:.22;filter:saturate(.65) sepia(.08) brightness(.9)}
+.revealed .tile:hover,.revealed .tile:focus-visible{opacity:.72;filter:none}
+.vignette{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(to bottom,transparent 64%,rgba(16,12,10,.48)),radial-gradient(ellipse at center,transparent 57%,rgba(12,9,8,.34) 100%)}
+.caption{position:absolute;z-index:4;bottom:16px;left:18px;right:18px;display:flex;align-items:end;justify-content:space-between;gap:12px;opacity:0;transform:translateY(8px);transition:.9s ease}
+.revealed .caption{opacity:1;transform:none;transition-delay:.65s}
+.caption .line1{font-family:Georgia,serif;font-size:clamp(17px,3vw,30px);text-align:left;text-shadow:0 2px 12px #000}
+.caption .line2{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#e6d7c3;text-align:right}
+.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px}
+button.ctrl{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;padding:12px 18px;border-radius:999px;font:600 14px/1 system-ui;backdrop-filter:blur(10px);cursor:pointer;transition:.2s}
+button.ctrl.primary{background:#f3eadc;color:#281f1a;border-color:#f3eadc}
+button.ctrl:active{transform:scale(.98)}
+.progress{height:3px;width:min(520px,80vw);margin:15px auto 0;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
+.bar{height:100%;width:0;background:#d7b986;border-radius:99px}
+.playing .bar{animation:load 7.1s linear forwards}
+.revealed .bar{width:100%}
+@keyframes load{to{width:100%}}
+.spark{position:fixed;pointer-events:none;z-index:10;font-size:18px;animation:float 2.8s ease-out forwards}
+@keyframes float{0%{opacity:0;transform:translateY(0) scale(.7) rotate(0)}18%{opacity:.8}100%{opacity:0;transform:translateY(-140px) scale(1.25) rotate(16deg)}}
+.modal{position:fixed;inset:0;z-index:20;display:none;place-items:center;background:rgba(10,8,7,.82);backdrop-filter:blur(10px);padding:22px}
+.modal.open{display:grid}
+.modal-card{width:min(760px,94vw);aspect-ratio:4/3;background:#f5ede2;padding:11px 11px 46px;border-radius:5px;box-shadow:0 30px 100px #000;transform:rotate(-.6deg);position:relative}
+.modal-photo{width:100%;height:100%;background-image:url('assets/memories.webp');background-size:600% 500%;background-repeat:no-repeat;background-position:var(--mx) var(--my);border-radius:2px}
+.modal-label{position:absolute;bottom:14px;left:16px;right:16px;color:#3b2c23;font-family:Georgia,serif;font-size:18px;text-align:center}
+.close{position:fixed;top:max(14px,env(safe-area-inset-top));right:14px;border:0;border-radius:50%;width:44px;height:44px;background:#fff;color:#1a1512;font-size:22px;cursor:pointer}
+@media(max-width:650px){
+ main{padding-top:18px}
+ .frame{width:96vw;border-radius:18px;padding:7px}
+ .inner{border-radius:12px}
+ .tiles{gap:1px;padding:1px}
+ .caption{bottom:10px;left:12px;right:12px}
+ .caption .line2{display:none}
+ .controls{margin-top:16px}
+}
+@media(prefers-reduced-motion:reduce){
+ .tile,.hero,.caption{transition:none!important}
+ .spark{display:none}
+}
 </style>
 </head>
 <body>
 <div class="bg"></div><div class="grain"></div>
-<main><section class="wrap">
-<div class="eyebrow">26 photographs · one story</div>
-<h1>The wedding is finished.<br>The memories stay.</h1>
-<p class="sub">Watch the little Polaroid-style memories gather into one portrait of the newlyweds. Tap any tile to revisit a moment.</p>
-<div class="frame" id="frame"><div class="inner">
-<img class="hero" src="assets/couple.webp" alt="Newlyweds sharing a kiss">
-<div class="tiles" id="tiles">
-<button class="tile" style="--i:0;--sx:0%;--sy:0%" data-src="0" aria-label="Open wedding memory 1"></button><button class="tile" style="--i:1;--sx:20%;--sy:0%" data-src="1" aria-label="Open wedding memory 2"></button><button class="tile" style="--i:2;--sx:40%;--sy:0%" data-src="2" aria-label="Open wedding memory 3"></button><button class="tile" style="--i:3;--sx:60%;--sy:0%" data-src="3" aria-label="Open wedding memory 4"></button><button class="tile" style="--i:4;--sx:80%;--sy:0%" data-src="4" aria-label="Open wedding memory 5"></button><button class="tile" style="--i:5;--sx:100%;--sy:0%" data-src="5" aria-label="Open wedding memory 6"></button>
-<button class="tile" style="--i:6;--sx:0%;--sy:25%" data-src="6" aria-label="Open wedding memory 7"></button><button class="tile" style="--i:7;--sx:20%;--sy:25%" data-src="7" aria-label="Open wedding memory 8"></button><button class="tile" style="--i:8;--sx:40%;--sy:25%" data-src="8" aria-label="Open wedding memory 9"></button><button class="tile" style="--i:9;--sx:60%;--sy:25%" data-src="9" aria-label="Open wedding memory 10"></button><button class="tile" style="--i:10;--sx:80%;--sy:25%" data-src="10" aria-label="Open wedding memory 11"></button><button class="tile" style="--i:11;--sx:100%;--sy:25%" data-src="11" aria-label="Open wedding memory 12"></button>
-<button class="tile" style="--i:12;--sx:0%;--sy:50%" data-src="12" aria-label="Open wedding memory 13"></button><button class="tile" style="--i:13;--sx:20%;--sy:50%" data-src="13" aria-label="Open wedding memory 14"></button><button class="tile" style="--i:14;--sx:40%;--sy:50%" data-src="14" aria-label="Open wedding memory 15"></button><button class="tile" style="--i:15;--sx:60%;--sy:50%" data-src="15" aria-label="Open wedding memory 16"></button><button class="tile" style="--i:16;--sx:80%;--sy:50%" data-src="16" aria-label="Open wedding memory 17"></button><button class="tile" style="--i:17;--sx:100%;--sy:50%" data-src="17" aria-label="Open wedding memory 18"></button>
-<button class="tile" style="--i:18;--sx:0%;--sy:75%" data-src="18" aria-label="Open wedding memory 19"></button><button class="tile" style="--i:19;--sx:20%;--sy:75%" data-src="19" aria-label="Open wedding memory 20"></button><button class="tile" style="--i:20;--sx:40%;--sy:75%" data-src="20" aria-label="Open wedding memory 21"></button><button class="tile" style="--i:21;--sx:60%;--sy:75%" data-src="21" aria-label="Open wedding memory 22"></button><button class="tile" style="--i:22;--sx:80%;--sy:75%" data-src="22" aria-label="Open wedding memory 23"></button><button class="tile" style="--i:23;--sx:100%;--sy:75%" data-src="23" aria-label="Open wedding memory 24"></button>
-<button class="tile" style="--i:24;--sx:0%;--sy:100%" data-src="24" aria-label="Open wedding memory 25"></button><button class="tile" style="--i:25;--sx:20%;--sy:100%" data-src="25" aria-label="Open wedding memory 26"></button><button class="tile" style="--i:26;--sx:0%;--sy:0%" data-src="0" aria-label="Open wedding memory 1"></button><button class="tile" style="--i:27;--sx:20%;--sy:0%" data-src="1" aria-label="Open wedding memory 2"></button><button class="tile" style="--i:28;--sx:40%;--sy:0%" data-src="2" aria-label="Open wedding memory 3"></button><button class="tile" style="--i:29;--sx:60%;--sy:0%" data-src="3" aria-label="Open wedding memory 4"></button>
-</div><div class="vignette"></div><div class="caption"><div class="line1">Two hearts. One beautiful beginning.</div><div class="line2">Made from the moments around “I do”</div></div>
-</div></div>
-<div class="controls"><button class="ctrl primary" id="play">Play the Mosaic</button><button class="ctrl" id="reveal">Reveal the Couple</button><button class="ctrl" id="replay">Replay</button></div><div class="progress"><div class="bar"></div></div>
-</section></main>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Wedding memory"><button class="close" id="close" aria-label="Close memory">×</button><div class="modal-card"><div class="modal-photo" id="modalPhoto"></div><div class="modal-label" id="modalLabel">A wedding memory</div></div></div>
+<main>
+  <section class="wrap">
+    <div class="frame" id="frame">
+      <div class="inner">
+        <img class="hero" src="assets/couple.webp" alt="Newlyweds sharing a kiss">
+        <div class="tiles" id="tiles">
+<button class="tile" style="--i:0;--sx:0.0000%;--sy:0.0000%;" data-src="0" aria-label="Open wedding memory 1"></button>
+<button class="tile" style="--i:1;--sx:20.0000%;--sy:0.0000%;" data-src="1" aria-label="Open wedding memory 2"></button>
+<button class="tile" style="--i:2;--sx:40.0000%;--sy:0.0000%;" data-src="2" aria-label="Open wedding memory 3"></button>
+<button class="tile" style="--i:3;--sx:60.0000%;--sy:0.0000%;" data-src="3" aria-label="Open wedding memory 4"></button>
+<button class="tile" style="--i:4;--sx:80.0000%;--sy:0.0000%;" data-src="4" aria-label="Open wedding memory 5"></button>
+<button class="tile" style="--i:5;--sx:100.0000%;--sy:0.0000%;" data-src="5" aria-label="Open wedding memory 6"></button>
+<button class="tile" style="--i:6;--sx:0.0000%;--sy:25.0000%;" data-src="6" aria-label="Open wedding memory 7"></button>
+<button class="tile" style="--i:7;--sx:20.0000%;--sy:25.0000%;" data-src="7" aria-label="Open wedding memory 8"></button>
+<button class="tile" style="--i:8;--sx:40.0000%;--sy:25.0000%;" data-src="8" aria-label="Open wedding memory 9"></button>
+<button class="tile" style="--i:9;--sx:60.0000%;--sy:25.0000%;" data-src="9" aria-label="Open wedding memory 10"></button>
+<button class="tile" style="--i:10;--sx:80.0000%;--sy:25.0000%;" data-src="10" aria-label="Open wedding memory 11"></button>
+<button class="tile" style="--i:11;--sx:100.0000%;--sy:25.0000%;" data-src="11" aria-label="Open wedding memory 12"></button>
+<button class="tile" style="--i:12;--sx:0.0000%;--sy:50.0000%;" data-src="12" aria-label="Open wedding memory 13"></button>
+<button class="tile" style="--i:13;--sx:20.0000%;--sy:50.0000%;" data-src="13" aria-label="Open wedding memory 14"></button>
+<button class="tile" style="--i:14;--sx:40.0000%;--sy:50.0000%;" data-src="14" aria-label="Open wedding memory 15"></button>
+<button class="tile" style="--i:15;--sx:60.0000%;--sy:50.0000%;" data-src="15" aria-label="Open wedding memory 16"></button>
+<button class="tile" style="--i:16;--sx:80.0000%;--sy:50.0000%;" data-src="16" aria-label="Open wedding memory 17"></button>
+<button class="tile" style="--i:17;--sx:100.0000%;--sy:50.0000%;" data-src="17" aria-label="Open wedding memory 18"></button>
+<button class="tile" style="--i:18;--sx:0.0000%;--sy:75.0000%;" data-src="18" aria-label="Open wedding memory 19"></button>
+<button class="tile" style="--i:19;--sx:20.0000%;--sy:75.0000%;" data-src="19" aria-label="Open wedding memory 20"></button>
+<button class="tile" style="--i:20;--sx:40.0000%;--sy:75.0000%;" data-src="20" aria-label="Open wedding memory 21"></button>
+<button class="tile" style="--i:21;--sx:60.0000%;--sy:75.0000%;" data-src="21" aria-label="Open wedding memory 22"></button>
+<button class="tile" style="--i:22;--sx:80.0000%;--sy:75.0000%;" data-src="22" aria-label="Open wedding memory 23"></button>
+<button class="tile" style="--i:23;--sx:100.0000%;--sy:75.0000%;" data-src="23" aria-label="Open wedding memory 24"></button>
+<button class="tile" style="--i:24;--sx:0.0000%;--sy:100.0000%;" data-src="24" aria-label="Open wedding memory 25"></button>
+<button class="tile" style="--i:25;--sx:20.0000%;--sy:100.0000%;" data-src="25" aria-label="Open wedding memory 26"></button>
+<button class="tile" style="--i:26;--sx:0.0000%;--sy:0.0000%;" data-src="0" aria-label="Open wedding memory 1"></button>
+<button class="tile" style="--i:27;--sx:20.0000%;--sy:0.0000%;" data-src="1" aria-label="Open wedding memory 2"></button>
+<button class="tile" style="--i:28;--sx:40.0000%;--sy:0.0000%;" data-src="2" aria-label="Open wedding memory 3"></button>
+<button class="tile" style="--i:29;--sx:60.0000%;--sy:0.0000%;" data-src="3" aria-label="Open wedding memory 4"></button>
+        </div>
+        <div class="vignette"></div>
+        <div class="caption">
+          <div class="line1">Two hearts. One beautiful beginning.</div>
+          <div class="line2">Made from the moments around “I do”</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl primary" id="play">Play the Mosaic</button>
+      <button class="ctrl" id="reveal">Reveal the Couple</button>
+      <button class="ctrl" id="replay">Replay</button>
+    </div>
+    <div class="progress"><div class="bar"></div></div>
+  </section>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Wedding memory">
+  <button class="close" id="close" aria-label="Close memory">×</button>
+  <div class="modal-card">
+    <div class="modal-photo" id="modalPhoto"></div>
+    <div class="modal-label" id="modalLabel">A wedding memory</div>
+  </div>
+</div>
+
 <script>
-const body=document.body,play=document.getElementById('play'),reveal=document.getElementById('reveal'),replay=document.getElementById('replay'),modal=document.getElementById('modal'),modalPhoto=document.getElementById('modalPhoto'),modalLabel=document.getElementById('modalLabel');let revealTimer;
-function sparkles(){const symbols=['♡','✦','·','✧'];for(let i=0;i<18;i++){setTimeout(()=>{const s=document.createElement('span');s.className='spark';s.textContent=symbols[Math.floor(Math.random()*symbols.length)];s.style.left=(10+Math.random()*80)+'vw';s.style.top=(55+Math.random()*25)+'vh';s.style.color=Math.random()>.5?'#e8d4b5':'#fff8ed';document.body.appendChild(s);setTimeout(()=>s.remove(),3000)},i*90)}}
-function start(){clearTimeout(revealTimer);body.classList.remove('revealed','playing');void body.offsetWidth;body.classList.add('playing');play.textContent='Memories gathering…';revealTimer=setTimeout(()=>{body.classList.add('revealed');play.textContent='Mosaic Complete';sparkles()},7100)}
-function revealNow(){clearTimeout(revealTimer);body.classList.add('playing','revealed');play.textContent='Mosaic Complete';sparkles()}function reset(){clearTimeout(revealTimer);body.classList.remove('playing','revealed');play.textContent='Play the Mosaic';setTimeout(start,250)}
-play.addEventListener('click',start);reveal.addEventListener('click',revealNow);replay.addEventListener('click',reset);
-document.querySelectorAll('.tile').forEach(tile=>{tile.addEventListener('click',()=>{const n=+tile.dataset.src,col=n%6,row=Math.floor(n/6),x=col/5*100,y=row/4*100;modalPhoto.style.setProperty('--mx',x+'%');modalPhoto.style.setProperty('--my',y+'%');modalLabel.textContent='Wedding memory '+String(n+1).padStart(2,'0');modal.classList.add('open')})});
-document.getElementById('close').onclick=()=>modal.classList.remove('open');modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('open')});window.addEventListener('load',()=>setTimeout(start,550));
+const body=document.body;
+const play=document.getElementById('play');
+const reveal=document.getElementById('reveal');
+const replay=document.getElementById('replay');
+const frame=document.getElementById('frame');
+const modal=document.getElementById('modal');
+const modalPhoto=document.getElementById('modalPhoto');
+const modalLabel=document.getElementById('modalLabel');
+let revealTimer;
+
+function sparkles(){
+  const symbols=['♡','✦','·','✧'];
+  for(let i=0;i<18;i++){
+    setTimeout(()=>{
+      const s=document.createElement('span'); s.className='spark';
+      s.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+      s.style.left=(10+Math.random()*80)+'vw';
+      s.style.top=(55+Math.random()*25)+'vh';
+      s.style.color=Math.random()>.5?'#e8d4b5':'#fff8ed';
+      document.body.appendChild(s); setTimeout(()=>s.remove(),3000);
+    },i*90);
+  }
+}
+function start(){
+  clearTimeout(revealTimer);
+  body.classList.remove('revealed','playing');
+  void body.offsetWidth;
+  body.classList.add('playing');
+  play.textContent='Memories gathering…';
+  revealTimer=setTimeout(()=>{ body.classList.add('revealed'); play.textContent='Mosaic Complete'; sparkles(); },7100);
+}
+function revealNow(){
+  clearTimeout(revealTimer); body.classList.add('playing','revealed'); play.textContent='Mosaic Complete'; sparkles();
+}
+function reset(){
+  clearTimeout(revealTimer); body.classList.remove('playing','revealed'); play.textContent='Play the Mosaic';
+  setTimeout(start,250);
+}
+play.addEventListener('click',start);
+reveal.addEventListener('click',revealNow);
+replay.addEventListener('click',reset);
+
+document.querySelectorAll('.tile').forEach(tile=>{
+  tile.addEventListener('click',()=>{
+    const n=+tile.dataset.src, col=n%6,row=Math.floor(n/6);
+    const x=(col/5*100), y=(row/4*100);
+    modalPhoto.style.setProperty('--mx',x+'%');
+    modalPhoto.style.setProperty('--my',y+'%');
+    modalLabel.textContent='Wedding memory '+String(n+1).padStart(2,'0');
+    modal.classList.add('open');
+  });
+});
+document.getElementById('close').onclick=()=>modal.classList.remove('open');
+modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('open')});
+
+window.addEventListener('load',()=>setTimeout(start,550));
 </script>
-</body></html>
+</body>
+</html>
