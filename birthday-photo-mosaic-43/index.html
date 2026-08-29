@@ -166,7 +166,7 @@
       <div class="stage">
         <div class="mosaic-wrap" id="mosaicWrap">
           <div class="mosaic" id="mosaic" aria-label="43 clickable memory photos"></div>
-          <div class="portrait" aria-hidden="true"><img src="assets/main-portrait.jpg" alt="" /></div>
+          <div class="portrait" aria-hidden="true"><img src="assets/main-portrait.jpg?v=2" alt="" /></div>
           <div class="shine" aria-hidden="true"></div>
         </div>
       </div>
@@ -203,7 +203,7 @@
     const modalLabel = document.getElementById('modalLabel');
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const photoCount = 43;
-    const photoPaths = Array.from({ length: photoCount }, (_, i) => `assets/memory-${String(i + 1).padStart(2, '0')}.jpg`);
+    const photoPaths = Array.from({ length: photoCount }, (_, i) => `assets/memory-${String(i + 1).padStart(2, '0')}.jpg?v=2`);
     const accents = ['4', '3', '♡', '✦', '43'];
     const accentSlots = new Map([[4, '4'], [11, '♡'], [24, '43'], [36, '✦'], [43, '3']]);
     let photoIndex = 0;
@@ -228,7 +228,13 @@
       const img = document.createElement('img');
       img.src = photoPaths[photoIndex];
       img.alt = '';
-      img.loading = photoIndex < 12 ? 'eager' : 'lazy';
+      img.loading = 'eager';
+      img.decoding = 'async';
+      img.addEventListener('error', () => {
+        if (img.dataset.retried) return;
+        img.dataset.retried = 'true';
+        img.src = `${img.src.split('?')[0]}?v=2&retry=${Date.now()}`;
+      });
       button.appendChild(img);
       setFlight(button, slot);
       button.addEventListener('click', () => openMemory(Number(button.dataset.index)));
