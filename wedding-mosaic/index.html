@@ -55,13 +55,19 @@ button.ctrl:active{transform:scale(.98)}
 .modal-label{position:absolute;bottom:14px;left:16px;right:16px;color:#3b2c23;font-family:Georgia,serif;font-size:18px;text-align:center}
 .close{position:fixed;top:max(14px,env(safe-area-inset-top));right:14px;border:0;border-radius:50%;width:44px;height:44px;background:#fff;color:#1a1512;font-size:22px;cursor:pointer}
 @media(max-width:650px){
- main{padding-top:18px}
- .frame{width:96vw;border-radius:18px;padding:7px}
- .inner{border-radius:12px}
- .tiles{gap:1px;padding:1px}
- .caption{bottom:10px;left:12px;right:12px}
+ html,body{width:100%;height:100%;overflow:hidden}
+ main{width:100vw;height:100svh;height:100dvh;min-height:0;padding:0;display:block}
+ .wrap{position:relative;width:100vw;height:100svh;height:100dvh;overflow:hidden}
+ .frame{position:absolute;inset:0;width:100vw;height:100svh;height:100dvh;aspect-ratio:auto;margin:0;border-radius:0;padding:0;transform:none;box-shadow:none;background:#15110f}
+ .inner{border-radius:0}
+ .hero{object-fit:cover}
+ .tiles{gap:1px;padding:0}
+ .caption{bottom:112px;left:14px;right:14px}
+ .caption .line1{font-size:clamp(18px,5vw,28px)}
  .caption .line2{display:none}
- .controls{margin-top:16px}
+ .controls{position:absolute;z-index:8;left:10px;right:10px;bottom:calc(30px + env(safe-area-inset-bottom));margin:0;display:flex;flex-wrap:nowrap;gap:7px}
+ button.ctrl{flex:1 1 0;min-width:0;padding:11px 6px;font-size:clamp(10px,2.8vw,13px);white-space:nowrap}
+ .progress{position:absolute;z-index:8;left:7%;bottom:calc(14px + env(safe-area-inset-bottom));width:86%;margin:0}
 }
 @media(prefers-reduced-motion:reduce){
  .tile,.hero,.caption{transition:none!important}
