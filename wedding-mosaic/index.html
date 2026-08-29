@@ -56,18 +56,19 @@ button.ctrl:active{transform:scale(.98)}
 .close{position:fixed;top:max(14px,env(safe-area-inset-top));right:14px;border:0;border-radius:50%;width:44px;height:44px;background:#fff;color:#1a1512;font-size:22px;cursor:pointer}
 @media(max-width:650px){
  html,body{width:100%;height:100%;overflow:hidden}
- main{width:100vw;height:100svh;height:100dvh;min-height:0;padding:0;display:block}
- .wrap{position:relative;width:100vw;height:100svh;height:100dvh;overflow:hidden}
- .frame{position:absolute;inset:0;width:100vw;height:100svh;height:100dvh;aspect-ratio:auto;margin:0;border-radius:0;padding:0;transform:none;box-shadow:none;background:#15110f}
- .inner{border-radius:0}
- .hero{object-fit:cover}
- .tiles{gap:1px;padding:0}
- .caption{bottom:112px;left:14px;right:14px}
- .caption .line1{font-size:clamp(18px,5vw,28px)}
+ body{min-height:100dvh}
+ main{width:100vw;height:100svh;height:100dvh;min-height:0;padding:8px 8px calc(92px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center}
+ .wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:visible}
+ .frame{position:relative;width:min(96vw,calc((100dvh - 116px - env(safe-area-inset-bottom))*4/3));height:auto;max-height:calc(100dvh - 116px - env(safe-area-inset-bottom));aspect-ratio:4/3;margin:0;border-radius:18px;padding:6px;transform:none;box-shadow:0 20px 55px rgba(0,0,0,.48);background:linear-gradient(145deg,#fffdf8,#e6d9c8)}
+ .inner{border-radius:12px}
+ .hero{object-fit:contain;background:#171310}
+ .tiles{gap:1px;padding:1px}
+ .caption{bottom:10px;left:12px;right:12px}
+ .caption .line1{font-size:clamp(15px,4.5vw,22px)}
  .caption .line2{display:none}
- .controls{position:absolute;z-index:8;left:10px;right:10px;bottom:calc(30px + env(safe-area-inset-bottom));margin:0;display:flex;flex-wrap:nowrap;gap:7px}
- button.ctrl{flex:1 1 0;min-width:0;padding:11px 6px;font-size:clamp(10px,2.8vw,13px);white-space:nowrap}
- .progress{position:absolute;z-index:8;left:7%;bottom:calc(14px + env(safe-area-inset-bottom));width:86%;margin:0}
+ .controls{position:fixed;z-index:8;left:8px;right:8px;bottom:calc(30px + env(safe-area-inset-bottom));margin:0;display:flex;flex-wrap:nowrap;gap:6px}
+ button.ctrl{flex:1 1 0;min-width:0;padding:10px 5px;font-size:clamp(9px,2.65vw,12px);white-space:nowrap}
+ .progress{position:fixed;z-index:8;left:8%;bottom:calc(14px + env(safe-area-inset-bottom));width:84%;margin:0}
 }
 @media(prefers-reduced-motion:reduce){
  .tile,.hero,.caption{transition:none!important}
