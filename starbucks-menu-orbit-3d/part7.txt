@@ -1,0 +1,91 @@
+oto-side-top"></div>
+        <div class="photo-side-bottom"></div>
+        <div class="photo-back"></div>
+      </div>
+    </div>
+  </div>
+  <div class="field"><label>Size</label><div class="option-row" id="sizeOptions"></div></div>
+  <div class="field"><label>Temperature</label><div class="option-row" id="tempOptions"></div></div>
+  <div class="field"><label>Milk</label><div class="option-row" id="milkOptions"></div></div>
+  <div class="field"><label>Extras</label><div class="option-row" id="extraOptions"></div></div>
+  <button class="btn primary" style="width:100%;margin-top:10px" id="addToCart">Add to Cart</button>
+</div>
+
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Your Pickup Order</h3>
+    <button class="icon-btn" id="closeCart">✕</button>
+  </div>
+  <div id="cartItems"></div>
+  <div class="total"><span>Total</span><span id="cartTotal">₱0</span></div>
+  <div class="field"><label>Name</label><input id="customerName" placeholder="Customer name"></div>
+  <div class="field"><label>Pickup time</label>
+    <select id="pickupTime">
+      <option>ASAP (15–20 min)</option>
+      <option>30 minutes</option>
+      <option>45 minutes</option>
+      <option>1 hour</option>
+    </select>
+  </div>
+  <button class="btn primary" style="width:100%" id="placeOrder">Place Pickup Order</button>
+  <div id="orderReceipt"></div>
+</div>
+
+<div class="admin" id="adminPanel">
+  <div class="admin-wrap">
+    <div class="topbar" style="position:static;background:none">
+      <div>
+        <h2 style="margin:0">Owner Dashboard</h2>
+        <p style="color:var(--muted);margin:4px 0 0">Manage availability, prices, analytics, branches, and pickup queue.</p>
+      </div>
+      <button class="btn" id="closeAdmin">Close Dashboard</button>
+    </div>
+    <div class="admin-grid">
+      <section class="card" style="padding:16px">
+        <h3>Menu & Availability</h3>
+        <table>
+          <thead><tr><th>Product</th><th>Price</th><th>Status</th></tr></thead>
+          <tbody id="adminProducts"></tbody>
+        </table>
+      </section>
+      <section class="card" style="padding:16px">
+        <h3>Analytics</h3>
+        <div class="stat-grid">
+          <div class="stat"><b id="adminViews">0</b><span>Product views</span></div>
+          <div class="stat"><b id="adminAdds">0</b><span>Cart additions</span></div>
+          <div class="stat"><b id="adminOrders">0</b><span>Orders</span></div>
+          <div class="stat"><b id="conversion">0%</b><span>View → order</span></div>
+        </div>
+        <h3 style="margin-top:16px">Branch</h3>
+        <div class="field"><label>Active branch</label>
+          <select id="branchSelect">
+            <option>Main Branch</option><option>North Branch</option><option>South Branch</option>
+          </select>
+        </div>
+      </section>
+      <section class="card" style="padding:16px;grid-column:1/-1">
+        <h3>Pickup Queue</h3>
+        <div id="pickupQueue"><p style="color:var(--muted)">No pickup orders yet.</p></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+
+<div class="subscription-modal" id="subscriptionModal" role="dialog" aria-modal="true" aria-labelledby="subscriptionTitle">
+  <div class="drawer-head">
+    <div>
+      <h3 id="subscriptionTitle">Continue Menu Orbit</h3>
+      <small style="color:var(--muted)">Choose how you want to continue after the free trial.</small>
+    </div>
+    <button class="icon-btn" id="closeSubscription" type="button" aria-label="Close subscription options">✕</button>
+  </div>
+
+  <div class="plan-card recommended">
+    <b>Recommended — Monthly Subscription</b>
+    <div class="plan-price">₱3,500 <small style="font-size:12px;color:var(--muted)">/ month</small></div>
+    <ul>
+      <li>Continue using the interactive Menu Orbit</li>
+      <li>QR menu link and hosting</li>
+      <li>Basic analytics and owner controls</li>
+      <li>Minor men
