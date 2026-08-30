@@ -1,0 +1,200 @@
+="btn primary" style="width:100%" id="placeOrder">Place Pickup Order</button>
+  <div id="orderReceipt"></div>
+</div>
+
+<div class="admin" id="adminPanel">
+  <div class="admin-wrap">
+    <div class="topbar" style="position:static;background:none">
+      <div>
+        <h2 style="margin:0">Owner Dashboard</h2>
+        <p style="color:var(--muted);margin:4px 0 0">Manage availability, prices, analytics, branches, and pickup queue.</p>
+      </div>
+      <button class="btn" id="closeAdmin">Close Dashboard</button>
+    </div>
+    <div class="admin-grid">
+      <section class="card" style="padding:16px">
+        <h3>Menu & Availability</h3>
+        <table>
+          <thead><tr><th>Product</th><th>Price</th><th>Status</th></tr></thead>
+          <tbody id="adminProducts"></tbody>
+        </table>
+      </section>
+      <section class="card" style="padding:16px">
+        <h3>Analytics</h3>
+        <div class="stat-grid">
+          <div class="stat"><b id="adminViews">0</b><span>Product views</span></div>
+          <div class="stat"><b id="adminAdds">0</b><span>Cart additions</span></div>
+          <div class="stat"><b id="adminOrders">0</b><span>Orders</span></div>
+          <div class="stat"><b id="conversion">0%</b><span>View → order</span></div>
+        </div>
+        <h3 style="margin-top:16px">Branch</h3>
+        <div class="field"><label>Active branch</label>
+          <select id="branchSelect">
+            <option>Main Branch</option><option>North Branch</option><option>South Branch</option>
+          </select>
+        </div>
+      </section>
+      <section class="card" style="padding:16px;grid-column:1/-1">
+        <h3>Pickup Queue</h3>
+        <div id="pickupQueue"><p style="color:var(--muted)">No pickup orders yet.</p></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+
+<div class="subscription-modal" id="subscriptionModal" role="dialog" aria-modal="true" aria-labelledby="subscriptionTitle">
+  <div class="drawer-head">
+    <div>
+      <h3 id="subscriptionTitle">Continue Menu Orbit</h3>
+      <small style="color:var(--muted)">Choose how you want to continue after the free trial.</small>
+    </div>
+    <button class="icon-btn" id="closeSubscription" type="button" aria-label="Close subscription options">✕</button>
+  </div>
+
+  <div class="plan-card recommended">
+    <b>Recommended — Monthly Subscription</b>
+    <div class="plan-price">₱3,500 <small style="font-size:12px;color:var(--muted)">/ month</small></div>
+    <ul>
+      <li>Continue using the interactive Menu Orbit</li>
+      <li>QR menu link and hosting</li>
+      <li>Basic analytics and owner controls</li>
+      <li>Minor menu updates and technical support</li>
+    </ul>
+    <button class="btn primary" style="width:100%" id="requestMonthly" type="button">Request Monthly Subscription</button>
+  </div>
+
+  <div class="plan-card">
+    <b>Full Setup Option</b>
+    <div class="plan-price">₱12,000 <small style="font-size:12px;color:var(--muted)">setup</small></div>
+    <p style="color:var(--muted);font-size:13px;line-height:1.5;margin:6px 0 12px">Then ₱1,500/month for agreed hosting, maintenance, and support.</p>
+    <button class="btn" style="width:100%" id="requestFullSetup" type="button">Request Full Setup</button>
+  </div>
+
+  <div class="subscription-note" id="subscriptionMessage" aria-live="polite">
+    Demo note: connect these buttons to your real payment, checkout, or contact link before using this with paying clients.
+  </div>
+</div>
+
+<div class="trial-expired" id="trialExpired" aria-live="assertive">
+  <div class="expired-card">
+    <div class="expired-icon">⏳</div>
+    <h2>Your 14-Day Free Trial Has Ended</h2>
+    <p>Thank you for trying Menu Orbit. Continue your subscription to keep the interactive menu, QR access, cart, pickup ordering, analytics, and owner controls active.</p>
+    <div class="expired-meta">
+      <div><b id="trialStartedOn">—</b><span>Trial started</span></div>
+      <div><b id="trialEndedOn">—</b><span>Trial ended</span></div>
+    </div>
+    <button class="btn primary" style="width:100%;font-size:16px;padding:14px" id="continueSubscription" type="button">Continue Subscription</button>
+    <p style="font-size:11px;margin-top:12px">Portfolio concept demo — subscription/payment backend is not connected yet.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+  {
+    id:1,name:"Espresso",price:155,cat:"Espresso",available:true,
+    image:"https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:2,name:"Cappuccino",price:165,cat:"Hot Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:3,name:"Caramel Macchiato",price:190,cat:"Signature",available:true,
+    image:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:4,name:"Iced Caffe Latte",price:165,cat:"Iced Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:5,name:"Caffe Mocha",price:180,cat:"Hot Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:6,name:"Cold Brew",price:170,cat:"Iced Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:7,name:"Matcha Latte",price:180,cat:"Non-Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:8,name:"Iced Caramel Macchiato",price:190,cat:"Signature",available:true,
+    image:"https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:9,name:"Butter Croissant",price:110,cat:"Pastries",available:true,
+    image:"https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:10,name:"Chocolate Muffin",price:125,cat:"Pastries",available:true,
+    image:"https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=700&q=85"
+  }
+];
+
+let state = JSON.parse(localStorage.getItem("starbucksOrbitState") || "{}");
+state.analytics ||= {views:0,adds:0,orders:0};
+state.cart ||= [];
+state.orders ||= [];
+state.availability ||= {};
+state.branch ||= "Main Branch";
+
+// 14-day trial starts on first launch of this browser.
+const TRIAL_LENGTH_MS = 14 * 24 * 60 * 60 * 1000;
+if (!state.trialStartedAt) {
+  state.trialStartedAt = Date.now();
+}
+state.subscriptionActive ||= false;
+
+let angleOffset = 0;
+let selectedCategory = "All";
+let selectedProduct = null;
+let customization = {size:"M",temp:"Iced",milk:"Regular",extra:"None"};
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function save(){ localStorage.setItem("starbucksOrbitState",JSON.stringify(state)); }
+function peso(n){return "₱"+Number(n).toLocaleString();}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
+function isAvailable(p){ return state.availability[p.id] !== false && p.available; }
+
+const cats = ["All",...new Set(products.map(p=>p.cat))];
+function renderCategories(){
+  $("#categories").innerHTML = cats.map(c=>`<button class="chip ${c===selectedCategory?'active':''}" data-cat="${c}">${c}</button>`).join("");
+  $$("#categories .chip").forEach(b=>b.onclick=()=>{selectedCategory=b.dataset.cat;renderCategories();renderOrbit();});
+}
+
+function visibleProducts(){
+  return products.filter(p=>selectedCategory==="All"||p.cat===selectedCategory);
+}
+function renderOrbit(){
+  const orbit=$("#orbit");
+  orbit.querySelectorAll(".product").forEach(n=>n.remove());
+  const list=visibleProducts();
+  const w=orbit.clientWidth,h=orbit.clientHeight;
+  const rx=Math.min(w*.39,230), ry=Math.min(h*.36,170);
+  list.forEach((p,i)=>{
+    const a=(i/list.length)*Math.PI*2+angleOffset;
+    const x=w/2+Math.cos(a)*rx, y=h/2+Math.sin(a)*ry;
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="product"+(isAvailable(p)?"":" sold");
+    b.style.left=x+"px";b.style.top=y+"px";
+    b.innerHTML=`${!isAvailable(p)?'<span class="sold-badge">SOLD OUT</span>':''}<img class="product-photo" src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'"><strong>${p.name}</strong><span>${peso(p.price)}</span>`;
+    b.addEventListener("click",(e)=>{e.stopPropagation();openProduct(p);});
+    b.addEventListener("pointerdown",(e)=>e.stopPropagation());
+    orbit.appendChild(b);
+  });
+}
+
+function optionButtons(id,options,key){
+  const el=$(id);el.innerHTML=options.map(o=>`<button class="option ${customization[key]===o?'active':''}" data-v="${o}">${o}</button>`).join("");
+  [...el.children].forEach(b=>b.onclick=()=>{customization[key]=b.dataset.v;optionButtons(id,options,key);});
+}
+
+
+let re
