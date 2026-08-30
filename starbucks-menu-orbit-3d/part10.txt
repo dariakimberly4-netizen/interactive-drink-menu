@@ -1,0 +1,92 @@
+ item is currently sold out.");return;}
+  selectedProduct=p;
+  state.analytics.views++;save();updateAnalytics();
+  customization={size:"M",temp:p.cat==="Iced Coffee"?"Iced":"Hot",milk:"Regular",extra:"None"};
+  $("#modalName").textContent=p.name;$("#modalPrice").textContent="";updateRealProduct(p);
+  optionButtons("#sizeOptions",["S","M","L"],"size");
+  optionButtons("#tempOptions",["Hot","Iced"],"temp");
+  optionButtons("#milkOptions",["Regular","Oat","Soy"],"milk");
+  optionButtons("#extraOptions",["None","+ Shot","+ Syrup"],"extra");
+  $("#productModal").classList.add("open");$("#backdrop").classList.add("open");
+}
+
+let productRotateY = -18;
+let productTiltX = 10;
+let dragging3D = false;
+let last3DX = 0;
+let last3DY = 0;
+
+function apply3DProductTransform(){
+  $("#realPhotoModel").style.transform = `rotateX(${productTiltX}deg) rotateY(${productRotateY}deg)`;
+}
+
+function reset3DProductPosition(){
+  productRotateY = -18;
+  productTiltX = 10;
+  apply3DProductTransform();
+}
+
+function updateRealProduct(p){
+  $("#heroImage").src = p.image;
+  $("#heroImage").alt = p.name;
+  $("#pricePill").textContent = peso(p.price);
+  $("#photoName").textContent = p.name;
+
+  const model = $("#realPhotoModel");
+  model.classList.remove("pop-in");
+  model.style.transform = "rotateX(76deg) rotateY(0deg) scale(.72) translateY(48px)";
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      model.classList.add("pop-in");
+      reset3DProductPosition();
+      setTimeout(() => model.classList.remove("pop-in"), 800);
+    });
+  });
+}
+
+function closeProduct(){
+  $("#productModal").classList.remove("open");
+  $("#backdrop").classList.remove("open");
+}
+
+$("#addToCart").onclick=()=>{
+  if(!selectedProduct)return;
+  let add=0;
+  if(customization.size==="L") add+=25;
+  if(customization.milk!=="Regular") add+=20;
+  if(customization.extra==="+ Shot") add+=35;
+  if(customization.extra==="+ Syrup") add+=20;
+  const item={...selectedProduct,unitPrice:selectedProduct.price+add,custom:{...customization},qty:1};
+  const sig=item.id+JSON.stringify(item.custom);
+  const existing=state.cart.find(x=>x.sig===sig);
+  if(existing) existing.qty++;
+  else state.cart.push({...item,sig});
+  state.analytics.adds++;save();renderCart();updateAnalytics();closeProduct();toast("Added to cart");
+};
+
+function renderCart(){
+  $("#cartCount").textContent=state.cart.reduce((a,x)=>a+x.qty,0);
+  $("#cartItems").innerHTML=state.cart.length?state.cart.map((x,i)=>`
+    <div class="cart-item">
+      <div><b>${x.name}</b><br><small>${x.custom.size} • ${x.custom.temp} • ${x.custom.milk} • ${x.custom.extra}</small><br><small>${peso(x.unitPrice)} × ${x.qty}</small></div>
+      <div><button class="icon-btn" onclick="changeQty(${i},-1)">−</button> <button class="icon-btn" onclick="changeQty(${i},1)">+</button></div>
+    </div>`).join(""):'<p style="color:var(--muted)">Your cart is empty.</p>';
+  const total=state.cart.reduce((a,x)=>a+x.unitPrice*x.qty,0);
+  $("#cartTotal").textContent=peso(total);
+}
+window.changeQty=(i,d)=>{state.cart[i].qty+=d;if(state.cart[i].qty<=0)state.cart.splice(i,1);save();renderCart();};
+
+$("#placeOrder").onclick=()=>{
+  if(!state.cart.length){toast("Add an item first.");return;}
+  const name=$("#customerName").value.trim()||"Guest";
+  const total=state.cart.reduce((a,x)=>a+x.unitPrice*x.qty,0);
+  const order={
+    id:"SB-"+String(Date.now()).slice(-6),
+    name,time:$("#pickupTime").value,total,
+    items:JSON.parse(JSON.stringify(state.cart)),
+    status:"Received",created:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
+  };
+  state.orders.unshift(order);state.analytics.orders++;state.cart=[];save();
+  renderCart();renderOrders();updateAnalytics();
+  $("#orderReceipt").innerHTML=`<div class="order-box"><b>Order ${order.id}</b><p style="color:var(--muted)">Received for ${order.time}. Show this number at pickup.</p><div
