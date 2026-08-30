@@ -1,199 +1,136 @@
-der:1px solid var(--line);border-radius:18px;padding:15px;margin-top:12px;background:#0a291f
+acity:1;pointer-events:auto}
+
+  .product-hero.reveal-3d .flat-preview{
+    opacity:0;
+    transform:translate(-50%,-50%) rotateY(-78deg) scale(.84);
   }
-  .plan-card.recommended{border-color:#318c68;background:#0d3327}
-  .plan-price{font-size:25px;font-weight:900;margin:5px 0}
-  .plan-card ul{padding-left:18px;color:var(--muted);font-size:13px;line-height:1.6}
-  .subscription-note{
-    margin-top:12px;padding:11px;border-radius:14px;
-    background:#10251e;color:var(--muted);font-size:12px;line-height:1.5
+  .product-hero.reveal-3d .product-viewer{
+    opacity:1;
+    transform:scale(1);
+  }
+  .product-hero.reveal-3d .reveal-price{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .flat-preview{
+    display:none;
+  }
+  .flat-preview img{
+    width:100%;height:154px;object-fit:cover;display:block;
+  }
+  .flat-preview .flat-info{
+    padding:11px 12px;
+  }
+  .flat-preview .flat-title{
+    font-size:13px;font-weight:800;line-height:1.2;
+  }
+  .flat-preview .flat-sub{
+    margin-top:6px;font-size:11px;color:var(--muted);
+  }
+  .reveal-price{
+    display:none;
   }
 
-  @media(max-width:900px){
-    .hero{grid-template-columns:1fr}
-    .features{grid-template-columns:1fr 1fr}
-    .admin-grid{grid-template-columns:1fr}
-    .orbit-card{min-height:560px}
-    .orbit{height:440px}
+  .product-hero{
+    height:320px;border-radius:20px;position:relative;overflow:hidden;
+    background:
+      radial-gradient(circle at 50% 22%,rgba(19,91,64,.52),rgba(8,42,32,.95) 64%,#03130e),
+      linear-gradient(180deg,#0a291f,#071d16);
+    perspective:1100px;
   }
-  @media(max-width:560px){
-    .app{padding:10px 10px 80px}
-    .topbar{align-items:flex-start}
-    .brand p{display:none}
-    .btn{padding:9px 10px;font-size:12px}
-    .orbit-card{padding:13px;min-height:520px}
-    .orbit{height:405px}
-    .center{width:118px;height:118px}
-    .center b{font-size:14px}
-    .product{width:98px;height:98px}
-    .product img.product-photo{width:52px;height:52px}
-    .product strong{font-size:10px}
-    .product span{font-size:10px}
-    .features{grid-template-columns:1fr 1fr}
-    .stat-grid{grid-template-columns:1fr 1fr}
+  .product-hero:after{
+    content:"";position:absolute;left:50%;bottom:18px;width:180px;height:28px;
+    transform:translateX(-50%);
+    border-radius:50%;
+    background:radial-gradient(ellipse at center,rgba(0,0,0,.42),rgba(0,0,0,0) 72%);
+    filter:blur(5px);
+    pointer-events:none;
   }
-</style>
-</head>
-<body>
-<div class="app">
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">★</div>
-      <div>
-        <h1>STARBUCKS MENU ORBIT</h1>
-        <p>Advanced interactive ordering concept demo</p><p style="font-size:10px;opacity:.75;margin-top:2px">Independent portfolio concept — not an official Starbucks product</p>
-      </div>
-    </div>
-    <div class="actions">
-      <div class="trial-badge" id="trialBadge" aria-live="polite">🎁 Free Trial: 14d</div>
-      <button class="btn ghost" id="branchBtn">📍 Main Branch</button>
-      <button class="btn" id="adminBtn">⚙️ Owner</button>
-      <button class="btn primary" id="cartBtn">🛒 Cart <span id="cartCount">0</span></button>
-    </div>
-  </div>
-
-  <div class="hero">
-    <section class="card orbit-card">
-      <div class="section-title">
-        <div><h2>Explore the Orbit</h2><small>Green Orbit • Tap a circle to open a 3D product popup</small><br><small style="opacity:.65">Photographic menu concept; product imagery is illustrative.</small></div>
-        <button class="btn" id="promoBtn">✨ Promo</button>
-      </div>
-      <div class="category-row" id="categories"></div>
-      <div class="orbit" id="orbit">
-        <div class="center"><div><b>STARBUCKS<br>MENU ORBIT</b><span>tap a circle to open the product in 3D</span></div></div>
-
-        <div class="orbit-reveal" id="orbitReveal" aria-live="polite">
-          <button class="btn reveal-back" id="revealBack" type="button">← Back to Orbit</button>
-          <div class="reveal-actions">
-            <button class="btn" id="revealCustomize" type="button">Customize</button>
-            <button class="btn primary" id="revealAdd" type="button">Add to Cart</button>
-          </div>
-
-          <div class="reveal-stage">
-            <div class="reveal-flat" id="revealFlat">
-              <img id="revealFlatImg" alt="Flat product">
-            </div>
-
-            <div class="reveal-3d-wrap" id="reveal3DWrap">
-              <div class="mini-3d-cup" id="mini3DCup">
-                <div class="front">
-                  <div class="liquid" id="revealLiquid"></div>
-                  <div class="art" id="revealArt"></div>
-                </div>
-                <div class="back">
-                  <div class="liquid" id="revealLiquidBack"></div>
-                </div>
-                <div class="side-l"></div>
-                <div class="side-r"></div>
-                <div class="top"></div>
-              </div>
-            </div>
-
-            <div class="reveal-price-box">
-              <strong id="revealPriceText">₱0</strong>
-              <span id="revealNameText">Product</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <aside class="card side">
-      <div class="section-title"><h2>Live Menu Intelligence</h2><small>Demo analytics</small></div>
-      <div class="stat-grid">
-        <div class="stat"><b id="visits">128</b><span>Menu visits</span></div>
-        <div class="stat"><b id="views">0</b><span>Product views</span></div>
-        <div class="stat"><b id="adds">0</b><span>Cart additions</span></div>
-        <div class="stat"><b id="orders">0</b><span>Pickup orders</span></div>
-      </div>
-      <div class="promo">
-        <h3>☕ Featured Drink + Pastry</h3>
-        <p>Save ₱25 when paired with any pastry. Promotions can be scheduled and highlighted inside the Orbit.</p>
-      </div>
-      <div class="mini-list">
-        <div class="mini"><div><b>🔥 Trending</b><br><small>Caramel Macchiato</small></div><span>24 views</span></div>
-        <div class="mini"><div><b>⏱ Scheduled Menu</b><br><small>Breakfast items</small></div><span class="pill">Active</span></div>
-        <div class="mini"><div><b>📦 Pickup Queue</b><br><small>Live order status</small></div><span id="queueCount">0</span></div>
-      </div>
-    </aside>
-  </div>
-
-  <section class="features">
-    <div class="feature"><b>🌀 Interactive Orbit</b><span>Swipe, drag, and tap product navigation.</span></div>
-    <div class="feature"><b>🥛 Drink Customization</b><span>Size, temperature, milk, syrup, extra shots.</span></div>
-    <div class="feature"><b>🛒 Smart Cart</b><span>Quantities, customizations, totals, and order review.</span></div>
-    <div class="feature"><b>📦 Pickup Ordering</b><span>Customer name, pickup time, and order reference.</span></div>
-    <div class="feature"><b>🚦 Sold-Out Controls</b><span>Owner can instantly hide unavailable items.</span></div>
-    <div class="feature"><b>📊 Analytics</b><span>Views, cart adds, orders, and popular products.</span></div>
-    <div class="feature"><b>🏪 Multi-Branch Ready</b><span>Switch menu, price, and availability by branch.</span></div>
-    <div class="feature"><b>🎁 Promos & Bundles</b><span>Seasonal offers, combos, and featured drinks.</span></div>
-  </section>
-</div>
-
-<div class="backdrop" id="backdrop"></div>
-
-<div class="modal" id="productModal">
-  <div class="drawer-head">
-    <div><h3 id="modalName">Drink</h3><small id="modalPrice" style="color:var(--accent2)"></small></div>
-    <button class="icon-btn" id="closeProduct">✕</button>
-  </div>
-  <div class="product-hero" id="productHero">
-    <span class="viewer-hint">3D product popup • drag to rotate</span>
-    <div class="reveal-price" id="revealPrice">₱0</div>
-    <div class="flat-preview" id="flatPreview">
-      <img id="flatPreviewImage" alt="Selected product preview">
-      <div class="flat-info">
-        <div class="flat-title" id="flatPreviewName">Product</div>
-        <div class="flat-sub">Tap a product and it reveals in 3D</div>
-      </div>
-    </div>
-    <div class="product-viewer" id="productViewer">
-      <div class="display-shadow"></div>
-
-      <div class="drink-model hot" id="drinkModel">
-        <div class="cup">
-          <div class="cup-front">
-            <div class="fill" id="drinkFill"></div>
-            <div class="foam" id="drinkFoam"></div>
-            <div class="front-art" id="frontArt"></div>
-            <div class="product-tag" id="productTag">DRINK</div>
-          </div>
-          <div class="cup-back"><div class="fill" id="drinkFillBack"></div><div class="foam" id="drinkFoamBack"></div></div>
-          <div class="cup-left"></div>
-          <div class="cup-right"></div>
-          <div class="cup-top"></div>
-          <div class="lid"></div>
-          <div class="straw" id="drinkStraw"></div>
-        </div>
-      </div>
-
-      <div class="pastry-model" id="pastryModel" style="display:none">
-        <div class="pastry-plate"></div>
-        <div class="pastry-piece" id="pastryPiece"></div>
-        <div class="pastry-name" id="pastryName">PASTRY</div>
-      </div>
-    </div>
-  </div>
-  <div class="field"><label>Size</label><div class="option-row" id="sizeOptions"></div></div>
-  <div class="field"><label>Temperature</label><div class="option-row" id="tempOptions"></div></div>
-  <div class="field"><label>Milk</label><div class="option-row" id="milkOptions"></div></div>
-  <div class="field"><label>Extras</label><div class="option-row" id="extraOptions"></div></div>
-  <button class="btn primary" style="width:100%;margin-top:10px" id="addToCart">Add to Cart</button>
-</div>
-
-<div class="drawer" id="cartDrawer">
-  <div class="drawer-head">
-    <h3>Your Pickup Order</h3>
-    <button class="icon-btn" id="closeCart">✕</button>
-  </div>
-  <div id="cartItems"></div>
-  <div class="total"><span>Total</span><span id="cartTotal">₱0</span></div>
-  <div class="field"><label>Name</label><input id="customerName" placeholder="Customer name"></div>
-  <div class="field"><label>Pickup time</label>
-    <select id="pickupTime">
-      <option>ASAP (15–20 min)</option>
-      <option>30 minutes</option>
-      <option>45 minutes</option>
-      <option>1 hour</option>
-    </select>
-  </div>
-  <button class=
+  .viewer-hint{
+    position:absolute;top:10px;right:10px;z-index:3;
+    font-size:11px;padding:6px 8px;border-radius:999px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(212,233,226,.18);color:#d4e9e2
+  }
+  .product-viewer{
+    position:absolute;inset:0;
+    display:grid;place-items:center;
+    transform-style:preserve-3d;
+    cursor:grab;touch-action:none;
+    opacity:1;
+    transform:scale(1);
+    transition:transform .18s ease-out;
+  }
+  .product-viewer.dragging{cursor:grabbing}
+  .real-photo-model{
+    position:relative;
+    width:min(76%,250px);height:250px;
+    transform-style:preserve-3d;
+    will-change:transform;
+    transition:transform .18s ease-out;
+  }
+  .real-photo-model.pop-in{
+    animation:photoPop3D .75s cubic-bezier(.2,.85,.2,1);
+  }
+  @keyframes photoPop3D{
+    0%{
+      transform:rotateX(76deg) rotateY(0deg) scale(.72) translateY(48px);
+    }
+    55%{
+      transform:rotateX(2deg) rotateY(-24deg) scale(1.03) translateY(-4px);
+    }
+    100%{
+      transform:rotateX(10deg) rotateY(-18deg) scale(1) translateY(0);
+    }
+  }
+  .photo-card{
+    position:absolute;inset:0;
+    border-radius:28px;
+    overflow:hidden;
+    background:linear-gradient(180deg,#ffffff,#e9eceb 100%);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:
+      0 30px 60px rgba(0,0,0,.34),
+      inset 0 0 0 1px rgba(255,255,255,.18);
+    transform:translateZ(34px);
+  }
+  .photo-card img{
+    width:100%;height:100%;object-fit:cover;display:block;
+  }
+  .photo-card:after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(255,255,255,.24),rgba(255,255,255,0) 38%,rgba(0,0,0,.13) 100%);
+    pointer-events:none;
+  }
+  .photo-side-left,.photo-side-right,.photo-side-top,.photo-side-bottom{
+    position:absolute;
+    background:linear-gradient(180deg,#d5ddda,#9ca7a2 100%);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  }
+  .photo-side-left,.photo-side-right{
+    top:10px;bottom:10px;width:34px;border-radius:16px;
+  }
+  .photo-side-left{
+    left:-3px;
+    transform:rotateY(-90deg) translateZ(17px);
+    transform-origin:left center;
+  }
+  .photo-side-right{
+    right:-3px;
+    transform:rotateY(90deg) translateZ(17px);
+    transform-origin:right center;
+  }
+  .photo-side-top,.photo-side-bottom{
+    left:10px;right:10px;height:34px;border-radius:16px;
+  }
+  .photo-side-top{
+    top:-3px;
+    transform:rotateX(90deg) translateZ(17px);
+    transform-origin:center top;
+  }
+  .photo-side-bottom{
+    bottom:-3px;
+    transform:rotateX(-90deg) translateZ(17px);
+    transform-origin:center bottom;
+  }
+  .photo-back{
+  
