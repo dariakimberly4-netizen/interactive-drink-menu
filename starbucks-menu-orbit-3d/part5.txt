@@ -16,7 +16,7 @@ function showOrbitReveal(p){
 
   $("#revealFlatImg").src = p.image;
   $("#revealFlatImg").alt = p.name;
-  $("#revealArt").style.backgroundImage = `url("${p.image}")`;
+  $("#revealArt").style.backgroundImage = "none";
   $("#revealPriceText").textContent = peso(p.price);
   $("#revealNameText").textContent = p.name;
 
@@ -26,8 +26,6 @@ function showOrbitReveal(p){
   $("#revealLiquidBack").style.setProperty("--rtop",pal.top);
   $("#revealLiquidBack").style.setProperty("--rbottom",pal.bottom);
 
-  // First show the selected product as a completely flat image on the surface.
-  // Then rise it into the 3D cup and reveal the price.
   orbitRevealTimer = setTimeout(()=>panel.classList.add("revealed"),650);
 
   state.analytics.views++;
@@ -105,8 +103,8 @@ function update3DProduct(p){
     drinkModel.classList.toggle("iced", palette.iced);
     drinkModel.classList.toggle("hot", !palette.iced);
 
-    $("#frontArt").style.backgroundImage = `url("${p.image}")`;
-    $("#productTag").textContent = shortTag(p.name);
+    $("#frontArt").style.backgroundImage = "none";
+    $("#productTag").textContent = "";
 
     const fillFront = $("#drinkFill");
     const fillBack = $("#drinkFillBack");
