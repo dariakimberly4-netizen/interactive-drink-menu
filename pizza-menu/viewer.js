@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.min.js';
+import { SoftwareRenderer } from './software-renderer.js';
 
 const stage = document.getElementById('stage');
 const status = document.getElementById('stage-status');
@@ -7,10 +8,8 @@ let renderer;
 try {
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
 } catch (error) {
-  window.pizza3DReady = true;
-  status.textContent = 'This browser could not start 3D. Try opening in Chrome. The menu and cart still work.';
-  document.querySelector('.showroom').classList.add('has-error');
-  throw error;
+  renderer = new SoftwareRenderer();
+  stage.dataset.renderer = 'software-3d';
 }
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
