@@ -1,213 +1,92 @@
-vealProduct = null;
-let orbitRevealTimer = null;
-
-function revealPalette(p){
-  return productPalette(p.name,p.cat);
-}
-
-function showOrbitReveal(p){
-  if(!isAvailable(p)){toast("This item is currently sold out.");return;}
-  revealProduct = p;
-  clearTimeout(orbitRevealTimer);
-
-  const panel = $("#orbitReveal");
-  panel.classList.remove("revealed");
-  panel.classList.add("open");
-
-  $("#revealFlatImg").src = p.image;
-  $("#revealFlatImg").alt = p.name;
-  $("#revealArt").style.backgroundImage = "none";
-  $("#revealPriceText").textContent = peso(p.price);
-  $("#revealNameText").textContent = p.name;
-
-  const pal = revealPalette(p);
-  $("#revealLiquid").style.setProperty("--rtop",pal.top);
-  $("#revealLiquid").style.setProperty("--rbottom",pal.bottom);
-  $("#revealLiquidBack").style.setProperty("--rtop",pal.top);
-  $("#revealLiquidBack").style.setProperty("--rbottom",pal.bottom);
-
-  orbitRevealTimer = setTimeout(()=>panel.classList.add("revealed"),650);
-
-  state.analytics.views++;
-  save();
-  updateAnalytics();
-}
-
-function closeOrbitReveal(){
-  clearTimeout(orbitRevealTimer);
-  $("#orbitReveal").classList.remove("revealed","open");
-  revealProduct = null;
-}
-
-function openProduct(p){
-  if(!isAvailable(p)){toast("This item is currently sold out.");return;}
-  selectedProduct=p;
-  state.analytics.views++;save();updateAnalytics();
-  customization={size:"M",temp:p.cat==="Iced Coffee"?"Iced":"Hot",milk:"Regular",extra:"None"};
-  $("#modalName").textContent=p.name;$("#modalPrice").textContent=peso(p.price);update3DProduct(p);$("#productHero").classList.add("reveal-3d");
-  optionButtons("#sizeOptions",["S","M","L"],"size");
-  optionButtons("#tempOptions",["Hot","Iced"],"temp");
-  optionButtons("#milkOptions",["Regular","Oat","Soy"],"milk");
-  optionButtons("#extraOptions",["None","+ Shot","+ Syrup"],"extra");
-  $("#productModal").classList.add("open");$("#backdrop").classList.add("open");
-}
-
-let productRotateY = -18;
-let productTiltX = 4;
-let dragging3D = false;
-let last3DX = 0;
-let last3DY = 0;
-
-function shortTag(name){
-  const cleaned = name.replace(/[^A-Za-z0-9 ]/g,"").trim().toUpperCase();
-  return cleaned.length > 11 ? cleaned.slice(0,11) : cleaned;
-}
-
-function productPalette(name, cat){
-  const key = (name + " " + cat).toLowerCase();
-  if (key.includes("espresso")) return {top:"#6f472d", bottom:"#2f1a10", foam:false, iced:false};
-  if (key.includes("caramel")) return {top:"#c58a4d", bottom:"#6e3d1f", foam:true, iced:key.includes("iced")};
-  if (key.includes("mocha")) return {top:"#8b5a45", bottom:"#4a2a22", foam:true, iced:false};
-  if (key.includes("matcha")) return {top:"#8dbb70", bottom:"#4e6e38", foam:true, iced:false};
-  if (key.includes("cold brew")) return {top:"#725238", bottom:"#23150f", foam:false, iced:true};
-  if (key.includes("latte")) return {top:"#cda378", bottom:"#8b593a", foam:true, iced:key.includes("iced")};
-  if (key.includes("cappuccino")) return {top:"#d2b08b", bottom:"#7a4a2d", foam:true, iced:false};
-  return {top:"#b37b55", bottom:"#68402a", foam:true, iced:cat==="Iced Coffee"};
-}
-
-function reset3DProductPosition(){
-  productRotateY = -18;
-  productTiltX = 4;
-  apply3DProductTransform();
-}
-
-function apply3DProductTransform(){
-  const drink = $("#drinkModel");
-  const pastry = $("#pastryModel");
-  const target = (pastry.style.display === "none") ? drink : pastry;
-  target.style.transform = `rotateX(${productTiltX}deg) rotateY(${productRotateY}deg)`;
-}
-
-function update3DProduct(p){
-  const isPastry = p.cat === "Pastries";
-  const palette = productPalette(p.name, p.cat);
-
-  $("#drinkModel").style.display = isPastry ? "none" : "block";
-  $("#pastryModel").style.display = isPastry ? "block" : "none";
-
-  if (isPastry){
-    $("#pastryPiece").style.backgroundImage = `url("${p.image}")`;
-    $("#pastryName").textContent = shortTag(p.name);
-  } else {
-    const drinkModel = $("#drinkModel");
-    drinkModel.classList.toggle("iced", palette.iced);
-    drinkModel.classList.toggle("hot", !palette.iced);
-
-    $("#frontArt").style.backgroundImage = "none";
-    $("#productTag").textContent = "";
-
-    const fillFront = $("#drinkFill");
-    const fillBack = $("#drinkFillBack");
-    fillFront.style.setProperty("--drinkTop", palette.top);
-    fillFront.style.setProperty("--drinkBottom", palette.bottom);
-    fillBack.style.setProperty("--drinkTop", palette.top);
-    fillBack.style.setProperty("--drinkBottom", palette.bottom);
-
-    $("#drinkFoam").style.display = palette.foam ? "block" : "none";
-    $("#drinkFoamBack").style.display = palette.foam ? "block" : "none";
+line-height:1.55;margin:0 auto 18px;max-width:430px}
+  .expired-meta{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0
+  }
+  .expired-meta div{
+    border:1px solid var(--line);background:#08251c;border-radius:16px;padding:12px
+  }
+  .expired-meta b{display:block;font-size:13px}
+  .expired-meta span{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+  .subscription-modal{
+    position:fixed;z-index:520;left:50%;top:50%;
+    width:min(560px,calc(100vw - 24px));max-height:88vh;overflow:auto;
+    transform:translate(-50%,-48%) scale(.98);
+    padding:20px;border-radius:24px;
+    background:#071d16;border:1px solid #2b795d;
+    box-shadow:0 30px 90px rgba(0,0,0,.62);
+    opacity:0;pointer-events:none;transition:.2s
+  }
+  .subscription-modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+  .plan-card{
+    border:1px solid var(--line);border-radius:18px;padding:15px;margin-top:12px;background:#0a291f
+  }
+  .plan-card.recommended{border-color:#318c68;background:#0d3327}
+  .plan-price{font-size:25px;font-weight:900;margin:5px 0}
+  .plan-card ul{padding-left:18px;color:var(--muted);font-size:13px;line-height:1.6}
+  .subscription-note{
+    margin-top:12px;padding:11px;border-radius:14px;
+    background:#10251e;color:var(--muted);font-size:12px;line-height:1.5
   }
 
-  reset3DProductPosition();
-}
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr}
+    .features{grid-template-columns:1fr 1fr}
+    .admin-grid{grid-template-columns:1fr}
+    .orbit-card{min-height:560px}
+    .orbit{height:440px}
+  }
+  @media(max-width:560px){
+    .app{padding:10px 10px 80px}
+    .topbar{align-items:flex-start}
+    .brand p{display:none}
+    .btn{padding:9px 10px;font-size:12px}
+    .orbit-card{padding:13px;min-height:520px}
+    .orbit{height:405px}
+    .center{width:118px;height:118px}
+    .center b{font-size:14px}
+    .product{width:98px;height:98px}
+    .product img.product-photo{width:52px;height:52px}
+    .product strong{font-size:10px}
+    .product span{font-size:10px}
+    .features{grid-template-columns:1fr 1fr}
+    .stat-grid{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">★</div>
+      <div>
+        <h1>STARBUCKS MENU ORBIT</h1>
+        <p>Advanced interactive ordering concept demo</p><p style="font-size:10px;opacity:.75;margin-top:2px">Independent portfolio concept — not an official Starbucks product</p>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="trial-badge" id="trialBadge" aria-live="polite">🎁 Free Trial: 14d</div>
+      <button class="btn ghost" id="branchBtn">📍 Main Branch</button>
+      <button class="btn" id="adminBtn">⚙️ Owner</button>
+      <button class="btn primary" id="cartBtn">🛒 Cart <span id="cartCount">0</span></button>
+    </div>
+  </div>
 
+  <div class="hero">
+    <section class="card orbit-card">
+      <div class="section-title">
+        <div><h2>Explore the Orbit</h2><small>Green Orbit • Tap a circle to open a 3D product popup</small><br><small style="opacity:.65">Uses real product pictures in the circles and popup.</small></div>
+        <button class="btn" id="promoBtn">✨ Promo</button>
+      </div>
+      <div class="category-row" id="categories"></div>
+      <div class="orbit" id="orbit">
+        <div class="center"><div><b>STARBUCKS<br>MENU ORBIT</b><span>tap a circle to open the product in 3D</span></div></div>
 
-let revealTimer = null;
+        <div class="orbit-reveal" id="orbitReveal" aria-live="polite">
+          <button class="btn reveal-back" id="revealBack" type="button">← Back to Orbit</button>
+          <div class="reveal-actions">
+            <button class="btn" id="revealCustomize" type="button">Customize</button>
+            <button class="btn primary" id="revealAdd" type="button">Add to Cart</button>
+          </div>
 
-function resetRevealState(){
-  const hero = $("#productHero");
-  hero.classList.remove("reveal-3d");
-  $("#revealPrice").textContent = "₱0";
-}
-
-function start3DReveal(p){
-  clearTimeout(revealTimer);
-  resetRevealState();
-  $("#flatPreviewImage").src = p.image;
-  $("#flatPreviewImage").alt = p.name;
-  $("#flatPreviewName").textContent = p.name;
-  $("#revealPrice").textContent = peso(p.price);
-
-  revealTimer = setTimeout(()=>{
-    $("#productHero").classList.add("reveal-3d");
-  }, 520);
-}
-
-function closeProduct(){ clearTimeout(revealTimer); resetRevealState(); $("#productModal").classList.remove("open");$("#backdrop").classList.remove("open"); }
-
-$("#addToCart").onclick=()=>{
-  if(!selectedProduct)return;
-  let add=0;
-  if(customization.size==="L") add+=25;
-  if(customization.milk!=="Regular") add+=20;
-  if(customization.extra==="+ Shot") add+=35;
-  if(customization.extra==="+ Syrup") add+=20;
-  const item={...selectedProduct,unitPrice:selectedProduct.price+add,custom:{...customization},qty:1};
-  const sig=item.id+JSON.stringify(item.custom);
-  const existing=state.cart.find(x=>x.sig===sig);
-  if(existing) existing.qty++;
-  else state.cart.push({...item,sig});
-  state.analytics.adds++;save();renderCart();updateAnalytics();closeProduct();toast("Added to cart");
-};
-
-function renderCart(){
-  $("#cartCount").textContent=state.cart.reduce((a,x)=>a+x.qty,0);
-  $("#cartItems").innerHTML=state.cart.length?state.cart.map((x,i)=>`
-    <div class="cart-item">
-      <div><b>${x.name}</b><br><small>${x.custom.size} • ${x.custom.temp} • ${x.custom.milk} • ${x.custom.extra}</small><br><small>${peso(x.unitPrice)} × ${x.qty}</small></div>
-      <div><button class="icon-btn" onclick="changeQty(${i},-1)">−</button> <button class="icon-btn" onclick="changeQty(${i},1)">+</button></div>
-    </div>`).join(""):'<p style="color:var(--muted)">Your cart is empty.</p>';
-  const total=state.cart.reduce((a,x)=>a+x.unitPrice*x.qty,0);
-  $("#cartTotal").textContent=peso(total);
-}
-window.changeQty=(i,d)=>{state.cart[i].qty+=d;if(state.cart[i].qty<=0)state.cart.splice(i,1);save();renderCart();};
-
-$("#placeOrder").onclick=()=>{
-  if(!state.cart.length){toast("Add an item first.");return;}
-  const name=$("#customerName").value.trim()||"Guest";
-  const total=state.cart.reduce((a,x)=>a+x.unitPrice*x.qty,0);
-  const order={
-    id:"SB-"+String(Date.now()).slice(-6),
-    name,time:$("#pickupTime").value,total,
-    items:JSON.parse(JSON.stringify(state.cart)),
-    status:"Received",created:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
-  };
-  state.orders.unshift(order);state.analytics.orders++;state.cart=[];save();
-  renderCart();renderOrders();updateAnalytics();
-  $("#orderReceipt").innerHTML=`<div class="order-box"><b>Order ${order.id}</b><p style="color:var(--muted)">Received for ${order.time}. Show this number at pickup.</p><div class="steps"><span class="step active">Received</span><span class="step">Preparing</span><span class="step">Ready</span><span class="step">Completed</span></div></div>`;
-  toast("Pickup order placed");
-};
-
-function updateAnalytics(){
-  $("#views").textContent=state.analytics.views;
-  $("#adds").textContent=state.analytics.adds;
-  $("#orders").textContent=state.analytics.orders;
-  $("#queueCount").textContent=state.orders.filter(o=>o.status!=="Completed").length;
-  $("#adminViews").textContent=state.analytics.views;
-  $("#adminAdds").textContent=state.analytics.adds;
-  $("#adminOrders").textContent=state.analytics.orders;
-  $("#conversion").textContent=(state.analytics.views?Math.round(state.analytics.orders/state.analytics.views*100):0)+"%";
-}
-
-function renderAdminProducts(){
-  $("#adminProducts").innerHTML=products.map(p=>{
-    const on=isAvailable(p);
-    return `<tr><td>${p.name}</td><td>${peso(p.price)}</td><td><button class="btn" onclick="toggleAvail(${p.id})"><span class="pill ${on?'':'off'}">${on?'Available':'Sold Out'}</span></button></td></tr>`
-  }).join("");
-}
-window.toggleAvail=id=>{
-  state.availability[id]=!isAvailable(products.find(p=>p.id===id));save();renderAdminProducts();renderOrbit();toast("Availability updated");
-};
-
-const statuses=["Received","Preparing","Ready","Completed"];
-function renderOrders(){
-  cons
+          <div class="reveal-stage">
+  
