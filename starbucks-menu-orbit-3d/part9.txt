@@ -1,0 +1,98 @@
+st TRIAL_LENGTH_MS = 14 * 24 * 60 * 60 * 1000;
+if (!state.trialStartedAt) {
+  state.trialStartedAt = Date.now();
+}
+state.subscriptionActive ||= false;
+
+let angleOffset = 0;
+let selectedCategory = "All";
+let selectedProduct = null;
+let customization = {size:"M",temp:"Iced",milk:"Regular",extra:"None"};
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function save(){ localStorage.setItem("starbucksOrbitState",JSON.stringify(state)); }
+function peso(n){return "₱"+Number(n).toLocaleString();}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
+function isAvailable(p){ return state.availability[p.id] !== false && p.available; }
+
+const cats = ["All",...new Set(products.map(p=>p.cat))];
+function renderCategories(){
+  $("#categories").innerHTML = cats.map(c=>`<button class="chip ${c===selectedCategory?'active':''}" data-cat="${c}">${c}</button>`).join("");
+  $$("#categories .chip").forEach(b=>b.onclick=()=>{selectedCategory=b.dataset.cat;renderCategories();renderOrbit();});
+}
+
+function visibleProducts(){
+  return products.filter(p=>selectedCategory==="All"||p.cat===selectedCategory);
+}
+function renderOrbit(){
+  const orbit=$("#orbit");
+  orbit.querySelectorAll(".product").forEach(n=>n.remove());
+  const list=visibleProducts();
+  const w=orbit.clientWidth,h=orbit.clientHeight;
+  const rx=Math.min(w*.39,230), ry=Math.min(h*.36,170);
+  list.forEach((p,i)=>{
+    const a=(i/list.length)*Math.PI*2+angleOffset;
+    const x=w/2+Math.cos(a)*rx, y=h/2+Math.sin(a)*ry;
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="product"+(isAvailable(p)?"":" sold");
+    b.style.left=x+"px";b.style.top=y+"px";
+    b.innerHTML=`${!isAvailable(p)?'<span class="sold-badge">SOLD OUT</span>':''}<img class="product-photo" src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'"><strong>${p.name}</strong><span>${peso(p.price)}</span>`;
+    b.addEventListener("click",(e)=>{e.stopPropagation();openProduct(p);});
+    b.addEventListener("pointerdown",(e)=>e.stopPropagation());
+    orbit.appendChild(b);
+  });
+}
+
+function optionButtons(id,options,key){
+  const el=$(id);el.innerHTML=options.map(o=>`<button class="option ${customization[key]===o?'active':''}" data-v="${o}">${o}</button>`).join("");
+  [...el.children].forEach(b=>b.onclick=()=>{customization[key]=b.dataset.v;optionButtons(id,options,key);});
+}
+
+
+let revealProduct = null;
+let orbitRevealTimer = null;
+
+function revealPalette(p){
+  return productPalette(p.name,p.cat);
+}
+
+function showOrbitReveal(p){
+  if(!isAvailable(p)){toast("This item is currently sold out.");return;}
+  revealProduct = p;
+  clearTimeout(orbitRevealTimer);
+
+  const panel = $("#orbitReveal");
+  panel.classList.remove("revealed");
+  panel.classList.add("open");
+
+  $("#revealFlatImg").src = p.image;
+  $("#revealFlatImg").alt = p.name;
+  $("#revealArt").style.backgroundImage = `url("${p.image}")`;
+  $("#revealPriceText").textContent = peso(p.price);
+  $("#revealNameText").textContent = p.name;
+
+  const pal = revealPalette(p);
+  $("#revealLiquid").style.setProperty("--rtop",pal.top);
+  $("#revealLiquid").style.setProperty("--rbottom",pal.bottom);
+  $("#revealLiquidBack").style.setProperty("--rtop",pal.top);
+  $("#revealLiquidBack").style.setProperty("--rbottom",pal.bottom);
+
+  // First show the selected product as a completely flat image on the surface.
+  // Then rise it into the 3D cup and reveal the price.
+  orbitRevealTimer = setTimeout(()=>panel.classList.add("revealed"),650);
+
+  state.analytics.views++;
+  save();
+  updateAnalytics();
+}
+
+function closeOrbitReveal(){
+  clearTimeout(orbitRevealTimer);
+  $("#orbitReveal").classList.remove("revealed","open");
+  revealProduct = null;
+}
+
+function openProduct(p){
+  if(!isAvailable(p)){toast("This
