@@ -3,20 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Menu Orbit Staff Dashboard</title>
+<title>Menu Orbit Staff Login</title>
 <style>
-html,body{margin:0;height:100%;background:#061f17;font-family:system-ui,sans-serif;color:#fff}
-#app{width:100%;height:100%;border:0;display:block}
-.notice{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:10;background:#0d3327;border:1px solid #2b795d;padding:8px 12px;border-radius:999px;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+:root{--bg:#061f17;--panel:#0b2b21;--line:#2b795d;--text:#f5fff9;--muted:#b8d2c5;--accent:#00754a;--accent2:#d4e9e2;--danger:#ef8f8f}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 50% 15%,rgba(0,117,74,.34),transparent 34%),linear-gradient(160deg,#041812,#09251c 60%,#041812);color:var(--text)}
+button,input{font:inherit}
+#loginView{min-height:100%;display:grid;place-items:center;padding:22px}
+.login-card{width:min(430px,100%);background:linear-gradient(180deg,#0d3327,#071d16);border:1px solid var(--line);border-radius:28px;padding:28px;box-shadow:0 30px 90px rgba(0,0,0,.48)}
+.logo{width:68px;height:68px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#0e5e43,#073223);border:1px solid #338969;box-shadow:0 0 0 8px rgba(0,117,74,.10);font-size:28px}
+h1{text-align:center;margin:0;font-size:25px} .sub{text-align:center;color:var(--muted);font-size:13px;line-height:1.5;margin:7px 0 22px}
+.field{display:grid;gap:7px;margin:14px 0}.field label{font-size:12px;color:var(--muted);font-weight:700}.field input{width:100%;padding:13px 14px;border-radius:14px;border:1px solid #245a46;background:#041812;color:#fff;outline:none}.field input:focus{border-color:#48a984;box-shadow:0 0 0 3px rgba(72,169,132,.12)}
+.pass-wrap{position:relative}.pass-wrap input{padding-right:78px}.show-btn{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--accent2);padding:7px 9px;font-size:12px;font-weight:800;cursor:pointer}
+.login-btn{width:100%;border:0;border-radius:15px;padding:13px 15px;margin-top:8px;background:linear-gradient(135deg,#00754a,#2d9a72);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 24px rgba(0,117,74,.24)}
+.login-btn:active{transform:translateY(1px)}
+.error{display:none;margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(239,143,143,.12);border:1px solid rgba(239,143,143,.35);color:#ffd3d3;font-size:12px}.error.show{display:block}
+.demo-note{margin-top:18px;padding-top:15px;border-top:1px solid rgba(212,233,226,.12);color:var(--muted);font-size:11px;line-height:1.45;text-align:center}
+#dashboardView{display:none;height:100%}#dashboardView.open{display:block}#app{width:100%;height:100%;border:0;display:block;background:#061f17}.notice{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:20;background:#0d3327;border:1px solid #2b795d;padding:8px 12px;border-radius:999px;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+@media(max-width:520px){.login-card{padding:22px;border-radius:24px}}
 </style>
 </head>
 <body>
-<div class="notice" id="notice">Opening Staff / Owner Dashboard…</div>
-<iframe id="app" src="./" title="Menu Orbit Staff Dashboard"></iframe>
+<section id="loginView">
+  <form class="login-card" id="loginForm" autocomplete="off">
+    <div class="logo">☕</div>
+    <h1>Staff Login</h1>
+    <p class="sub">Menu Orbit Owner & Staff Dashboard</p>
+    <div class="field">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" inputmode="text" autocomplete="username" placeholder="Enter username" required>
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <div class="pass-wrap">
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required>
+        <button class="show-btn" id="togglePassword" type="button">SHOW</button>
+      </div>
+    </div>
+    <button class="login-btn" type="submit">Sign In</button>
+    <div class="error" id="loginError">Incorrect username or password.</div>
+    <div class="demo-note">Demo staff access. For production use, move authentication to a secure backend instead of GitHub Pages.</div>
+  </form>
+</section>
+
+<section id="dashboardView">
+  <div class="notice" id="notice">Opening Staff / Owner Dashboard…</div>
+  <iframe id="app" title="Menu Orbit Staff Dashboard"></iframe>
+</section>
+
 <script>
+const DEMO_USER='staff';
+const DEMO_PASS='Orbit2026!';
+const loginView=document.getElementById('loginView');
+const dashboardView=document.getElementById('dashboardView');
+const loginForm=document.getElementById('loginForm');
+const errorBox=document.getElementById('loginError');
 const frame=document.getElementById('app');
 const notice=document.getElementById('notice');
-function openDashboard(){
+
+function openDashboardInFrame(){
   try{
     const d=frame.contentWindow.document;
     const btn=d.querySelector('#adminBtn');
@@ -24,16 +69,45 @@ function openDashboard(){
   }catch(e){}
   return false;
 }
-frame.addEventListener('load',()=>{
-  let tries=0;
-  const timer=setInterval(()=>{
-    tries++;
-    if(openDashboard()||tries>50){
-      clearInterval(timer);
-      if(tries>50) notice.textContent='Tap Owner to open the staff dashboard.';
-    }
-  },300);
+
+function startDashboard(){
+  loginView.style.display='none';
+  dashboardView.classList.add('open');
+  frame.src='./?staff=1';
+  frame.addEventListener('load',()=>{
+    let tries=0;
+    const timer=setInterval(()=>{
+      tries++;
+      if(openDashboardInFrame()||tries>60){
+        clearInterval(timer);
+        if(tries>60) notice.textContent='Tap Owner to open the staff dashboard.';
+      }
+    },300);
+  },{once:true});
+}
+
+loginForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  const user=document.getElementById('username').value.trim();
+  const pass=document.getElementById('password').value;
+  if(user===DEMO_USER && pass===DEMO_PASS){
+    errorBox.classList.remove('show');
+    sessionStorage.setItem('menuOrbitStaffLoggedIn','1');
+    startDashboard();
+  }else{
+    errorBox.classList.add('show');
+  }
 });
+
+document.getElementById('togglePassword').addEventListener('click',()=>{
+  const p=document.getElementById('password');
+  const btn=document.getElementById('togglePassword');
+  const show=p.type==='password';
+  p.type=show?'text':'password';
+  btn.textContent=show?'HIDE':'SHOW';
+});
+
+if(sessionStorage.getItem('menuOrbitStaffLoggedIn')==='1') startDashboard();
 </script>
 </body>
 </html>
