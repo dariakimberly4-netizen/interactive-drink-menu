@@ -1,0 +1,86 @@
+u updates and technical support</li>
+    </ul>
+    <button class="btn primary" style="width:100%" id="requestMonthly" type="button">Request Monthly Subscription</button>
+  </div>
+
+  <div class="plan-card">
+    <b>Full Setup Option</b>
+    <div class="plan-price">₱12,000 <small style="font-size:12px;color:var(--muted)">setup</small></div>
+    <p style="color:var(--muted);font-size:13px;line-height:1.5;margin:6px 0 12px">Then ₱1,500/month for agreed hosting, maintenance, and support.</p>
+    <button class="btn" style="width:100%" id="requestFullSetup" type="button">Request Full Setup</button>
+  </div>
+
+  <div class="subscription-note" id="subscriptionMessage" aria-live="polite">
+    Demo note: connect these buttons to your real payment, checkout, or contact link before using this with paying clients.
+  </div>
+</div>
+
+<div class="trial-expired" id="trialExpired" aria-live="assertive">
+  <div class="expired-card">
+    <div class="expired-icon">⏳</div>
+    <h2>Your 14-Day Free Trial Has Ended</h2>
+    <p>Thank you for trying Menu Orbit. Continue your subscription to keep the interactive menu, QR access, cart, pickup ordering, analytics, and owner controls active.</p>
+    <div class="expired-meta">
+      <div><b id="trialStartedOn">—</b><span>Trial started</span></div>
+      <div><b id="trialEndedOn">—</b><span>Trial ended</span></div>
+    </div>
+    <button class="btn primary" style="width:100%;font-size:16px;padding:14px" id="continueSubscription" type="button">Continue Subscription</button>
+    <p style="font-size:11px;margin-top:12px">Portfolio concept demo — subscription/payment backend is not connected yet.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+  {
+    id:1,name:"Espresso",price:155,cat:"Espresso",available:true,
+    image:"https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:2,name:"Cappuccino",price:165,cat:"Hot Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:3,name:"Caramel Macchiato",price:190,cat:"Signature",available:true,
+    image:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:4,name:"Iced Caffe Latte",price:165,cat:"Iced Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:5,name:"Caffe Mocha",price:180,cat:"Hot Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:6,name:"Cold Brew",price:170,cat:"Iced Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:7,name:"Matcha Latte",price:180,cat:"Non-Coffee",available:true,
+    image:"https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:8,name:"Iced Caramel Macchiato",price:190,cat:"Signature",available:true,
+    image:"https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:9,name:"Butter Croissant",price:110,cat:"Pastries",available:true,
+    image:"https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=700&q=85"
+  },
+  {
+    id:10,name:"Chocolate Muffin",price:125,cat:"Pastries",available:true,
+    image:"https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=700&q=85"
+  }
+];
+
+let state = JSON.parse(localStorage.getItem("starbucksOrbitState") || "{}");
+state.analytics ||= {views:0,adds:0,orders:0};
+state.cart ||= [];
+state.orders ||= [];
+state.availability ||= {};
+state.branch ||= "Main Branch";
+
+// 14-day trial starts on first launch of this browser.
+con
