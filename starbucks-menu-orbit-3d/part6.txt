@@ -1,175 +1,79 @@
-t list=state.orders;
-  $("#pickupQueue").innerHTML=list.length?list.map((o,idx)=>`
-    <div class="order-box">
-      <div style="display:flex;justify-content:space-between;gap:10px"><div><b>${o.id} — ${o.name}</b><br><small style="color:var(--muted)">${o.created} • ${o.time}</small></div><b>${peso(o.total)}</b></div>
-      <div class="steps">${statuses.map(s=>`<span class="step ${s===o.status?'active':''}">${s}</span>`).join("")}</div>
-      ${o.status!=="Completed"?`<button class="btn primary" style="margin-top:10px" onclick="advanceOrder(${idx})">Advance Status</button>`:''}
-    </div>`).join(""):'<p style="color:var(--muted)">No pickup orders yet.</p>';
-}
-window.advanceOrder=i=>{
-  const o=state.orders[i],idx=statuses.indexOf(o.status);
-  if(idx<statuses.length-1)o.status=statuses[idx+1];
-  save();renderOrders();updateAnalytics();toast("Order status updated");
-};
+           <div class="reveal-flat" id="revealFlat">
+              <img id="revealFlatImg" alt="Flat product">
+            </div>
 
+            <div class="reveal-3d-wrap" id="reveal3DWrap">
+              <div class="mini-3d-cup" id="mini3DCup">
+                <div class="front">
+                  <div class="liquid" id="revealLiquid"></div>
+                  <div class="art" id="revealArt"></div>
+                </div>
+                <div class="back">
+                  <div class="liquid" id="revealLiquidBack"></div>
+                </div>
+                <div class="side-l"></div>
+                <div class="side-r"></div>
+                <div class="top"></div>
+              </div>
+            </div>
 
-function formatTrialDate(ms){
-  return new Date(ms).toLocaleDateString([], {year:"numeric",month:"short",day:"numeric"});
-}
+            <div class="reveal-price-box">
+              <strong id="revealPriceText">₱0</strong>
+              <span id="revealNameText">Product</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-function getTrialStatus(){
-  const start = Number(state.trialStartedAt) || Date.now();
-  const end = start + TRIAL_LENGTH_MS;
-  const remaining = end - Date.now();
-  return {start,end,remaining,expired: remaining <= 0 && !state.subscriptionActive};
-}
+    <aside class="card side">
+      <div class="section-title"><h2>Live Menu Intelligence</h2><small>Demo analytics</small></div>
+      <div class="stat-grid">
+        <div class="stat"><b id="visits">128</b><span>Menu visits</span></div>
+        <div class="stat"><b id="views">0</b><span>Product views</span></div>
+        <div class="stat"><b id="adds">0</b><span>Cart additions</span></div>
+        <div class="stat"><b id="orders">0</b><span>Pickup orders</span></div>
+      </div>
+      <div class="promo">
+        <h3>☕ Featured Drink + Pastry</h3>
+        <p>Save ₱25 when paired with any pastry. Promotions can be scheduled and highlighted inside the Orbit.</p>
+      </div>
+      <div class="mini-list">
+        <div class="mini"><div><b>🔥 Trending</b><br><small>Caramel Macchiato</small></div><span>24 views</span></div>
+        <div class="mini"><div><b>⏱ Scheduled Menu</b><br><small>Breakfast items</small></div><span class="pill">Active</span></div>
+        <div class="mini"><div><b>📦 Pickup Queue</b><br><small>Live order status</small></div><span id="queueCount">0</span></div>
+      </div>
+    </aside>
+  </div>
 
-function updateTrialUI(){
-  const s = getTrialStatus();
-  const badge = $("#trialBadge");
+  <section class="features">
+    <div class="feature"><b>🌀 Interactive Orbit</b><span>Swipe, drag, and tap product navigation.</span></div>
+    <div class="feature"><b>🥛 Drink Customization</b><span>Size, temperature, milk, syrup, extra shots.</span></div>
+    <div class="feature"><b>🛒 Smart Cart</b><span>Quantities, customizations, totals, and order review.</span></div>
+    <div class="feature"><b>📦 Pickup Ordering</b><span>Customer name, pickup time, and order reference.</span></div>
+    <div class="feature"><b>🚦 Sold-Out Controls</b><span>Owner can instantly hide unavailable items.</span></div>
+    <div class="feature"><b>📊 Analytics</b><span>Views, cart adds, orders, and popular products.</span></div>
+    <div class="feature"><b>🏪 Multi-Branch Ready</b><span>Switch menu, price, and availability by branch.</span></div>
+    <div class="feature"><b>🎁 Promos & Bundles</b><span>Seasonal offers, combos, and featured drinks.</span></div>
+  </section>
+</div>
 
-  if (state.subscriptionActive){
-    badge.textContent = "✓ Subscription Active";
-    badge.classList.remove("warning");
-    $("#trialExpired").classList.remove("open");
-    return;
-  }
+<div class="backdrop" id="backdrop"></div>
 
-  if (s.remaining <= 0){
-    badge.textContent = "Trial Expired";
-    badge.classList.add("warning");
-    $("#trialStartedOn").textContent = formatTrialDate(s.start);
-    $("#trialEndedOn").textContent = formatTrialDate(s.end);
-    $("#trialExpired").classList.add("open");
-
-    // Close app-level panels so the expiration screen is the active state.
-    $("#cartDrawer").classList.remove("open");
-    $("#adminPanel").classList.remove("open");
-    $("#productModal").classList.remove("open");
-    $("#backdrop").classList.remove("open");
-    return;
-  }
-
-  const d = Math.floor(s.remaining / 86400000);
-  const h = Math.floor((s.remaining % 86400000) / 3600000);
-  const m = Math.floor((s.remaining % 3600000) / 60000);
-  badge.textContent = `🎁 Free Trial: ${d}d ${h}h ${m}m`;
-  badge.classList.toggle("warning", s.remaining <= (3 * 86400000));
-  $("#trialExpired").classList.remove("open");
-}
-
-function openSubscriptionOptions(){
-  $("#subscriptionModal").classList.add("open");
-}
-function closeSubscriptionOptions(){
-  $("#subscriptionModal").classList.remove("open");
-}
-
-$("#continueSubscription").addEventListener("click", openSubscriptionOptions);
-$("#closeSubscription").addEventListener("click", closeSubscriptionOptions);
-
-$("#requestMonthly").addEventListener("click", ()=>{
-  $("#subscriptionMessage").innerHTML =
-    "<b>Monthly subscription selected: ₱3,500/month.</b><br>Connect this button to your real payment or contact link before client launch.";
-});
-
-$("#requestFullSetup").addEventListener("click", ()=>{
-  $("#subscriptionMessage").innerHTML =
-    "<b>Full setup selected: ₱12,000 + ₱1,500/month maintenance.</b><br>Connect this button to your real payment or contact link before client launch.";
-});
-
-
-$("#revealBack").addEventListener("click",closeOrbitReveal);
-
-$("#revealCustomize").addEventListener("click",()=>{
-  if(!revealProduct) return;
-  const p = revealProduct;
-  closeOrbitReveal();
-  openProduct(p);
-});
-
-$("#revealAdd").addEventListener("click",()=>{
-  if(!revealProduct) return;
-  const p = revealProduct;
-  const item = {
-    ...p,
-    unitPrice:p.price,
-    custom:{size:"M",temp:p.cat==="Iced Coffee"?"Iced":"Hot",milk:"Regular",extra:"None"},
-    qty:1
-  };
-  const sig=item.id+JSON.stringify(item.custom);
-  const existing=state.cart.find(x=>x.sig===sig);
-  if(existing) existing.qty++;
-  else state.cart.push({...item,sig});
-  state.analytics.adds++;
-  save();
-  renderCart();
-  updateAnalytics();
-  toast("Added to cart");
-});
-
-$("#adminBtn").onclick=()=>{$("#adminPanel").classList.add("open");renderAdminProducts();renderOrders();};
-$("#closeAdmin").onclick=()=>$("#adminPanel").classList.remove("open");
-$("#cartBtn").onclick=()=>$("#cartDrawer").classList.add("open");
-$("#closeCart").onclick=()=>$("#cartDrawer").classList.remove("open");
-$("#closeProduct").onclick=closeProduct;
-$("#backdrop").onclick=closeProduct;
-$("#promoBtn").onclick=()=>toast("Promo applied: Coffee + Pastry bundle");
-$("#branchBtn").onclick=()=>$("#adminPanel").classList.add("open");
-$("#branchSelect").value=state.branch;
-$("#branchBtn").textContent="📍 "+state.branch;
-$("#branchSelect").onchange=e=>{state.branch=e.target.value;save();$("#branchBtn").textContent="📍 "+state.branch;toast("Branch switched");};
-
-let dragging=false,lastX=0;
-$("#orbit").addEventListener("pointerdown",e=>{
-  if(e.target.closest(".product")) return;
-  dragging=true;
-  lastX=e.clientX;
-  $("#orbit").setPointerCapture(e.pointerId);
-});
-$("#orbit").addEventListener("pointermove",e=>{
-  if(!dragging)return;
-  angleOffset+=(e.clientX-lastX)*.01;
-  lastX=e.clientX;
-  renderOrbit();
-});
-$("#orbit").addEventListener("pointerup",()=>dragging=false);
-$("#orbit").addEventListener("pointercancel",()=>dragging=false);
-
-window.addEventListener("resize",renderOrbit);
-
-$("#productViewer").addEventListener("pointerdown",e=>{
-  if(!$("#productHero").classList.contains("reveal-3d")) return;
-  dragging3D = true;
-  last3DX = e.clientX;
-  last3DY = e.clientY;
-  $("#productViewer").classList.add("dragging");
-  $("#productViewer").setPointerCapture(e.pointerId);
-});
-$("#productViewer").addEventListener("pointermove",e=>{
-  if(!dragging3D) return;
-  const dx = e.clientX - last3DX;
-  const dy = e.clientY - last3DY;
-  productRotateY += dx * 0.45;
-  productTiltX = Math.max(-16, Math.min(18, productTiltX - dy * 0.15));
-  last3DX = e.clientX;
-  last3DY = e.clientY;
-  apply3DProductTransform();
-});
-$("#productViewer").addEventListener("pointerup",()=>{
-  dragging3D = false;
-  $("#productViewer").classList.remove("dragging");
-});
-$("#productViewer").addEventListener("pointercancel",()=>{
-  dragging3D = false;
-  $("#productViewer").classList.remove("dragging");
-});
-$("#productViewer").addEventListener("dblclick", reset3DProductPosition);
-
-renderCategories();renderOrbit();renderCart();updateAnalytics();renderAdminProducts();renderOrders();
-save();
-updateTrialUI();
-setInterval(updateTrialUI, 30000);
-</script>
-</body>
-</html>
+<div class="modal" id="productModal">
+  <div class="drawer-head">
+    <div><h3 id="modalName">Drink</h3><small id="modalPrice" style="color:var(--accent2)"></small></div>
+    <button class="icon-btn" id="closeProduct">✕</button>
+  </div>
+  <div class="product-hero" id="productHero">
+    <span class="viewer-hint">Real picture • drag to rotate</span>
+    <div class="price-pill" id="pricePill">₱0</div>
+    <div class="photo-name" id="photoName">Product</div>
+    <div class="product-viewer" id="productViewer">
+      <div class="real-photo-model" id="realPhotoModel">
+        <div class="photo-card">
+          <img id="heroImage" alt="Selected product">
+        </div>
+        <div class="photo-side-left"></div>
+        <div class="photo-side-right"></div>
+        <div class="ph
