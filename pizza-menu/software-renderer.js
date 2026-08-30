@@ -23,10 +23,10 @@ export class SoftwareRenderer {
    const normal=new THREE.Vector3().subVectors(b,a).cross(new THREE.Vector3().subVectors(d,a)).normalize();
    const shade=.67+.33*Math.max(0,normal.dot(this.light));
    const color=mat.color?.clone().multiplyScalar(shade).getStyle()||'#c78f45';
-   triangles.push({v,z:(v[0].z+v[1].z+v[2].z)/3,color,image:mat.map?.image,uv:uv?ids.map(i=>[uv.getX(i),1-uv.getY(i)]):null});
+   triangles.push({layer:mesh.renderOrder||0,v,z:(v[0].z+v[1].z+v[2].z)/3,color,image:mat.map?.image,uv:uv?ids.map(i=>[uv.getX(i),1-uv.getY(i)]):null});
   }
  });
- triangles.sort((a,b)=>b.z-a.z);
+ triangles.sort((a,b)=>a.layer-b.layer||b.z-a.z);
  for(const t of triangles){const v=t.v;
   if(t.image&&t.uv){this.drawTexturedTriangle(c,v,t.uv,t.image);continue}
   c.beginPath();c.moveTo(v[0].x,v[0].y);c.lineTo(v[1].x,v[1].y);c.lineTo(v[2].x,v[2].y);c.closePath();c.fillStyle=t.color;c.fill();c.lineWidth=.45;c.strokeStyle=t.color;c.stroke();
