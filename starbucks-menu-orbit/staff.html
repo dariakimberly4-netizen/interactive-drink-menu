@@ -12,7 +12,7 @@
 </head>
 <body>
   <div class="wrap">
-    <header><div><h1>Menu Orbit Staff</h1><p>Pickup order dashboard</p></div><div class="spacer"></div><button class="btn" id="backBtn">← Menu</button><button class="btn" id="signOutBtn" hidden>Sign out</button></header>
+    <header><div><h1>Menu Orbit Staff</h1><p>Pickup order dashboard</p></div><div class="spacer"></div><button class="btn" id="activationBtn">Go Live</button><button class="btn" id="backBtn">← Menu</button><button class="btn" id="signOutBtn" hidden>Sign out</button></header>
     <main id="app"></main>
   </div>
   <script src="config.js"></script>
@@ -23,7 +23,7 @@
     const money=n=>'₱'+Number(n||0).toLocaleString('en-PH',{maximumFractionDigits:0});
     const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
     let filter='active';
-    document.querySelector('#backBtn').onclick=()=>location.href='index.html';
+    document.querySelector('#backBtn').onclick=()=>location.href='index.html';document.querySelector('#activationBtn').onclick=()=>location.href='activation.html';
     if(!db){app.innerHTML='<section class="card login backend"><h2>Backend not connected</h2><p>The staff dashboard is installed, but it needs the Menu Orbit Supabase project URL and publishable key in <b>config.js</b>.</p></section>';}
     else init();
     async function init(){const {data:{session}}=await db.auth.getSession();if(!session)return renderLogin();signOut.hidden=false;signOut.onclick=async()=>{await db.auth.signOut();location.reload()};renderDashboard();}
