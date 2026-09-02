@@ -49,14 +49,14 @@
   <div class="search-panel" id="searchPanel"><input id="searchInput" type="search" placeholder="Search drinks and food…" aria-label="Search products" /></div>
   <main class="stage" id="stage" aria-label="Interactive product orbit">
     <div class="orbit-line"></div><div class="orbit" id="orbit"></div>
-    <button class="core" id="pickupBtn" aria-label="Open Menu Orbit"><div><b>STARBUCKS</b><span>Menu Orbit</span><small>UNOFFICIAL PROTOTYPE</small></div></button>
+    <button class="core" id="pickupBtn" aria-label="Find a store and pickup time" onclick="document.getElementById('pickupModal').classList.add('open')"><div><b>STARBUCKS</b><span>Menu Orbit</span><small>UNOFFICIAL PROTOTYPE</small></div></button>
   </main>
   <div class="instructions" id="instructions">Use Tilt or Voice without the camera • Swipe remains available</div>
   <div class="control-dock"><button class="mode-cta" id="tiltCta">📱 Use Phone Tilt</button><button class="mode-cta" id="voiceCta">🎙 Voice Control</button></div>
 
   <aside class="drawer" id="detail" aria-hidden="true" aria-label="Product details"></aside>
   <div class="modal" id="cartModal" role="dialog" aria-modal="true" aria-labelledby="cartTitle"><div class="modal-card" id="cartContent"></div></div>
-  <div class="modal" id="pickupModal" role="dialog" aria-modal="true" aria-labelledby="pickupTitle"><div class="modal-card" id="pickupContent"></div></div>
+  <div class="modal" id="pickupModal" role="dialog" aria-modal="true" aria-labelledby="pickupTitle"><div class="modal-card" id="pickupContent"><div class="drawer-head"><div><h2 id="pickupTitle">Find a Store / Pickup</h2><small style="color:#abc0b6">Choose a branch and collection time</small></div><button class="close" aria-label="Close" onclick="document.getElementById('pickupModal').classList.remove('open')">×</button></div><div class="section-title">Nearby pickup locations</div><div class="options"><label><input type="radio" name="store" checked> Starbucks SM City Bacoor</label><label><input type="radio" name="store"> Starbucks Molino Boulevard</label><label><input type="radio" name="store"> Starbucks Vista Mall Daang Hari</label></div><div class="section-title">Pickup time</div><div class="options"><label><input type="radio" name="pickupTime" checked> As soon as possible</label><label><input type="radio" name="pickupTime"> Choose a time</label></div><div class="section-title">Order type</div><div class="options"><label><input type="radio" name="orderType" checked> Pick up in store</label><label><input type="radio" name="orderType"> Curbside pickup</label></div><button class="add" onclick="document.getElementById('pickupModal').classList.remove('open')">Continue to Menu</button><p class="notice">Demo pickup locations only. Confirm official branch availability before ordering.</p></div></div>
   <div class="modal" id="adminModal" role="dialog" aria-modal="true" aria-labelledby="adminTitle"><div class="modal-card" id="adminContent"></div></div>
   <div class="gesture-box" id="gestureBox"><video id="camera" autoplay muted playsinline></video><div class="gesture-status"><span class="privacy-dot"></span><span id="gestureStatus">Camera starting…</span></div></div>
   <div class="hand-cursor" id="handCursor"></div>
