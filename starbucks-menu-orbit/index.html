@@ -33,6 +33,8 @@
     @media(max-width:700px){header{height:68px;padding:9px 11px}.mini-logo{width:44px;height:44px}.brand small{display:none}.icon-btn{padding:0 11px}.icon-btn .label{display:none}.toolbar{padding-top:9px}.stage{top:116px;bottom:114px}.stage::before{width:92vw;height:92vw}.orbit-line{width:86vw;height:46vw}.product{width:108px}.photo{width:88px}.card-name{left:7px;right:7px;bottom:21px;font-size:8px}.card-price{bottom:5px;font-size:8px;padding:2px 6px}.core{width:132px;padding:15px}.core b{font-size:13px}.core span{font-size:8px}.core small{font-size:6px}.instructions{left:12px;right:12px;bottom:70px;transform:none;text-align:center;white-space:normal;font-size:9px;padding:7px 10px}.control-dock{left:10px;right:10px;bottom:10px;transform:none}.mode-cta{min-width:0;flex:1;min-height:48px;padding:0 10px;font-size:13px}.gesture-box{width:145px;bottom:126px}.gesture-box video{height:86px}.facts{grid-template-columns:1fr 1fr 1fr}}
     @media(max-width:390px){.brand strong{font-size:13px}.core{width:118px;padding:13px}.core b{font-size:11.5px}.core span{font-size:7px}.core small{font-size:5.5px}.product{width:96px}.photo{width:74px}}
     body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{scroll-behavior:auto!important;transition-duration:.001ms!important;animation-duration:.001ms!important}.reduce-motion .orbit-line{display:none}
+    /* The middle-orbit link uses a URL fragment. Once closed, that fragment must not keep the dialog visible. */
+    .modal:target:not(.open){display:none}
   </style>
 </head>
 <body>
