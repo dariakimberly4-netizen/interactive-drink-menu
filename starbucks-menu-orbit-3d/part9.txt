@@ -14,7 +14,8 @@ const $$ = s => [...document.querySelectorAll(s)];
 function save(){ localStorage.setItem("starbucksOrbitState",JSON.stringify(state)); }
 function peso(n){return "₱"+Number(n).toLocaleString();}
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
-function isAvailable(p){ return state.availability[p.id] !== false && p.available; }
+/* Catalog mode: every listed menu item is available to browse and add. */
+function isAvailable(){ return true; }
 
 const cats = ["All",...new Set(products.map(p=>p.cat))];
 function renderCategories(){
