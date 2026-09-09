@@ -50,7 +50,6 @@
     <button class="icon-btn" id="gestureBtn" aria-pressed="false">☝ <span class="label">Gestures</span></button>
     <button class="icon-btn" id="motionBtn" aria-pressed="false">◌ <span class="label">Reduce</span></button>
     <button class="icon-btn" id="adminBtn" aria-label="Open menu editor">⚙ <span class="label">Admin</span></button>
-    <button class="icon-btn" id="accountBtn" aria-label="Account">◉ <span class="label">Account</span></button>
     <button class="icon-btn" id="helpBtn" aria-label="Help and support">? <span class="label">Help</span></button>
     <button class="icon-btn" id="ordersBtn" aria-label="Open recent orders">↺ <span class="label">Orders</span></button>
     <button class="icon-btn" id="cartBtn" aria-label="Open cart">🛒 <span class="count" id="cartCount">0</span></button>
@@ -195,7 +194,7 @@
     function copyDemo(value){navigator.clipboard?.writeText(value).then(()=>alert('Copied. Paste it into the customer demo sign-in fields.')).catch(()=>alert(value))}
     const customerDemoObserver=new MutationObserver(()=>{const form=$('#loginEmail')?.closest('.form');if(!form||$('#customerDemoDetails'))return;form.insertAdjacentHTML('beforebegin',`<div class="demo-banner" id="customerDemoDetails"><b>Customer demo — no typing needed</b><br><small>Messenger and some mobile browsers block copy-and-paste. Open the read-only preview directly instead.</small><button type="button" class="add" id="openCustomerDemo" style="margin-top:12px">Open customer demo</button><details style="margin-top:12px"><summary>Show demo sign-in details</summary><div style="margin-top:8px">Email: <code>customer.demo@menuorbit.test</code><br>Password: <code>OrbitCustomer2026!</code><div class="store-actions"><button type="button" id="copyDemoEmail">Copy Email</button><button type="button" id="copyDemoPassword">Copy Password</button></div></div></details><small>Read-only preview only. No real customer data is used.</small></div>`);$('#copyDemoEmail').onclick=()=>copyDemo('customer.demo@menuorbit.test');$('#copyDemoPassword').onclick=()=>copyDemo('OrbitCustomer2026!')});
     customerDemoObserver.observe($('#accountContent'),{childList:true,subtree:true});
-    $('#pickupBtn').onclick=openPickup;$('#cartBtn').onclick=openCart;$('#accountBtn').onclick=openAccount;$('#customerAccountBtn').onclick=openAccount;$('#helpBtn').onclick=openHelp;$('#accountModal').onclick=e=>{if(e.target.id==='accountModal')e.currentTarget.classList.remove('open')};
+    $('#pickupBtn').onclick=openPickup;$('#cartBtn').onclick=openCart;$('#customerAccountBtn').onclick=openAccount;$('#helpBtn').onclick=openHelp;$('#accountModal').onclick=e=>{if(e.target.id==='accountModal')e.currentTarget.classList.remove('open')};
     document.addEventListener('click',e=>{if(e.target.closest('#pickupClose'))history.replaceState(null,'',location.pathname+location.search)},true);
     document.addEventListener('click',e=>{if(e.target.closest('#pickupBtn'))openPickup()});
 
