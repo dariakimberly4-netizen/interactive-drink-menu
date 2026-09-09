@@ -41,7 +41,7 @@ function wire(){
     document.querySelectorAll('[data-end]').forEach(b=>b.onclick=()=>{state.promos.find(x=>x.id==b.dataset.end).status='Ended';audit('Promotion ended');save();render()});
   }
   if(state.tab==='care'){
-    document.querySelectorAll('[data-reply]').forEach(b=>b.onclick=()=>modal(`<div class="title"><h2>Demo reply</h2><button class="btn" data-close>×</button></div><div class="form"><label>Reply<textarea id="replyText">Thank you—we are checking this with the branch.</textarea></label><button class="btn primary" id="sendReply">Send demo reply</button></div>`));
+    document.querySelectorAll('[data-reply]').forEach(b=>b.onclick=()=>{modal(`<div class="title"><h2>Demo reply</h2><button class="btn" data-close>×</button></div><div class="form"><label>Reply<textarea id="replyText">Thank you—we are checking this with the branch.</textarea></label><button class="btn primary" id="sendReply">Send demo reply</button></div>`);$('#sendReply').onclick=()=>{audit('Demo customer reply sent');save();$('#modal').classList.remove('open');toast('Demo reply saved.')}});
     document.querySelectorAll('[data-resolve]').forEach(b=>b.onclick=()=>{state.care.find(x=>x.id==b.dataset.resolve).status='Resolved';audit('Customer care request resolved');save();render()});newChat.onclick=()=>toast('Saved reply copied to demo chat.');
   }
   if(state.tab==='reports')exportBtn.onclick=()=>{const csv='Product,Price,Stock\n'+state.menu.map(p=>`"${p.name}",${p.price},${p.qty}`).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='menu-orbit-demo-report.csv';a.click();toast('Demo report exported.')};
