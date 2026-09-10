@@ -5,7 +5,7 @@ window.MENU_ORBIT_CONFIG = {
 };
 
 /* Keep all original DOM nodes intact so Menu Orbit initialization can run.
-   Only visually hide the removed customer controls. */
+   Hide unwanted gesture/tilt/voice controls and add a floating customer dock. */
 (() => {
   const style = document.createElement('style');
   style.textContent = `
@@ -24,73 +24,102 @@ window.MENU_ORBIT_CONFIG = {
 
     .customer-footer {
       position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 24;
-      height: 72px;
-      padding: 7px max(12px, env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      left: 50%;
+      bottom: calc(14px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      z-index: 30;
+      width: min(92vw, 560px);
+      height: 66px;
+      padding: 7px 10px;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 6px;
-      background: rgba(2, 20, 14, .90);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-top: 1px solid rgba(212,173,98,.42);
-      box-shadow: 0 -10px 36px rgba(0,0,0,.30);
+      background: rgba(4, 28, 20, .82);
+      backdrop-filter: blur(22px) saturate(125%);
+      -webkit-backdrop-filter: blur(22px) saturate(125%);
+      border: 1px solid rgba(212,173,98,.34);
+      border-radius: 999px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.06);
     }
+
+    .customer-footer::before {
+      content: "";
+      position: absolute;
+      left: 14%;
+      right: 14%;
+      top: -1px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(244,200,111,.72), transparent);
+      pointer-events: none;
+    }
+
     .customer-footer button {
+      position: relative;
       min-width: 0;
       border: 0;
-      border-radius: 14px;
+      border-radius: 999px;
       background: transparent;
-      color: #dce8e2;
+      color: #cbd9d2;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
-      font-size: 11px;
+      gap: 3px;
+      font-size: 10.5px;
       font-weight: 800;
-      letter-spacing: .01em;
       padding: 5px 3px;
+      transition: transform .18s ease, background .18s ease, color .18s ease;
     }
-    .customer-footer button:active,
+
+    .customer-footer button:active {
+      transform: translateY(-2px) scale(.98);
+    }
+
     .customer-footer button.active {
-      background: rgba(255,255,255,.08);
-      color: #f4efe6;
+      color: #fff8e9;
+      background: rgba(255,255,255,.07);
     }
+
+    .customer-footer button.active::after {
+      content: "";
+      position: absolute;
+      bottom: 3px;
+      width: 24px;
+      height: 2px;
+      border-radius: 99px;
+      background: #d4ad62;
+      box-shadow: 0 0 10px rgba(212,173,98,.55);
+    }
+
     .customer-footer .footer-icon {
-      font-size: 20px;
+      font-size: 19px;
       line-height: 1;
     }
-    .stage { bottom: 72px !important; }
 
-    @media (min-width: 800px) {
+    .stage { bottom: 94px !important; }
+
+    @media (max-width: 520px) {
       .customer-footer {
-        left: 50%;
-        right: auto;
-        width: min(620px, calc(100% - 32px));
-        transform: translateX(-50%);
-        bottom: 14px;
-        height: 68px;
-        border: 1px solid rgba(212,173,98,.34);
-        border-radius: 22px;
-        padding: 7px 12px;
+        width: calc(100% - 24px);
+        height: 64px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        padding: 6px 8px;
       }
-      .stage { bottom: 92px !important; }
+      .customer-footer button { font-size: 10px; }
+      .customer-footer .footer-icon { font-size: 18px; }
+      .stage { bottom: 86px !important; }
     }
   `;
   document.head.appendChild(style);
 
   const installFooter = () => {
-    if (document.querySelector('.customer-footer')) return;
+    document.querySelector('.customer-footer')?.remove();
 
     const footer = document.createElement('nav');
     footer.className = 'customer-footer';
     footer.setAttribute('aria-label', 'Customer navigation');
     footer.innerHTML = `
-      <button type="button" data-footer-action="menu" class="active" aria-label="Menu Orbit"><span class="footer-icon">◉</span><span>Menu Orbit</span></button>
+      <button type="button" data-footer-action="menu" class="active" aria-label="Menu Orbit"><span class="footer-icon">◉</span><span>Menu</span></button>
       <button type="button" data-footer-action="pickup" aria-label="Pickup"><span class="footer-icon">⌖</span><span>Pickup</span></button>
       <button type="button" data-footer-action="cart" aria-label="Cart"><span class="footer-icon">▣</span><span>Cart</span></button>
       <button type="button" data-footer-action="account" aria-label="My Account"><span class="footer-icon">◌</span><span>Account</span></button>
