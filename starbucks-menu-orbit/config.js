@@ -4,7 +4,8 @@ window.MENU_ORBIT_CONFIG = {
   branches: []
 };
 
-/* Keep the Menu Orbit visible. Hide only the unwanted gesture/tilt/voice controls. */
+/* Keep all original DOM nodes intact so Menu Orbit initialization can run.
+   Only visually hide the removed customer controls. */
 (() => {
   const style = document.createElement('style');
   style.textContent = `
@@ -22,23 +23,4 @@ window.MENU_ORBIT_CONFIG = {
     }
   `;
   document.head.appendChild(style);
-
-  const removeDisabledControls = () => {
-    document.querySelectorAll('#gestureBtn,[id*="gestureBtn"],.gesture-box,#gestureBox,.hand-cursor,#handCursor,.control-dock,.instructions').forEach(el => el.remove());
-
-    document.querySelectorAll('button').forEach(btn => {
-      const text = (btn.textContent || '').replace(/\s+/g,' ').trim();
-      if (/^(?:☝️?\s*)?Gestures$/i.test(text) || /^📱?\s*Use Phone Tilt$/i.test(text) || /^🎙️?\s*Voice Control$/i.test(text)) {
-        btn.remove();
-      }
-    });
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', removeDisabledControls, { once: true });
-  } else {
-    removeDisabledControls();
-  }
-
-  new MutationObserver(removeDisabledControls).observe(document.documentElement, { childList: true, subtree: true });
 })();
