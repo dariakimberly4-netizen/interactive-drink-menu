@@ -4,7 +4,7 @@ window.MENU_ORBIT_CONFIG = {
   branches: []
 };
 
-/* Camera gestures, phone tilt, voice control, and swipe messaging are intentionally disabled and hidden in the customer system. */
+/* Keep the Menu Orbit visible. Hide only the unwanted gesture/tilt/voice controls. */
 (() => {
   const style = document.createElement('style');
   style.textContent = `
@@ -27,13 +27,10 @@ window.MENU_ORBIT_CONFIG = {
     document.querySelectorAll('#gestureBtn,[id*="gestureBtn"],.gesture-box,#gestureBox,.hand-cursor,#handCursor,.control-dock,.instructions').forEach(el => el.remove());
 
     document.querySelectorAll('button').forEach(btn => {
-      const text = (btn.textContent || '').trim();
-      if (/gestures?/i.test(text) || /use phone tilt/i.test(text) || /voice control/i.test(text)) btn.remove();
-    });
-
-    document.querySelectorAll('div,p,span,small').forEach(el => {
-      const text = (el.textContent || '').trim();
-      if (/use tilt or voice without the camera/i.test(text) || /swipe remains available/i.test(text)) el.remove();
+      const text = (btn.textContent || '').replace(/\s+/g,' ').trim();
+      if (/^(?:☝️?\s*)?Gestures$/i.test(text) || /^📱?\s*Use Phone Tilt$/i.test(text) || /^🎙️?\s*Voice Control$/i.test(text)) {
+        btn.remove();
+      }
     });
   };
 
