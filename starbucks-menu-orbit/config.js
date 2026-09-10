@@ -4,7 +4,7 @@ window.MENU_ORBIT_CONFIG = {
   branches: []
 };
 
-/* Gestures are intentionally disabled and hidden in the customer system. */
+/* Camera gestures, phone tilt, voice control, and swipe messaging are intentionally disabled and hidden in the customer system. */
 (() => {
   const style = document.createElement('style');
   style.textContent = `
@@ -13,7 +13,9 @@ window.MENU_ORBIT_CONFIG = {
     .gesture-box,
     #gestureBox,
     .hand-cursor,
-    #handCursor {
+    #handCursor,
+    .control-dock,
+    .instructions {
       display: none !important;
       visibility: hidden !important;
       pointer-events: none !important;
@@ -21,18 +23,25 @@ window.MENU_ORBIT_CONFIG = {
   `;
   document.head.appendChild(style);
 
-  const removeGestureControls = () => {
-    document.querySelectorAll('#gestureBtn,[id*="gestureBtn"],.gesture-box,#gestureBox,.hand-cursor,#handCursor').forEach(el => el.remove());
+  const removeDisabledControls = () => {
+    document.querySelectorAll('#gestureBtn,[id*="gestureBtn"],.gesture-box,#gestureBox,.hand-cursor,#handCursor,.control-dock,.instructions').forEach(el => el.remove());
+
     document.querySelectorAll('button').forEach(btn => {
-      if (/^\s*(?:☝️?\s*)?gestures?\s*$/i.test(btn.textContent || '')) btn.remove();
+      const text = (btn.textContent || '').trim();
+      if (/gestures?/i.test(text) || /use phone tilt/i.test(text) || /voice control/i.test(text)) btn.remove();
+    });
+
+    document.querySelectorAll('div,p,span,small').forEach(el => {
+      const text = (el.textContent || '').trim();
+      if (/use tilt or voice without the camera/i.test(text) || /swipe remains available/i.test(text)) el.remove();
     });
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', removeGestureControls, { once: true });
+    document.addEventListener('DOMContentLoaded', removeDisabledControls, { once: true });
   } else {
-    removeGestureControls();
+    removeDisabledControls();
   }
 
-  new MutationObserver(removeGestureControls).observe(document.documentElement, { childList: true, subtree: true });
+  new MutationObserver(removeDisabledControls).observe(document.documentElement, { childList: true, subtree: true });
 })();
