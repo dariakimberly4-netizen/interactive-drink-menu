@@ -171,3 +171,13 @@ window.MENU_ORBIT_CONFIG = {
   script.dataset.menuOrbitStudyUpgrade='true';
   document.head.appendChild(script);
 })();
+
+/* Final slot-lock guard: completed bookings remain unavailable for their original slot. */
+(() => {
+  if (document.querySelector('script[data-menu-orbit-study-lock]')) return;
+  const script=document.createElement('script');
+  script.src='study-seat-final-lock.js?v=20260912a';
+  script.defer=true;
+  script.dataset.menuOrbitStudyLock='true';
+  document.head.appendChild(script);
+})();
