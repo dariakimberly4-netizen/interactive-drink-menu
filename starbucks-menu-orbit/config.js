@@ -150,3 +150,14 @@ window.MENU_ORBIT_CONFIG = {
     installFooter();
   }
 })();
+
+/* Shared order → inventory automation. Live UUID orders are processed by Supabase;
+   demo orders are mirrored into the browser inventory used by inventory.html. */
+(() => {
+  if (document.querySelector('script[data-menu-orbit-inventory-engine]')) return;
+  const script=document.createElement('script');
+  script.src='inventory-engine.js?v=20260911a';
+  script.defer=true;
+  script.dataset.menuOrbitInventoryEngine='true';
+  document.head.appendChild(script);
+})();
