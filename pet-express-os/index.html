@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#FFC514">
+  <title>Pet Express OS — The Dog & Cat Shop</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img id="petExpressLogo" class="brand-logo" alt="Pet Express — The Dog & Cat Shop logo">
+      <div><h1>Pet Express OS</h1><p>The Dog & Cat Shop</p></div>
+    </div>
+    <div class="top-actions">
+      <button class="chip" id="notificationButton">🔔 <span id="notificationCount">0</span></button>
+      <button class="chip yellow" data-nav="checkin">Quick Check-In</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main">
+      <section id="dashboard" class="page active">
+        <div class="page-head"><div><h2>Command Dashboard</h2><p id="todayText"></p></div><div class="actions"><button class="btn yellow" data-action="new-booking">+ New Booking</button><button class="btn" data-nav="pos">New Sale</button></div></div>
+        <div id="dashboardStats" class="stats-grid"></div>
+        <div class="quick-grid">
+          <button class="quick yellow" data-action="new-booking">📅<span>NEW BOOKING</span></button>
+          <button class="quick blue" data-nav="pos">🛒<span>NEW SALE</span></button>
+          <button class="quick" data-action="new-customer">👤<span>ADD CUSTOMER</span></button>
+          <button class="quick" data-action="new-pet">🐾<span>ADD PET</span></button>
+          <button class="quick" data-nav="inventory">📦<span>CHECK INVENTORY</span></button>
+        </div>
+        <div class="split"><div class="card"><h3>Today's Schedule</h3><div id="todaySchedule"></div></div><div class="card"><h3>Attention Needed</h3><div id="attentionList"></div></div></div>
+      </section>
+
+      <section id="bookings" class="page">
+        <div class="page-head"><div><h2>Bookings</h2><p>Calendar-ready service scheduling with staff double-booking protection.</p></div><button class="btn" data-action="new-booking">+ New Booking</button></div>
+        <div class="card"><div class="toolbar"><input id="bookingSearch" class="control grow" placeholder="Search customer, pet, service…"><select id="bookingStatus" class="control"><option value="">All statuses</option></select><input id="bookingDate" class="control" type="date"><button class="btn ghost" id="clearBookingFilters">Clear</button></div><div id="bookingsTable"></div></div>
+      </section>
+
+      <section id="pos" class="page">
+        <div class="page-head"><div><h2>Point of Sale</h2><p>Fast product and service checkout.</p></div><button class="btn ghost" id="transactionHistoryButton">Transaction History</button></div>
+        <div class="pos-layout">
+          <div class="card"><div class="toolbar"><input id="productSearch" class="control grow" placeholder="Search product, SKU or barcode…"><select id="productCategory" class="control"><option value="">All categories</option></select></div><div id="productGrid" class="product-grid"></div></div>
+          <div class="card cart-card"><h3>Current Cart</h3><label class="field"><span>Customer / Rewards</span><select id="posCustomer" class="control"></select></label><div id="cartLines"></div><div class="cart-total"><span>Total</span><strong id="cartTotal">₱0.00</strong></div><div class="form-grid"><label class="field"><span>Discount %</span><input id="discount" class="control" type="number" min="0" max="100" value="0"></label><label class="field"><span>Payment</span><select id="paymentMethod" class="control"><option>Cash</option><option>GCash</option><option>Card</option><option>Other</option></select></label></div><button class="btn yellow full" id="checkoutButton">PAY & COMPLETE SALE</button></div>
+        </div>
+      </section>
+
+      <section id="customers" class="page">
+        <div class="page-head"><div><h2>Customer Records</h2><p>Owners, visits, spending, pets and history.</p></div><button class="btn" data-action="new-customer">+ Add Customer</button></div>
+        <div class="card"><div class="toolbar"><input id="customerSearch" class="control grow" placeholder="Search name, mobile or email…"></div><div id="customersTable"></div></div>
+      </section>
+
+      <section id="pets" class="page">
+        <div class="page-head"><div><h2>Pet Profiles</h2><p>Care notes, allergies, medical alerts and grooming history.</p></div><button class="btn" data-action="new-pet">+ Add Pet</button></div>
+        <div class="card"><div class="toolbar"><input id="petSearch" class="control grow" placeholder="Search pet, breed or owner…"><select id="petType" class="control"><option value="">All pets</option><option>Dog</option><option>Cat</option></select></div><div id="petList"></div></div>
+      </section>
+
+      <section id="inventory" class="page">
+        <div class="page-head"><div><h2>Inventory</h2><p>Stock, pricing, reorder levels, batches and expiry tracking.</p></div><button class="btn" data-action="new-inventory">+ Add Product</button></div>
+        <div class="card"><div class="toolbar"><input id="inventorySearch" class="control grow" placeholder="Search product, SKU or brand…"><select id="inventoryStatus" class="control"><option value="">All stock</option><option>LOW STOCK</option><option>OUT OF STOCK</option><option>EXPIRING SOON</option></select></div><div id="inventoryTable"></div></div>
+      </section>
+
+      <section id="staff" class="page">
+        <div class="page-head"><div><h2>Staff Portal</h2><p>Role-aware operational view.</p></div><button class="btn" data-action="new-staff">+ Add Staff</button></div>
+        <div class="split"><div class="card"><h3>Staff Directory</h3><div id="staffList"></div></div><div class="card"><h3>Groomer Work Queue</h3><div id="groomerQueue"></div></div></div>
+      </section>
+
+      <section id="rewards" class="page">
+        <div class="page-head"><div><h2>Pet Express Rewards</h2><p>Points from purchases and services, plus birthday rewards.</p></div></div>
+        <div class="split"><div class="card"><label class="field"><span>Select Customer</span><select id="rewardCustomer" class="control"></select></label><div id="rewardDetails"></div></div><div class="card"><h3>Available Rewards</h3><div class="reward-card"><span>🎁</span><div><strong>100 points</strong><p>₱100 service voucher</p></div></div><div class="reward-card"><span>🧁</span><div><strong>Pet Birthday Reward</strong><p>Bonus treat during the registered birthday month</p></div></div></div></div>
+      </section>
+
+      <section id="reports" class="page">
+        <div class="page-head"><div><h2>Reports</h2><p>Sales, services, customers, inventory and profit estimate.</p></div><div class="actions"><button class="btn ghost" id="downloadCsvButton">Download CSV</button><button class="btn" id="printReportButton">Print Report</button></div></div>
+        <div id="reportStats" class="stats-grid"></div>
+        <div class="split report-panels"><div class="card"><h3>Sales by Category</h3><div id="salesBars" class="bars"></div></div><div class="card"><h3>Most Booked Services</h3><div id="serviceBars" class="bars"></div></div></div>
+      </section>
+
+      <section id="checkin" class="page">
+        <div class="page-head"><div><h2>Customer Check-In</h2><p>Find today's booking and check the pet in with one tap.</p></div></div>
+        <div class="card"><div class="toolbar"><input id="checkinSearch" class="control grow" placeholder="Customer name, mobile or pet name…"></div><div id="checkinList"></div></div>
+      </section>
+
+      <section id="hub" class="page">
+        <div class="page-head"><div><h2>Customer Hub</h2><p>Customer-facing booking, pet registration, appointments and rewards.</p></div></div>
+        <div class="hub-hero"><div><h3>Welcome to Pet Express 🐾</h3><p>Book care, register a pet and keep track of upcoming visits.</p></div><button class="btn" data-action="new-booking">Book a Service</button></div>
+        <div class="three-grid hub-grid"><div class="card"><h3>Upcoming Appointments</h3><div id="hubBookings"></div></div><div class="card"><h3>Register a Pet</h3><p>Keep allergies, temperament and grooming notes ready for every visit.</p><button class="btn yellow" data-action="new-pet">+ Register Pet</button></div><div class="card"><h3>Loyalty Points</h3><div id="hubRewards"></div></div></div>
+      </section>
+
+      <section id="notifications" class="page">
+        <div class="page-head"><div><h2>Notifications</h2><p>Operational alerts and customer status updates.</p></div><button class="btn ghost" id="markReadButton">Mark All Read</button></div>
+        <div id="notificationList" class="card"></div>
+      </section>
+
+      <section id="settings" class="page">
+        <div class="page-head"><div><h2>Settings</h2><p>Local demo storage and data backup.</p></div></div>
+        <div class="split"><div class="card"><h3>Backup</h3><p>Export all demo records as JSON or restore a previous backup.</p><div class="actions"><button class="btn" id="exportJsonButton">Export JSON</button><label class="btn ghost file-button">Import JSON<input id="importJsonInput" type="file" accept="application/json"></label></div></div><div class="card"><h3>Demo Reset</h3><p>Restore the original Pet Express demo data on this device.</p><button class="btn danger" id="resetButton">Reset Demo Data</button></div></div>
+      </section>
+
+      <footer>Pet Express OS • Demo data is stored locally on this device</footer>
+    </main>
+  </div>
+
+  <nav id="mobileNav" class="mobile-nav"></nav>
+
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head"><h3 id="modalTitle">Add Record</h3><button class="icon-button" id="closeModalButton">✕</button></div>
+      <form id="modalForm"></form>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
