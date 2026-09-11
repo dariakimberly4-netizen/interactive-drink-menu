@@ -40,11 +40,12 @@ const roles=[
  {role:'Cashier',email:'cashier.demo@menuorbit.test',password:'CashierOrbit2026!',page:'cashier.html'},
  {role:'Barista / Service Crew',email:'barista.demo@menuorbit.test',password:'BaristaOrbit2026!',page:'staff.html'},
  {role:'Inventory Controller',email:'inventory.demo@menuorbit.test',password:'InventoryOrbit2026!',page:'inventory-demo.html'},
+ {role:'Supplier',email:'supplier.demo@menuorbit.test',password:'SupplierOrbit2026!',page:'supplier-portal.html'},
  {role:'Branch Manager',email:'manager.demo@menuorbit.test',password:'ManagerOrbit2026!',page:'manager.html'},
  {role:'System Administrator',email:'admin.demo@menuorbit.test',password:'AdminOrbit2026!',page:'admin.html'}
 ];
 const normalizeRole=r=>String(r||'').trim().toLowerCase().replace(/[\s-]+/g,'_');
-const rolePage=r=>({cashier:'cashier.html',barista:'staff.html',service_crew:'staff.html',barista_service_crew:'staff.html',inventory:'inventory.html',inventory_controller:'inventory.html',inventory_manager:'inventory.html',stock_controller:'inventory.html',manager:'manager.html',branch_manager:'manager.html',administrator:'admin.html',system_administrator:'admin.html',admin:'admin.html'})[normalizeRole(r)]||null;
+const rolePage=r=>({cashier:'cashier.html',barista:'staff.html',service_crew:'staff.html',barista_service_crew:'staff.html',inventory:'inventory.html',inventory_controller:'inventory.html',inventory_manager:'inventory.html',stock_controller:'inventory.html',supplier:'supplier-portal.html',supplier_user:'supplier-portal.html',vendor:'supplier-portal.html',manager:'manager.html',branch_manager:'manager.html',administrator:'admin.html',system_administrator:'admin.html',admin:'admin.html'})[normalizeRole(r)]||null;
 function setMsg(text,error=false){msg.textContent=text;msg.className='notice'+(error?' error':'')}
 function go(page){location.href=page}
 function copy(text,label){navigator.clipboard?.writeText(text).then(()=>setMsg(label+' copied.')).catch(()=>setMsg(text))}
