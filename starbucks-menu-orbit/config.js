@@ -161,3 +161,13 @@ window.MENU_ORBIT_CONFIG = {
   script.dataset.menuOrbitInventoryEngine='true';
   document.head.appendChild(script);
 })();
+
+/* Additive Study Seat upgrade. Kept external so the core Menu Orbit remains untouched. */
+(() => {
+  if (document.querySelector('script[data-menu-orbit-study-upgrade]')) return;
+  const script=document.createElement('script');
+  script.src='study-seat-upgrade.js?v=20260912a';
+  script.defer=true;
+  script.dataset.menuOrbitStudyUpgrade='true';
+  document.head.appendChild(script);
+})();
