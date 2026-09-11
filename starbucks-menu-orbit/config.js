@@ -166,17 +166,17 @@ window.MENU_ORBIT_CONFIG = {
 (() => {
   if (document.querySelector('script[data-menu-orbit-study-upgrade]')) return;
   const script=document.createElement('script');
-  script.src='study-seat-upgrade.js?v=20260912a';
+  script.src='study-seat-upgrade.js?v=20260912b';
   script.defer=true;
   script.dataset.menuOrbitStudyUpgrade='true';
   document.head.appendChild(script);
 })();
 
-/* Final slot-lock guard: completed bookings remain unavailable for their original slot. */
+/* Legacy slot-lock guard retained for compatibility; current demo logic also validates slots. */
 (() => {
   if (document.querySelector('script[data-menu-orbit-study-lock]')) return;
   const script=document.createElement('script');
-  script.src='study-seat-final-lock.js?v=20260912a';
+  script.src='study-seat-final-lock.js?v=20260912b';
   script.defer=true;
   script.dataset.menuOrbitStudyLock='true';
   document.head.appendChild(script);
