@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#061a13">
+<title>Menu Orbit — Inventory Login</title>
+<style>
+:root{--g:#00754a;--g2:#00a862;--panel:#08251b;--cream:#f4efe6;--line:rgba(255,255,255,.14);--muted:#aac0b5;--danger:#ffb2b2}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 50% 0,#145d42,#061a13 42%,#020907);color:#fff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.card{width:min(560px,100%);background:rgba(8,37,27,.97);border:1px solid var(--line);border-radius:26px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.38)}.head{display:flex;align-items:center;gap:12px;margin-bottom:18px}.logo{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--g2),var(--g));font:900 22px Georgia,serif;border:2px solid #fff}.head h1{margin:0;font-size:28px}.head p{margin:3px 0 0;color:var(--muted);font-size:12px}.field{width:100%;height:58px;margin:7px 0;border-radius:14px;border:1px solid var(--line);background:#0d3628;color:#fff;padding:0 14px;font:inherit}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.btn{min-height:54px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.07);color:#fff;font-weight:900;font:inherit}.btn.primary{border:0;background:linear-gradient(135deg,var(--g2),var(--g))}.demo{margin-top:18px;padding:14px;border-radius:16px;border:1px solid rgba(244,200,111,.25);background:rgba(244,200,111,.07)}.demo h2{font-size:15px;margin:0 0 8px;color:#ffe5aa}.demo p{margin:4px 0;font-size:13px}.msg{min-height:20px;margin-top:12px;color:var(--muted);font-size:12px}.error{color:var(--danger)}.foot{text-align:center;color:#809b8e;font-size:11px;margin-top:16px}@media(max-width:560px){.actions{grid-template-columns:1fr}.btn{min-height:58px}}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="head"><div class="logo">I</div><div><h1>Inventory Login</h1><p>Menu Orbit • Demo Inventory Access</p></div></div>
+  <form id="loginForm">
+    <input class="field" id="email" type="email" autocomplete="username" placeholder="Inventory email" required>
+    <input class="field" id="password" type="password" autocomplete="current-password" placeholder="Password" required>
+    <div class="actions"><button class="btn primary" type="submit">OPEN INVENTORY DEMO</button><button class="btn" type="button" id="clearBtn">CLEAR</button></div>
+  </form>
+  <div id="msg" class="msg"></div>
+  <section class="demo">
+    <h2>DEMO INVENTORY ACCOUNT</h2>
+    <p><b>Email:</b> inventory.demo@menuorbit.test</p>
+    <p><b>Password:</b> InventoryOrbit2026!</p>
+    <button class="btn" id="fillBtn" style="width:100%;margin-top:10px">USE DEMO LOGIN</button>
+  </section>
+  <p class="foot">Demo login only. This page does not create a production security boundary.</p>
+</main>
+<script>
+const email=document.querySelector('#email'),password=document.querySelector('#password'),msg=document.querySelector('#msg');
+const DEMO_EMAIL='inventory.demo@menuorbit.test',DEMO_PASSWORD='InventoryOrbit2026!';
+function setMsg(t,e=false){msg.textContent=t;msg.className='msg'+(e?' error':'')}
+document.querySelector('#fillBtn').onclick=()=>{email.value=DEMO_EMAIL;password.value=DEMO_PASSWORD;setMsg('Demo login filled. Tap OPEN INVENTORY DEMO.')};
+document.querySelector('#clearBtn').onclick=()=>{email.value='';password.value='';setMsg('')};
+document.querySelector('#loginForm').onsubmit=e=>{e.preventDefault();if(email.value.trim()===DEMO_EMAIL&&password.value===DEMO_PASSWORD){sessionStorage.setItem('mo_inventory_demo_login','ok');location.href='inventory-demo.html'}else setMsg('Invalid inventory demo email or password.',true)};
+</script>
+</body>
+</html>
