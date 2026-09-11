@@ -15,7 +15,7 @@
 <div class="wrap">
 <header class="top">
 <div class="logo">S</div><div class="brand"><h1>Menu Orbit Staff Portal</h1><p>One secure entry point for all staff roles</p></div><div class="spacer"></div>
-<button class="btn" id="motionBtn">◌ Reduce Motion</button><button class="btn" id="customerBtn">← Customer Menu</button>
+<button class="btn" id="motionBtn">◌ Reduce Motion</button><button class="btn cream" id="inventoryBtn">▣ INVENTORY</button><button class="btn" id="customerBtn">← Customer Menu</button>
 </header>
 <section class="card login">
 <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap"><div><h2>Staff Sign In</h2><p class="sub">Enter your staff email and password. Menu Orbit will open the dashboard assigned to your role.</p></div><div class="status"><span class="dot" id="dot"></span><span id="connection">CHECKING</span></div></div>
@@ -49,15 +49,14 @@ function go(page){location.href=page}
 function copy(text,label){navigator.clipboard?.writeText(text).then(()=>setMsg(label+' copied.')).catch(()=>setMsg(text))}
 function drawRoles(){document.querySelector('#roles').innerHTML=roles.map((r,i)=>`<article class="role"><h3>${r.role}</h3><p><b>Email:</b> ${r.email}</p><p><b>Password:</b> ${r.password}</p><div class="role-actions"><button class="copy" data-copy="${i}">COPY LOGIN</button><button class="enter" data-enter="${i}">ENTER DEMO</button></div></article>`).join('');document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{const r=roles[+b.dataset.copy];copy(r.email+'\n'+r.password,r.role+' login')});document.querySelectorAll('[data-enter]').forEach(b=>b.onclick=()=>go(roles[+b.dataset.enter].page))}
 drawRoles();
+document.querySelector('#inventoryBtn').onclick=()=>go('inventory.html');
 document.querySelector('#customerBtn').onclick=()=>go('index.html');
 document.querySelector('#clearBtn').onclick=()=>{emailEl.value='';passwordEl.value='';setMsg('')};
 document.querySelector('#motionBtn').onclick=()=>{document.body.classList.toggle('reduce-motion');document.querySelector('#motionBtn').textContent=document.body.classList.contains('reduce-motion')?'● Motion Reduced':'◌ Reduce Motion'};
 if(db){document.querySelector('#connection').textContent='SUPABASE READY';document.querySelector('#dot').style.background='#59cf91'}else{document.querySelector('#connection').textContent='DEMO MODE';document.querySelector('#dot').style.background='#f0c36a'}
 async function resolveLiveRole(user){
-  // Primary role source used by the Menu Orbit operations migration.
   let res=await db.from('mo_staff_profiles').select('role,active').eq('user_id',user.id).maybeSingle();
   if(!res.error&&res.data){if(res.data.active===false)throw new Error('This staff account is inactive.');return res.data.role}
-  // Backward-compatible fallbacks for earlier project schemas.
   for(const table of ['staff_profiles','profiles']){
     const q=await db.from(table).select('role').eq('user_id',user.id).maybeSingle();
     if(!q.error&&q.data?.role)return q.data.role;
