@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#FFC514">
   <title>Pet Express OS — The Dog & Cat Shop</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="demo-upgrade.css">
 </head>
 <body>
   <header class="topbar">
@@ -97,11 +98,11 @@
       </section>
 
       <section id="settings" class="page">
-        <div class="page-head"><div><h2>Settings</h2><p>Local demo storage and data backup.</p></div></div>
+        <div class="page-head"><div><h2>Settings</h2><p>Demo storage, backup and presentation controls.</p></div></div>
         <div class="split"><div class="card"><h3>Backup</h3><p>Export all demo records as JSON or restore a previous backup.</p><div class="actions"><button class="btn" id="exportJsonButton">Export JSON</button><label class="btn ghost file-button">Import JSON<input id="importJsonInput" type="file" accept="application/json"></label></div></div><div class="card"><h3>Demo Reset</h3><p>Restore the original Pet Express demo data on this device.</p><button class="btn danger" id="resetButton">Reset Demo Data</button></div></div>
       </section>
 
-      <footer>Pet Express OS • Demo data is stored locally on this device</footer>
+      <footer>Pet Express OS • Client Presentation Demo • Simulated cloud sync and role permissions</footer>
     </main>
   </div>
 
@@ -115,5 +116,6 @@
   </div>
   <div id="toast" class="toast"></div>
   <script src="app.js"></script>
+  <script src="demo-upgrade.js"></script>
 </body>
 </html>
