@@ -109,6 +109,10 @@ window.MENU_ORBIT_CONFIG = {
       .customer-footer .footer-icon { font-size: 18px; }
       .stage { bottom: 86px !important; }
     }
+
+    /* Product cards remain direct tap targets on phones and desktop. */
+    .product { pointer-events: auto !important; touch-action: manipulation; cursor: pointer; }
+    .product .photo, .product .photo * { pointer-events: none; }
   `;
   document.head.appendChild(style);
 
@@ -149,6 +153,26 @@ window.MENU_ORBIT_CONFIG = {
   } else {
     installFooter();
   }
+})();
+
+/* Prevent the orbit drag handler from stealing taps from dynamically rendered products. */
+(() => {
+  const bindProductTap = (root = document) => {
+    root.querySelectorAll?.('.product:not([data-tap-fixed])').forEach(card => {
+      card.dataset.tapFixed = 'true';
+      card.addEventListener('pointerdown', e => e.stopPropagation());
+      card.addEventListener('pointerup', e => e.stopPropagation());
+      card.addEventListener('pointercancel', e => e.stopPropagation());
+    });
+  };
+  const start = () => {
+    bindProductTap();
+    const orbit = document.querySelector('#orbit');
+    if (!orbit) return;
+    new MutationObserver(() => bindProductTap(orbit)).observe(orbit, { childList: true, subtree: true });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
 })();
 
 /* Shared order → inventory automation. Live UUID orders are processed by Supabase;
