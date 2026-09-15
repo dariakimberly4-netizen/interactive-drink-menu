@@ -6,13 +6,15 @@ window.MENU_ORBIT_CONFIG = {
 
 /* Keep the existing Menu Orbit layout intact. */
 (() => {
+  const path=location.pathname.toLowerCase();
+  const isCustomerMenu=path.endsWith('/starbucks-menu-orbit/')||path.endsWith('/starbucks-menu-orbit/index.html');
+  const isStaffPortal=/\/(manager|staff|cashier|seller-center|staff-operations-center)\.html$/.test(path);
   const style = document.createElement('style');
   style.textContent = `
-    #gestureBtn,[id*="gestureBtn"],.gesture-box,#gestureBox,.hand-cursor,#handCursor,.control-dock,.instructions {
-      display:none!important;visibility:hidden!important;pointer-events:none!important;
-    }
+    #gestureBtn,[id*="gestureBtn"],.gesture-box,#gestureBox,.hand-cursor,#handCursor,.control-dock,.instructions {display:none!important;visibility:hidden!important;pointer-events:none!important}
     .product{pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important}
     .product .photo,.product .photo *{pointer-events:none!important}
+    ${isStaffPortal?'.customer-footer{display:none!important}':''}
     .customer-footer{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:30;width:min(92vw,560px);height:66px;padding:7px 10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;background:rgba(4,28,20,.82);backdrop-filter:blur(22px) saturate(125%);-webkit-backdrop-filter:blur(22px) saturate(125%);border:1px solid rgba(212,173,98,.34);border-radius:999px;box-shadow:0 14px 40px rgba(0,0,0,.40),inset 0 1px 0 rgba(255,255,255,.06)}
     .customer-footer::before{content:"";position:absolute;left:14%;right:14%;top:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(244,200,111,.72),transparent);pointer-events:none}
     .customer-footer button{position:relative;min-width:0;border:0;border-radius:999px;background:transparent;color:#cbd9d2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:800;padding:5px 3px;transition:transform .18s ease,background .18s ease,color .18s ease}
@@ -25,6 +27,7 @@ window.MENU_ORBIT_CONFIG = {
   document.head.appendChild(style);
 
   const installFooter=()=>{
+    if(!isCustomerMenu){document.querySelector('.customer-footer')?.remove();return}
     document.querySelector('.customer-footer')?.remove();
     const footer=document.createElement('nav');
     footer.className='customer-footer';footer.setAttribute('aria-label','Customer navigation');
@@ -33,25 +36,23 @@ window.MENU_ORBIT_CONFIG = {
     document.body.appendChild(footer);
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installFooter,{once:true});else installFooter();
+
+  /* Reliable Staff tab route for the Branch Manager portal. */
+  if(path.endsWith('/manager.html')){
+    document.addEventListener('click',e=>{
+      const b=e.target.closest?.('button[data-tab="staff"]');
+      if(!b)return;
+      e.preventDefault();e.stopImmediatePropagation();
+      location.href='staff-operations-center.html';
+    },true);
+  }
 })();
 
-/* Product interaction repair.
-   Do NOT synthesize clicks on pointerup: the native button click is more reliable on desktop.
-   This delegated fallback survives every Orbit re-render. */
+/* Product interaction repair. */
 (() => {
   const productFromEvent=e=>e.target?.closest?.('.product[data-id]');
-  document.addEventListener('click',e=>{
-    const card=productFromEvent(e);
-    if(!card)return;
-    /* Let the card's own onclick run. Stop only ancestor drag/click handlers. */
-    e.stopPropagation();
-  },false);
-  document.addEventListener('keydown',e=>{
-    const card=productFromEvent(e);
-    if(!card||!['Enter',' '].includes(e.key))return;
-    e.preventDefault();
-    card.click();
-  },false);
+  document.addEventListener('click',e=>{const card=productFromEvent(e);if(!card)return;e.stopPropagation()},false);
+  document.addEventListener('keydown',e=>{const card=productFromEvent(e);if(!card||!['Enter',' '].includes(e.key))return;e.preventDefault();card.click()},false);
 })();
 
 /* Shared order → inventory automation. */
