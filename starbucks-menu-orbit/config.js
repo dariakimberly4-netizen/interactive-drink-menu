@@ -35,31 +35,23 @@ window.MENU_ORBIT_CONFIG = {
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installFooter,{once:true});else installFooter();
 })();
 
-/* HARD FIX: product clicks are handled before the orbit drag layer can swallow them.
-   Works for every product rendered later by category/search/favorites too. */
+/* Product interaction repair.
+   Do NOT synthesize clicks on pointerup: the native button click is more reliable on desktop.
+   This delegated fallback survives every Orbit re-render. */
 (() => {
-  let down=null;
-  document.addEventListener('pointerdown',e=>{
-    const card=e.target.closest?.('.product');
-    if(!card)return;
-    down={card,x:e.clientX,y:e.clientY,id:e.pointerId};
-    e.stopPropagation();
-  },true);
-  document.addEventListener('pointerup',e=>{
-    if(!down||down.id!==e.pointerId)return;
-    const {card,x,y}=down;down=null;
-    const moved=Math.hypot(e.clientX-x,e.clientY-y);
-    if(moved>14)return;
-    e.preventDefault();e.stopImmediatePropagation();
-    if(typeof card.onclick==='function') card.onclick.call(card,e);
-    else card.dispatchEvent(new MouseEvent('click',{bubbles:false,cancelable:true,view:window}));
-  },true);
-  document.addEventListener('pointercancel',()=>{down=null},true);
+  const productFromEvent=e=>e.target?.closest?.('.product[data-id]');
   document.addEventListener('click',e=>{
-    const card=e.target.closest?.('.product');
-    if(!card||e.detail===0)return;
+    const card=productFromEvent(e);
+    if(!card)return;
+    /* Let the card's own onclick run. Stop only ancestor drag/click handlers. */
     e.stopPropagation();
-  },true);
+  },false);
+  document.addEventListener('keydown',e=>{
+    const card=productFromEvent(e);
+    if(!card||!['Enter',' '].includes(e.key))return;
+    e.preventDefault();
+    card.click();
+  },false);
 })();
 
 /* Shared order → inventory automation. */
