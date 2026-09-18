@@ -84,7 +84,7 @@ img{display:block}
 .final:after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(5,35,26,.38),rgba(5,29,21,.82))}
 
 .opening-copy{
-  position:absolute;pointer-events:auto;z-index:30;left:clamp(22px,6vw,92px);top:50%;transform:translateY(-48%);
+  position:absolute;pointer-events:auto;z-index:90;z-index:30;left:clamp(22px,6vw,92px);top:50%;transform:translateY(-48%);
   width:min(43vw,660px);will-change:opacity,transform
 }
 .kicker{font-size:11px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:#e1c38b}
@@ -106,10 +106,12 @@ img{display:block}
 .copy.people-copy{right:7vw;top:50%;transform:translateY(-47%);width:min(42vw,620px)}
 .copy.origin-copy{left:7vw;top:50%;transform:translateY(-47%);max-width:690px}
 
-.final-copy{position:absolute;pointer-events:auto;z-index:35;inset:0;display:grid;place-content:center;text-align:center;padding:24px;opacity:0}
+.final-copy{position:absolute;pointer-events:none;z-index:35;inset:0;display:grid;place-content:center;text-align:center;padding:24px;opacity:0}
 .final-copy h2{font-size:clamp(60px,8.8vw,142px);color:#fff}
 .final-copy p{font-size:clamp(18px,1.45vw,22px);color:#e8efeb;margin:0 auto 30px}
-.final-copy .btn{background:#fff;color:var(--forest);justify-self:center;min-width:190px}
+.final-copy .btn{background:#fff;color:var(--forest);justify-self:center;min-width:190px;pointer-events:none}
+.final-copy.active{pointer-events:auto}
+.final-copy.active .btn{pointer-events:auto}
 
 .gold-thread{pointer-events:none;
   position:absolute;z-index:24;left:50%;bottom:-5vh;width:3px;height:64vh;
@@ -338,6 +340,7 @@ footer span{font-size:11px}
     final.style.opacity=range(p,.86,.94);
     final.style.transform='scale('+(1.12-range(p,.88,1)*.06)+') translateX('+(range(p,.88,1)*-2)+'%)';
     finalCopy.style.opacity=range(p,.92,.97);
+    finalCopy.classList.toggle('active',p>.915);
 
     // GOLD THREAD — same visual thread changes with each scene
     let angle=67, left=50, bottom=-5, height=64, opacity=.86;
