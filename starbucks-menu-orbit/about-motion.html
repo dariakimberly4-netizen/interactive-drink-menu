@@ -64,9 +64,14 @@ h1{font-size:clamp(66px,9vw,148px)}h2{font-size:clamp(54px,7vw,104px)}
  .scene{padding:130px 20px 60px}.hero{display:block}.hero .copy{max-width:100%}h1{font-size:58px}.bean{width:54vw;height:78vw;right:-6%;top:35%}.photoOrbit img{width:92px;height:120px}.p1{top:48%;right:8%}.p2{right:45%;bottom:5%}.p3{right:-2%;bottom:12%}
  .story .wrap,.planet .wrap{grid-template-columns:1fr}.frame img{height:54vh}.grid{grid-template-columns:1fr}.card{min-height:62vh}.earth{height:52vh}.giantWord{font-size:38vw}
 }
+
+.motionStamp{position:fixed;z-index:150;left:50%;top:118px;transform:translateX(-50%);background:#ffde8b;color:#063b29;padding:8px 14px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.18em;box-shadow:0 10px 30px #0003;animation:stampBounce 1.8s ease-in-out infinite}
+@keyframes stampBounce{50%{transform:translateX(-50%) translateY(8px) scale(1.05)}}
+body.reduced .motionStamp{animation:none}
+@media(max-width:900px){.motionStamp{top:112px}}
 </style>
 </head>
-<body>
+<body><div class="motionStamp">LIVE MOTION</div>
 <nav><a class="brand" href="#home">OUR STORY</a><a href="#home">HOME</a><a href="#story">OUR STORY</a><a class="menu" href="index.html#orbit">MENU</a><a href="#people">PEOPLE</a><a href="#planet">PLANET</a><a class="push" href="#future">FUTURE</a></nav>
 <div class="ticker"><div>COFFEE • PEOPLE • PLANET • POSSIBILITY • COFFEE • PEOPLE • PLANET • POSSIBILITY • COFFEE • PEOPLE • PLANET • POSSIBILITY • </div></div>
 
