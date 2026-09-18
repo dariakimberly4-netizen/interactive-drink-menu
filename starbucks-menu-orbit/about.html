@@ -303,8 +303,45 @@ body{background:linear-gradient(120deg,#fffaf2,#f1eadf,#eef6f1);background-size:
 }
 body.reduced .wildTicker{display:none}
 body.reduced,.reduced .hero:after,.reduced .hero h1,.reduced .orbitCard,.reduced .heroPhoto,.reduced .storyImage,.reduced .planetPhoto,.reduced .journeyCard,.reduced .peopleFeature,.reduced .peopleSmall,.reduced .impact div,.reduced .final:before,.reduced .final:after,.reduced .menuLink{animation:none!important}
+</style><style id="force-wild-motion">
+/* User explicitly requested wild motion: override OS/browser reduced-motion unless the page button is used */
+body:not(.reduced){animation:bgShift 14s ease infinite!important}
+body:not(.reduced) .wildTicker{display:flex!important}
+body:not(.reduced) .wildTicker div{animation:ticker 12s linear infinite!important}
+body:not(.reduced) .hero:after{animation:spinWash 16s linear infinite!important}
+body:not(.reduced) .hero h1{animation:headlineBreath 3.8s ease-in-out infinite!important}
+body:not(.reduced) .oc1{animation:orbit1 6s ease-in-out infinite!important}
+body:not(.reduced) .oc2{animation:orbit2 7s ease-in-out infinite!important}
+body:not(.reduced) .oc3{animation:orbit3 6.5s ease-in-out infinite!important}
+body:not(.reduced) .heroPhoto{animation:heroCinematic 5s ease-in-out infinite!important}
+body:not(.reduced) .storyImage,body:not(.reduced) .planetPhoto{animation:autoPan 7s ease-in-out infinite!important}
+body:not(.reduced) .journeyCard{animation:cardFloat 4.6s ease-in-out infinite!important}
+body:not(.reduced) .peopleFeature,body:not(.reduced) .peopleSmall{animation:featureSway 5s ease-in-out infinite!important}
+body:not(.reduced) .impact div{animation:impactPulse 3.8s ease-in-out infinite!important}
+body:not(.reduced) .final:before{animation:finalOrbit 9s linear infinite!important}
+body:not(.reduced) .final:after{animation:finalOrbit 7s linear infinite reverse!important}
+body:not(.reduced) .menuLink{animation:menuPulse 2.2s ease-in-out infinite!important}
+
+/* unmistakable mobile motion */
+.motionBean{position:fixed;z-index:70;left:50%;top:52%;width:68px;height:96px;border-radius:52% 48% 48% 52%;
+ background:radial-gradient(circle at 28% 20%,#b8763e,#603014 42%,#251107 78%);
+ box-shadow:inset -10px -14px 18px #0007,0 16px 35px #0005;pointer-events:none;opacity:.0}
+.motionBean:after{content:"";position:absolute;left:47%;top:8%;width:10%;height:84%;border-radius:50%;background:#1a0a04;transform:rotate(10deg)}
+body:not(.reduced) .motionBean{animation:beanFly 12s cubic-bezier(.5,.05,.25,1) infinite!important}
+@keyframes beanFly{
+ 0%{opacity:0;transform:translate(-60vw,35vh) rotate(-40deg) scale(.45)}
+ 10%{opacity:.85}
+ 35%{transform:translate(-12vw,-10vh) rotate(160deg) scale(.9)}
+ 60%{transform:translate(22vw,8vh) rotate(330deg) scale(.65)}
+ 85%{opacity:.75;transform:translate(45vw,-28vh) rotate(520deg) scale(1.05)}
+ 100%{opacity:0;transform:translate(70vw,-45vh) rotate(680deg) scale(.45)}
+}
+.motionWord{position:fixed;z-index:69;left:0;right:0;bottom:11vh;text-align:center;pointer-events:none;
+ font-family:"DM Serif Display",serif;font-size:clamp(48px,12vw,140px);font-weight:400;color:#0b3d2e0d;letter-spacing:-.04em}
+body:not(.reduced) .motionWord{animation:wordPulse 4s ease-in-out infinite!important}
+@keyframes wordPulse{50%{transform:scale(1.07);color:#0b3d2e16}}
 </style></head>
-<body><div class="motionSky" aria-hidden="true"><i></i><i></i><i></i></div><div class="cursorGlow" aria-hidden="true"></div><div class="scrollBeam" aria-hidden="true"></div>
+<body><div class="motionBean" aria-hidden="true"></div><div class="motionWord" aria-hidden="true">CONNECT</div><div class="motionSky" aria-hidden="true"><i></i><i></i><i></i></div><div class="cursorGlow" aria-hidden="true"></div><div class="scrollBeam" aria-hidden="true"></div>
 <div class="progress"></div>
 <nav class="siteNav" aria-label="Primary navigation">
   <a class="brand" href="#home"><span class="brandMark">☕</span><span class="brandText">OUR STORY</span></a>
@@ -507,5 +544,15 @@ document.querySelectorAll('.journeyCard').forEach(card=>{
   });
   card.addEventListener('pointerleave',()=>card.style.transform='');
 });
+</script><script id="force-motion-script">
+const word=document.querySelector('.motionWord');
+const words=['CONNECT','COFFEE','PEOPLE','PLANET','POSSIBILITY'];
+let wi=0;
+setInterval(()=>{ if(!document.body.classList.contains('reduced')&&word){wi=(wi+1)%words.length;word.textContent=words[wi];}},1800);
+const mb=document.getElementById('motionBtn');
+if(mb){
+  mb.textContent='REDUCE MOTION';
+  mb.addEventListener('click',()=>{mb.textContent=document.body.classList.contains('reduced')?'WILD MOTION':'REDUCE MOTION';});
+}
 </script></body>
 </html>
