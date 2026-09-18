@@ -174,8 +174,69 @@ footer{font-size:14px!important}
   .kicker{font-size:12px!important;letter-spacing:.12em!important}
   .siteNav{height:68px!important}
 }
+</style><style id="wild-motion-v1">
+/* Wild motion layer — keeps text readable */
+body{overflow-x:hidden}
+.motionSky{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.motionSky i{position:absolute;border-radius:50%;filter:blur(18px);opacity:.22;mix-blend-mode:multiply;animation:drift 18s ease-in-out infinite alternate}
+.motionSky i:nth-child(1){width:240px;height:240px;background:#0a7a50;left:-60px;top:16%}
+.motionSky i:nth-child(2){width:320px;height:320px;background:#d0ab65;right:-90px;top:38%;animation-duration:24s}
+.motionSky i:nth-child(3){width:180px;height:180px;background:#7fb39c;left:28%;bottom:6%;animation-duration:20s}
+@keyframes drift{to{transform:translate3d(80px,-50px,0) scale(1.18) rotate(14deg)}}
+
+.hero,.story,.journey,.people,.planet,.stores,.final{position:relative;z-index:2}
+.hero:before,.story:before,.planet:before{
+ content:"";position:absolute;inset:auto -10vw -80px auto;width:260px;height:260px;border:1px solid #0b3d2e22;border-radius:50%;
+ box-shadow:0 0 0 28px #0b3d2e08,0 0 0 56px #0b3d2e05;pointer-events:none;animation:ringPulse 7s ease-in-out infinite
+}
+@keyframes ringPulse{50%{transform:scale(1.14) rotate(12deg);opacity:.55}}
+
+.heroVisual{transform-style:preserve-3d}
+.heroPhoto{will-change:transform;transition:transform .25s ease-out;animation:heroFloat 7s ease-in-out infinite}
+.note{animation:noteFloat 5s ease-in-out infinite}
+@keyframes heroFloat{50%{transform:translateY(-14px) scale(1.015)}}
+@keyframes noteFloat{50%{transform:translateY(10px) rotate(-1deg)}}
+
+.journeyCard,.peopleFeature,.peopleSmall,.planetPhoto,.storyImage{will-change:transform}
+.journeyCard{transform-style:preserve-3d}
+.journeyCard:hover{transform:translateY(-14px) rotateX(2deg) rotateY(-2deg) scale(1.015)!important}
+.journeyCard img{transition:transform .65s cubic-bezier(.2,.8,.2,1)}
+.journeyCard:hover img{transform:scale(1.08)}
+
+.peopleFeature img,.peopleSmall img,.storyImage,.planetPhoto{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.peopleFeature:hover img,.peopleSmall:hover img{transform:scale(1.06)}
+.storyImage:hover,.planetPhoto:hover{transform:scale(1.025)}
+
+.btn,.menuLink,.storeLink{position:relative;overflow:hidden;transform:translateZ(0)}
+.btn:after,.menuLink:after,.storeLink:after{
+ content:"";position:absolute;inset:-30%;background:linear-gradient(115deg,transparent 36%,#ffffff55 50%,transparent 64%);
+ transform:translateX(-130%);transition:transform .7s ease
+}
+.btn:hover:after,.menuLink:hover:after,.storeLink:hover:after{transform:translateX(130%)}
+
+.sectionTitle{transform-origin:left center}
+.reveal.on .sectionTitle{animation:titleRise .8s cubic-bezier(.2,.9,.2,1)}
+@keyframes titleRise{0%{letter-spacing:.04em;transform:translateY(20px) scale(.98);opacity:.35}100%{letter-spacing:normal;transform:none;opacity:1}}
+
+.cardText{transition:transform .45s ease,background .45s ease}
+.peopleFeature:hover .cardText,.peopleSmall:hover .cardText{transform:translateY(-8px);background:rgba(0,35,25,.9)}
+
+.cursorGlow{position:fixed;width:180px;height:180px;border-radius:50%;pointer-events:none;z-index:5;background:radial-gradient(circle,#d9b66c20,transparent 65%);transform:translate(-50%,-50%);mix-blend-mode:multiply}
+.scrollBeam{position:fixed;right:0;top:0;width:4px;height:0;background:linear-gradient(#d9b66c,#00754a);z-index:120;border-radius:0 0 0 4px}
+
+@media(max-width:900px){
+ .cursorGlow{display:none}
+ .motionSky i{opacity:.14}
+ .heroPhoto{animation-duration:8s}
+}
+@media(prefers-reduced-motion:reduce){
+ .motionSky,.cursorGlow,.scrollBeam{display:none!important}
+ .heroPhoto,.note,.hero:before,.story:before,.planet:before{animation:none!important}
+}
+body.reduced .motionSky,body.reduced .cursorGlow,body.reduced .scrollBeam{display:none!important}
+body.reduced .heroPhoto,body.reduced .note,body.reduced .hero:before,body.reduced .story:before,body.reduced .planet:before{animation:none!important}
 </style></head>
-<body>
+<body><div class="motionSky" aria-hidden="true"><i></i><i></i><i></i></div><div class="cursorGlow" aria-hidden="true"></div><div class="scrollBeam" aria-hidden="true"></div>
 <div class="progress"></div>
 <nav class="siteNav" aria-label="Primary navigation">
   <a class="brand" href="#home"><span class="brandMark">☕</span><span class="brandText">OUR STORY</span></a>
@@ -328,5 +389,47 @@ function filterStores(){
 document.getElementById('storeBtn').addEventListener('click',filterStores);
 document.getElementById('storeInput').addEventListener('input',filterStores);
 </script>
-</body>
+<script id="wild-motion-script">
+const glow=document.querySelector('.cursorGlow');
+const beam=document.querySelector('.scrollBeam');
+const heroVisual=document.querySelector('.heroVisual');
+const heroPhoto=document.querySelector('.heroPhoto');
+
+addEventListener('pointermove',e=>{
+  if(glow){glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'}
+  if(heroVisual && heroPhoto && matchMedia('(pointer:fine)').matches){
+    const r=heroVisual.getBoundingClientRect();
+    const x=(e.clientX-(r.left+r.width/2))/r.width;
+    const y=(e.clientY-(r.top+r.height/2))/r.height;
+    heroPhoto.style.transform='perspective(900px) rotateY('+(x*5)+'deg) rotateX('+(-y*5)+'deg) translateY(-4px) scale(1.015)';
+  }
+},{passive:true});
+
+heroVisual?.addEventListener('pointerleave',()=>{
+  if(heroPhoto) heroPhoto.style.transform='';
+});
+
+addEventListener('scroll',()=>{
+  const max=document.documentElement.scrollHeight-innerHeight;
+  const p=max?scrollY/max:0;
+  if(beam) beam.style.height=(p*100)+'vh';
+
+  document.querySelectorAll('.storyImage,.planetPhoto,.peopleFeature img,.peopleSmall img').forEach((el,i)=>{
+    const r=el.getBoundingClientRect();
+    const offset=((r.top+r.height/2)-innerHeight/2)/innerHeight;
+    el.style.transform='translateY('+(offset*-10)+'px) scale(1.02)';
+  });
+},{passive:true});
+
+document.querySelectorAll('.journeyCard').forEach(card=>{
+  card.addEventListener('pointermove',e=>{
+    if(!matchMedia('(pointer:fine)').matches) return;
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform='translateY(-10px) perspective(900px) rotateX('+(-y*5)+'deg) rotateY('+(x*6)+'deg) scale(1.012)';
+  });
+  card.addEventListener('pointerleave',()=>card.style.transform='');
+});
+</script></body>
 </html>
