@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Our Story — Motion Experience</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;600;700&display=swap');
+:root{--g:#063b29;--g2:#00754a;--cream:#f6f0e5;--gold:#d4b06a;--ink:#14231c}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#061a13;color:#fff;font-family:"DM Sans",sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;z-index:100;left:0;right:0;top:0;height:72px;display:flex;align-items:center;gap:22px;padding:0 5vw;background:rgba(246,240,229,.95);backdrop-filter:blur(14px);color:var(--g);border-bottom:1px solid #143d2d20}
+nav a{font-weight:700;font-size:13px;white-space:nowrap}nav .brand{font-family:"DM Serif Display";font-size:22px;margin-right:6px}nav .menu{background:var(--g2);color:#fff;padding:12px 18px;border-radius:999px}nav .push{margin-left:auto}
+.motionToggle{position:fixed;z-index:110;right:14px;bottom:14px;border:1px solid #ffffff45;background:#083e2ddd;color:#fff;padding:11px 14px;border-radius:999px;font-weight:700}
+.ticker{position:fixed;z-index:90;top:72px;left:0;right:0;height:34px;background:var(--g);overflow:hidden;display:flex;align-items:center}
+.ticker div{white-space:nowrap;min-width:max-content;font-size:11px;font-weight:700;letter-spacing:.2em;animation:ticker 14s linear infinite}
+@keyframes ticker{to{transform:translateX(-50%)}}
+.scene{min-height:100svh;position:relative;overflow:hidden;padding:140px 7vw 70px;display:grid;align-items:center}
+.hero{background:radial-gradient(circle at 72% 28%,#d39a4f55 0 12%,transparent 34%),linear-gradient(135deg,#051b13,#0e4b36 58%,#06251b)}
+.hero .copy{position:relative;z-index:6;max-width:650px}
+.kicker{font-size:12px;letter-spacing:.22em;color:#e3c78e;font-weight:700}
+h1,h2{font-family:"DM Serif Display",serif;font-weight:400;margin:12px 0;line-height:.9}
+h1{font-size:clamp(66px,9vw,148px)}h2{font-size:clamp(54px,7vw,104px)}
+.hero p,.scene p{font-size:18px;line-height:1.7;max-width:650px}
+.btn{display:inline-block;margin-top:20px;padding:14px 20px;border-radius:999px;background:#fff;color:var(--g);font-weight:700}
+.giantWord{position:absolute;left:-2vw;bottom:-7vh;font-family:"DM Serif Display";font-size:clamp(130px,24vw,420px);line-height:.75;color:#ffffff08;white-space:nowrap;animation:wordDrift 10s ease-in-out infinite alternate}
+@keyframes wordDrift{to{transform:translateX(8vw) scale(1.04)}}
+.bean{position:absolute;right:11%;top:19%;width:min(30vw,430px);height:min(47vw,640px);border-radius:50% 46% 52% 48%;background:radial-gradient(circle at 30% 20%,#d5a36a,#7d431f 32%,#2f1409 70%);box-shadow:inset -40px -40px 80px #0009,0 30px 90px #0009,0 0 90px #e0ab5a50;transform:rotate(-15deg);animation:beanFly 4.8s ease-in-out infinite}
+.bean:after{content:"";position:absolute;left:47%;top:4%;width:12%;height:92%;background:#1e0d06;border-radius:50%;transform:rotate(10deg)}
+@keyframes beanFly{50%{transform:translateY(-34px) rotate(-6deg) scale(1.03)}}
+.photoOrbit{position:absolute;inset:0;pointer-events:none}
+.photoOrbit img{position:absolute;width:140px;height:180px;object-fit:cover;border-radius:22px;border:4px solid #fff;box-shadow:0 20px 50px #0008}
+.p1{right:4%;top:18%;animation:o1 8s ease-in-out infinite}.p2{right:29%;bottom:6%;animation:o2 9s ease-in-out infinite}.p3{right:2%;bottom:18%;animation:o3 10s ease-in-out infinite}
+@keyframes o1{50%{transform:translate(-55px,40px) rotate(10deg)}}@keyframes o2{50%{transform:translate(60px,-55px) rotate(-8deg)}}@keyframes o3{50%{transform:translate(-40px,-45px) rotate(7deg)}}
+.story{background:var(--cream);color:var(--ink)}
+.story .wrap{display:grid;grid-template-columns:1fr 1fr;gap:7vw;align-items:center;position:relative;z-index:3}
+.frame{position:relative}.frame img{width:100%;height:66vh;object-fit:cover;border-radius:28px;box-shadow:0 30px 80px #0002;animation:photoPan 9s ease-in-out infinite}
+@keyframes photoPan{50%{transform:scale(1.045) translateY(-12px)}}
+.stamp{position:absolute;right:-20px;top:-20px;width:110px;height:110px;border-radius:50%;background:var(--g);color:white;display:grid;place-items:center;text-align:center;font-size:12px;font-weight:700;letter-spacing:.1em;animation:spin 13s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cards{background:#08291e;padding-top:145px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative;z-index:4}
+.card{min-height:520px;border-radius:28px;overflow:hidden;position:relative;transform-style:preserve-3d;animation:floatCard 6s ease-in-out infinite}
+.card:nth-child(2){animation-delay:-2s}.card:nth-child(3){animation-delay:-4s}
+@keyframes floatCard{50%{transform:translateY(-22px) rotate(.6deg)}}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.6s}.card:hover img{transform:scale(1.08)}
+.card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 22%,#00160fd9 75%,#00160ff2)}
+.cardText{position:absolute;z-index:3;left:26px;right:26px;bottom:28px}.cardText h3{font-family:"DM Serif Display";font-size:40px;margin:6px 0}.cardText small{color:#e6ca91;letter-spacing:.16em}
+.planet{background:linear-gradient(130deg,#eaf3ed,#dcebe1);color:var(--ink)}
+.planet .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:6vw;align-items:center;position:relative;z-index:3}
+.earth{height:68vh;border-radius:38px;background:radial-gradient(circle at 40% 30%,#7dc597,#32765b 35%,#164739 65%,#0a2d24);box-shadow:inset -70px -40px 100px #0004,0 30px 80px #0002;position:relative;animation:earthPulse 7s ease-in-out infinite}
+@keyframes earthPulse{50%{transform:scale(1.025) rotate(.8deg)}}
+.ring{position:absolute;inset:8%;border:1px solid #fff8;border-radius:50%;animation:spin 12s linear infinite}.ring.r2{inset:20%;animation-duration:8s;animation-direction:reverse}.ring:before,.ring:after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 0 20px #fff}.ring:before{top:-9px;left:48%}.ring:after{bottom:-9px;left:30%}
+.final{background:linear-gradient(140deg,#071e16,#0a4732);text-align:center;place-items:center}
+.final .center{position:relative;z-index:4;max-width:900px;margin:auto}.final h2{font-size:clamp(66px,10vw,150px)}
+.final:before,.final:after{content:"";position:absolute;border-radius:50%;border:1px solid #ffffff20}
+.final:before{width:60vw;height:60vw;animation:spin 24s linear infinite}.final:after{width:38vw;height:38vw;animation:spin 14s linear infinite reverse}
+.spark{position:absolute;width:6px;height:6px;background:#e7c884;border-radius:50%;box-shadow:0 0 18px #e7c884;animation:spark 5s ease-in-out infinite}
+.s1{left:12%;top:23%}.s2{right:15%;top:30%;animation-delay:-1s}.s3{left:22%;bottom:18%;animation-delay:-2s}.s4{right:24%;bottom:12%;animation-delay:-3s}
+@keyframes spark{50%{transform:translateY(-50px) scale(2);opacity:.3}}
+.reveal{opacity:0;transform:translateY(40px);transition:.8s}.reveal.on{opacity:1;transform:none}
+.reduced *{animation:none!important;transition:none!important}
+@media(max-width:900px){
+ nav{height:68px;padding:0 14px;gap:10px;overflow-x:auto}nav a:not(.brand):not(.menu){display:none}.ticker{top:68px}
+ .scene{padding:130px 20px 60px}.hero{display:block}.hero .copy{max-width:100%}h1{font-size:58px}.bean{width:54vw;height:78vw;right:-6%;top:35%}.photoOrbit img{width:92px;height:120px}.p1{top:48%;right:8%}.p2{right:45%;bottom:5%}.p3{right:-2%;bottom:12%}
+ .story .wrap,.planet .wrap{grid-template-columns:1fr}.frame img{height:54vh}.grid{grid-template-columns:1fr}.card{min-height:62vh}.earth{height:52vh}.giantWord{font-size:38vw}
+}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="#home">OUR STORY</a><a href="#home">HOME</a><a href="#story">OUR STORY</a><a class="menu" href="index.html#orbit">MENU</a><a href="#people">PEOPLE</a><a href="#planet">PLANET</a><a class="push" href="#future">FUTURE</a></nav>
+<div class="ticker"><div>COFFEE • PEOPLE • PLANET • POSSIBILITY • COFFEE • PEOPLE • PLANET • POSSIBILITY • COFFEE • PEOPLE • PLANET • POSSIBILITY • </div></div>
+
+<section class="scene hero" id="home">
+ <div class="copy reveal"><div class="kicker">WILD MOTION STORYVERSE</div><h1>COFFEE<br>CONNECTS<br>US.</h1><p>This version is deliberately alive: the bean floats, photographs orbit, typography drifts, sections breathe, and every chapter moves continuously.</p><a class="btn" href="#story">ENTER THE STORY ↓</a></div>
+ <div class="bean"></div>
+ <div class="photoOrbit"><img class="p1" src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=600&q=82"><img class="p2" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=82"><img class="p3" src="https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=600&q=82"></div>
+ <div class="giantWord">COFFEE</div>
+</section>
+
+<section class="scene story" id="story">
+ <div class="wrap">
+  <div class="frame reveal"><img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1300&q=88"><div class="stamp">FROM BEAN<br>TO CUP</div></div>
+  <div class="reveal"><div class="kicker" style="color:#00754a">THE BEGINNING</div><h2>One small bean. A world of stories.</h2><p>Scroll through a living editorial experience where photography moves independently from the text instead of behaving like one flat poster.</p></div>
+ </div>
+</section>
+
+<section class="scene cards" id="people">
+ <div class="grid">
+  <article class="card"><img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=900&q=86"><div class="cardText"><small>PEOPLE</small><h3>The third place</h3><p>Spaces become meaningful because people fill them with life.</p></div></article>
+  <article class="card"><img src="https://images.unsplash.com/photo-1511081692775-05d0f180a065?auto=format&fit=crop&w=900&q=86"><div class="cardText"><small>COMMUNITY</small><h3>Shared moments</h3><p>Conversation turns a cup into a memory.</p></div></article>
+  <article class="card"><img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=900&q=86"><div class="cardText"><small>CRAFT</small><h3>Made by people</h3><p>Hands, care and detail shape the experience.</p></div></article>
+ </div>
+</section>
+
+<section class="scene planet" id="planet">
+ <div class="wrap">
+  <div class="reveal"><div class="kicker" style="color:#00754a">PLANET</div><h2>A brighter tomorrow keeps moving.</h2><p>Origin, reuse, care and continuous improvement become part of one moving system rather than static information cards.</p></div>
+  <div class="earth reveal"><div class="ring"></div><div class="ring r2"></div></div>
+ </div>
+</section>
+
+<section class="scene final" id="future">
+ <i class="spark s1"></i><i class="spark s2"></i><i class="spark s3"></i><i class="spark s4"></i>
+ <div class="center reveal"><div class="kicker">THE NEXT CHAPTER</div><h2>ONE CUP.<br>ENDLESS MOTION.</h2><p>Only MENU opens your existing orbit. Everything else stays inside this story experience.</p><a class="btn" href="#home">REPLAY ↑</a></div>
+</section>
+
+<button class="motionToggle" id="motion">REDUCE MOTION</button>
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('on')),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+document.getElementById('motion').onclick=()=>document.body.classList.toggle('reduced');
+document.querySelectorAll('.card').forEach(card=>{
+ card.addEventListener('pointermove',e=>{
+  if(innerWidth<900)return;
+  const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  card.style.transform='perspective(900px) rotateX('+(-y*6)+'deg) rotateY('+(x*8)+'deg) translateY(-10px)';
+ });
+ card.addEventListener('pointerleave',()=>card.style.transform='');
+});
+</script>
+</body></html>
