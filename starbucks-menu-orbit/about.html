@@ -14,4 +14,44 @@
 <section class="scene photo8"><div class="copy glass"><div class="eyebrow">Chapter 07 • Impact Forest</div><h2>IMPACT BECOMES A WORLD</h2><p>Community and environmental stories are visualized as a living landscape: light becomes trees, water becomes rivers, and shared moments illuminate the forest.</p></div></section>
 <section class="scene photo1"><div class="stars"></div><div class="copy"><div class="eyebrow">Finale • The Infinite Cup</div><div class="portal"><div class="cup">∞</div></div><h2>ONE CUP.<br>LIMITLESS CONNECTIONS.</h2><p>The cup dissolves into thousands of particles, then reforms on the table where the journey began.</p><div class="actions"><a class="cta" href="index.html">Return to Menu Orbit</a><a class="cta alt" href="#start">Experience Again</a></div></div></section>
 <script>const b=document.body,m=document.getElementById('motion');m.onclick=()=>{b.classList.toggle('reduced');m.textContent=b.classList.contains('reduced')?'Motion Reduced ✓':'Reduce Motion'};</script>
+<style>
+/* WILDEST STORYVERSE upgrade */
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:40;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),transparent 0 90px,rgba(0,117,74,.035) 260px,transparent 420px)}
+.scene{perspective:1000px}
+.copy{transition:transform .5s ease,filter .5s ease}
+.scene:hover .copy{transform:translateY(-5px)}
+.storyrail{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:45;display:grid;gap:7px;padding:10px 7px;border-radius:99px;background:#001d13aa;backdrop-filter:blur(14px);border:1px solid #ffffff25}
+.storyrail a{width:10px;height:10px;border-radius:50%;border:1px solid #fff;background:#ffffff25;display:block}
+.storyrail a.active{background:#00a862;box-shadow:0 0 18px #00a862}
+.beanstorm{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden}.fbean{position:absolute;top:-40px;font-size:24px;opacity:.42;animation:fall linear infinite}
+@keyframes fall{to{transform:translate3d(var(--drift),110vh,0) rotate(540deg)}}
+.portal{position:absolute;width:min(68vw,560px);aspect-ratio:1;border-radius:50%;border:1px solid #e6c86b55;box-shadow:0 0 60px #00a86244,inset 0 0 80px #d4a94c25;animation:breathe 3s ease-in-out infinite;pointer-events:none}
+@keyframes breathe{50%{transform:scale(1.06);box-shadow:0 0 120px #00a86266,inset 0 0 100px #d4a94c35}}
+.progress{position:fixed;top:65px;left:0;height:3px;width:0;background:linear-gradient(90deg,#00a862,#f0d48b);z-index:60}
+@media(max-width:700px){.storyrail{right:6px}.portal{width:88vw}.beanstorm{display:none}}
+</style>
+<div class="progress" id="storyProgress"></div><div class="beanstorm" id="beanstorm"></div><nav class="storyrail" id="storyrail" aria-label="Story chapters"></nav>
+<script>
+(()=>{
+ const scenes=[...document.querySelectorAll('.scene')];
+ scenes.forEach((s,i)=>{if(!s.id)s.id='chapter-'+(i+1)});
+ const rail=document.getElementById('storyrail');
+ scenes.forEach((s,i)=>{const a=document.createElement('a');a.href='#'+s.id;a.title='Chapter '+(i+1);rail.appendChild(a)});
+ const dots=[...rail.children], progress=document.getElementById('storyProgress');
+ const reduce=()=>document.body.classList.contains('reduced')||matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function update(){
+  const max=document.documentElement.scrollHeight-innerHeight;
+  progress.style.width=(max?scrollY/max*100:0)+'%';
+  let best=0,dist=Infinity;
+  scenes.forEach((s,i)=>{let d=Math.abs(s.getBoundingClientRect().top-innerHeight*.35);if(d<dist){dist=d;best=i}});
+  dots.forEach((d,i)=>d.classList.toggle('active',i===best));
+  if(!reduce()) scenes.forEach(s=>{const r=s.getBoundingClientRect();const p=(r.top-innerHeight/2)/innerHeight;s.style.backgroundPosition='center calc(50% + '+(p*45)+'px)'});
+ }
+ addEventListener('scroll',update,{passive:true});update();
+ addEventListener('pointermove',e=>{document.body.style.setProperty('--mx',e.clientX+'px');document.body.style.setProperty('--my',e.clientY+'px')},{passive:true});
+ const storm=document.getElementById('beanstorm');
+ if(!reduce()){for(let i=0;i<18;i++){const b=document.createElement('span');b.className='fbean';b.textContent='●';b.style.left=Math.random()*100+'vw';b.style.animationDuration=(7+Math.random()*9)+'s';b.style.animationDelay=(-Math.random()*14)+'s';b.style.setProperty('--drift',(Math.random()*180-90)+'px');storm.appendChild(b)}}
+ const first=scenes[0]; if(first){const p=document.createElement('div');p.className='portal';first.prepend(p)}
+})();
+</script>
 </body></html>
