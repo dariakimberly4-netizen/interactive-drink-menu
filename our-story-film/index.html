@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4efe5">
+<title>Coffee Connects Us — Cinematic Cut</title>
+<meta name="description" content="A cinematic scroll story about coffee, craft, people and origin.">
+<link rel="preload" as="image" href="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg">
+<style>
+:root{
+  --ivory:#f4efe5;--paper:#fbf8f2;--forest:#073b2b;--coffee:#583927;
+  --gold:#b59660;--ink:#16251f;--white:#fff;--nav:70px
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--ivory)}
+body{margin:0;background:#101712;color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
+body.menu-open{overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+img{display:block;max-width:100%}
+:focus-visible{outline:3px solid #f3c56c;outline-offset:4px;border-radius:10px}
+.skip{position:fixed;z-index:500;left:12px;top:10px;transform:translateY(-150%);background:#fff;color:var(--forest);padding:11px 15px;border-radius:999px;font-weight:800}
+.skip:focus{transform:none}
+
+.site-nav{
+  position:fixed;z-index:250;inset:0 0 auto 0;height:var(--nav);display:flex;align-items:center;
+  gap:28px;padding:0 clamp(18px,4vw,64px);color:#fff;
+  background:linear-gradient(180deg,rgba(0,0,0,.52),rgba(0,0,0,0));
+  transition:background .3s ease,color .3s ease,border-color .3s ease
+}
+.site-nav.light{background:rgba(244,239,229,.95);color:var(--forest);border-bottom:1px solid rgba(7,59,43,.12);backdrop-filter:blur(14px)}
+.wordmark{font-family:Georgia,"Times New Roman",serif;font-size:22px;font-weight:700;margin-right:auto;white-space:nowrap}
+.navlinks{display:flex;align-items:center;gap:22px}
+.navlinks a{font-size:11px;font-weight:900;letter-spacing:.14em}
+.navlinks a:hover{opacity:.72}
+.navlinks .menu-link{background:#fff;color:var(--forest);padding:11px 16px;border-radius:999px}
+.site-nav.light .menu-link{background:var(--forest);color:#fff}
+.menu-toggle{display:none;width:48px;height:48px;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;align-items:center;justify-content:center;cursor:pointer}
+.menu-toggle i,.menu-toggle:before,.menu-toggle:after{content:"";display:block;width:20px;height:2px;background:currentColor}
+.menu-toggle i{margin:5px 0}
+
+.mobile-menu{display:none;position:fixed;z-index:240;inset:0;background:var(--ivory);padding:calc(var(--nav) + 28px) 22px 32px}
+.mobile-menu.open{display:block}
+.mobile-menu nav{display:grid}
+.mobile-menu a{display:flex;align-items:center;min-height:64px;border-bottom:1px solid rgba(7,59,43,.14);font-family:Georgia,"Times New Roman",serif;font-size:34px;color:var(--forest)}
+.mobile-menu .mobile-cta{justify-content:center;border:0;border-radius:999px;background:var(--forest);color:#fff;margin-top:22px;font-family:inherit;font-size:13px;font-weight:900;letter-spacing:.1em}
+
+.film{height:620svh;position:relative;background:#0b0f0c}
+.marker{position:absolute;width:1px;height:1px;left:0;pointer-events:none}
+#home{top:0}#story{top:17%}#people{top:57%}#planet{top:75%}
+.stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#111}
+.layer{position:absolute;inset:-2%;opacity:0;will-change:opacity,transform,filter}
+.layer>img{width:100%;height:100%;object-fit:cover}
+.hero-layer{opacity:1;inset:0;background:var(--ivory)}
+.hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;clip-path:inset(7% 4% 7% 49% round 24px);will-change:clip-path,transform,filter}
+.hero-wash{position:absolute;inset:0 51% 0 0;background:
+  radial-gradient(circle at 24% 24%,rgba(181,150,96,.13),transparent 30%),
+  linear-gradient(135deg,#fcfaf5,#f1e9dc);pointer-events:none}
+.hero-copy{position:absolute;z-index:7;left:clamp(22px,6vw,92px);top:50%;transform:translateY(-48%);width:min(39vw,620px);will-change:opacity,transform}
+.eyebrow,.scene-no{font-size:11px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.hero-copy h1,.scene-copy h2,.final-copy h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.05em;line-height:.88;margin:14px 0;color:var(--forest)}
+.hero-copy h1{font-size:clamp(56px,7.5vw,118px)}
+.hero-copy p{font-size:clamp(17px,1.35vw,21px);line-height:1.65;color:#47564e;max-width:560px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 19px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.09em}
+.btn.primary{background:var(--forest);color:#fff}.btn.secondary{border:1px solid var(--forest);color:var(--forest)}
+.scroll-cue{position:absolute;z-index:9;right:32px;bottom:26px;color:#fff;font-size:10px;font-weight:900;letter-spacing:.18em;display:flex;gap:10px;align-items:center}
+.scroll-cue:before{content:"";width:34px;height:1px;background:currentColor}
+
+.history-layer{filter:grayscale(1)}
+.history-layer:after,.origin-layer:after,.final-layer:after{content:"";position:absolute;inset:0;pointer-events:none}
+.history-layer:after{background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.23) 58%,rgba(0,0,0,.08))}
+.history-layer img{object-position:center}
+
+.craft-layer{background:#9d6c4e}
+.craft-bg,.people-bg{position:absolute;inset:-5%;width:110%;height:110%;object-fit:cover;filter:blur(24px) brightness(.58) saturate(.82);transform:scale(1.12)}
+.craft-frame{position:absolute;z-index:2;left:7vw;top:11vh;width:min(66vw,1020px);height:78vh;overflow:hidden;background:#2a201a}
+.craft-frame img{width:100%;height:100%;object-fit:cover;object-position:center;image-rendering:auto}
+.craft-layer:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 45%,rgba(33,23,18,.18) 65%,rgba(33,23,18,.58));pointer-events:none}
+
+.people-layer{background:#7e604d}
+.people-bg{filter:blur(34px) brightness(.52) saturate(.72)}
+.people-frame{position:absolute;z-index:2;left:8vw;top:8vh;width:min(35vw,520px);height:84vh;overflow:hidden;background:#6f5848}
+.people-frame img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.people-layer:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(25,15,10,.12),rgba(25,15,10,.56) 58%,rgba(25,15,10,.78));pointer-events:none}
+
+.origin-layer:after{background:linear-gradient(90deg,rgba(5,36,26,.83),rgba(5,36,26,.35) 56%,rgba(5,36,26,.06))}
+.origin-layer img{object-position:center}
+
+.final-layer:after{background:linear-gradient(rgba(3,26,19,.56),rgba(3,26,19,.82))}
+.final-layer img{object-position:63% center;transform:scale(1.08)}
+
+.scene-copy{position:absolute;z-index:12;color:#fff;max-width:min(760px,74vw);opacity:0;will-change:opacity,transform}
+.scene-copy h2{font-size:clamp(52px,7.2vw,112px);color:#fff}
+.scene-copy p{font-size:clamp(17px,1.4vw,22px);line-height:1.65;color:#f1eee8;max-width:570px}
+.scene-copy.history{left:7vw;bottom:10vh}
+.scene-copy.craft{right:6vw;top:50%;transform:translateY(-46%);width:min(35vw,520px)}
+.scene-copy.people{right:7vw;top:50%;transform:translateY(-47%);width:min(43vw,650px)}
+.scene-copy.origin{left:7vw;top:50%;transform:translateY(-47%)}
+.scene-copy .meta{margin-top:22px;font-size:11px;font-weight:900;letter-spacing:.17em;color:#ddc18b}
+
+.final-copy{position:absolute;z-index:15;inset:0;display:grid;place-content:center;text-align:center;color:#fff;padding:24px;opacity:0}
+.final-copy h2{font-size:clamp(60px,8.7vw,142px);color:#fff;margin-bottom:20px}
+.final-copy p{font-size:clamp(18px,1.5vw,23px);color:#e4ece8;margin:0 auto 30px}
+.final-copy .btn{background:#fff;color:var(--forest);justify-self:center;min-width:190px}
+
+.progress{position:fixed;z-index:230;right:14px;top:50%;transform:translateY(-50%);display:grid;gap:9px}
+.progress span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.38);box-shadow:0 0 0 1px rgba(0,0,0,.12);transition:transform .2s,background .2s}
+.progress span.on{transform:scale(1.8);background:#dfc18a}
+
+.reduced-story{display:none;background:var(--paper);color:var(--ink)}
+.reduced-scene{min-height:100svh;display:grid;grid-template-columns:1fr 1fr;align-items:center}
+.reduced-scene img{width:100%;height:100%;min-height:100svh;object-fit:cover}
+.reduced-text{padding:clamp(34px,7vw,100px)}
+.reduced-text h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(48px,6vw,96px);line-height:.94;color:var(--forest);font-weight:400;margin:14px 0}
+.reduced-text p{font-size:18px;line-height:1.7;max-width:560px}
+.simple-footer{background:#05291e;color:#cbd8d2;padding:24px clamp(20px,5vw,70px);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.simple-footer strong{font-family:Georgia,"Times New Roman",serif;color:#fff;font-size:21px;margin-right:auto}
+.simple-footer span{font-size:11px}
+
+@media(max-width:900px){
+  :root{--nav:66px}
+  .navlinks{display:none}.menu-toggle{display:flex;flex-direction:column}
+  .film{height:520svh}
+  .hero-photo{clip-path:inset(0 0 52% 0);object-position:center top}
+  .hero-wash{inset:48% 0 0 0}
+  .hero-copy{left:20px;right:20px;top:auto;bottom:5.5vh;transform:none;width:auto}
+  .hero-copy h1{font-size:clamp(48px,13vw,74px)}
+  .hero-copy p{font-size:17px;max-width:96%}
+  .actions{display:grid}.actions .btn{width:100%}
+  .scroll-cue{top:84px;bottom:auto;right:18px}
+  .history-layer:after{background:linear-gradient(180deg,rgba(0,0,0,.05) 22%,rgba(0,0,0,.8) 74%,rgba(0,0,0,.9))}
+  .scene-copy{left:20px!important;right:20px!important;top:auto!important;bottom:8vh!important;transform:none!important;width:auto!important;max-width:none}
+  .scene-copy h2{font-size:clamp(46px,12vw,68px)}
+  .scene-copy p{font-size:17px}
+  .craft-frame{left:5vw;top:8vh;width:90vw;height:66vh}
+  .craft-layer:after{background:linear-gradient(180deg,transparent 25%,rgba(33,23,18,.72) 76%,rgba(33,23,18,.9))}
+  .people-frame{left:8vw;top:7vh;width:64vw;height:67vh}
+  .people-layer:after{background:linear-gradient(180deg,rgba(25,15,10,.04),rgba(25,15,10,.82) 76%,rgba(25,15,10,.92))}
+  .origin-layer:after{background:linear-gradient(180deg,rgba(5,36,26,.06),rgba(5,36,26,.87) 75%,rgba(5,36,26,.94))}
+  .final-copy h2{font-size:clamp(54px,14vw,78px)}
+  .progress{right:8px}
+}
+@media(max-width:560px){
+  .wordmark{font-size:20px}.mobile-menu a{font-size:31px}
+  .scene-copy h2{font-size:46px}.hero-copy h1{font-size:48px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .film,.progress{display:none!important}
+  .reduced-story{display:block}
+  .reduced-scene{grid-template-columns:1fr;min-height:auto}
+  .reduced-scene img{min-height:0;height:auto;max-height:72svh}
+  .reduced-text{padding:56px 20px 76px}
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to story</a>
+<header class="site-nav" id="siteNav">
+  <a class="wordmark jump" data-p="0" href="#home">Our Story</a>
+  <nav class="navlinks" aria-label="Primary navigation">
+    <a class="jump" data-p="0" href="#home">HOME</a>
+    <a class="jump" data-p=".17" href="#story">OUR STORY</a>
+    <a class="menu-link" href="../starbucks-menu-orbit/index.html#orbit">MENU</a>
+    <a class="jump" data-p=".57" href="#people">PEOPLE</a>
+    <a class="jump" data-p=".75" href="#planet">PLANET</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="mobileMenu"><i></i></button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <nav aria-label="Mobile navigation">
+    <a class="jump" data-p="0" href="#home">HOME</a>
+    <a class="jump" data-p=".17" href="#story">OUR STORY</a>
+    <a class="jump" data-p=".57" href="#people">PEOPLE</a>
+    <a class="jump" data-p=".75" href="#planet">PLANET</a>
+    <a class="mobile-cta" href="../starbucks-menu-orbit/index.html#orbit">EXPLORE THE MENU</a>
+  </nav>
+</div>
+
+<div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+
+<main>
+<section class="film" id="film">
+  <span class="marker" id="home"></span>
+  <span class="marker" id="story"></span>
+  <span class="marker" id="people"></span>
+  <span class="marker" id="planet"></span>
+
+  <div class="stage">
+    <div class="layer hero-layer" id="heroLayer">
+      <img class="hero-photo" id="heroPhoto" src="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg" width="768" height="513" fetchpriority="high" decoding="async" alt="Three people talking around a long wooden table inside a warm coffeehouse">
+      <div class="hero-wash" id="heroWash"></div>
+      <div class="hero-copy" id="heroCopy">
+        <div class="eyebrow">People • Coffee • Connection</div>
+        <h1>COFFEE<br>CONNECTS<br>US.</h1>
+        <p>A cup can become a conversation, a ritual, a meeting place, and a memory.</p>
+        <div class="actions"><a class="btn primary jump" data-p=".17" href="#story">EXPLORE OUR STORY</a><a class="btn secondary" href="../starbucks-menu-orbit/index.html#orbit">MENU</a></div>
+      </div>
+      <div class="scroll-cue">CINEMATIC CUT • SCROLL</div>
+    </div>
+
+    <div class="layer history-layer" id="historyLayer">
+      <img src="https://about.starbucks.com/uploads/2025/10/24a-dl-original-store-sbx20080316-7766-2-1024x713.jpg" width="1024" height="713" decoding="async" alt="Black-and-white original Starbucks storefront">
+    </div>
+
+    <div class="layer craft-layer" id="craftLayer">
+      <img class="craft-bg" src="../20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" width="320" height="213" loading="lazy" alt="">
+      <div class="craft-frame"><img src="../20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" width="320" height="213" loading="lazy" alt="Starbucks barista preparing a drink"></div>
+    </div>
+
+    <div class="layer people-layer" id="peopleLayer">
+      <img class="people-bg" src="../Starbucks-and-PSL-Society-Collection-2-768x1152.webp" width="768" height="1152" loading="lazy" alt="">
+      <div class="people-frame"><img src="../Starbucks-and-PSL-Society-Collection-2-768x1152.webp" width="768" height="1152" loading="lazy" alt="Smiling customer with Starbucks drinks"></div>
+    </div>
+
+    <div class="layer origin-layer" id="originLayer">
+      <img src="../64c-dl-hacienda-alsacia-costa-rica-farmer-support-center-3-768x512.jpg" width="768" height="512" loading="lazy" alt="Hacienda Alsacia coffee origin experience">
+    </div>
+
+    <div class="layer final-layer" id="finalLayer">
+      <img src="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg" width="768" height="513" loading="lazy" alt="">
+    </div>
+
+    <div class="scene-copy history" id="historyCopy">
+      <div class="scene-no">01 • WHERE THE STORY BEGAN</div>
+      <h2>A SMALL BEGINNING.<br>A LASTING IDEA.</h2>
+      <p>Seattle, 1971.<br><br>One storefront.<br>Whole-bean coffee.<br>A small beginning that would grow far beyond its front door.</p>
+    </div>
+
+    <div class="scene-copy craft" id="craftCopy">
+      <div class="scene-no">02 • THE CRAFT</div>
+      <h2>MADE BY HAND.<br>REMEMBERED<br>BY HEART.</h2>
+      <p>Precision matters.<br>So does the person behind the cup.</p>
+    </div>
+
+    <div class="scene-copy people" id="peopleCopy">
+      <div class="scene-no">03 • EVERYDAY MOMENTS</div>
+      <h2>THE STORY<br>BECOMES<br>YOURS.</h2>
+      <p>Coffee becomes part of mornings, conversations, celebrations, and ordinary moments worth remembering.</p>
+    </div>
+
+    <div class="scene-copy origin" id="originCopy">
+      <div class="scene-no">04 • WHERE COFFEE BEGINS</div>
+      <h2>EVERY CUP<br>HAS AN ORIGIN.</h2>
+      <p>Before the café,<br>before the barista,<br>before the first sip,<br>there is the land.</p>
+    </div>
+
+    <div class="final-copy" id="finalCopy">
+      <div class="eyebrow" style="color:#dec28b">The story comes full circle</div>
+      <h2>ONE CUP.<br>LIMITLESS CONNECTIONS.</h2>
+      <p>Different places. Different stories. One shared cup.</p>
+      <a class="btn" href="../starbucks-menu-orbit/index.html#orbit">EXPLORE THE MENU</a>
+    </div>
+  </div>
+</section>
+
+<section class="reduced-story" aria-label="Our Story">
+  <article class="reduced-scene"><img src="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg" width="768" height="513" alt="Three people talking around a long wooden table inside a warm coffeehouse"><div class="reduced-text"><div class="eyebrow">People • Coffee • Connection</div><h2>COFFEE CONNECTS US.</h2><p>A cup can become a conversation, a ritual, a meeting place, and a memory.</p></div></article>
+  <article class="reduced-scene"><img src="https://about.starbucks.com/uploads/2025/10/24a-dl-original-store-sbx20080316-7766-2-1024x713.jpg" width="1024" height="713" alt="Black-and-white original Starbucks storefront"><div class="reduced-text"><div class="scene-no">01 • WHERE THE STORY BEGAN</div><h2>A SMALL BEGINNING. A LASTING IDEA.</h2><p>Seattle, 1971. One storefront. Whole-bean coffee. A small beginning that would grow far beyond its front door.</p></div></article>
+  <article class="reduced-scene"><img src="../20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" width="320" height="213" loading="lazy" alt="Starbucks barista preparing a drink"><div class="reduced-text"><div class="scene-no">02 • THE CRAFT</div><h2>MADE BY HAND. REMEMBERED BY HEART.</h2><p>Precision matters. So does the person behind the cup.</p></div></article>
+  <article class="reduced-scene"><img src="../Starbucks-and-PSL-Society-Collection-2-768x1152.webp" width="768" height="1152" loading="lazy" alt="Smiling customer with Starbucks drinks"><div class="reduced-text"><div class="scene-no">03 • EVERYDAY MOMENTS</div><h2>THE STORY BECOMES YOURS.</h2><p>Coffee becomes part of mornings, conversations, celebrations, and ordinary moments worth remembering.</p></div></article>
+  <article class="reduced-scene"><img src="../64c-dl-hacienda-alsacia-costa-rica-farmer-support-center-3-768x512.jpg" width="768" height="512" loading="lazy" alt="Hacienda Alsacia coffee origin experience"><div class="reduced-text"><div class="scene-no">04 • WHERE COFFEE BEGINS</div><h2>EVERY CUP HAS AN ORIGIN.</h2><p>Before the café, before the barista, before the first sip, there is the land.</p></div></article>
+</section>
+</main>
+
+<footer class="simple-footer"><strong>Coffee Connects Us</strong><span>Unofficial interactive concept</span></footer>
+
+<script>
+(function(){
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const film=document.getElementById('film'), nav=document.getElementById('siteNav');
+  const heroPhoto=document.getElementById('heroPhoto'), heroCopy=document.getElementById('heroCopy'), heroWash=document.getElementById('heroWash');
+  const layers={history:document.getElementById('historyLayer'),craft:document.getElementById('craftLayer'),people:document.getElementById('peopleLayer'),origin:document.getElementById('originLayer'),final:document.getElementById('finalLayer')};
+  const copies={history:document.getElementById('historyCopy'),craft:document.getElementById('craftCopy'),people:document.getElementById('peopleCopy'),origin:document.getElementById('originCopy'),final:document.getElementById('finalCopy')};
+  const dots=[...document.querySelectorAll('.progress span')];
+  const toggle=document.getElementById('menuToggle'), mobile=document.getElementById('mobileMenu');
+  let ticking=false;
+
+  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+  const range=(p,a,b)=>clamp((p-a)/(b-a));
+  const bell=(p,a,b,c,d)=>Math.min(range(p,a,b),1-range(p,c,d));
+
+  function render(){
+    ticking=false;
+    if(reduced)return;
+    const r=film.getBoundingClientRect(), travel=film.offsetHeight-innerHeight;
+    const p=clamp((-r.top)/Math.max(1,travel));
+
+    nav.classList.toggle('light',p>.16 && p<.87);
+
+    const mobileView=innerWidth<=900;
+    const expand=range(p,.015,.135);
+    if(mobileView){
+      heroPhoto.style.clipPath='inset('+(5*(1-expand))+'% '+(4*(1-expand))+'% '+(50*(1-expand))+'% '+(4*(1-expand))+'% round '+(20*(1-expand))+'px)';
+      heroWash.style.opacity=String(1-expand);
+    }else{
+      heroPhoto.style.clipPath='inset('+(7*(1-expand))+'% '+(4*(1-expand))+'% '+(7*(1-expand))+'% '+(49*(1-expand))+'% round '+(24*(1-expand))+'px)';
+      heroWash.style.opacity=String(1-expand);
+    }
+    heroPhoto.style.transform='scale('+(1.025+expand*.035)+')';
+    heroPhoto.style.filter='saturate('+(1-range(p,.12,.20)*.65)+') grayscale('+(range(p,.13,.21)*.72)+')';
+    heroCopy.style.opacity=String(1-range(p,.055,.145));
+    heroCopy.style.transform=mobileView?'translateY('+(range(p,.05,.15)*-18)+'px)':'translateY(calc(-48% - '+(range(p,.05,.15)*24)+'px))';
+
+    const ho=bell(p,.12,.18,.32,.39), co=bell(p,.32,.39,.51,.59), po=bell(p,.51,.58,.69,.77), oo=bell(p,.69,.76,.84,.91), fo=range(p,.86,.94);
+    layers.history.style.opacity=ho; layers.craft.style.opacity=co; layers.people.style.opacity=po; layers.origin.style.opacity=oo; layers.final.style.opacity=fo;
+
+    layers.history.style.transform='translateX('+(range(p,.24,.39)*-5)+'%) scale('+(1.03-range(p,.18,.36)*.025)+')';
+    layers.craft.style.transform='translateX('+(4-range(p,.34,.54)*4)+'%) scale('+(1.02+range(p,.38,.55)*.018)+')';
+    layers.people.style.transform='translateX('+(5-range(p,.54,.72)*5)+'%)';
+    layers.origin.style.transform='scale('+(1.045-range(p,.74,.89)*.035)+')';
+    layers.final.style.transform='scale('+(1.035+range(p,.89,1)*.025)+')';
+
+    copies.history.style.opacity=bell(p,.17,.205,.30,.355);
+    copies.craft.style.opacity=bell(p,.37,.405,.49,.545);
+    copies.people.style.opacity=bell(p,.56,.595,.67,.725);
+    copies.origin.style.opacity=bell(p,.74,.775,.83,.885);
+    copies.final.style.opacity=range(p,.91,.96);
+
+    if(!mobileView){
+      copies.history.style.transform='translateY('+(14-range(p,.17,.26)*14)+'px)';
+      copies.craft.style.transform='translateY(calc(-46% + '+(16-range(p,.37,.46)*16)+'px))';
+      copies.people.style.transform='translateY(calc(-47% + '+(16-range(p,.56,.65)*16)+'px))';
+      copies.origin.style.transform='translateY(calc(-47% + '+(16-range(p,.74,.82)*16)+'px))';
+    }
+
+    const scene=p<.18?0:p<.39?1:p<.59?2:p<.77?3:4;
+    dots.forEach((d,i)=>d.classList.toggle('on',i===scene));
+  }
+  function request(){if(!ticking){ticking=true;requestAnimationFrame(render)}}
+  addEventListener('scroll',request,{passive:true}); addEventListener('resize',request,{passive:true}); render();
+
+  document.querySelectorAll('.jump').forEach(a=>a.addEventListener('click',e=>{
+    if(reduced)return;
+    e.preventDefault();
+    const p=parseFloat(a.dataset.p||'0'), top=scrollY+film.getBoundingClientRect().top+p*(film.offsetHeight-innerHeight);
+    scrollTo({top,behavior:'smooth'}); closeMenu();
+  }));
+
+  function closeMenu(){mobile.classList.remove('open');document.body.classList.remove('menu-open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation')}
+  toggle.addEventListener('click',()=>{const open=!mobile.classList.contains('open');mobile.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation')});
+  mobile.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(!a.classList.contains('jump'))closeMenu()}));
+  addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});
+})();
+</script>
+</body>
+</html>
