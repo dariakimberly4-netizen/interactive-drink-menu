@@ -235,6 +235,74 @@ body{overflow-x:hidden}
 }
 body.reduced .motionSky,body.reduced .cursorGlow,body.reduced .scrollBeam{display:none!important}
 body.reduced .heroPhoto,body.reduced .note,body.reduced .hero:before,body.reduced .story:before,body.reduced .planet:before{animation:none!important}
+</style><style id="wild-motion-v2">
+/* V2: obvious continuous motion */
+body{background:linear-gradient(120deg,#fffaf2,#f1eadf,#eef6f1);background-size:300% 300%;animation:bgShift 14s ease infinite}
+@keyframes bgShift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+
+.wildTicker{position:fixed;z-index:85;left:0;right:0;top:76px;height:34px;overflow:hidden;background:#0b3d2e;color:#fff;border-bottom:1px solid #ffffff20;display:flex;align-items:center;pointer-events:none}
+.wildTicker div{white-space:nowrap;font-size:11px;font-weight:800;letter-spacing:.22em;animation:ticker 18s linear infinite;min-width:max-content}
+@keyframes ticker{to{transform:translateX(-50%)}}
+
+.hero{padding-top:160px!important;overflow:hidden}
+.hero:after{content:"";position:absolute;inset:-20%;background:conic-gradient(from 0deg at 70% 30%,transparent 0 25%,rgba(0,117,74,.08) 30%,transparent 40%,rgba(181,144,82,.08) 55%,transparent 70%);animation:spinWash 22s linear infinite;pointer-events:none;z-index:0}
+@keyframes spinWash{to{transform:rotate(360deg)}}
+.hero>div{position:relative;z-index:2}
+
+.hero h1{animation:headlineBreath 5s ease-in-out infinite}
+@keyframes headlineBreath{50%{transform:translateX(10px);letter-spacing:-.01em}}
+
+.orbitCards{position:absolute;inset:0;pointer-events:none;z-index:4}
+.orbitCard{position:absolute;width:130px!important;height:170px!important;object-fit:cover!important;border-radius:20px!important;border:4px solid #fff;box-shadow:0 18px 50px #0004!important}
+.oc1{left:-8%;top:6%;animation:orbit1 9s ease-in-out infinite}
+.oc2{right:-9%;top:30%;animation:orbit2 11s ease-in-out infinite}
+.oc3{left:3%;bottom:-6%;animation:orbit3 10s ease-in-out infinite}
+@keyframes orbit1{0%,100%{transform:translate(0,0) rotate(-10deg)}50%{transform:translate(35px,55px) rotate(7deg) scale(1.08)}}
+@keyframes orbit2{0%,100%{transform:translate(0,0) rotate(12deg)}50%{transform:translate(-45px,-40px) rotate(-5deg) scale(1.1)}}
+@keyframes orbit3{0%,100%{transform:translate(0,0) rotate(-6deg)}50%{transform:translate(60px,-35px) rotate(8deg) scale(1.06)}}
+
+.heroPhoto{animation:heroCinematic 8s ease-in-out infinite!important}
+@keyframes heroCinematic{0%,100%{transform:scale(1.02) translateY(0) rotate(.2deg)}50%{transform:scale(1.08) translateY(-18px) rotate(-.6deg)}}
+
+.storyImage,.planetPhoto{animation:autoPan 10s ease-in-out infinite}
+@keyframes autoPan{0%,100%{object-position:50% 50%;transform:scale(1.02)}50%{object-position:58% 42%;transform:scale(1.08)}}
+
+.journeyCard{animation:cardFloat 6s ease-in-out infinite!important}
+.journeyCard:nth-child(2){animation-delay:-2s!important}
+.journeyCard:nth-child(3){animation-delay:-4s!important}
+@keyframes cardFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-16px) rotate(.4deg)}}
+
+.peopleFeature{animation:featureSway 8s ease-in-out infinite}
+.peopleSmall:nth-child(1){animation:featureSway 7s ease-in-out -2s infinite}
+.peopleSmall:nth-child(2){animation:featureSway 9s ease-in-out -4s infinite}
+@keyframes featureSway{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+.impact div{animation:impactPulse 5s ease-in-out infinite}
+.impact div:nth-child(2){animation-delay:-1s}.impact div:nth-child(3){animation-delay:-2s}.impact div:nth-child(4){animation-delay:-3s}
+@keyframes impactPulse{50%{transform:translateY(-7px) scale(1.025);box-shadow:0 14px 34px #0b3d2e18}}
+
+.final{position:relative;overflow:hidden}
+.final:before,.final:after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.final:before{width:420px;height:420px;border:1px solid #ffffff28;left:-140px;top:-120px;box-shadow:0 0 0 55px #ffffff09,0 0 0 110px #ffffff06;animation:finalOrbit 14s linear infinite}
+.final:after{width:320px;height:320px;border:1px solid #d9b66c40;right:-100px;bottom:-80px;box-shadow:0 0 0 45px #d9b66c10,0 0 0 90px #d9b66c08;animation:finalOrbit 10s linear infinite reverse}
+@keyframes finalOrbit{to{transform:rotate(360deg) scale(1.08)}}
+
+.siteNav{transform:translateZ(0)}
+.menuLink{animation:menuPulse 3s ease-in-out infinite}
+@keyframes menuPulse{50%{box-shadow:0 0 0 7px #00754a18,0 8px 22px #00754a2f}}
+
+@media(max-width:900px){
+ .wildTicker{top:68px}
+ .hero{padding-top:140px!important}
+ .orbitCard{width:95px!important;height:125px!important}
+ .oc1{left:-4%;top:15%}.oc2{right:-5%;top:38%}.oc3{left:7%;bottom:0}
+}
+@media(prefers-reduced-motion:reduce){
+ body,.wildTicker div,.hero:after,.hero h1,.orbitCard,.heroPhoto,.storyImage,.planetPhoto,.journeyCard,.peopleFeature,.peopleSmall,.impact div,.final:before,.final:after,.menuLink{animation:none!important}
+ .wildTicker{display:none}
+}
+body.reduced .wildTicker{display:none}
+body.reduced,.reduced .hero:after,.reduced .hero h1,.reduced .orbitCard,.reduced .heroPhoto,.reduced .storyImage,.reduced .planetPhoto,.reduced .journeyCard,.reduced .peopleFeature,.reduced .peopleSmall,.reduced .impact div,.reduced .final:before,.reduced .final:after,.reduced .menuLink{animation:none!important}
 </style></head>
 <body><div class="motionSky" aria-hidden="true"><i></i><i></i><i></i></div><div class="cursorGlow" aria-hidden="true"></div><div class="scrollBeam" aria-hidden="true"></div>
 <div class="progress"></div>
@@ -248,6 +316,9 @@ body.reduced .heroPhoto,body.reduced .note,body.reduced .hero:before,body.reduce
   <a href="#stores">STORES</a>
   <a class="storeLink" href="#stores">FIND A STORE</a>
 </nav>
+<div class="wildTicker" aria-hidden="true">
+  <div>COFFEE • PEOPLE • PLANET • POSSIBILITY • COFFEE • PEOPLE • PLANET • POSSIBILITY • </div>
+</div>
 
 <header class="hero" id="home">
   <div class="reveal">
@@ -260,6 +331,11 @@ body.reduced .heroPhoto,body.reduced .note,body.reduced .hero:before,body.reduce
     </div>
   </div>
   <div class="heroVisual reveal">
+    <div class="orbitCards" aria-hidden="true">
+      <img class="orbitCard oc1" src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=500&q=80" alt="">
+      <img class="orbitCard oc2" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=500&q=80" alt="">
+      <img class="orbitCard oc3" src="https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=500&q=80" alt="">
+    </div>
     <img class="heroPhoto" src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1400&q=88" alt="Warm coffeehouse interior">
     <div class="note"><strong>One cup.</strong><small>One conversation can change the shape of a day.</small></div>
   </div>
