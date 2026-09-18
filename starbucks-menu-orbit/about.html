@@ -5,398 +5,346 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4efe5">
 <title>Coffee Connects Us — Our Story</title>
-<meta name="description" content="A cinematic coffee story about people, craft, origin and connection.">
+<meta name="description" content="A cinematic scroll story about coffee, craft, people and origin.">
 <link rel="preload" as="image" href="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg">
 <style>
 :root{
-  --ivory:#f4efe5;
-  --paper:#fbf8f2;
-  --forest:#073b2b;
-  --forest2:#0b563d;
-  --coffee:#5d3a28;
-  --gold:#b3945d;
-  --ink:#16251f;
-  --muted:#6a756f;
-  --white:#fff;
-  --nav-h:72px;
+  --ivory:#f4efe5;--paper:#fbf8f2;--forest:#073b2b;--coffee:#583927;
+  --gold:#b59660;--ink:#16251f;--white:#fff;--nav:70px
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;background:var(--ivory)}
-body{
-  margin:0;
-  color:var(--ink);
-  background:var(--paper);
-  font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  line-height:1.55;
-  overflow-x:hidden;
-}
+body{margin:0;background:#101712;color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
 body.menu-open{overflow:hidden}
-img{display:block;width:100%;height:auto}
 a{color:inherit;text-decoration:none}
 button{font:inherit}
-:focus-visible{outline:3px solid #f0c36f;outline-offset:4px;border-radius:8px}
-.skip{
-  position:fixed;z-index:500;left:12px;top:10px;transform:translateY(-150%);
-  background:#fff;color:#073b2b;padding:10px 14px;border-radius:999px;font-weight:800
-}
+img{display:block;max-width:100%}
+:focus-visible{outline:3px solid #f3c56c;outline-offset:4px;border-radius:10px}
+.skip{position:fixed;z-index:500;left:12px;top:10px;transform:translateY(-150%);background:#fff;color:var(--forest);padding:11px 15px;border-radius:999px;font-weight:800}
 .skip:focus{transform:none}
 
-.nav{
-  position:fixed;z-index:200;inset:0 0 auto 0;height:var(--nav-h);
-  display:flex;align-items:center;gap:28px;padding:0 clamp(18px,4vw,64px);
-  color:#fff;background:linear-gradient(180deg,rgba(0,0,0,.48),rgba(0,0,0,0));
-  transition:background .35s ease,backdrop-filter .35s ease,border-color .35s ease;
+.site-nav{
+  position:fixed;z-index:250;inset:0 0 auto 0;height:var(--nav);display:flex;align-items:center;
+  gap:28px;padding:0 clamp(18px,4vw,64px);color:#fff;
+  background:linear-gradient(180deg,rgba(0,0,0,.52),rgba(0,0,0,0));
+  transition:background .3s ease,color .3s ease,border-color .3s ease
 }
-.nav.scrolled{
-  color:var(--forest);background:rgba(244,239,229,.94);
-  backdrop-filter:blur(16px);border-bottom:1px solid rgba(7,59,43,.12)
-}
-.wordmark{
-  font-family:Georgia,"Times New Roman",serif;font-size:22px;font-weight:700;
-  letter-spacing:.01em;margin-right:auto;white-space:nowrap
-}
-.navlinks{display:flex;align-items:center;gap:24px}
-.navlinks a{font-size:12px;font-weight:800;letter-spacing:.11em}
-.navlinks a:not(.menu-link):hover{opacity:.72}
-.menu-link{
-  padding:11px 17px;border-radius:999px;background:#fff;color:var(--forest)
-}
-.nav.scrolled .menu-link{background:var(--forest);color:#fff}
-.menu-toggle{
-  display:none;width:48px;height:48px;border:1px solid currentColor;border-radius:999px;
-  background:transparent;color:inherit;align-items:center;justify-content:center;cursor:pointer
-}
-.menu-toggle span,.menu-toggle:before,.menu-toggle:after{
-  content:"";display:block;width:20px;height:2px;background:currentColor;
-  transition:transform .25s ease,opacity .25s ease
-}
-.menu-toggle span{margin:5px 0}
+.site-nav.light{background:rgba(244,239,229,.95);color:var(--forest);border-bottom:1px solid rgba(7,59,43,.12);backdrop-filter:blur(14px)}
+.wordmark{font-family:Georgia,"Times New Roman",serif;font-size:22px;font-weight:700;margin-right:auto;white-space:nowrap}
+.navlinks{display:flex;align-items:center;gap:22px}
+.navlinks a{font-size:11px;font-weight:900;letter-spacing:.14em}
+.navlinks a:hover{opacity:.72}
+.navlinks .menu-link{background:#fff;color:var(--forest);padding:11px 16px;border-radius:999px}
+.site-nav.light .menu-link{background:var(--forest);color:#fff}
+.menu-toggle{display:none;width:48px;height:48px;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;align-items:center;justify-content:center;cursor:pointer}
+.menu-toggle i,.menu-toggle:before,.menu-toggle:after{content:"";display:block;width:20px;height:2px;background:currentColor}
+.menu-toggle i{margin:5px 0}
 
-.mobile-drawer{
-  display:none;position:fixed;z-index:190;inset:0;background:var(--ivory);
-  padding:calc(var(--nav-h) + 36px) 24px 36px;
-}
-.mobile-drawer.open{display:block}
-.mobile-drawer nav{display:grid;gap:6px}
-.mobile-drawer a{
-  display:flex;align-items:center;min-height:62px;border-bottom:1px solid rgba(7,59,43,.13);
-  font-family:Georgia,"Times New Roman",serif;font-size:34px;color:var(--forest)
-}
-.mobile-drawer .mobile-menu-link{
-  margin-top:22px;justify-content:center;background:var(--forest);color:#fff;border:0;border-radius:999px;
-  font-family:inherit;font-size:14px;font-weight:900;letter-spacing:.09em
-}
+.mobile-menu{display:none;position:fixed;z-index:240;inset:0;background:var(--ivory);padding:calc(var(--nav) + 28px) 22px 32px}
+.mobile-menu.open{display:block}
+.mobile-menu nav{display:grid}
+.mobile-menu a{display:flex;align-items:center;min-height:64px;border-bottom:1px solid rgba(7,59,43,.14);font-family:Georgia,"Times New Roman",serif;font-size:34px;color:var(--forest)}
+.mobile-menu .mobile-cta{justify-content:center;border:0;border-radius:999px;background:var(--forest);color:#fff;margin-top:22px;font-family:inherit;font-size:13px;font-weight:900;letter-spacing:.1em}
 
-.hero-scene{height:190svh;position:relative;background:#0b2019}
-.hero-sticky{position:sticky;top:0;height:100svh;overflow:hidden}
-.hero-image{
-  position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:center;
-  transform:scale(1.055);will-change:transform
-}
-.hero-curtain{
-  position:absolute;z-index:2;inset:0 auto 0 0;width:49%;
-  background:
-    radial-gradient(circle at 25% 25%,rgba(179,148,93,.16),transparent 30%),
-    linear-gradient(135deg,#fbf8f1,var(--ivory));
-  box-shadow:22px 0 60px rgba(0,0,0,.08);
-  will-change:width
-}
-.hero-copy{
-  position:absolute;z-index:3;left:clamp(22px,6vw,94px);top:50%;transform:translateY(-48%);
-  width:min(41vw,650px);will-change:opacity,transform
-}
-.eyebrow{
-  font-size:11px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)
-}
-.hero-copy h1,.display{
-  font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.045em;
-  margin:12px 0;color:var(--forest);line-height:.88
-}
-.hero-copy h1{font-size:clamp(54px,7.5vw,118px)}
-.hero-copy p{font-size:clamp(17px,1.35vw,21px);max-width:560px;color:#45534c}
+.film{height:680svh;position:relative;background:#111}
+.marker{position:absolute;width:1px;height:1px;left:0;pointer-events:none}
+#home{top:0}#story{top:17%}#people{top:57%}#planet{top:75%}
+.stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#111}
+.layer{position:absolute;inset:-2%;opacity:0;will-change:opacity,transform,filter}
+.layer>img{width:100%;height:100%;object-fit:cover}
+.hero-layer{opacity:1;inset:0;background:var(--ivory)}
+.hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;clip-path:inset(0 0 0 50%);will-change:clip-path,transform,filter}
+.hero-wash{position:absolute;inset:0 50% 0 0;background:
+  radial-gradient(circle at 24% 24%,rgba(181,150,96,.13),transparent 30%),
+  linear-gradient(135deg,#fcfaf5,#f1e9dc);pointer-events:none}
+.hero-copy{position:absolute;z-index:7;left:clamp(22px,6vw,92px);top:50%;transform:translateY(-48%);width:min(39vw,620px);will-change:opacity,transform}
+.eyebrow,.scene-no{font-size:11px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.hero-copy h1,.scene-copy h2,.final-copy h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.05em;line-height:.88;margin:14px 0;color:var(--forest)}
+.hero-copy h1{font-size:clamp(56px,7.5vw,118px)}
+.hero-copy p{font-size:clamp(17px,1.35vw,21px);line-height:1.65;color:#47564e;max-width:560px}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-.btn{
-  display:inline-flex;min-height:50px;align-items:center;justify-content:center;
-  padding:13px 19px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.08em
-}
-.btn.primary{background:var(--forest);color:#fff}
-.btn.secondary{border:1px solid var(--forest);color:var(--forest)}
-.hero-hint{
-  position:absolute;z-index:3;right:clamp(16px,3vw,42px);bottom:28px;color:#fff;
-  display:flex;align-items:center;gap:9px;font-size:10px;font-weight:900;letter-spacing:.16em
-}
-.hero-hint:before{content:"";width:34px;height:1px;background:currentColor}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 19px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.09em}
+.btn.primary{background:var(--forest);color:#fff}.btn.secondary{border:1px solid var(--forest);color:var(--forest)}
+.scroll-cue{position:absolute;z-index:9;right:32px;bottom:26px;color:#fff;font-size:10px;font-weight:900;letter-spacing:.18em;display:flex;gap:10px;align-items:center}
+.scroll-cue:before{content:"";width:34px;height:1px;background:currentColor}
 
-.chapter{
-  position:relative;min-height:100svh;overflow:hidden
-}
-.chapter.full{display:grid;align-items:end;padding:clamp(90px,10vw,150px) clamp(20px,6vw,90px)}
-.chapter-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.chapter-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,15,11,.78) 0%,rgba(5,15,11,.42) 48%,rgba(5,15,11,.08) 78%)}
-.chapter-content{position:relative;z-index:3;max-width:780px;color:#fff}
-.chapter-number{font-size:12px;letter-spacing:.22em;font-weight:900;color:#dfc48d}
-.chapter-content h2,.editorial-copy h2,.origin-copy h2,.finale h2{
-  font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.04em;line-height:.94
-}
-.chapter-content h2{font-size:clamp(50px,7vw,108px);margin:16px 0 22px}
-.chapter-content p{font-size:clamp(17px,1.35vw,21px);max-width:560px;color:#f1eee8}
-.meta{margin-top:22px;font-size:11px;font-weight:900;letter-spacing:.17em;color:#e3c88f}
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
-.reveal.visible{opacity:1;transform:none}
+.history-layer{filter:grayscale(1)}
+.history-layer:after,.origin-layer:after,.final-layer:after{content:"";position:absolute;inset:0;pointer-events:none}
+.history-layer:after{background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.23) 58%,rgba(0,0,0,.08))}
+.history-layer img{object-position:center}
 
-.craft{
-  min-height:115svh;background:linear-gradient(135deg,#efe4d2,#f9f6ef);
-  display:grid;grid-template-columns:1.12fr .88fr;align-items:stretch
-}
-.craft-media{position:relative;min-height:100svh;overflow:hidden}
-.craft-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
-.craft-copy{
-  display:flex;flex-direction:column;justify-content:center;padding:clamp(70px,8vw,130px) clamp(24px,6vw,80px)
-}
-.craft-copy h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(52px,6vw,94px);font-weight:400;line-height:.93;letter-spacing:-.045em;color:var(--forest);margin:15px 0 22px}
-.craft-copy p{font-size:clamp(18px,1.4vw,22px);max-width:520px;color:#526158}
-.rule{width:70px;height:1px;background:var(--gold);margin:4px 0 18px}
+.craft-layer{background:#9d6c4e}
+.craft-bg,.people-bg{position:absolute;inset:-5%;width:110%;height:110%;object-fit:cover;filter:blur(24px) brightness(.58) saturate(.82);transform:scale(1.12)}
+.craft-frame{position:absolute;z-index:2;left:7vw;top:11vh;width:min(66vw,1020px);height:78vh;overflow:hidden;background:#2a201a}
+.craft-frame img{width:100%;height:100%;object-fit:cover;object-position:center;image-rendering:auto}
+.craft-layer:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 45%,rgba(33,23,18,.18) 65%,rgba(33,23,18,.58));pointer-events:none}
 
-.people{
-  min-height:110svh;background:#efe4d4;padding:clamp(90px,10vw,150px) clamp(20px,6vw,90px);
-  display:grid;grid-template-columns:.82fr 1.18fr;gap:clamp(30px,7vw,110px);align-items:center
-}
-.people-photo{
-  width:min(100%,570px);margin:auto;aspect-ratio:2/3;object-fit:cover;border-radius:2px;
-  box-shadow:0 35px 80px rgba(79,49,31,.18)
-}
-.editorial-copy{max-width:730px}
-.editorial-copy h2{font-size:clamp(56px,7vw,112px);color:var(--coffee);margin:16px 0 24px}
-.editorial-copy p{font-size:clamp(18px,1.4vw,22px);max-width:600px;color:#665346}
-.pull{
-  font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(24px,2.6vw,38px);
-  color:#8f6b42;margin-top:34px;max-width:570px
-}
+.people-layer{background:#7e604d}
+.people-bg{filter:blur(34px) brightness(.52) saturate(.72)}
+.people-frame{position:absolute;z-index:2;left:8vw;top:8vh;width:min(35vw,520px);height:84vh;overflow:hidden;background:#6f5848}
+.people-frame img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.people-layer:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(25,15,10,.12),rgba(25,15,10,.56) 58%,rgba(25,15,10,.78));pointer-events:none}
 
-.origin{min-height:110svh;position:relative;display:flex;align-items:center;overflow:hidden}
-.origin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.origin:after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(6,42,30,.92) 0%,rgba(6,42,30,.66) 46%,rgba(6,42,30,.06) 82%)
-}
-.origin-copy{position:relative;z-index:2;color:#fff;max-width:760px;padding:110px clamp(20px,7vw,110px)}
-.origin-copy h2{font-size:clamp(56px,7.3vw,116px);margin:16px 0 24px;color:#fff}
-.origin-copy p{font-size:clamp(18px,1.4vw,22px);max-width:520px;color:#e5eee9}
+.origin-layer:after{background:linear-gradient(90deg,rgba(5,36,26,.83),rgba(5,36,26,.35) 56%,rgba(5,36,26,.06))}
+.origin-layer img{object-position:center}
 
-.finale{
-  min-height:100svh;display:grid;place-items:center;text-align:center;position:relative;color:#fff;overflow:hidden;
-  padding:100px 20px
-}
-.finale-bg{
-  position:absolute;inset:0;background:
-    linear-gradient(rgba(4,31,23,.64),rgba(4,31,23,.78)),
-    url("https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg") center 42%/cover;
-  transform:scale(1.04)
-}
-.finale-inner{position:relative;z-index:2;max-width:1000px}
-.finale h2{font-size:clamp(60px,8.8vw,142px);margin:12px 0 22px;color:#fff}
-.finale p{font-size:clamp(18px,1.5vw,23px);color:#e5ece8;margin:0 auto 30px}
-.finale .btn{background:#fff;color:var(--forest);min-width:190px}
+.final-layer:after{background:linear-gradient(rgba(3,26,19,.56),rgba(3,26,19,.82))}
+.final-layer img{object-position:63% center;transform:scale(1.08)}
 
-footer{
-  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-  padding:28px clamp(20px,6vw,90px);background:#05291e;color:#bdcdc5
-}
-footer strong{font-family:Georgia,"Times New Roman",serif;font-size:22px;color:#fff;margin-right:auto}
-footer span{font-size:11px}
+.scene-copy{position:absolute;z-index:12;color:#fff;max-width:min(760px,74vw);opacity:0;will-change:opacity,transform}
+.scene-copy h2{font-size:clamp(52px,7.2vw,112px);color:#fff}
+.scene-copy p{font-size:clamp(17px,1.4vw,22px);line-height:1.65;color:#f1eee8;max-width:570px}
+.scene-copy.history{left:7vw;bottom:10vh}
+.scene-copy.craft{right:6vw;top:50%;transform:translateY(-46%);width:min(35vw,520px)}
+.scene-copy.people{right:7vw;top:50%;transform:translateY(-47%);width:min(43vw,650px)}
+.scene-copy.origin{left:7vw;top:50%;transform:translateY(-47%)}
+.scene-copy .meta{margin-top:22px;font-size:11px;font-weight:900;letter-spacing:.17em;color:#ddc18b}
+
+.final-copy{position:absolute;z-index:15;inset:0;display:grid;place-content:center;text-align:center;color:#fff;padding:24px;opacity:0}
+.final-copy h2{font-size:clamp(60px,8.7vw,142px);color:#fff;margin-bottom:20px}
+.final-copy p{font-size:clamp(18px,1.5vw,23px);color:#e4ece8;margin:0 auto 30px}
+.final-copy .btn{background:#fff;color:var(--forest);justify-self:center;min-width:190px}
+
+.progress{position:fixed;z-index:230;right:14px;top:50%;transform:translateY(-50%);display:grid;gap:9px}
+.progress span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.38);box-shadow:0 0 0 1px rgba(0,0,0,.12);transition:transform .2s,background .2s}
+.progress span.on{transform:scale(1.8);background:#dfc18a}
+
+.reduced-story{display:none;background:var(--paper);color:var(--ink)}
+.reduced-scene{min-height:100svh;display:grid;grid-template-columns:1fr 1fr;align-items:center}
+.reduced-scene img{width:100%;height:100%;min-height:100svh;object-fit:cover}
+.reduced-text{padding:clamp(34px,7vw,100px)}
+.reduced-text h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(48px,6vw,96px);line-height:.94;color:var(--forest);font-weight:400;margin:14px 0}
+.reduced-text p{font-size:18px;line-height:1.7;max-width:560px}
+.simple-footer{background:#05291e;color:#cbd8d2;padding:24px clamp(20px,5vw,70px);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.simple-footer strong{font-family:Georgia,"Times New Roman",serif;color:#fff;font-size:21px;margin-right:auto}
+.simple-footer span{font-size:11px}
 
 @media(max-width:900px){
-  :root{--nav-h:66px}
+  :root{--nav:66px}
   .navlinks{display:none}.menu-toggle{display:flex;flex-direction:column}
-  .hero-curtain{width:100%;height:55%;inset:auto 0 0 0;box-shadow:0 -20px 60px rgba(0,0,0,.08)}
-  .hero-image{object-position:center top}
-  .hero-copy{left:20px;right:20px;top:auto;bottom:7vh;transform:none;width:auto}
-  .hero-copy h1{font-size:clamp(48px,13vw,76px)}
-  .hero-copy p{max-width:92%;font-size:17px}
-  .hero-hint{top:88px;bottom:auto}
-  .chapter.full{align-items:end;padding:100px 20px 72px}
-  .chapter-shade{background:linear-gradient(180deg,rgba(5,15,11,.08) 20%,rgba(5,15,11,.80) 75%,rgba(5,15,11,.90))}
-  .craft{grid-template-columns:1fr}
-  .craft-media{min-height:70svh}.craft-copy{padding:70px 20px 90px}
-  .people{grid-template-columns:1fr;padding:90px 20px;gap:42px}
-  .people-photo{max-width:480px}
-  .origin:after{background:linear-gradient(180deg,rgba(6,42,30,.14),rgba(6,42,30,.9) 72%)}
-  .origin{align-items:end}.origin-copy{padding:90px 20px 70px}
+  .film{height:520svh}
+  .hero-photo{clip-path:inset(0 0 52% 0);object-position:center top}
+  .hero-wash{inset:48% 0 0 0}
+  .hero-copy{left:20px;right:20px;top:auto;bottom:5.5vh;transform:none;width:auto}
+  .hero-copy h1{font-size:clamp(48px,13vw,74px)}
+  .hero-copy p{font-size:17px;max-width:96%}
+  .actions{display:grid}.actions .btn{width:100%}
+  .scroll-cue{top:84px;bottom:auto;right:18px}
+  .history-layer:after{background:linear-gradient(180deg,rgba(0,0,0,.05) 22%,rgba(0,0,0,.8) 74%,rgba(0,0,0,.9))}
+  .scene-copy{left:20px!important;right:20px!important;top:auto!important;bottom:8vh!important;transform:none!important;width:auto!important;max-width:none}
+  .scene-copy h2{font-size:clamp(46px,12vw,68px)}
+  .scene-copy p{font-size:17px}
+  .craft-frame{left:5vw;top:8vh;width:90vw;height:66vh}
+  .craft-layer:after{background:linear-gradient(180deg,transparent 25%,rgba(33,23,18,.72) 76%,rgba(33,23,18,.9))}
+  .people-frame{left:8vw;top:7vh;width:64vw;height:67vh}
+  .people-layer:after{background:linear-gradient(180deg,rgba(25,15,10,.04),rgba(25,15,10,.82) 76%,rgba(25,15,10,.92))}
+  .origin-layer:after{background:linear-gradient(180deg,rgba(5,36,26,.06),rgba(5,36,26,.87) 75%,rgba(5,36,26,.94))}
+  .final-copy h2{font-size:clamp(54px,14vw,78px)}
+  .progress{right:8px}
 }
 @media(max-width:560px){
-  .actions{display:grid}.actions .btn{width:100%}
-  .hero-copy h1{font-size:49px}
-  .chapter-content h2,.craft-copy h2,.editorial-copy h2,.origin-copy h2{font-size:48px}
-  .finale h2{font-size:58px}
-  footer strong{width:100%}
+  .wordmark{font-size:20px}.mobile-menu a{font-size:31px}
+  .scene-copy h2{font-size:46px}.hero-copy h1{font-size:48px}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  *,*:before,*:after{animation:none!important;transition:none!important}
-  .reveal{opacity:1!important;transform:none!important}
-  .hero-image,.finale-bg{transform:none!important}
+  .film,.progress{display:none!important}
+  .reduced-story{display:block}
+  .reduced-scene{grid-template-columns:1fr;min-height:auto}
+  .reduced-scene img{min-height:0;height:auto;max-height:72svh}
+  .reduced-text{padding:56px 20px 76px}
+  *{transition:none!important;animation:none!important}
 }
 </style>
 </head>
 <body>
 <a class="skip" href="#story">Skip to story</a>
-
-<header class="nav" id="siteNav">
-  <a class="wordmark" href="#home">Our Story</a>
-  <nav class="navlinks" aria-label="Primary">
-    <a href="#home">HOME</a>
-    <a href="#story">OUR STORY</a>
+<header class="site-nav" id="siteNav">
+  <a class="wordmark jump" data-p="0" href="#home">Our Story</a>
+  <nav class="navlinks" aria-label="Primary navigation">
+    <a class="jump" data-p="0" href="#home">HOME</a>
+    <a class="jump" data-p=".17" href="#story">OUR STORY</a>
     <a class="menu-link" href="index.html#orbit">MENU</a>
-    <a href="#people">PEOPLE</a>
-    <a href="#planet">PLANET</a>
+    <a class="jump" data-p=".57" href="#people">PEOPLE</a>
+    <a class="jump" data-p=".75" href="#planet">PLANET</a>
   </nav>
-  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-controls="mobileDrawer" aria-expanded="false"><span></span></button>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="mobileMenu"><i></i></button>
 </header>
 
-<div class="mobile-drawer" id="mobileDrawer">
+<div class="mobile-menu" id="mobileMenu">
   <nav aria-label="Mobile navigation">
-    <a href="#home">HOME</a>
-    <a href="#story">OUR STORY</a>
-    <a href="#people">PEOPLE</a>
-    <a href="#planet">PLANET</a>
-    <a class="mobile-menu-link" href="index.html#orbit">EXPLORE THE MENU</a>
+    <a class="jump" data-p="0" href="#home">HOME</a>
+    <a class="jump" data-p=".17" href="#story">OUR STORY</a>
+    <a class="jump" data-p=".57" href="#people">PEOPLE</a>
+    <a class="jump" data-p=".75" href="#planet">PLANET</a>
+    <a class="mobile-cta" href="index.html#orbit">EXPLORE THE MENU</a>
   </nav>
 </div>
 
+<div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+
 <main>
-  <section class="hero-scene" id="home" aria-label="Coffee Connects Us">
-    <div class="hero-sticky">
-      <img class="hero-image" id="heroImage" src="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg" width="768" height="513" fetchpriority="high" decoding="async" alt="Three people talking around a long wooden table inside a warm coffeehouse">
-      <div class="hero-curtain" id="heroCurtain"></div>
+<section class="film" id="film">
+  <span class="marker" id="home"></span>
+  <span class="marker" id="story"></span>
+  <span class="marker" id="people"></span>
+  <span class="marker" id="planet"></span>
+
+  <div class="stage">
+    <div class="layer hero-layer" id="heroLayer">
+      <img class="hero-photo" id="heroPhoto" src="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg" width="768" height="513" fetchpriority="high" decoding="async" alt="Three people talking around a long wooden table inside a warm coffeehouse">
+      <div class="hero-wash" id="heroWash"></div>
       <div class="hero-copy" id="heroCopy">
         <div class="eyebrow">People • Coffee • Connection</div>
         <h1>COFFEE<br>CONNECTS<br>US.</h1>
         <p>A cup can become a conversation, a ritual, a meeting place, and a memory.</p>
-        <div class="actions">
-          <a class="btn primary" href="#story">EXPLORE OUR STORY</a>
-          <a class="btn secondary" href="index.html#orbit">MENU</a>
-        </div>
+        <div class="actions"><a class="btn primary jump" data-p=".17" href="#story">EXPLORE OUR STORY</a><a class="btn secondary" href="index.html#orbit">MENU</a></div>
       </div>
-      <div class="hero-hint">SCROLL TO ENTER</div>
+      <div class="scroll-cue">SCROLL TO ENTER</div>
     </div>
-  </section>
 
-  <section class="chapter full" id="story">
-    <img class="chapter-image" src="https://about.starbucks.com/uploads/2025/10/24a-dl-original-store-sbx20080316-7766-2-1024x713.jpg" width="1536" height="1070" alt="Black-and-white view of an original Starbucks storefront">
-    <div class="chapter-shade"></div>
-    <div class="chapter-content reveal">
-      <div class="chapter-number">01 • WHERE THE STORY BEGAN</div>
+    <div class="layer history-layer" id="historyLayer">
+      <img src="https://about.starbucks.com/uploads/2025/10/24a-dl-original-store-sbx20080316-7766-2-1024x713.jpg" width="1024" height="713" decoding="async" alt="Black-and-white original Starbucks storefront">
+    </div>
+
+    <div class="layer craft-layer" id="craftLayer">
+      <img class="craft-bg" src="../20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" width="320" height="213" loading="lazy" alt="">
+      <div class="craft-frame"><img src="../20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" width="320" height="213" loading="lazy" alt="Starbucks barista preparing a drink"></div>
+    </div>
+
+    <div class="layer people-layer" id="peopleLayer">
+      <img class="people-bg" src="../Starbucks-and-PSL-Society-Collection-2-768x1152.webp" width="768" height="1152" loading="lazy" alt="">
+      <div class="people-frame"><img src="../Starbucks-and-PSL-Society-Collection-2-768x1152.webp" width="768" height="1152" loading="lazy" alt="Smiling customer with Starbucks drinks"></div>
+    </div>
+
+    <div class="layer origin-layer" id="originLayer">
+      <img src="../64c-dl-hacienda-alsacia-costa-rica-farmer-support-center-3-768x512.jpg" width="768" height="512" loading="lazy" alt="Hacienda Alsacia coffee origin experience">
+    </div>
+
+    <div class="layer final-layer" id="finalLayer">
+      <img src="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg" width="768" height="513" loading="lazy" alt="">
+    </div>
+
+    <div class="scene-copy history" id="historyCopy">
+      <div class="scene-no">01 • WHERE THE STORY BEGAN</div>
       <h2>A SMALL BEGINNING.<br>A LASTING IDEA.</h2>
-      <p>The story began in Seattle in 1971.<br>One storefront.<br>Whole-bean coffee.<br>The beginning of something much bigger.</p>
-      <div class="meta">SEATTLE • 1971</div>
+      <p>Seattle, 1971.<br><br>One storefront.<br>Whole-bean coffee.<br>A small beginning that would grow far beyond its front door.</p>
     </div>
-  </section>
 
-  <section class="craft" id="craft">
-    <div class="craft-media reveal">
-      <img src="/interactive-drink-menu/20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" width="320" height="213" loading="lazy" alt="Starbucks barista preparing a drink">
-    </div>
-    <div class="craft-copy reveal">
-      <div class="chapter-number" style="color:#9d7a43">02 • THE CRAFT</div>
-      <div class="rule"></div>
+    <div class="scene-copy craft" id="craftCopy">
+      <div class="scene-no">02 • THE CRAFT</div>
       <h2>MADE BY HAND.<br>REMEMBERED<br>BY HEART.</h2>
       <p>Precision matters.<br>So does the person behind the cup.</p>
     </div>
-  </section>
 
-  <section class="people" id="people">
-    <img class="people-photo reveal" src="/interactive-drink-menu/Starbucks-and-PSL-Society-Collection-2-768x1152.webp" width="768" height="1152" loading="lazy" alt="A smiling customer sitting with Starbucks drinks">
-    <div class="editorial-copy reveal">
-      <div class="chapter-number" style="color:#a17d4a">03 • EVERYDAY MOMENTS</div>
+    <div class="scene-copy people" id="peopleCopy">
+      <div class="scene-no">03 • EVERYDAY MOMENTS</div>
       <h2>THE STORY<br>BECOMES<br>YOURS.</h2>
       <p>Coffee becomes part of mornings, conversations, celebrations, and ordinary moments worth remembering.</p>
-      <div class="pull">The cup is only the beginning.</div>
     </div>
-  </section>
 
-  <section class="origin" id="planet">
-    <img src="/interactive-drink-menu/64c-dl-hacienda-alsacia-costa-rica-farmer-support-center-3-768x512.jpg" width="768" height="512" loading="lazy" alt="Hacienda Alsacia coffee origin experience">
-    <div class="origin-copy reveal">
-      <div class="chapter-number">04 • WHERE COFFEE BEGINS</div>
+    <div class="scene-copy origin" id="originCopy">
+      <div class="scene-no">04 • WHERE COFFEE BEGINS</div>
       <h2>EVERY CUP<br>HAS AN ORIGIN.</h2>
       <p>Before the café,<br>before the barista,<br>before the first sip,<br>there is the land.</p>
     </div>
-  </section>
 
-  <section class="finale" aria-label="One cup limitless connections">
-    <div class="finale-bg" id="finaleBg"></div>
-    <div class="finale-inner reveal">
+    <div class="final-copy" id="finalCopy">
       <div class="eyebrow" style="color:#dec28b">The story comes full circle</div>
       <h2>ONE CUP.<br>LIMITLESS CONNECTIONS.</h2>
       <p>Different places. Different stories. One shared cup.</p>
       <a class="btn" href="index.html#orbit">EXPLORE THE MENU</a>
     </div>
-  </section>
+  </div>
+</section>
+
+<section class="reduced-story" aria-label="Our Story">
+  <article class="reduced-scene"><img src="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-768x513.jpg" width="768" height="513" alt="Three people talking around a long wooden table inside a warm coffeehouse"><div class="reduced-text"><div class="eyebrow">People • Coffee • Connection</div><h2>COFFEE CONNECTS US.</h2><p>A cup can become a conversation, a ritual, a meeting place, and a memory.</p></div></article>
+  <article class="reduced-scene"><img src="https://about.starbucks.com/uploads/2025/10/24a-dl-original-store-sbx20080316-7766-2-1024x713.jpg" width="1024" height="713" alt="Black-and-white original Starbucks storefront"><div class="reduced-text"><div class="scene-no">01 • WHERE THE STORY BEGAN</div><h2>A SMALL BEGINNING. A LASTING IDEA.</h2><p>Seattle, 1971. One storefront. Whole-bean coffee. A small beginning that would grow far beyond its front door.</p></div></article>
+  <article class="reduced-scene"><img src="../20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" width="320" height="213" loading="lazy" alt="Starbucks barista preparing a drink"><div class="reduced-text"><div class="scene-no">02 • THE CRAFT</div><h2>MADE BY HAND. REMEMBERED BY HEART.</h2><p>Precision matters. So does the person behind the cup.</p></div></article>
+  <article class="reduced-scene"><img src="../Starbucks-and-PSL-Society-Collection-2-768x1152.webp" width="768" height="1152" loading="lazy" alt="Smiling customer with Starbucks drinks"><div class="reduced-text"><div class="scene-no">03 • EVERYDAY MOMENTS</div><h2>THE STORY BECOMES YOURS.</h2><p>Coffee becomes part of mornings, conversations, celebrations, and ordinary moments worth remembering.</p></div></article>
+  <article class="reduced-scene"><img src="../64c-dl-hacienda-alsacia-costa-rica-farmer-support-center-3-768x512.jpg" width="768" height="512" loading="lazy" alt="Hacienda Alsacia coffee origin experience"><div class="reduced-text"><div class="scene-no">04 • WHERE COFFEE BEGINS</div><h2>EVERY CUP HAS AN ORIGIN.</h2><p>Before the café, before the barista, before the first sip, there is the land.</p></div></article>
+</section>
 </main>
 
-<footer>
-  <strong>Coffee Connects Us</strong>
-  <span>Unofficial interactive concept</span>
-  <span>Our Story • People • Planet</span>
-</footer>
+<footer class="simple-footer"><strong>Coffee Connects Us</strong><span>Unofficial interactive concept</span></footer>
 
 <script>
 (function(){
-  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var nav=document.getElementById('siteNav');
-  var hero=document.querySelector('.hero-scene');
-  var curtain=document.getElementById('heroCurtain');
-  var copy=document.getElementById('heroCopy');
-  var image=document.getElementById('heroImage');
-  var toggle=document.getElementById('menuToggle');
-  var drawer=document.getElementById('mobileDrawer');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const film=document.getElementById('film'), nav=document.getElementById('siteNav');
+  const heroPhoto=document.getElementById('heroPhoto'), heroCopy=document.getElementById('heroCopy'), heroWash=document.getElementById('heroWash');
+  const layers={history:document.getElementById('historyLayer'),craft:document.getElementById('craftLayer'),people:document.getElementById('peopleLayer'),origin:document.getElementById('originLayer'),final:document.getElementById('finalLayer')};
+  const copies={history:document.getElementById('historyCopy'),craft:document.getElementById('craftCopy'),people:document.getElementById('peopleCopy'),origin:document.getElementById('originCopy'),final:document.getElementById('finalCopy')};
+  const dots=[...document.querySelectorAll('.progress span')];
+  const toggle=document.getElementById('menuToggle'), mobile=document.getElementById('mobileMenu');
+  let ticking=false;
 
-  function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-  function update(){
-    nav.classList.toggle('scrolled',scrollY>innerHeight*.72);
-    if(!reduce){
-      var rect=hero.getBoundingClientRect();
-      var travel=hero.offsetHeight-innerHeight;
-      var p=clamp((-rect.top)/Math.max(1,travel),0,1);
-      if(innerWidth>900){
-        curtain.style.width=(49*(1-p))+'%';
-        copy.style.opacity=String(1-clamp(p*1.55,0,1));
-        copy.style.transform='translateY(calc(-48% - '+(p*26)+'px))';
-      }else{
-        curtain.style.height=(55*(1-p))+'%';
-        copy.style.opacity=String(1-clamp(p*1.35,0,1));
-        copy.style.transform='translateY('+(p*-18)+'px)';
-      }
-      image.style.transform='scale('+(1.055-(p*.035))+')';
+  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+  const range=(p,a,b)=>clamp((p-a)/(b-a));
+  const bell=(p,a,b,c,d)=>Math.min(range(p,a,b),1-range(p,c,d));
+
+  function render(){
+    ticking=false;
+    if(reduced)return;
+    const r=film.getBoundingClientRect(), travel=film.offsetHeight-innerHeight;
+    const p=clamp((-r.top)/Math.max(1,travel));
+
+    nav.classList.toggle('light',p>.16 && p<.87);
+
+    const mobileView=innerWidth<=900;
+    const expand=range(p,.015,.135);
+    if(mobileView){
+      heroPhoto.style.clipPath='inset(0 0 '+(52*(1-expand))+'% 0)';
+      heroWash.style.opacity=String(1-expand);
+    }else{
+      heroPhoto.style.clipPath='inset(0 0 0 '+(50*(1-expand))+'%)';
+      heroWash.style.opacity=String(1-expand);
     }
-  }
-  addEventListener('scroll',update,{passive:true});
-  addEventListener('resize',update,{passive:true});
-  update();
+    heroPhoto.style.transform='scale('+(1.025+expand*.035)+')';
+    heroPhoto.style.filter='saturate('+(1-range(p,.12,.20)*.65)+') grayscale('+(range(p,.13,.21)*.72)+')';
+    heroCopy.style.opacity=String(1-range(p,.055,.145));
+    heroCopy.style.transform=mobileView?'translateY('+(range(p,.05,.15)*-18)+'px)':'translateY(calc(-48% - '+(range(p,.05,.15)*24)+'px))';
 
-  var observer=new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting) entry.target.classList.add('visible');
-    });
-  },{threshold:.18});
-  document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el)});
+    const ho=bell(p,.12,.18,.32,.39), co=bell(p,.32,.39,.51,.59), po=bell(p,.51,.58,.69,.77), oo=bell(p,.69,.76,.84,.91), fo=range(p,.86,.94);
+    layers.history.style.opacity=ho; layers.craft.style.opacity=co; layers.people.style.opacity=po; layers.origin.style.opacity=oo; layers.final.style.opacity=fo;
 
-  function closeMenu(){
-    drawer.classList.remove('open');
-    document.body.classList.remove('menu-open');
-    toggle.setAttribute('aria-expanded','false');
-    toggle.setAttribute('aria-label','Open navigation');
+    layers.history.style.transform='translateX('+(range(p,.24,.39)*-5)+'%) scale('+(1.03-range(p,.18,.36)*.025)+')';
+    layers.craft.style.transform='translateX('+(4-range(p,.34,.54)*4)+'%) scale('+(1.02+range(p,.38,.55)*.018)+')';
+    layers.people.style.transform='translateX('+(5-range(p,.54,.72)*5)+'%)';
+    layers.origin.style.transform='scale('+(1.045-range(p,.74,.89)*.035)+')';
+    layers.final.style.transform='scale('+(1.035+range(p,.89,1)*.025)+')';
+
+    copies.history.style.opacity=bell(p,.17,.205,.30,.355);
+    copies.craft.style.opacity=bell(p,.37,.405,.49,.545);
+    copies.people.style.opacity=bell(p,.56,.595,.67,.725);
+    copies.origin.style.opacity=bell(p,.74,.775,.83,.885);
+    copies.final.style.opacity=range(p,.91,.96);
+
+    if(!mobileView){
+      copies.history.style.transform='translateY('+(14-range(p,.17,.26)*14)+'px)';
+      copies.craft.style.transform='translateY(calc(-46% + '+(16-range(p,.37,.46)*16)+'px))';
+      copies.people.style.transform='translateY(calc(-47% + '+(16-range(p,.56,.65)*16)+'px))';
+      copies.origin.style.transform='translateY(calc(-47% + '+(16-range(p,.74,.82)*16)+'px))';
+    }
+
+    const scene=p<.18?0:p<.39?1:p<.59?2:p<.77?3:4;
+    dots.forEach((d,i)=>d.classList.toggle('on',i===scene));
   }
-  toggle.addEventListener('click',function(){
-    var open=!drawer.classList.contains('open');
-    drawer.classList.toggle('open',open);
-    document.body.classList.toggle('menu-open',open);
-    toggle.setAttribute('aria-expanded',String(open));
-    toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');
-  });
-  drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeMenu)});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
+  function request(){if(!ticking){ticking=true;requestAnimationFrame(render)}}
+  addEventListener('scroll',request,{passive:true}); addEventListener('resize',request,{passive:true}); render();
+
+  document.querySelectorAll('.jump').forEach(a=>a.addEventListener('click',e=>{
+    if(reduced)return;
+    e.preventDefault();
+    const p=parseFloat(a.dataset.p||'0'), top=scrollY+film.getBoundingClientRect().top+p*(film.offsetHeight-innerHeight);
+    scrollTo({top,behavior:'smooth'}); closeMenu();
+  }));
+
+  function closeMenu(){mobile.classList.remove('open');document.body.classList.remove('menu-open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation')}
+  toggle.addEventListener('click',()=>{const open=!mobile.classList.contains('open');mobile.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation')});
+  mobile.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(!a.classList.contains('jump'))closeMenu()}));
+  addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});
 })();
 </script>
 </body>
