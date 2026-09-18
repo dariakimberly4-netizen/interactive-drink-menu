@@ -25,7 +25,7 @@ body{
   font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 }
 body.menu-open{overflow:hidden}
-a{color:inherit;text-decoration:none}
+a{color:inherit;text-decoration:none;position:relative;z-index:2}
 button{font:inherit}
 img{display:block}
 :focus-visible{outline:3px solid #f6cf85;outline-offset:4px;border-radius:10px}
@@ -33,7 +33,7 @@ img{display:block}
 .skip:focus{transform:none}
 
 .site-nav{
-  position:fixed;z-index:260;top:0;left:0;right:0;height:var(--navh);
+  position:fixed;pointer-events:auto;z-index:260;top:0;left:0;right:0;height:var(--navh);
   display:flex;align-items:center;gap:26px;padding:0 clamp(18px,4vw,64px);
   color:#fff;background:linear-gradient(180deg,rgba(0,0,0,.56),transparent);
   transition:.3s ease
@@ -48,7 +48,7 @@ img{display:block}
 .menu-toggle{display:none;width:48px;height:48px;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;align-items:center;justify-content:center;cursor:pointer}
 .menu-toggle span,.menu-toggle:before,.menu-toggle:after{content:"";width:20px;height:2px;background:currentColor;display:block}
 .menu-toggle span{margin:5px 0}
-.mobile-drawer{display:none;position:fixed;z-index:250;inset:0;background:var(--ivory);padding:calc(var(--navh) + 28px) 22px 30px}
+.mobile-drawer{display:none;pointer-events:auto;position:fixed;z-index:250;inset:0;background:var(--ivory);padding:calc(var(--navh) + 28px) 22px 30px}
 .mobile-drawer.open{display:block}
 .mobile-drawer nav{display:grid}
 .mobile-drawer a{min-height:64px;display:flex;align-items:center;border-bottom:1px solid rgba(7,57,42,.13);font-family:Georgia,"Times New Roman",serif;font-size:33px;color:var(--forest)}
@@ -56,7 +56,7 @@ img{display:block}
 
 .journey{height:720svh;position:relative;background:#111}
 .stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#0d0b09;perspective:1200px}
-.scene{position:absolute;inset:-3%;opacity:0;will-change:opacity,transform,filter,clip-path}
+.scene{position:absolute;inset:-3%;opacity:0;will-change:opacity,transform,filter,clip-path;pointer-events:none}
 .scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .scene.hero{opacity:1;inset:0}
 .hero img{object-position:center 55%;transform:scale(1.06);filter:saturate(1.05)}
@@ -84,7 +84,7 @@ img{display:block}
 .final:after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(5,35,26,.38),rgba(5,29,21,.82))}
 
 .opening-copy{
-  position:absolute;z-index:30;left:clamp(22px,6vw,92px);top:50%;transform:translateY(-48%);
+  position:absolute;pointer-events:auto;z-index:30;left:clamp(22px,6vw,92px);top:50%;transform:translateY(-48%);
   width:min(43vw,660px);will-change:opacity,transform
 }
 .kicker{font-size:11px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:#e1c38b}
@@ -93,12 +93,12 @@ img{display:block}
 }
 .opening-copy h1{font-size:clamp(58px,7.8vw,122px)}
 .opening-copy p{font-size:clamp(17px,1.4vw,21px);line-height:1.7;color:#f2ebe1;max-width:520px}
-.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-.btn{display:inline-flex;min-height:50px;align-items:center;justify-content:center;padding:13px 20px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.09em}
+.actions{position:relative;z-index:60;display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{position:relative;z-index:61;pointer-events:auto;display:inline-flex;min-height:50px;align-items:center;justify-content:center;padding:13px 20px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.09em}
 .btn.primary{background:var(--ivory);color:var(--forest)}
 .btn.secondary{border:1px solid rgba(255,255,255,.7);color:#fff}
 
-.copy{position:absolute;z-index:32;color:#fff;opacity:0;will-change:opacity,transform}
+.copy{position:absolute;pointer-events:none;z-index:32;color:#fff;opacity:0;will-change:opacity,transform}
 .copy h2{font-size:clamp(48px,6.5vw,102px);color:#fff}
 .copy p{font-size:clamp(17px,1.35vw,21px);line-height:1.65;color:#f2eee8;max-width:530px}
 .copy.past{left:7vw;bottom:9vh;max-width:690px}
@@ -106,19 +106,19 @@ img{display:block}
 .copy.people-copy{right:7vw;top:50%;transform:translateY(-47%);width:min(42vw,620px)}
 .copy.origin-copy{left:7vw;top:50%;transform:translateY(-47%);max-width:690px}
 
-.final-copy{position:absolute;z-index:35;inset:0;display:grid;place-content:center;text-align:center;padding:24px;opacity:0}
+.final-copy{position:absolute;pointer-events:auto;z-index:35;inset:0;display:grid;place-content:center;text-align:center;padding:24px;opacity:0}
 .final-copy h2{font-size:clamp(60px,8.8vw,142px);color:#fff}
 .final-copy p{font-size:clamp(18px,1.45vw,22px);color:#e8efeb;margin:0 auto 30px}
 .final-copy .btn{background:#fff;color:var(--forest);justify-self:center;min-width:190px}
 
-.gold-thread{
+.gold-thread{pointer-events:none;
   position:absolute;z-index:24;left:50%;bottom:-5vh;width:3px;height:64vh;
   background:linear-gradient(180deg,rgba(194,161,106,0),#c2a16a 28%,#e2c38a);
   transform-origin:50% 100%;transform:translateX(-50%) perspective(650px) rotateX(67deg) scaleY(1.45);
   box-shadow:0 0 16px rgba(194,161,106,.33);opacity:.85;will-change:transform,left,bottom,height,opacity
 }
-.gold-node{position:absolute;z-index:25;left:50%;bottom:12vh;width:9px;height:9px;border-radius:50%;background:#e2c38a;transform:translateX(-50%);box-shadow:0 0 0 5px rgba(226,195,138,.12),0 0 22px rgba(226,195,138,.45);opacity:.7}
-.scene-index{position:fixed;z-index:240;right:14px;top:50%;transform:translateY(-50%);display:grid;gap:10px}
+.gold-node{pointer-events:none;position:absolute;z-index:25;left:50%;bottom:12vh;width:9px;height:9px;border-radius:50%;background:#e2c38a;transform:translateX(-50%);box-shadow:0 0 0 5px rgba(226,195,138,.12),0 0 22px rgba(226,195,138,.45);opacity:.7}
+.scene-index{position:fixed;pointer-events:none;z-index:240;right:14px;top:50%;transform:translateY(-50%);display:grid;gap:10px}
 .scene-index span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.32);transition:.25s}
 .scene-index span.on{background:#e1c38b;transform:scale(1.8)}
 
