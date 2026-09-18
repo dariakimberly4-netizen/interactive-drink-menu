@@ -2,487 +2,403 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f7f3ea"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4efe5">
 <title>Coffee Connects Us — Our Story</title>
+<meta name="description" content="A cinematic coffee story about people, craft, origin and connection.">
+<link rel="preload" as="image" href="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-1024x684.jpg">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap');
-
 :root{
-  --forest:#083d2d;
-  --forest-2:#0d5f44;
-  --ivory:#f7f3ea;
-  --paper:#fcfaf5;
-  --ink:#193027;
-  --muted:#66736c;
-  --gold:#b79356;
-  --line:#d9d2c6;
+  --ivory:#f4efe5;
+  --paper:#fbf8f2;
+  --forest:#073b2b;
+  --forest2:#0b563d;
+  --coffee:#5d3a28;
+  --gold:#b3945d;
+  --ink:#16251f;
+  --muted:#6a756f;
   --white:#fff;
+  --nav-h:72px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;background:var(--ivory)}
 body{
   margin:0;
-  background:var(--paper);
   color:var(--ink);
-  font-family:"DM Sans",sans-serif;
-  font-size:17px;
-  line-height:1.7;
+  background:var(--paper);
+  font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.55;
   overflow-x:hidden;
 }
-img{display:block;width:100%}
-a{text-decoration:none;color:inherit}
-button,input{font:inherit}
-section{scroll-margin-top:90px}
+body.menu-open{overflow:hidden}
+img{display:block;width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+:focus-visible{outline:3px solid #f0c36f;outline-offset:4px;border-radius:8px}
+.skip{
+  position:fixed;z-index:500;left:12px;top:10px;transform:translateY(-150%);
+  background:#fff;color:#073b2b;padding:10px 14px;border-radius:999px;font-weight:800
+}
+.skip:focus{transform:none}
 
 .nav{
-  position:fixed;z-index:100;top:0;left:0;right:0;height:74px;
-  display:flex;align-items:center;gap:24px;padding:0 4.5vw;
-  background:rgba(252,250,245,.96);backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(8,61,45,.12)
+  position:fixed;z-index:200;inset:0 0 auto 0;height:var(--nav-h);
+  display:flex;align-items:center;gap:28px;padding:0 clamp(18px,4vw,64px);
+  color:#fff;background:linear-gradient(180deg,rgba(0,0,0,.48),rgba(0,0,0,0));
+  transition:background .35s ease,backdrop-filter .35s ease,border-color .35s ease;
 }
-.brand{
-  display:flex;align-items:center;gap:10px;
-  font-weight:700;color:var(--forest);margin-right:8px
+.nav.scrolled{
+  color:var(--forest);background:rgba(244,239,229,.94);
+  backdrop-filter:blur(16px);border-bottom:1px solid rgba(7,59,43,.12)
 }
-.brandMark{
-  width:42px;height:42px;border:2px solid var(--forest);border-radius:50%;
-  display:grid;place-items:center;font-size:20px
+.wordmark{
+  font-family:Georgia,"Times New Roman",serif;font-size:22px;font-weight:700;
+  letter-spacing:.01em;margin-right:auto;white-space:nowrap
 }
-.nav a{font-size:13px;font-weight:700;letter-spacing:.03em}
-.nav a:hover,.nav a.active{color:var(--forest-2)}
-.nav .menu{
-  color:#fff;background:var(--forest);padding:11px 18px;border-radius:999px
+.navlinks{display:flex;align-items:center;gap:24px}
+.navlinks a{font-size:12px;font-weight:800;letter-spacing:.11em}
+.navlinks a:not(.menu-link):hover{opacity:.72}
+.menu-link{
+  padding:11px 17px;border-radius:999px;background:#fff;color:var(--forest)
 }
-.nav .stores{margin-left:auto;border:1px solid var(--forest);padding:10px 15px;border-radius:999px}
-.progress{
-  position:fixed;z-index:120;top:74px;left:0;height:3px;width:0;
-  background:linear-gradient(90deg,var(--gold),var(--forest-2))
+.nav.scrolled .menu-link{background:var(--forest);color:#fff}
+.menu-toggle{
+  display:none;width:48px;height:48px;border:1px solid currentColor;border-radius:999px;
+  background:transparent;color:inherit;align-items:center;justify-content:center;cursor:pointer
+}
+.menu-toggle span,.menu-toggle:before,.menu-toggle:after{
+  content:"";display:block;width:20px;height:2px;background:currentColor;
+  transition:transform .25s ease,opacity .25s ease
+}
+.menu-toggle span{margin:5px 0}
+
+.mobile-drawer{
+  display:none;position:fixed;z-index:190;inset:0;background:var(--ivory);
+  padding:calc(var(--nav-h) + 36px) 24px 36px;
+}
+.mobile-drawer.open{display:block}
+.mobile-drawer nav{display:grid;gap:6px}
+.mobile-drawer a{
+  display:flex;align-items:center;min-height:62px;border-bottom:1px solid rgba(7,59,43,.13);
+  font-family:Georgia,"Times New Roman",serif;font-size:34px;color:var(--forest)
+}
+.mobile-drawer .mobile-menu-link{
+  margin-top:22px;justify-content:center;background:var(--forest);color:#fff;border:0;border-radius:999px;
+  font-family:inherit;font-size:14px;font-weight:900;letter-spacing:.09em
 }
 
-.hero{
-  min-height:100svh;padding:120px 6vw 70px;
-  display:grid;grid-template-columns:.88fr 1.12fr;gap:5vw;align-items:center;
+.hero-scene{height:190svh;position:relative;background:#0b2019}
+.hero-sticky{position:sticky;top:0;height:100svh;overflow:hidden}
+.hero-image{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,0,0,.05),rgba(0,0,0,.14)),url("https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-1024x684.jpg");
+  background-size:cover;background-position:center;
+  transform:scale(1.055);will-change:transform
+}
+.hero-curtain{
+  position:absolute;z-index:2;inset:0 auto 0 0;width:49%;
   background:
-    radial-gradient(circle at 24% 20%,rgba(183,147,86,.10),transparent 28%),
-    linear-gradient(180deg,#fbf8f1,#f2ece0)
+    radial-gradient(circle at 25% 25%,rgba(179,148,93,.16),transparent 30%),
+    linear-gradient(135deg,#fbf8f1,var(--ivory));
+  box-shadow:22px 0 60px rgba(0,0,0,.08);
+  will-change:width
 }
-.kicker{
-  color:var(--forest-2);font-size:12px;font-weight:700;letter-spacing:.20em;
-  text-transform:uppercase
+.hero-copy{
+  position:absolute;z-index:3;left:clamp(22px,6vw,94px);top:50%;transform:translateY(-48%);
+  width:min(41vw,650px);will-change:opacity,transform
 }
-.hero h1,.title{
-  margin:12px 0;font-family:"DM Serif Display",serif;font-weight:400;
-  color:var(--forest);line-height:.96
+.eyebrow{
+  font-size:11px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)
 }
-.hero h1{font-size:clamp(64px,8vw,132px);letter-spacing:-.035em}
-.hero p{font-size:20px;max-width:600px;color:#43544a;line-height:1.75}
-.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero-copy h1,.display{
+  font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.045em;
+  margin:12px 0;color:var(--forest);line-height:.88
+}
+.hero-copy h1{font-size:clamp(54px,7.5vw,118px)}
+.hero-copy p{font-size:clamp(17px,1.35vw,21px);max-width:560px;color:#45534c}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:48px;padding:13px 20px;border-radius:999px;font-size:14px;font-weight:700
+  display:inline-flex;min-height:50px;align-items:center;justify-content:center;
+  padding:13px 19px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.08em
 }
-.primary{background:var(--forest);color:#fff}
-.secondary{border:1px solid var(--forest);color:var(--forest)}
-
-.heroMedia{
-  position:relative;min-height:620px;overflow:hidden;border-radius:30px;
-  box-shadow:0 28px 80px rgba(8,61,45,.16)
+.btn.primary{background:var(--forest);color:#fff}
+.btn.secondary{border:1px solid var(--forest);color:var(--forest)}
+.hero-hint{
+  position:absolute;z-index:3;right:clamp(16px,3vw,42px);bottom:28px;color:#fff;
+  display:flex;align-items:center;gap:9px;font-size:10px;font-weight:900;letter-spacing:.16em
 }
-.heroMedia img{
-  width:100%;height:100%;min-height:620px;object-fit:cover;
-  transform:scale(1.02);will-change:transform
-}
-.heroMedia:after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 60%,rgba(3,28,20,.40))
-}
-.heroNote{
-  position:absolute;z-index:3;left:24px;bottom:24px;max-width:270px;
-  background:rgba(255,255,255,.94);color:var(--ink);
-  padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.65)
-}
-.heroNote strong{display:block;font-family:"DM Serif Display";font-size:28px;color:var(--forest)}
-.heroNote small{display:block;color:#526158;line-height:1.5;margin-top:4px}
+.hero-hint:before{content:"";width:34px;height:1px;background:currentColor}
 
 .chapter{
-  padding:110px 6vw;background:var(--ivory)
+  position:relative;min-height:100svh;overflow:hidden
 }
-.split{
-  display:grid;grid-template-columns:1.05fr .95fr;gap:6vw;align-items:center
+.chapter.full{display:grid;align-items:end;padding:clamp(90px,10vw,150px) clamp(20px,6vw,90px)}
+.chapter-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.chapter-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,15,11,.78) 0%,rgba(5,15,11,.42) 48%,rgba(5,15,11,.08) 78%)}
+.chapter-content{position:relative;z-index:3;max-width:780px;color:#fff}
+.chapter-number{font-size:12px;letter-spacing:.22em;font-weight:900;color:#dfc48d}
+.chapter-content h2,.editorial-copy h2,.origin-copy h2,.finale h2{
+  font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.04em;line-height:.94
 }
-.photoFrame{
-  overflow:hidden;border-radius:28px;box-shadow:0 22px 65px rgba(0,0,0,.10)
-}
-.photoFrame img{height:560px;object-fit:cover;will-change:transform}
-.title{font-size:clamp(48px,6vw,90px)}
-.body{font-size:18px;line-height:1.8;color:#4c5d53}
-.timeline{
-  margin-top:30px;padding-left:22px;border-left:2px solid var(--gold)
-}
-.timeline b{display:block;color:var(--forest);font-size:15px;margin-bottom:5px}
-.timeline span{color:var(--muted)}
+.chapter-content h2{font-size:clamp(50px,7vw,108px);margin:16px 0 22px}
+.chapter-content p{font-size:clamp(17px,1.35vw,21px);max-width:560px;color:#f1eee8}
+.meta{margin-top:22px;font-size:11px;font-weight:900;letter-spacing:.17em;color:#e3c88f}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:none}
 
-.sequence{
-  padding:110px 6vw;background:var(--paper)
+.craft{
+  min-height:115svh;background:linear-gradient(135deg,#efe4d2,#f9f6ef);
+  display:grid;grid-template-columns:1.12fr .88fr;align-items:stretch
 }
-.sequenceIntro{max-width:760px;margin-bottom:48px}
-.sequenceGrid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:18px
+.craft-media{position:relative;min-height:100svh;overflow:hidden}
+.craft-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.craft-copy{
+  display:flex;flex-direction:column;justify-content:center;padding:clamp(70px,8vw,130px) clamp(24px,6vw,80px)
 }
-.storyCard{
-  overflow:hidden;border-radius:24px;background:#fff;border:1px solid var(--line);
-  transition:transform .35s ease,box-shadow .35s ease
-}
-.storyCard:hover{transform:translateY(-7px);box-shadow:0 20px 50px rgba(0,0,0,.10)}
-.storyCard img{height:330px;object-fit:cover;transition:transform .6s ease}
-.storyCard:hover img{transform:scale(1.04)}
-.storyCard .content{padding:24px}
-.step{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.16em}
-.storyCard h3{
-  margin:7px 0;font-family:"DM Serif Display";font-size:34px;line-height:1.05;color:var(--forest)
-}
-.storyCard p{margin:0;color:var(--muted)}
+.craft-copy h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(52px,6vw,94px);font-weight:400;line-height:.93;letter-spacing:-.045em;color:var(--forest);margin:15px 0 22px}
+.craft-copy p{font-size:clamp(18px,1.4vw,22px);max-width:520px;color:#526158}
+.rule{width:70px;height:1px;background:var(--gold);margin:4px 0 18px}
 
 .people{
-  padding:110px 6vw;background:var(--forest);color:#fff
+  min-height:110svh;background:#efe4d4;padding:clamp(90px,10vw,150px) clamp(20px,6vw,90px);
+  display:grid;grid-template-columns:.82fr 1.18fr;gap:clamp(30px,7vw,110px);align-items:center
 }
-.people .title{color:#fff}
-.people .body{color:#d9e6df}
-.peopleLayout{
-  display:grid;grid-template-columns:1.25fr .75fr;gap:18px;margin-top:40px
+.people-photo{
+  width:min(100%,570px);margin:auto;aspect-ratio:2/3;object-fit:cover;border-radius:2px;
+  box-shadow:0 35px 80px rgba(79,49,31,.18)
 }
-.peopleMain,.peopleSide{
-  position:relative;overflow:hidden;border-radius:26px
+.editorial-copy{max-width:730px}
+.editorial-copy h2{font-size:clamp(56px,7vw,112px);color:var(--coffee);margin:16px 0 24px}
+.editorial-copy p{font-size:clamp(18px,1.4vw,22px);max-width:600px;color:#665346}
+.pull{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(24px,2.6vw,38px);
+  color:#8f6b42;margin-top:34px;max-width:570px
 }
-.peopleMain{min-height:580px}.peopleSide{min-height:280px}
-.peopleMain img,.peopleSide img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform
-}
-.peopleOverlay{
-  position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(3,28,20,.90))
-}
-.peopleText{
-  position:absolute;z-index:2;left:26px;right:26px;bottom:25px
-}
-.peopleText h3{
-  font-family:"DM Serif Display";font-size:40px;line-height:1.02;margin:5px 0
-}
-.sideStack{display:grid;gap:18px}
 
-.planet{
-  padding:110px 6vw;background:#eaf0ec
+.origin{min-height:110svh;position:relative;display:flex;align-items:center;overflow:hidden}
+.origin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.origin:after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(6,42,30,.92) 0%,rgba(6,42,30,.66) 46%,rgba(6,42,30,.06) 82%)
 }
-.planetGrid{
-  display:grid;grid-template-columns:.88fr 1.12fr;gap:6vw;align-items:center
-}
-.planetPhoto{
-  height:620px;object-fit:cover;border-radius:28px;box-shadow:0 22px 65px rgba(0,0,0,.10)
-}
-.pillars{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:28px
-}
-.pillars div{
-  padding:19px;background:#fff;border:1px solid #cfd9d2;border-radius:16px
-}
-.pillars b{display:block;font-family:"DM Serif Display";font-size:28px;color:var(--forest)}
-.pillars span{font-size:14px;color:#526158}
+.origin-copy{position:relative;z-index:2;color:#fff;max-width:760px;padding:110px clamp(20px,7vw,110px)}
+.origin-copy h2{font-size:clamp(56px,7.3vw,116px);margin:16px 0 24px;color:#fff}
+.origin-copy p{font-size:clamp(18px,1.4vw,22px);max-width:520px;color:#e5eee9}
 
-.storesSection{
-  padding:110px 6vw;background:var(--paper)
+.finale{
+  min-height:100svh;display:grid;place-items:center;text-align:center;position:relative;color:#fff;overflow:hidden;
+  padding:100px 20px
 }
-.storePanel{
-  display:grid;grid-template-columns:.85fr 1.15fr;gap:28px;
-  background:#fff;border:1px solid var(--line);border-radius:28px;padding:28px
+.finale-bg{
+  position:absolute;inset:0;background:
+    linear-gradient(rgba(4,31,23,.64),rgba(4,31,23,.78)),
+    url("https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-1024x684.jpg") center 42%/cover;
+  transform:scale(1.04)
 }
-.storeSearch{display:flex;gap:10px;margin-top:22px}
-.storeSearch input{
-  flex:1;min-width:0;padding:14px 15px;border:1px solid var(--line);
-  border-radius:14px;background:#fff
-}
-.storeSearch button{
-  border:0;border-radius:14px;background:var(--forest);color:#fff;
-  padding:0 18px;font-weight:700
-}
-.storeList{display:grid;gap:11px}
-.storeItem{padding:17px;border:1px solid var(--line);border-radius:15px;background:#fbf8f1}
-.storeItem b{color:var(--forest)}
-.storeItem small{display:block;color:var(--muted);margin-top:4px}
-.demo{font-size:12px;color:var(--muted);margin-top:12px}
-
-.final{
-  min-height:86svh;padding:100px 6vw;display:grid;place-items:center;text-align:center;
-  color:#fff;background:
-    linear-gradient(rgba(4,37,27,.48),rgba(4,37,27,.76)),
-    url('https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-1024x684.jpg') center/cover
-}
-.finalInner{max-width:900px}
-.final h2{
-  font-family:"DM Serif Display";font-size:clamp(58px,8vw,120px);
-  font-weight:400;line-height:.92;margin:0 0 20px
-}
-.final p{max-width:620px;margin:0 auto 28px;font-size:19px;color:#e8f0eb}
+.finale-inner{position:relative;z-index:2;max-width:1000px}
+.finale h2{font-size:clamp(60px,8.8vw,142px);margin:12px 0 22px;color:#fff}
+.finale p{font-size:clamp(18px,1.5vw,23px);color:#e5ece8;margin:0 auto 30px}
+.finale .btn{background:#fff;color:var(--forest);min-width:190px}
 
 footer{
-  padding:34px 6vw;background:#062c20;color:#cbd9d1;
-  display:flex;align-items:center;gap:18px;flex-wrap:wrap
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding:28px clamp(20px,6vw,90px);background:#05291e;color:#bdcdc5
 }
-footer strong{font-family:"DM Serif Display";font-size:24px;color:#fff;margin-right:auto}
-footer span{font-size:12px}
+footer strong{font-family:Georgia,"Times New Roman",serif;font-size:22px;color:#fff;margin-right:auto}
+footer span{font-size:11px}
 
-.reveal{opacity:0;transform:translateY(22px);transition:.7s ease}
-.reveal.on{opacity:1;transform:none}
-.motion{
-  position:fixed;z-index:90;left:14px;bottom:14px;border:1px solid #ffffff50;
-  background:rgba(8,61,45,.92);color:#fff;border-radius:999px;padding:11px 14px;
-  font-size:11px;font-weight:700
-}
-body.reduced *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-
-@media(max-width:920px){
-  .nav{gap:11px;padding:0 14px}
-  .nav a:not(.brand):not(.menu):not(.stores){display:none}
-  .nav .stores{display:none}
-  .hero,.split,.planetGrid,.peopleLayout,.storePanel{grid-template-columns:1fr}
-  .hero{padding:108px 20px 60px}
-  .heroMedia{min-height:480px}.heroMedia img{min-height:480px}
-  .chapter,.sequence,.people,.planet,.storesSection{padding:78px 20px}
-  .sequenceGrid{grid-template-columns:1fr}
-  .peopleMain{min-height:460px}
-  .planetPhoto{height:470px}
+@media(max-width:900px){
+  :root{--nav-h:66px}
+  .navlinks{display:none}.menu-toggle{display:flex;flex-direction:column}
+  .hero-curtain{width:100%;height:55%;inset:auto 0 0 0;box-shadow:0 -20px 60px rgba(0,0,0,.08)}
+  .hero-image{background-position:center top}
+  .hero-copy{left:20px;right:20px;top:auto;bottom:7vh;transform:none;width:auto}
+  .hero-copy h1{font-size:clamp(48px,13vw,76px)}
+  .hero-copy p{max-width:92%;font-size:17px}
+  .hero-hint{top:88px;bottom:auto}
+  .chapter.full{align-items:end;padding:100px 20px 72px}
+  .chapter-shade{background:linear-gradient(180deg,rgba(5,15,11,.08) 20%,rgba(5,15,11,.80) 75%,rgba(5,15,11,.90))}
+  .craft{grid-template-columns:1fr}
+  .craft-media{min-height:70svh}.craft-copy{padding:70px 20px 90px}
+  .people{grid-template-columns:1fr;padding:90px 20px;gap:42px}
+  .people-photo{max-width:480px}
+  .origin:after{background:linear-gradient(180deg,rgba(6,42,30,.14),rgba(6,42,30,.9) 72%)}
+  .origin{align-items:end}.origin-copy{padding:90px 20px 70px}
 }
 @media(max-width:560px){
-  body{font-size:16px}
-  .nav{height:68px}.progress{top:68px}
-  .brand span:last-child{display:none}
-  .hero h1{font-size:50px}
-  .hero p,.body{font-size:17px}
-  .actions{display:grid}.btn{width:100%}
-  .heroMedia{min-height:420px}.heroMedia img{min-height:420px}
-  .heroNote{left:14px;right:14px;bottom:14px;max-width:none}
-  .title{font-size:42px}
-  .photoFrame img,.planetPhoto{height:390px}
-  .storyCard img{height:240px}
-  .peopleText h3{font-size:30px}
-  .pillars{grid-template-columns:1fr}
-  .storeSearch{display:grid}
+  .actions{display:grid}.actions .btn{width:100%}
+  .hero-copy h1{font-size:49px}
+  .chapter-content h2,.craft-copy h2,.editorial-copy h2,.origin-copy h2{font-size:48px}
+  .finale h2{font-size:58px}
+  footer strong{width:100%}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .reveal{opacity:1!important;transform:none!important;transition:none!important}
+  *,*:before,*:after{animation:none!important;transition:none!important}
+  .reveal{opacity:1!important;transform:none!important}
+  .hero-image,.finale-bg{transform:none!important}
 }
 </style>
 </head>
 <body>
+<a class="skip" href="#story">Skip to story</a>
 
-<div class="progress"></div>
-
-<nav class="nav" aria-label="Primary navigation">
-  <a class="brand active" href="#home"><span class="brandMark">☕</span><span>OUR STORY</span></a>
-  <a href="#home" data-section="home">HOME</a>
-  <a href="#story" data-section="story">OUR STORY</a>
-  <a class="menu" href="index.html#orbit">MENU</a>
-  <a href="#people" data-section="people">PEOPLE</a>
-  <a href="#planet" data-section="planet">PLANET</a>
-  <a class="stores" href="#stores" data-section="stores">FIND A STORE</a>
-</nav>
-
-<header class="hero" id="home">
-  <div class="reveal">
-    <div class="kicker">People • Coffee • Connection</div>
-    <h1>COFFEE<br>CONNECTS<br>US.</h1>
-    <p>A cup can become a conversation, a ritual, a meeting place, and a memory. This story begins with coffee—but it is really about people.</p>
-    <div class="actions">
-      <a class="btn primary" href="#story">EXPLORE OUR STORY</a>
-      <a class="btn secondary" href="index.html#orbit">MENU</a>
-    </div>
-  </div>
-
-  <div class="heroMedia reveal" id="heroMedia">
-    <img id="heroImg" src="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-1024x684.jpg" alt="Three people talking around a wooden table in a warm Starbucks coffeehouse">
-</div>
+<header class="nav" id="siteNav">
+  <a class="wordmark" href="#home">Our Story</a>
+  <nav class="navlinks" aria-label="Primary">
+    <a href="#home">HOME</a>
+    <a href="#story">OUR STORY</a>
+    <a class="menu-link" href="index.html#orbit">MENU</a>
+    <a href="#people">PEOPLE</a>
+    <a href="#planet">PLANET</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-controls="mobileDrawer" aria-expanded="false"><span></span></button>
 </header>
 
-<section class="chapter" id="story">
-  <div class="split">
-    <div class="photoFrame reveal">
-      <img id="historyImg" src="https://about.starbucks.com/uploads/2025/10/24a-dl-original-store-sbx20080316-7766-2-scaled.jpg" alt="Black and white view of the original Starbucks storefront">
-    </div>
-    <div class="reveal">
-      <div class="kicker">01 • Where the story began</div>
-      <h2 class="title">A small beginning. A lasting idea.</h2>
-      <p class="body">The story began in Seattle in 1971. The setting has changed over time, but coffee, craft and human connection remain at the center of the experience.</p>
-      <div class="timeline">
-        <b>SEATTLE • 1971</b>
-        <span>One storefront. Whole-bean coffee. The beginning of a much bigger story.</span>
+<div class="mobile-drawer" id="mobileDrawer">
+  <nav aria-label="Mobile navigation">
+    <a href="#home">HOME</a>
+    <a href="#story">OUR STORY</a>
+    <a href="#people">PEOPLE</a>
+    <a href="#planet">PLANET</a>
+    <a class="mobile-menu-link" href="index.html#orbit">EXPLORE THE MENU</a>
+  </nav>
+</div>
+
+<main>
+  <section class="hero-scene" id="home" aria-label="Coffee Connects Us">
+    <div class="hero-sticky">
+      <div class="hero-image" id="heroImage" role="img" aria-label="Three people talking around a long wooden table inside a warm coffeehouse"></div>
+      <div class="hero-curtain" id="heroCurtain"></div>
+      <div class="hero-copy" id="heroCopy">
+        <div class="eyebrow">People • Coffee • Connection</div>
+        <h1>COFFEE<br>CONNECTS<br>US.</h1>
+        <p>A cup can become a conversation, a ritual, a meeting place, and a memory.</p>
+        <div class="actions">
+          <a class="btn primary" href="#story">EXPLORE OUR STORY</a>
+          <a class="btn secondary" href="index.html#orbit">MENU</a>
+        </div>
       </div>
+      <div class="hero-hint">SCROLL TO ENTER</div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="sequence" id="journey">
-  <div class="sequenceIntro reveal">
-    <div class="kicker">02 • From farm to cup</div>
-    <h2 class="title">Three quiet chapters.</h2>
-    <p class="body">From origin to craft to the everyday cup, each chapter follows the people and places behind the coffee.</p>
-  </div>
-
-  <div class="sequenceGrid">
-    <article class="storyCard reveal">
-      <img loading="lazy" src="/interactive-drink-menu/64c-dl-hacienda-alsacia-costa-rica-farmer-support-center-3-768x512.jpg" alt="Coffee plant and ripe coffee cherries">
-      <div class="content"><span class="step">ORIGIN</span><h3>From the farm.</h3><p>It begins long before the counter—with the people and places that grow coffee.</p></div>
-    </article>
-    <article class="storyCard reveal">
-      <img loading="lazy" src="/interactive-drink-menu/20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" alt="Barista preparing coffee">
-      <div class="content"><span class="step">CRAFT</span><h3>Made with care.</h3><p>Hands, timing and detail turn an ingredient into an experience.</p></div>
-    </article>
-    <article class="storyCard reveal">
-      <img loading="lazy" src="/interactive-drink-menu/Starbucks-and-PSL-Society-Collection-2-768x1152.webp" alt="Cup of coffee on a table">
-      <div class="content"><span class="step">CUP</span><h3>A moment begins.</h3><p>The coffee matters. The conversation around it can matter even more.</p></div>
-    </article>
-  </div>
-</section>
-
-<section class="people" id="people">
-  <div class="reveal">
-    <div class="kicker" style="color:#dcc391">03 • People</div>
-    <h2 class="title">THE STORY IS HUMAN.</h2>
-    <p class="body">Partners, customers, friends and communities are what give the coffeehouse meaning.</p>
-  </div>
-
-  <div class="peopleLayout">
-    <article class="peopleMain reveal">
-      <img loading="lazy" src="/interactive-drink-menu/Starbucks-and-PSL-Society-Collection-2-768x1152.webp" alt="People spending time together in a coffeehouse">
-      <div class="peopleOverlay"></div>
-      <div class="peopleText"><small>COMMUNITY</small><h3>A place becomes meaningful when people fill it with life.</h3></div>
-    </article>
-
-    <div class="sideStack">
-      <article class="peopleSide reveal">
-        <img loading="lazy" src="/interactive-drink-menu/20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" alt="Coffeehouse counter">
-        <div class="peopleOverlay"></div>
-        <div class="peopleText"><small>PARTNERS</small><h3>People behind every cup.</h3></div>
-      </article>
-      <article class="peopleSide reveal">
-        <img loading="lazy" src="https://about.starbucks.com/uploads/2025/08/Bridgehampton_03-1024x684.jpg" alt="Friends together around a table">
-        <div class="peopleOverlay"></div>
-        <div class="peopleText"><small>EVERYDAY MOMENTS</small><h3>Small rituals become memories.</h3></div>
-      </article>
+  <section class="chapter full" id="story">
+    <img class="chapter-image" src="https://about.starbucks.com/uploads/2025/10/24a-dl-original-store-sbx20080316-7766-2-scaled.jpg" width="1536" height="1070" alt="Black-and-white view of an original Starbucks storefront">
+    <div class="chapter-shade"></div>
+    <div class="chapter-content reveal">
+      <div class="chapter-number">01 • WHERE THE STORY BEGAN</div>
+      <h2>A SMALL BEGINNING.<br>A LASTING IDEA.</h2>
+      <p>The story began in Seattle in 1971.<br>One storefront.<br>Whole-bean coffee.<br>The beginning of something much bigger.</p>
+      <div class="meta">SEATTLE • 1971</div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="planet" id="planet">
-  <div class="planetGrid">
-    <div class="reveal">
-      <div class="kicker">04 • Planet</div>
-      <h2 class="title">A BRIGHTER TOMORROW.</h2>
-      <p class="body">Coffee has an origin story. A more thoughtful future means caring about where it comes from, how resources are used, and the communities connected to it.</p>
-      <div class="pillars">
-        <div><b>Origin</b><span>Respect where coffee begins.</span></div>
-        <div><b>Reuse</b><span>Choose less waste.</span></div>
-        <div><b>Care</b><span>Support people and communities.</span></div>
-        <div><b>Improve</b><span>Keep moving forward.</span></div>
-      </div>
+  <section class="craft" id="craft">
+    <div class="craft-media reveal">
+      <img src="/interactive-drink-menu/20230615-PA082-Fall-PPK-Colorado-083-320x213.jpg" width="320" height="213" loading="lazy" alt="Starbucks barista preparing a drink">
     </div>
-    <img class="planetPhoto reveal" loading="lazy" src="/interactive-drink-menu/64c-dl-hacienda-alsacia-costa-rica-farmer-support-center-3-768x512.jpg" alt="Lush green coffee-growing landscape">
-  </div>
-</section>
+    <div class="craft-copy reveal">
+      <div class="chapter-number" style="color:#9d7a43">02 • THE CRAFT</div>
+      <div class="rule"></div>
+      <h2>MADE BY HAND.<br>REMEMBERED<br>BY HEART.</h2>
+      <p>Precision matters.<br>So does the person behind the cup.</p>
+    </div>
+  </section>
 
-<section class="storesSection" id="stores">
-  <div class="storePanel reveal">
-    <div>
-      <div class="kicker">Find a store</div>
-      <h2 class="title" style="font-size:clamp(42px,5vw,72px)">Continue the story nearby.</h2>
-      <p class="body">Explore nearby concept locations, or continue into the interactive menu.</p>
-      <div class="storeSearch">
-        <input id="storeInput" type="search" placeholder="Search Bacoor, Molino, Daang Hari…" aria-label="Search demo stores">
-        <button id="storeBtn">SEARCH</button>
-      </div>
-      <div class="demo">Prototype locations only.</div>
+  <section class="people" id="people">
+    <img class="people-photo reveal" src="/interactive-drink-menu/Starbucks-and-PSL-Society-Collection-2-768x1152.webp" width="768" height="1152" loading="lazy" alt="A smiling customer sitting with Starbucks drinks">
+    <div class="editorial-copy reveal">
+      <div class="chapter-number" style="color:#a17d4a">03 • EVERYDAY MOMENTS</div>
+      <h2>THE STORY<br>BECOMES<br>YOURS.</h2>
+      <p>Coffee becomes part of mornings, conversations, celebrations, and ordinary moments worth remembering.</p>
+      <div class="pull">The cup is only the beginning.</div>
     </div>
-    <div class="storeList">
-      <div class="storeItem" data-key="bacoor"><b>SM City Bacoor</b><small>Bacoor • Demo listing</small></div>
-      <div class="storeItem" data-key="molino"><b>Molino Boulevard</b><small>Molino • Demo listing</small></div>
-      <div class="storeItem" data-key="daang hari"><b>Vista Mall Daang Hari</b><small>Daang Hari • Demo listing</small></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="final">
-  <div class="finalInner reveal">
-    <div class="kicker" style="color:#ddc28f">The next chapter</div>
-    <h2>ONE CUP.<br>LIMITLESS CONNECTIONS.</h2>
-    <p>Different places. Different stories. One shared cup.</p>
-    <a class="btn" style="background:#fff;color:#083d2d" href="index.html#orbit">RETURN TO MENU</a>
-  </div>
-</section>
+  <section class="origin" id="planet">
+    <img src="/interactive-drink-menu/64c-dl-hacienda-alsacia-costa-rica-farmer-support-center-3-768x512.jpg" width="768" height="512" loading="lazy" alt="Hacienda Alsacia coffee origin experience">
+    <div class="origin-copy reveal">
+      <div class="chapter-number">04 • WHERE COFFEE BEGINS</div>
+      <h2>EVERY CUP<br>HAS AN ORIGIN.</h2>
+      <p>Before the café,<br>before the barista,<br>before the first sip,<br>there is the land.</p>
+    </div>
+  </section>
+
+  <section class="finale" aria-label="One cup limitless connections">
+    <div class="finale-bg" id="finaleBg"></div>
+    <div class="finale-inner reveal">
+      <div class="eyebrow" style="color:#dec28b">The story comes full circle</div>
+      <h2>ONE CUP.<br>LIMITLESS CONNECTIONS.</h2>
+      <p>Different places. Different stories. One shared cup.</p>
+      <a class="btn" href="index.html#orbit">EXPLORE THE MENU</a>
+    </div>
+  </section>
+</main>
 
 <footer>
   <strong>Coffee Connects Us</strong>
   <span>Unofficial interactive concept</span>
-  <span>•</span>
-  <span>Our Story</span>
-  <span>People</span>
-  <span>Planet</span>
+  <span>Our Story • People • Planet</span>
 </footer>
 
-<button class="motion" id="motion">REDUCE MOTION</button>
-
 <script>
-const progress=document.querySelector('.progress');
-const hero=document.getElementById('heroImg');
-const history=document.getElementById('historyImg');
+(function(){
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var nav=document.getElementById('siteNav');
+  var hero=document.querySelector('.hero-scene');
+  var curtain=document.getElementById('heroCurtain');
+  var copy=document.getElementById('heroCopy');
+  var image=document.getElementById('heroImage');
+  var toggle=document.getElementById('menuToggle');
+  var drawer=document.getElementById('mobileDrawer');
 
-addEventListener('scroll',()=>{
-  const max=document.documentElement.scrollHeight-innerHeight;
-  const p=max?scrollY/max:0;
-  progress.style.width=(p*100)+'%';
-
-  if(!document.body.classList.contains('reduced')){
-    const hr=document.getElementById('heroMedia').getBoundingClientRect();
-    if(hr.bottom>0 && hr.top<innerHeight){
-      const y=(hr.top+hr.height/2-innerHeight/2)/innerHeight;
-      hero.style.transform='scale(1.05) translateY('+(y*-18)+'px)';
-    }
-    const sr=history.getBoundingClientRect();
-    if(sr.bottom>0 && sr.top<innerHeight){
-      const y=(sr.top+sr.height/2-innerHeight/2)/innerHeight;
-      history.style.transform='scale(1.04) translateY('+(y*-14)+'px)';
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+  function update(){
+    nav.classList.toggle('scrolled',scrollY>innerHeight*.72);
+    if(!reduce){
+      var rect=hero.getBoundingClientRect();
+      var travel=hero.offsetHeight-innerHeight;
+      var p=clamp((-rect.top)/Math.max(1,travel),0,1);
+      if(innerWidth>900){
+        curtain.style.width=(49*(1-p))+'%';
+        copy.style.opacity=String(1-clamp(p*1.55,0,1));
+        copy.style.transform='translateY(calc(-48% - '+(p*26)+'px))';
+      }else{
+        curtain.style.height=(55*(1-p))+'%';
+        copy.style.opacity=String(1-clamp(p*1.35,0,1));
+        copy.style.transform='translateY('+(p*-18)+'px)';
+      }
+      image.style.transform='scale('+(1.055-(p*.035))+')';
     }
   }
+  addEventListener('scroll',update,{passive:true});
+  addEventListener('resize',update,{passive:true});
+  update();
 
-  const current=[...document.querySelectorAll('section[id],header[id]')]
-    .filter(s=>s.getBoundingClientRect().top<160)
-    .pop();
-  if(current){
-    document.querySelectorAll('.nav a[data-section]').forEach(a=>{
-      a.classList.toggle('active',a.dataset.section===current.id);
+  var observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting) entry.target.classList.add('visible');
     });
+  },{threshold:.18});
+  document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el)});
+
+  function closeMenu(){
+    drawer.classList.remove('open');
+    document.body.classList.remove('menu-open');
+    toggle.setAttribute('aria-expanded','false');
+    toggle.setAttribute('aria-label','Open navigation');
   }
-},{passive:true});
-
-const io=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')});
-},{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-document.getElementById('motion').addEventListener('click',()=>{
-  document.body.classList.toggle('reduced');
-  if(document.body.classList.contains('reduced')){
-    hero.style.transform='';
-    history.style.transform='';
-  }
-});
-
-function filterStores(){
-  const q=document.getElementById('storeInput').value.trim().toLowerCase();
-  document.querySelectorAll('.storeItem').forEach(el=>{
-    el.style.display=!q||el.innerText.toLowerCase().includes(q)||el.dataset.key.includes(q)?'block':'none';
+  toggle.addEventListener('click',function(){
+    var open=!drawer.classList.contains('open');
+    drawer.classList.toggle('open',open);
+    document.body.classList.toggle('menu-open',open);
+    toggle.setAttribute('aria-expanded',String(open));
+    toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');
   });
-}
-document.getElementById('storeInput').addEventListener('input',filterStores);
-document.getElementById('storeBtn').addEventListener('click',filterStores);
+  drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeMenu)});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
+})();
 </script>
 </body>
 </html>
