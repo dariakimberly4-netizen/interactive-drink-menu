@@ -10,11 +10,19 @@
   .mobileNav a{flex:1;text-align:center;text-decoration:none;color:#063b29;font-weight:800;font-size:11px;padding:12px 8px;border-radius:999px}
 }
 </style></head><body><main class="master" id="top">
-<a class="navHot nHome" href="index.html" aria-label="Home"></a>
+<a class="navHot nHome" href="#top" aria-label="Home"></a>
 <a class="navHot nStory" href="#top" aria-label="Our Story"></a>
 <a class="navHot nDrinks" href="index.html" aria-label="Drinks"></a>
 <a class="navHot nPeople" href="#stories" aria-label="People"></a>
 <a class="navHot nPlanet" href="#future" aria-label="Planet"></a>
-<a class="navHot nStores" href="index.html" aria-label="Stores"></a>
-<a class="navHot nSearch" href="index.html" aria-label="Search"></a>
-<a class="navHot nStore" href="index.html" aria-label="Find a Store"></a><img src="file_00000000338881faa308983078829b48.png" alt="Coffee Connects Us — Our Story"><a class="hot h1" href="#history" aria-label="Begin the journey"></a><a class="hot h2" id="history" href="#stories" aria-label="Explore history"></a><a class="hot h3" id="stories" href="#future" aria-label="Explore stories"></a><a class="hot h4" id="future" href="index.html" aria-label="Return to menu"></a></main><nav class="mobileNav"><a href="index.html">HOME</a><a href="#top">OUR STORY</a><a href="#stories">PEOPLE</a><a href="#future">PLANET</a></nav><div class="chapterLabel"><button data-to="0" class="on"></button><button data-to=".h2"></button><button data-to=".h3"></button><button data-to=".h4"></button></div><div class="hint">TAP THE STORY • SCROLL TO EXPLORE</div><script>document.querySelectorAll('.hot[href^="#"]').forEach(a=>a.onclick=e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth',block:'center'})});const master=document.querySelector('.master'),pic=master.querySelector('img'),dots=[...document.querySelectorAll('.chapterLabel button')];addEventListener('scroll',()=>{const max=document.documentElement.scrollHeight-innerHeight,p=max?scrollY/max:0;pic.style.transform='translateY('+(-p*18)+'px) scale('+(1+p*.025)+')';dots.forEach((d,i)=>d.classList.toggle('on',Math.abs(p-i/3)<.18))},{passive:true});addEventListener('pointermove',e=>{master.style.setProperty('--mx',(e.clientX/innerWidth*100)+'%');master.style.setProperty('--my',(e.clientY/innerHeight*100)+'%')},{passive:true});dots.forEach((d,i)=>d.onclick=()=>{if(i===0)scrollTo({top:0,behavior:'smooth'});else document.querySelector(d.dataset.to).scrollIntoView({behavior:'smooth',block:'center'})})</script></body></html>
+<a class="navHot nStores" href="#top" aria-label="Stores"></a>
+<a class="navHot nSearch" href="#top" aria-label="Search"></a>
+<a class="navHot nStore" href="#top" aria-label="Find a Store"></a><img src="file_00000000338881faa308983078829b48.png" alt="Coffee Connects Us — Our Story"><a class="hot h1" href="#history" aria-label="Begin the journey"></a><a class="hot h2" id="history" href="#stories" aria-label="Explore history"></a><a class="hot h3" id="stories" href="#future" aria-label="Explore stories"></a><a class="hot h4" id="future" href="index.html" aria-label="Return to menu"></a></main><nav class="mobileNav"><a href="#top">HOME</a><a href="#top">OUR STORY</a><a href="index.html">MENU</a><a href="#stories">PEOPLE</a><a href="#future">PLANET</a></nav><div class="chapterLabel"><button data-to="0" class="on"></button><button data-to=".h2"></button><button data-to=".h3"></button><button data-to=".h4"></button></div><div class="hint">TAP THE STORY • SCROLL TO EXPLORE</div><script>document.querySelectorAll('.hot[href^="#"]').forEach(a=>a.onclick=e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth',block:'center'})});const master=document.querySelector('.master'),pic=master.querySelector('img'),dots=[...document.querySelectorAll('.chapterLabel button')];addEventListener('scroll',()=>{const max=document.documentElement.scrollHeight-innerHeight,p=max?scrollY/max:0;pic.style.transform='translateY('+(-p*18)+'px) scale('+(1+p*.025)+')';dots.forEach((d,i)=>d.classList.toggle('on',Math.abs(p-i/3)<.18))},{passive:true});addEventListener('pointermove',e=>{master.style.setProperty('--mx',(e.clientX/innerWidth*100)+'%');master.style.setProperty('--my',(e.clientY/innerHeight*100)+'%')},{passive:true});dots.forEach((d,i)=>d.onclick=()=>{if(i===0)scrollTo({top:0,behavior:'smooth'});else document.querySelector(d.dataset.to).scrollIntoView({behavior:'smooth',block:'center'})})
+// ONLY MENU OPENS ORBIT
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href');
+    if(id==="#top"){e.preventDefault();scrollTo({top:0,behavior:"smooth"});}
+  });
+});
+</script></body></html>
