@@ -131,6 +131,151 @@
     body.product-detail-open .control-dock{visibility:hidden!important}
     #mainSubmenuSecondary{display:none!important}
 
+
+    /* TRUE NAVIGATION ORBIT */
+    .nav-orbit-direct{
+      position:relative;
+      width:min(92vw,620px);
+      height:min(66vw,420px);
+      max-height:420px;
+      min-height:300px;
+      margin:10px auto 4px;
+    }
+    .nav-orbit-ring{
+      position:absolute;
+      left:50%;top:50%;
+      width:68%;aspect-ratio:1;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(244,200,111,.28);
+      border-radius:50%;
+      box-shadow:0 0 50px rgba(0,117,74,.12),inset 0 0 42px rgba(255,255,255,.025);
+      pointer-events:none;
+    }
+    .nav-orbit-center{
+      position:absolute;
+      left:50%;top:50%;
+      transform:translate(-50%,-50%);
+      width:28%;aspect-ratio:1;
+      border-radius:50%;
+      display:grid;place-items:center;
+      align-content:center;
+      text-align:center;
+      padding:10px;
+      background:radial-gradient(circle at 35% 25%,#149b67,#006241 62%,#003f2b);
+      border:3px solid #f4efe6;
+      box-shadow:0 0 0 5px rgba(212,173,98,.62),0 14px 34px rgba(0,0,0,.3);
+      color:#fff;
+      z-index:2;
+    }
+    .nav-orbit-center strong{font-family:Georgia,serif;font-size:clamp(17px,3.2vw,28px);line-height:1}
+    .nav-orbit-center span{display:block;margin-top:6px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#dcebe3}
+    .nav-orbit-direct .main-submenu-direct{
+      position:absolute;inset:0;
+      display:block!important;
+      margin:0!important;padding:0!important;
+      overflow:visible!important;
+      max-width:none!important;
+    }
+    .nav-orbit-direct .main-submenu-direct button{
+      position:absolute;
+      width:31%;
+      min-height:64px;
+      border-radius:24px;
+      white-space:normal!important;
+      padding:10px 12px!important;
+      font-size:clamp(13px,2.6vw,20px);
+      line-height:1.08;
+      background:#0c281f;
+      border:2px solid rgba(255,255,255,.15);
+      color:#fff;
+      box-shadow:0 9px 24px rgba(0,0,0,.18);
+      transform:translate(-50%,-50%);
+      cursor:pointer;
+    }
+    .nav-orbit-direct .main-submenu-direct button:hover,
+    .nav-orbit-direct .main-submenu-direct button:focus-visible{
+      border-color:#f4c86f;
+      background:#13392d;
+    }
+    .nav-orbit-direct .main-submenu-direct button:nth-child(1){left:50%;top:9%}
+    .nav-orbit-direct .main-submenu-direct button:nth-child(2){left:88%;top:50%}
+    .nav-orbit-direct .main-submenu-direct button:nth-child(3){left:50%;top:91%}
+    .nav-orbit-direct .main-submenu-direct button:nth-child(4){left:12%;top:50%}
+    .nav-orbit-direct .main-submenu-direct button:nth-child(5){left:20%;top:18%}
+    .nav-orbit-direct .main-submenu-direct button:nth-child(6){left:80%;top:18%}
+    .nav-orbit-direct .main-submenu-direct button:nth-child(7){left:80%;top:82%}
+    .nav-orbit-direct .main-submenu-direct button:nth-child(8){left:20%;top:82%}
+    .nav-orbit-direct .main-submenu-direct button.nav-back{
+      background:#f4efe6;color:#07331f;border-color:#f4c86f;
+    }
+
+    /* Products are results, never orbit navigation */
+    body:not(.show-product-results) #stage{display:none!important}
+    body.show-product-results #mainMenuDirect{display:none!important}
+    body.show-product-results #stage{
+      display:block!important;
+      position:relative!important;
+      top:auto!important;bottom:auto!important;
+      min-height:calc(100vh - 92px);
+      padding:18px 14px 110px;
+      overflow:auto!important;
+      perspective:none!important;
+    }
+    body.show-product-results #stage .orbit-line,
+    body.show-product-results #stage .core,
+    body.show-product-results #stage::before{display:none!important}
+    body.show-product-results #orbit{
+      position:relative!important;
+      inset:auto!important;
+      display:grid!important;
+      grid-template-columns:repeat(auto-fit,minmax(128px,1fr));
+      gap:14px;
+      transform:none!important;
+      padding-top:52px;
+    }
+    body.show-product-results #orbit::before{
+      content:'MENU RESULTS';
+      position:absolute;left:4px;top:4px;
+      color:#fff;font-weight:900;letter-spacing:.12em;font-size:13px;
+    }
+    body.show-product-results .product{
+      position:relative!important;
+      left:auto!important;top:auto!important;
+      transform:none!important;
+      width:100%!important;height:auto!important;
+      min-height:168px;
+      opacity:1!important;
+      filter:none!important;
+      display:grid;place-items:center;
+    }
+    body.show-product-results .product .photo{width:112px!important;height:112px!important}
+    body.show-product-results .instructions,
+    body.show-product-results .control-dock{display:none!important}
+
+    .results-back{
+      position:fixed;left:14px;top:82px;z-index:145;
+      min-height:42px;padding:0 16px;border-radius:999px;
+      border:1px solid #f4c86f;background:#f4efe6;color:#07331f;
+      font-weight:900;display:none;
+    }
+    body.show-product-results .results-back{display:block}
+
+    @media(max-width:800px){
+      .main-menu-direct{padding:8px 10px 6px}
+      .nav-orbit-direct{height:330px;min-height:330px;width:96vw;margin-top:6px}
+      .nav-orbit-direct .main-submenu-direct{display:block!important}
+      .nav-orbit-direct .main-submenu-direct button{
+        width:34%!important;min-height:58px!important;
+        font-size:14px!important;padding:8px!important;
+      }
+      .nav-orbit-center{width:29%}
+      body.show-product-results #orbit{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:430px){
+      .nav-orbit-direct{height:305px;min-height:305px}
+      .nav-orbit-direct .main-submenu-direct button{width:36%!important;min-height:54px!important;font-size:13px!important}
+      .nav-orbit-center strong{font-size:18px}
+    }
     /* LEGACY HEADER CLEANUP */
     #helpBtn,#cartBtn,#rewardsBtn,#customerAccountBtn{display:none!important}
     @media(max-width:800px){
@@ -140,7 +285,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-11 -->
+<!-- BUILD 20260924-NAV-ORBIT -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -161,11 +306,16 @@
         <button type="button" data-direct-main="account">👤<span>MY ACCOUNT</span></button>
         <button type="button" data-direct-main="settings">⚙<span>SETTINGS</span></button>
       </div>
-      <div class="main-submenu-direct force-mobile-subgrid" id="mainSubmenuDirect"></div>
+      <div class="nav-orbit-direct" id="navOrbitDirect" aria-label="Navigation orbit">
+        <div class="nav-orbit-ring" aria-hidden="true"></div>
+        <div class="nav-orbit-center" id="navOrbitCenter"><strong>MENU</strong><span>Choose a path</span></div>
+        <div class="main-submenu-direct" id="mainSubmenuDirect"></div>
+      </div>
       <div class="main-submenu-secondary" id="mainSubmenuSecondary" aria-live="polite"></div>
     </section>
     <nav class="toolbar" id="categories" aria-label="Menu categories"></nav>
   <div class="search-panel" id="searchPanel"><input id="searchInput" type="search" placeholder="Search drinks and food…" aria-label="Search products" /></div>
+  <button class="results-back" id="resultsBack" type="button">‹ Back to Menu Orbit</button>
   <main class="stage" id="stage" aria-label="Interactive product orbit">
     <div class="orbit-line"></div><div class="orbit" id="orbit"></div>
     <a class="core" id="pickupBtn" href="#pickupModal" aria-label="Find a store and pickup time" style="text-decoration:none"><div><b>STARBUCKS</b><span>Menu Orbit</span><small>UNOFFICIAL PROTOTYPE</small></div></a>
@@ -366,85 +516,92 @@
 (function(){
   const maps={
     menu:[
-      ['Browse',[['Featured',()=>clickCat('Featured')],['Trending',()=>clickEl('#moTrending')]]],
+      ['Browse',[['Featured',()=>showCategory('Featured')],['Trending',()=>clickEl('#moTrending')],['New / Seasonal',()=>showCategory('Featured')]]],
       ['Find',[['Search',()=>clickEl('#searchBtn')],['Visual Search',()=>clickEl('#moVisualSearch')]]],
-      ['Preferences',[['Diet Filters',()=>clickEl('#moDiet')]]],
-      ['Compare',[['Compare Drinks',()=>clickEl('#moCompare')]]]
+      ['Preferences',[['Diet Filters',()=>clickEl('#moDiet')],['Favorites',()=>showCategory('Favorites')],['Your Usual',()=>clickEl('#moUsual')]]],
+      ['Compare',[['Compare Drinks',()=>clickEl('#moCompare')],['Pairings',()=>clickEl('#moPairings')]]]
     ],
     order:[
-      ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Your Usual',()=>clickEl('#moUsual')]]],
-      ['Plan Order',[['Schedule',()=>clickEl('#moSchedule')],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
+      ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')]]],
+      ['Plan Order',[['Schedule Order',()=>clickEl('#moSchedule')],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
-      ['History & Help',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Order Chat',()=>clickEl('#moOrderChat')],['Order Help',()=>clickEl('#moProblem')]]]
+      ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Previous Orders',()=>clickEl('#moReceiptsBtn')]]],
+      ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')]]]
     ],
     stores:[
-      ['Find Store',[['Find a Store',()=>clickEl('#pickupBtn')]]],
-      ['Branch Details',[['Branch Profile',()=>clickEl('#moBranch')],['Compare Branches',()=>clickEl('#moBranchCompare')]]]
+      ['Find Store',[['Nearby Stores',()=>clickEl('#pickupBtn')],['Find a Store',()=>clickEl('#pickupBtn')]]],
+      ['My Store',[['Selected Branch',()=>clickEl('#moBranch')]]],
+      ['Branch Details',[['Hours & Services',()=>clickEl('#moBranch')],['Availability',()=>clickEl('#moBranch')]]],
+      ['Compare Stores',[['Compare Branches',()=>clickEl('#moBranchCompare')]]]
     ],
     rewards:[
-      ['Rewards Home',[['Star Rewards',()=>clickEl('#rewardsBtn')],['Milestones',()=>clickEl('#moLoyalty')]]],
-      ['Offers',[['Voucher',()=>clickEl('#moVoucherTimer')],['Deal Reminders',()=>clickEl('#moDealReminders')]]],
-      ['Discover',[['Pairings',()=>clickEl('#moPairings')]]],
-      ['Inbox',[['Inbox',()=>clickEl('#moInbox')]]]
+      ['Rewards Home',[['Stars',()=>clickEl('#rewardsBtn')],['Reward Status',()=>clickEl('#rewardsBtn')]]],
+      ['Offers',[['Vouchers',()=>clickEl('#moVoucherTimer')],['Deal Reminders',()=>clickEl('#moDealReminders')]]],
+      ['Milestones',[['Progress / Achievements',()=>clickEl('#moLoyalty')]]],
+      ['Discover',[['Pairings & Offers',()=>clickEl('#moPairings')]]],
+      ['Inbox',[['Reward Notifications',()=>clickEl('#moInbox')]]]
     ],
     account:[
-      ['Profile',[['Profile',()=>clickEl('#moProfileDash')]]],
+      ['Profile',[['Personal Details',()=>clickEl('#moProfileDash')]]],
       ['Payments',[['Saved Payments',()=>clickEl('#moPayments')]]],
-      ['Activity',[['Search History',()=>clickEl('#moSearchHistory')]]],
+      ['Favorites',[['Saved Drinks / Food',()=>showCategory('Favorites')]]],
+      ['Activity',[['Search History',()=>clickEl('#moSearchHistory')],['Order History',()=>clickEl('#moReceiptsBtn')]]],
       ['Preferences',[['Notifications',()=>clickEl('#moNotifPrefs')],['Review Filters',()=>clickEl('#moReviewFilters')]]]
     ],
     settings:[
       ['Accessibility',[['Reduce Motion',()=>clickEl('#motionBtn')],['Gestures',()=>clickEl('#gestureBtn')],['Voice Control',()=>clickEl('#voiceCta')]]],
-      ['Help',[['Help',()=>clickEl('#helpBtn')]]],
-      ['Display',[['Presentation Mode',()=>clickEl('#moPresentationBtn')]]]
+      ['Display',[['Presentation Mode',()=>clickEl('#moPresentationBtn')]]],
+      ['Notifications',[['Notification Preferences',()=>clickEl('#moNotifPrefs')]]],
+      ['Help & Support',[['Help',()=>clickEl('#helpBtn')]]],
+      ['About',[['Menu Orbit Information',()=>showAbout()]]]
     ]
   };
 
-  let activeMain='menu', mode='groups', activeItems=[], rendering=false;
+  let activeMain='menu', mode='groups', activeItems=[];
 
   function clickEl(sel){const el=document.querySelector(sel);if(el)el.click();}
-  function clickCat(name){const b=[...document.querySelectorAll('[data-cat]')].find(x=>x.dataset.cat===name||x.textContent.trim()===name);if(b)b.click();}
-  function labels(){return [...document.querySelectorAll('#mainSubmenuDirect>button')].map(b=>b.textContent.trim());}
-
-  function expectedLabels(){
-    if(mode==='items')return ['‹ Back',...activeItems.map(x=>x[0])];
-    return (maps[activeMain]||[]).map(x=>x[0]);
+  function clickCat(name){
+    const b=[...document.querySelectorAll('[data-cat]')].find(x=>x.dataset.cat===name||x.textContent.trim()===name);
+    if(b)b.click();
   }
-
+  function showCategory(name){
+    clickCat(name);
+    document.body.classList.add('show-product-results');
+  }
+  function showAbout(){
+    const modal=document.getElementById('hubModal'), content=document.getElementById('hubContent');
+    if(!modal||!content)return;
+    content.innerHTML='<div class="drawer-head"><div><h2>Menu Orbit</h2><small>Unofficial interactive prototype</small></div><button class="close" id="orbitAboutClose">×</button></div><p class="desc">A navigation-first menu experience where the orbit is used for discovery, ordering, stores, rewards, account tools, and settings.</p>';
+    modal.classList.add('open');
+    document.getElementById('orbitAboutClose').onclick=()=>modal.classList.remove('open');
+  }
+  function center(title,sub){
+    const el=document.getElementById('navOrbitCenter'); if(!el)return;
+    el.innerHTML='<strong>'+title+'</strong><span>'+(sub||'Choose a path')+'</span>';
+  }
   function renderGroups(name){
-    activeMain=name; mode='groups'; activeItems=[];
+    activeMain=name;mode='groups';activeItems=[];
+    document.body.classList.remove('show-product-results');
     document.querySelectorAll('[data-direct-main]').forEach(b=>b.classList.toggle('active',b.dataset.directMain===name));
-    const sub=document.getElementById('mainSubmenuDirect'); if(!sub)return;
-    rendering=true; sub.innerHTML='';
+    const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
+    sub.innerHTML='';
+    const title=document.querySelector('[data-direct-main="'+name+'"] span')?.textContent||name.toUpperCase();
+    center(title,'Choose a path');
     (maps[name]||[]).forEach(([label,items])=>{
-      const b=document.createElement('button'); b.type='button'; b.textContent=label;
-      b.onclick=()=>renderItems(items); sub.appendChild(b);
+      const b=document.createElement('button');b.type='button';b.textContent=label;
+      b.onclick=()=>renderItems(label,items);sub.appendChild(b);
     });
-    rendering=false;
   }
-
-  function renderItems(items){
-    mode='items'; activeItems=items;
-    const sub=document.getElementById('mainSubmenuDirect'); if(!sub)return;
-    rendering=true; sub.innerHTML='';
-    const back=document.createElement('button'); back.type='button'; back.textContent='‹ Back';
-    back.onclick=()=>renderGroups(activeMain); sub.appendChild(back);
+  function renderItems(groupLabel,items){
+    mode='items';activeItems=items;
+    const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
+    sub.innerHTML='';center(groupLabel,'Choose an option');
+    const back=document.createElement('button');back.type='button';back.textContent='‹ Back';back.className='nav-back';
+    back.onclick=()=>renderGroups(activeMain);sub.appendChild(back);
     items.forEach(([label,fn])=>{
-      const b=document.createElement('button'); b.type='button'; b.textContent=label; b.onclick=fn; sub.appendChild(b);
+      const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;sub.appendChild(b);
     });
-    rendering=false;
   }
-
-  function enforceNav(){
-    if(rendering)return;
-    const actual=labels(), expected=expectedLabels();
-    if(actual.length!==expected.length || actual.some((x,i)=>x!==expected[i])){
-      mode==='items'?renderItems(activeItems):renderGroups(activeMain);
-    }
-    const secondary=document.getElementById('mainSubmenuSecondary');
-    if(secondary && secondary.childNodes.length)secondary.replaceChildren();
-  }
-
   function syncDetailState(){
     const detail=document.getElementById('detail'), nav=document.getElementById('mainMenuDirect');
     if(!detail||!nav)return;
@@ -452,23 +609,15 @@
     nav.style.setProperty('display',open?'none':'','important');
     document.body.classList.toggle('product-detail-open',open);
   }
-
   function init(){
     document.querySelectorAll('[data-direct-main]').forEach(b=>b.onclick=()=>renderGroups(b.dataset.directMain));
-    const secondary=document.getElementById('mainSubmenuSecondary'); if(secondary)secondary.replaceChildren();
+    document.getElementById('resultsBack')?.addEventListener('click',()=>renderGroups(activeMain));
+    document.getElementById('mainSubmenuSecondary')?.replaceChildren();
     renderGroups('menu');
-
-    const sub=document.getElementById('mainSubmenuDirect');
-    if(sub)new MutationObserver(()=>queueMicrotask(enforceNav)).observe(sub,{childList:true,subtree:true,characterData:true});
-    if(secondary)new MutationObserver(()=>{if(secondary.childNodes.length)secondary.replaceChildren()}).observe(secondary,{childList:true});
-
     const detail=document.getElementById('detail');
     if(detail)new MutationObserver(syncDetailState).observe(detail,{attributes:true,attributeFilter:['class','aria-hidden']});
     syncDetailState();
-
-    [250,700,1400,2600,4500].forEach(ms=>setTimeout(()=>{enforceNav();syncDetailState()},ms));
   }
-
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
