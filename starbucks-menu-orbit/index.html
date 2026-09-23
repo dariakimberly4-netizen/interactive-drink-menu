@@ -460,7 +460,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-CUSTOMER-BATCH-4 -->
+<!-- BUILD 20260924-CUSTOMER-BATCH-5 -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -695,7 +695,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-17"></script>
+  <script src="customer-next.js?v=20260924-18"></script>
 
 <script>
 (function(){
@@ -715,16 +715,16 @@
       ['Compare',[['Compare Drinks',()=>clickEl('#moCompare')],['Pairings',()=>clickEl('#moPairings')]]]
     ],
     order:[
-      ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Quick Order',()=>window.MenuOrbitCustomer?.openQuickOrder?.()],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
-      ['Plan Order',[['Schedule Order',()=>clickEl('#moSchedule')],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
+      ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Saved Basket',()=>window.MenuOrbitCustomer?.openSavedBasket?.()],['Quick Order',()=>window.MenuOrbitCustomer?.openQuickOrder?.()],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
+      ['Plan Order',[['Schedule Order',()=>clickEl('#moSchedule')],['Pickup Reminder',()=>window.MenuOrbitCustomer?.openPickupReminder?.()],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
-      ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Receipt Search',()=>window.MenuOrbitCustomer?.openReceiptSearch?.()],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
+      ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Receipt Search',()=>window.MenuOrbitCustomer?.openReceiptSearch?.()],['Recently Ordered',()=>window.MenuOrbitCustomer?.openRecentlyOrdered?.()],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
       ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')],['Refund / Issue Status',()=>window.MenuOrbitCustomer?.openRefundIssueStatus?.()],['Post-Pickup Feedback',()=>window.MenuOrbitCustomer?.openPostPickupFeedback?.()]]]
     ],
     stores:[
       ['Find Store',[['Nearby Stores',()=>clickEl('#pickupBtn')],['Find a Store',()=>clickEl('#pickupBtn')]]],
       ['My Store',[['Selected Branch',()=>clickEl('#moBranch')],['Favorite Store',()=>window.MenuOrbitCustomer?.openFavoriteStore?.()],['Pickup Notes',()=>window.MenuOrbitCustomer?.openPickupNotes?.()]]],
-      ['Branch Details',[['Hours & Services',()=>clickEl('#moBranch')],['Availability',()=>clickEl('#moBranch')],['Store Availability',()=>window.MenuOrbitCustomer?.openStoreAvailability?.()]]],
+      ['Branch Details',[['Hours & Services',()=>clickEl('#moBranch')],['Availability',()=>clickEl('#moBranch')],['Store Availability',()=>window.MenuOrbitCustomer?.openStoreAvailability?.()],['Ingredient Availability',()=>window.MenuOrbitCustomer?.openIngredientAvailability?.()]]],
       ['Compare Stores',[['Compare Branches',()=>clickEl('#moBranchCompare')]]]
     ],
     rewards:[
@@ -738,7 +738,7 @@
       ['Profile',[['Personal Details',()=>clickEl('#moProfileDash')]]],
       ['Payments',[['Saved Payments',()=>clickEl('#moPayments')]]],
       ['Favorites',[['Saved Drinks / Food',()=>showCategory('Favorites')],['Favorites Collections',()=>window.MenuOrbitCustomer?.openFavoriteCollections?.()]]],
-      ['Activity',[['Search History',()=>clickEl('#moSearchHistory')],['Order History',()=>clickEl('#moReceiptsBtn')],['Notification Center',()=>window.MenuOrbitCustomer?.openNotificationCenter?.()]]],
+      ['Activity',[['Search History',()=>clickEl('#moSearchHistory')],['Order History',()=>clickEl('#moReceiptsBtn')],['Order & Spend Insights',()=>window.MenuOrbitCustomer?.openOrderSpendInsights?.()],['Notification Center',()=>window.MenuOrbitCustomer?.openNotificationCenter?.()]]],
       ['Preferences',[['Notifications',()=>clickEl('#moNotifPrefs')],['Review Filters',()=>clickEl('#moReviewFilters')]]]
     ],
     settings:[
@@ -845,14 +845,19 @@
     'Pickup Notes':'customer-pickup-notes-2026-09-24-v4',
     'Receipt Search':'customer-receipt-search-2026-09-24-v4',
     'Accessibility Profile':'customer-accessibility-profile-2026-09-24-v4',
-    'Privacy & Data Controls':'customer-privacy-data-controls-2026-09-24-v4'
+    'Privacy & Data Controls':'customer-privacy-data-controls-2026-09-24-v4',
+    'Recently Ordered':'customer-recently-ordered-2026-09-24-v5',
+    'Saved Basket':'customer-saved-basket-2026-09-24-v5',
+    'Order & Spend Insights':'customer-order-spend-insights-2026-09-24-v5',
+    'Ingredient Availability':'customer-ingredient-availability-2026-09-24-v5',
+    'Pickup Reminder':'customer-pickup-reminder-2026-09-24-v5'
   };
   const CUSTOMER_LATEST_BATCH=[
-    'Quick Order',
-    'Pickup Notes',
-    'Receipt Search',
-    'Accessibility Profile',
-    'Privacy & Data Controls'
+    'Recently Ordered',
+    'Saved Basket',
+    'Order & Spend Insights',
+    'Ingredient Availability',
+    'Pickup Reminder'
   ];
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
@@ -871,28 +876,17 @@
     return labels.some(customerFeatureUnseen);
   }
   function mainHasNew(key){
-    if(key==='menu')return anyCustomerUnseen(['Recently Viewed','Recommended for You','Saved Drink Presets','Smart Substitutions']);
-    if(key==='order')return anyCustomerUnseen(['Order Tracking','Reorder','Modify / Cancel Order','Post-Pickup Feedback','Refund / Issue Status','Quick Order','Receipt Search']);
-    if(key==='stores')return anyCustomerUnseen(['Store Availability','Favorite Store','Pickup Notes']);
-    if(key==='rewards')return anyCustomerUnseen(['Voucher Wallet','Rewards History']);
-    if(key==='account')return anyCustomerUnseen(['Favorites Collections','Notification Center']);
-    if(key==='settings')return anyCustomerUnseen(['Accessibility Profile','Privacy & Data Controls']);
+    if(key==='order')return anyCustomerUnseen(['Recently Ordered','Saved Basket','Pickup Reminder']);
+    if(key==='stores')return customerFeatureUnseen('Ingredient Availability');
+    if(key==='account')return customerFeatureUnseen('Order & Spend Insights');
     return false;
   }
   function groupHasNew(main,group){
-    if(main==='menu'&&group==='Browse')return anyCustomerUnseen(['Recently Viewed','Recommended for You']);
-    if(main==='menu'&&group==='Preferences')return anyCustomerUnseen(['Saved Drink Presets','Smart Substitutions']);
-    if(main==='order'&&group==='Current Order')return anyCustomerUnseen(['Modify / Cancel Order','Quick Order']);
-    if(main==='order'&&group==='Order History')return anyCustomerUnseen(['Order Tracking','Reorder','Receipt Search']);
-    if(main==='order'&&group==='Help')return anyCustomerUnseen(['Post-Pickup Feedback','Refund / Issue Status']);
-    if(main==='stores'&&group==='My Store')return anyCustomerUnseen(['Favorite Store','Pickup Notes']);
-    if(main==='stores'&&group==='Branch Details')return customerFeatureUnseen('Store Availability');
-    if(main==='rewards'&&group==='Offers')return customerFeatureUnseen('Voucher Wallet');
-    if(main==='rewards'&&group==='Rewards Home')return customerFeatureUnseen('Rewards History');
-    if(main==='account'&&group==='Favorites')return customerFeatureUnseen('Favorites Collections');
-    if(main==='account'&&group==='Activity')return customerFeatureUnseen('Notification Center');
-    if(main==='settings'&&group==='Accessibility')return customerFeatureUnseen('Accessibility Profile');
-    if(main==='settings'&&group==='Privacy & Data')return customerFeatureUnseen('Privacy & Data Controls');
+    if(main==='order'&&group==='Current Order')return customerFeatureUnseen('Saved Basket');
+    if(main==='order'&&group==='Plan Order')return customerFeatureUnseen('Pickup Reminder');
+    if(main==='order'&&group==='Order History')return customerFeatureUnseen('Recently Ordered');
+    if(main==='stores'&&group==='Branch Details')return customerFeatureUnseen('Ingredient Availability');
+    if(main==='account'&&group==='Activity')return customerFeatureUnseen('Order & Spend Insights');
     return false;
   }
 
