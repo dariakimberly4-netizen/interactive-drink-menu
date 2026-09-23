@@ -1075,6 +1075,27 @@
       visibility:hidden!important;
       pointer-events:none!important;
     }
+  
+    /* CALL STAFF ABSOLUTE TOP FIX */
+    #callStaffModal{
+      position:fixed!important;
+      inset:0!important;
+      width:100vw!important;
+      height:100dvh!important;
+      z-index:2147483646!important;
+      align-items:center!important;
+      justify-content:center!important;
+      overflow:auto!important;
+      padding:14px!important;
+      box-sizing:border-box!important;
+      isolation:isolate!important;
+    }
+    #callStaffModal .modal-card{
+      z-index:2147483647!important;
+      width:min(620px,calc(100vw - 28px))!important;
+      max-height:calc(100dvh - 28px)!important;
+      margin:auto!important;
+    }
   </style>
 </head>
 <body>
@@ -1314,7 +1335,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-23"></script>
+  <script src="customer-next.js?v=20260924-24"></script>
 
 <script>
 (function(){
@@ -1398,6 +1419,52 @@
     setTimeout(selectDine,80);
     setTimeout(selectDine,220);
   }
+  function suspendOrbitForCallStaff(){
+    try{closeSmartQuickRing?.()}catch(e){}
+    document.getElementById('smartQuickRing')?.remove();
+    document.getElementById('orbitQuickAccessBtn')?.remove();
+    document.getElementById('orbitLongpressCoach')?.remove();
+    const targets=[
+      document.getElementById('mainMenuDirect'),
+      document.querySelector('header'),
+      document.querySelector('.stage'),
+      document.querySelector('.instructions'),
+      document.querySelector('.control-dock'),
+      document.getElementById('resultsBack')
+    ].filter(Boolean);
+    targets.forEach(el=>{
+      if(!el.dataset.callStaffPrevDisplay){
+        el.dataset.callStaffPrevDisplay=el.style.getPropertyValue('display')||'__none__';
+        el.dataset.callStaffPrevPriority=el.style.getPropertyPriority('display')||'';
+      }
+      el.style.setProperty('display','none','important');
+    });
+    document.body.classList.add('call-staff-open');
+    document.body.style.setProperty('overflow','hidden','important');
+  }
+  function resumeOrbitAfterCallStaff(){
+    const targets=[
+      document.getElementById('mainMenuDirect'),
+      document.querySelector('header'),
+      document.querySelector('.stage'),
+      document.querySelector('.instructions'),
+      document.querySelector('.control-dock'),
+      document.getElementById('resultsBack')
+    ].filter(Boolean);
+    targets.forEach(el=>{
+      const prev=el.dataset.callStaffPrevDisplay;
+      const pri=el.dataset.callStaffPrevPriority||'';
+      if(prev!==undefined){
+        if(prev==='__none__')el.style.removeProperty('display');
+        else el.style.setProperty('display',prev,pri);
+        delete el.dataset.callStaffPrevDisplay;
+        delete el.dataset.callStaffPrevPriority;
+      }
+    });
+    document.body.classList.remove('call-staff-open');
+    document.body.style.removeProperty('overflow');
+  }
+
   function openCallStaff(){
     markCustomerFeatureSeen('Call Staff');
     let modal=document.getElementById('callStaffModal');
@@ -1450,14 +1517,17 @@
       </div>
       <p class="notice">Prototype feature. Requests are saved on this browser for demo use.</p>
     `;
+    suspendOrbitForCallStaff();
+    modal.style.setProperty('display','flex','important');
+    modal.style.setProperty('z-index','2147483646','important');
     modal.classList.add('open');
-    document.body.classList.add('call-staff-open');
 
     let selected='';
-    document.getElementById('callStaffClose').onclick=()=>{modal.classList.remove('open');document.body.classList.remove('call-staff-open')};
+    document.getElementById('callStaffClose').onclick=()=>{modal.classList.remove('open');modal.style.removeProperty('display');resumeOrbitAfterCallStaff()};
     document.getElementById('callStaffSetTable').onclick=()=>{
       modal.classList.remove('open');
-      document.body.classList.remove('call-staff-open');
+      modal.style.removeProperty('display');
+      resumeOrbitAfterCallStaff();
       openTableQrOrdering();
     };
     content.querySelectorAll('[data-staff-request]').forEach(btn=>{
