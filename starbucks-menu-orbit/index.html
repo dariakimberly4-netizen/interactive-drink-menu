@@ -1213,7 +1213,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-15"></script>
+  <script src="customer-next.js?v=20260924-16"></script>
 
 <script>
 (function(){
@@ -1234,13 +1234,13 @@
     ],
     order:[
       ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Saved Basket',()=>window.MenuOrbitCustomer?.openSavedBasket?.()],['Price Change Notice',()=>window.MenuOrbitCustomer?.openPriceChangeNotice?.()],['Quick Order',()=>window.MenuOrbitCustomer?.openQuickOrder?.()],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
-      ['Plan Order',[['Schedule Order',()=>clickEl('#moSchedule')],['Pickup Reminder',()=>window.MenuOrbitCustomer?.openPickupReminder?.()],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
+      ['Plan Order',[['Dine In',()=>openDineIn()],['Schedule Order',()=>clickEl('#moSchedule')],['Pickup Reminder',()=>window.MenuOrbitCustomer?.openPickupReminder?.()],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
       ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Receipt Search',()=>window.MenuOrbitCustomer?.openReceiptSearch?.()],['Recently Ordered',()=>window.MenuOrbitCustomer?.openRecentlyOrdered?.()],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
       ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')],['Support History',()=>window.MenuOrbitCustomer?.openSupportHistory?.()],['Refund / Issue Status',()=>window.MenuOrbitCustomer?.openRefundIssueStatus?.()],['Post-Pickup Feedback',()=>window.MenuOrbitCustomer?.openPostPickupFeedback?.()]]]
     ],
     stores:[
-      ['Find Store',[['Nearby Stores',()=>clickEl('#pickupBtn')],['Pickup / Dine In',()=>clickEl('#pickupBtn')]]],
+      ['Find Store',[['Nearby Stores',()=>clickEl('#pickupBtn')],['Pickup',()=>clickEl('#pickupBtn')],['Dine In',()=>openDineIn()]]],
       ['My Store',[['Selected Branch',()=>clickEl('#moBranch')],['Favorite Store',()=>window.MenuOrbitCustomer?.openFavoriteStore?.()],['Pickup Notes',()=>window.MenuOrbitCustomer?.openPickupNotes?.()],['Saved Pickup Preferences',()=>window.MenuOrbitCustomer?.openSavedPickupPreferences?.()]]],
       ['Branch Details',[['Hours & Services',()=>clickEl('#moBranch')],['Availability',()=>clickEl('#moBranch')],['Store Availability',()=>window.MenuOrbitCustomer?.openStoreAvailability?.()],['Ingredient Availability',()=>window.MenuOrbitCustomer?.openIngredientAvailability?.()]]],
       ['Compare Stores',[['Compare Branches',()=>clickEl('#moBranchCompare')]]]
@@ -1274,6 +1274,28 @@
   let activeMain=null, level='main', activeGroup=null, activeItems=[], restoring=false, transitionTimer=null;
 
   function clickEl(sel){const el=document.querySelector(sel);if(el)el.click();}
+  function openDineIn(){
+    clickEl('#pickupBtn');
+    const selectDine=()=>{
+      let radio=[...document.querySelectorAll('input[name="orderType"]')].find(x=>(x.value||'').toLowerCase()==='dine in');
+      if(!radio){
+        const group=[...document.querySelectorAll('#pickupContent .options')].find(box=>box.querySelector('input[name="orderType"]'));
+        if(group){
+          const label=document.createElement('label');
+          label.innerHTML='<input type="radio" name="orderType" value="Dine In"> Dine In';
+          group.appendChild(label);
+          radio=label.querySelector('input');
+        }
+      }
+      if(radio){
+        radio.checked=true;
+        radio.dispatchEvent(new Event('change',{bubbles:true}));
+        radio.closest('label')?.scrollIntoView({block:'center',behavior:'smooth'});
+      }
+    };
+    setTimeout(selectDine,80);
+    setTimeout(selectDine,220);
+  }
   function clickCat(name){
     const b=[...document.querySelectorAll('[data-cat]')].find(x=>x.dataset.cat===name||x.textContent.trim()===name);
     if(b)b.click();
@@ -1639,10 +1661,12 @@
     'Undo Last Action':'customer-undo-last-action-2026-09-24-v7',
     'Price Change Notice':'customer-price-change-notice-2026-09-24-v7',
     'Clear All Customer Data':'customer-clear-all-data-2026-09-24-v7',
-    'Smart Wellness Filters':'customer-smart-wellness-filters-2026-09-24-v8'
+    'Smart Wellness Filters':'customer-smart-wellness-filters-2026-09-24-v8',
+    'Dine In':'customer-dine-in-2026-09-24-v9'
   };
   const CUSTOMER_LATEST_BATCH=[
-    'Smart Wellness Filters'
+    'Smart Wellness Filters',
+    'Dine In'
   ];
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
@@ -1662,10 +1686,15 @@
     return labels.some(customerFeatureUnseen);
   }
   function mainHasNew(key){
-    return key==='menu'&&customerFeatureUnseen('Smart Wellness Filters');
+    if(key==='menu'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
+    if((key==='order'||key==='stores')&&customerFeatureUnseen('Dine In'))return true;
+    return false;
   }
   function groupHasNew(main,group){
-    return main==='menu'&&group==='Preferences'&&customerFeatureUnseen('Smart Wellness Filters');
+    if(main==='menu'&&group==='Preferences'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
+    if(main==='order'&&group==='Plan Order'&&customerFeatureUnseen('Dine In'))return true;
+    if(main==='stores'&&group==='Find Store'&&customerFeatureUnseen('Dine In'))return true;
+    return false;
   }
 
   function decorateNewButton(b){
