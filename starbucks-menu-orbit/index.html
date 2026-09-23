@@ -124,6 +124,13 @@
       }
     }
   
+    /* PRODUCT DETAIL MUST OWN THE SCREEN */
+    body.product-detail-open #mainMenuDirect{display:none!important}
+    body.product-detail-open .stage,
+    body.product-detail-open .instructions,
+    body.product-detail-open .control-dock{visibility:hidden!important}
+    #mainSubmenuSecondary{display:none!important}
+
     /* LEGACY HEADER CLEANUP */
     #helpBtn,#cartBtn,#rewardsBtn,#customerAccountBtn{display:none!important}
     @media(max-width:800px){
@@ -392,41 +399,76 @@
       ['Display',[['Presentation Mode',()=>clickEl('#moPresentationBtn')]]]
     ]
   };
-  let activeMain='menu';
+
+  let activeMain='menu', mode='groups', activeItems=[], rendering=false;
+
   function clickEl(sel){const el=document.querySelector(sel);if(el)el.click();}
   function clickCat(name){const b=[...document.querySelectorAll('[data-cat]')].find(x=>x.dataset.cat===name||x.textContent.trim()===name);if(b)b.click();}
+  function labels(){return [...document.querySelectorAll('#mainSubmenuDirect>button')].map(b=>b.textContent.trim());}
+
+  function expectedLabels(){
+    if(mode==='items')return ['‹ Back',...activeItems.map(x=>x[0])];
+    return (maps[activeMain]||[]).map(x=>x[0]);
+  }
+
   function renderGroups(name){
-    activeMain=name;
+    activeMain=name; mode='groups'; activeItems=[];
     document.querySelectorAll('[data-direct-main]').forEach(b=>b.classList.toggle('active',b.dataset.directMain===name));
     const sub=document.getElementById('mainSubmenuDirect'); if(!sub)return;
-    sub.innerHTML='';
+    rendering=true; sub.innerHTML='';
     (maps[name]||[]).forEach(([label,items])=>{
-      const b=document.createElement('button');
-      b.type='button';b.textContent=label;
-      b.onclick=()=>renderItems(label,items);
-      sub.appendChild(b);
+      const b=document.createElement('button'); b.type='button'; b.textContent=label;
+      b.onclick=()=>renderItems(items); sub.appendChild(b);
     });
+    rendering=false;
   }
-  function renderItems(groupLabel,items){
+
+  function renderItems(items){
+    mode='items'; activeItems=items;
     const sub=document.getElementById('mainSubmenuDirect'); if(!sub)return;
-    sub.innerHTML='';
-    const back=document.createElement('button');
-    back.type='button';back.textContent='‹ Back';
-    back.setAttribute('aria-label','Back to '+activeMain+' groups');
-    back.onclick=()=>renderGroups(activeMain);
-    sub.appendChild(back);
+    rendering=true; sub.innerHTML='';
+    const back=document.createElement('button'); back.type='button'; back.textContent='‹ Back';
+    back.onclick=()=>renderGroups(activeMain); sub.appendChild(back);
     items.forEach(([label,fn])=>{
-      const b=document.createElement('button');
-      b.type='button';b.textContent=label;
-      b.onclick=fn;
-      sub.appendChild(b);
+      const b=document.createElement('button'); b.type='button'; b.textContent=label; b.onclick=fn; sub.appendChild(b);
     });
+    rendering=false;
   }
+
+  function enforceNav(){
+    if(rendering)return;
+    const actual=labels(), expected=expectedLabels();
+    if(actual.length!==expected.length || actual.some((x,i)=>x!==expected[i])){
+      mode==='items'?renderItems(activeItems):renderGroups(activeMain);
+    }
+    const secondary=document.getElementById('mainSubmenuSecondary');
+    if(secondary && secondary.childNodes.length)secondary.replaceChildren();
+  }
+
+  function syncDetailState(){
+    const detail=document.getElementById('detail'), nav=document.getElementById('mainMenuDirect');
+    if(!detail||!nav)return;
+    const open=detail.classList.contains('open')||detail.getAttribute('aria-hidden')==='false';
+    nav.style.setProperty('display',open?'none':'','important');
+    document.body.classList.toggle('product-detail-open',open);
+  }
+
   function init(){
     document.querySelectorAll('[data-direct-main]').forEach(b=>b.onclick=()=>renderGroups(b.dataset.directMain));
-    const secondary=document.getElementById('mainSubmenuSecondary');if(secondary)secondary.innerHTML='';
+    const secondary=document.getElementById('mainSubmenuSecondary'); if(secondary)secondary.replaceChildren();
     renderGroups('menu');
+
+    const sub=document.getElementById('mainSubmenuDirect');
+    if(sub)new MutationObserver(()=>queueMicrotask(enforceNav)).observe(sub,{childList:true,subtree:true,characterData:true});
+    if(secondary)new MutationObserver(()=>{if(secondary.childNodes.length)secondary.replaceChildren()}).observe(secondary,{childList:true});
+
+    const detail=document.getElementById('detail');
+    if(detail)new MutationObserver(syncDetailState).observe(detail,{attributes:true,attributeFilter:['class','aria-hidden']});
+    syncDetailState();
+
+    [250,700,1400,2600,4500].forEach(ms=>setTimeout(()=>{enforceNav();syncDetailState()},ms));
   }
+
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
