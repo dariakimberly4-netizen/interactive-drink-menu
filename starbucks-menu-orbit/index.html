@@ -1210,7 +1210,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-13"></script>
+  <script src="customer-next.js?v=20260924-14"></script>
 
 <script>
 (function(){
@@ -1923,6 +1923,29 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cleanBottomNav);else cleanBottomNav();
   [300,700,1200,2000,3200,5000].forEach(ms=>setTimeout(cleanBottomNav,ms));
+})();
+</script>
+
+<script>
+(function(){
+  function markDineIn(){
+    const labels=[...document.querySelectorAll('label')];
+    const dine=labels.find(l=>(l.textContent||'').trim().toLowerCase()==='dine in');
+    if(dine){
+      dine.style.position='relative';
+      window.NewFeatureHighlight?.register(dine,'dine-in-highlight-v1','NEW');
+    }
+    const subs=[...document.querySelectorAll('#mainSubmenuDirect button')];
+    const entry=subs.find(b=>(b.textContent||'').trim().toLowerCase()==='pickup / dine in');
+    if(entry){
+      window.NewFeatureHighlight?.register(entry,'pickup-dinein-submenu-v1','NEW');
+    }
+  }
+  document.addEventListener('click',e=>{
+    if(e.target.closest('#pickupBtn')||e.target.closest('[data-direct-main="stores"]')) setTimeout(markDineIn,120);
+  });
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(markDineIn,700));
+  else setTimeout(markDineIn,700);
 })();
 </script>
 </body>
