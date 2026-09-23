@@ -95,6 +95,8 @@
     bindProducts(out);
   }
 
+  window.openMenuOrbitTrending=openTrending;
+
   // VISUAL SEARCH USING DOMINANT COLOR
   function inferFamily(rgb){
     const [r,g,b]=rgb,max=Math.max(r,g,b),min=Math.min(r,g,b);
