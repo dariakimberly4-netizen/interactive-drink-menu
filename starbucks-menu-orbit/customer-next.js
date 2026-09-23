@@ -607,7 +607,64 @@ function openPickupReminder(){
  $('#moSavePickupReminder').onclick=()=>{put('mo_pickup_reminder_v1',{enabled:$('#moPickupReminderEnabled').checked,minutes:Number($('#moPickupReminderMinutes').value),ready:$('#moPickupReadyAlert').checked});toast('Pickup reminder saved');render()};
 }
 
-window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter,openQuickOrder,openPickupNotes,openReceiptSearch,openAccessibilityProfile,openPrivacyDataControls,openRecentlyOrdered,openSavedBasket,openOrderSpendInsights,openIngredientAvailability,openPickupReminder};
+
+function openSupportHistory(){
+ const issues=get('mo_customer_issues_v1',[]),feedback=get('mo_order_feedback_v1',{}),notices=get('mo_support_history_v1',[]);
+ const rows=[
+   ...issues.map(x=>({kind:'Issue',title:x.type+' • '+x.orderCode,status:x.status,when:x.createdAt||'',detail:x.note||''})),
+   ...Object.entries(feedback).map(([code,x])=>({kind:'Feedback',title:'Feedback • '+code,status:(x.rating||0)+'★',when:x.savedAt||'',detail:x.comment||''})),
+   ...notices
+ ].sort((a,b)=>String(b.when||'').localeCompare(String(a.when||'')));
+ const out=sheet('Support History','View previous issue requests, feedback, and saved support activity.');
+ out.innerHTML=rows.length?rows.map(x=>'<div class="mo-next-card" style="margin-bottom:10px"><h4>'+esc(x.title)+'</h4><small>'+esc(x.kind)+' • '+esc(x.status||'Saved')+(x.when?'<br>'+esc(x.when):'')+(x.detail?'<br>'+esc(x.detail):'')+'</small></div>').join(''):'<div class="empty">No support history yet.</div>';
+}
+
+function logAccountActivity(type,detail){
+ const arr=get('mo_account_activity_v1',[]);
+ arr.unshift({type,detail,at:new Date().toISOString()});
+ put('mo_account_activity_v1',arr.slice(0,60));
+}
+function openAccountActivityLog(){
+ const activity=get('mo_account_activity_v1',[]),orders=get('menuOrbitOrders',[]);
+ const derived=orders.slice(0,10).map(o=>({type:'Order',detail:(o.code||'Order')+' • '+money(o.total||0),at:o.createdAt||''}));
+ const rows=[...activity,...derived].sort((a,b)=>String(b.at||'').localeCompare(String(a.at||''))).slice(0,40);
+ const out=sheet('Account Activity Log','Review recent customer-side changes saved in this browser.');
+ out.innerHTML=rows.length?rows.map(x=>'<div class="mo-next-card" style="margin-bottom:10px"><h4>'+esc(x.type)+'</h4><small>'+esc(x.detail||'')+(x.at?'<br>'+esc(x.at):'')+'</small></div>').join(''):'<div class="empty">No account activity yet.</div>';
+}
+
+function applyLanguage(){
+ const lang=get('mo_language_v1','English');
+ document.documentElement.setAttribute('lang',lang==='Filipino'?'fil':'en');
+}
+function openLanguageSelector(){
+ const current=get('mo_language_v1','English'),out=sheet('Language','Choose a preferred interface language for this prototype.');
+ out.innerHTML='<div class="mo-form"><label class="mo-pref"><span><b>English</b><small>Default prototype language.</small></span><input type="radio" name="moLanguage" value="English" '+(current==='English'?'checked':'')+'></label><label class="mo-pref"><span><b>Filipino</b><small>Remember Filipino as your preferred language.</small></span><input type="radio" name="moLanguage" value="Filipino" '+(current==='Filipino'?'checked':'')+'></label><button class="mo-primary" id="moSaveLanguage">SAVE LANGUAGE</button></div><p class="demo-banner">This saves the language preference and document language setting. Existing feature copy remains primarily English in this prototype.</p>';
+ $('#moSaveLanguage').onclick=()=>{const lang=out.querySelector('input[name="moLanguage"]:checked')?.value||'English';put('mo_language_v1',lang);applyLanguage();logAccountActivity('Language preference','Changed to '+lang);toast('Language preference saved')};
+}
+
+function updateConnectionBanner(){
+ let b=$('#moConnectionBanner');
+ if(!b){b=document.createElement('div');b.id='moConnectionBanner';b.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;padding:10px 14px;border-radius:14px;background:#5c271f;color:#fff;font:800 12px system-ui;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.3);display:none';document.body.appendChild(b)}
+ if(navigator.onLine){b.style.display='none'}else{b.textContent='OFFLINE • Your cart and saved demo data remain on this device.';b.style.display='block'}
+}
+function openOfflineReconnect(){
+ const out=sheet('Offline / Reconnect','See connection status and how Menu Orbit protects local demo data.');
+ out.innerHTML='<div class="mo-statgrid"><div class="mo-stat"><b>'+(navigator.onLine?'ONLINE':'OFFLINE')+'</b><small>Connection</small></div><div class="mo-stat"><b>'+get('menuOrbitCart',[]).length+'</b><small>Cart items preserved</small></div><div class="mo-stat"><b>'+get('menuOrbitOrders',[]).length+'</b><small>Orders stored locally</small></div></div><div class="mo-saved-banner" style="margin-top:12px">'+(navigator.onLine?'Connection available. Menu Orbit can continue normally.':'Connection unavailable. Local cart, preferences, and saved data remain available in this browser.')+'</div><button class="mo-primary" style="width:100%;margin-top:12px" id="moRetryConnection">RECHECK CONNECTION</button><p class="demo-banner">This is a browser-side resilience demo; it does not provide true offline server ordering.</p>';
+ $('#moRetryConnection').onclick=()=>{updateConnectionBanner();openOfflineReconnect()};
+}
+
+function openSavedPickupPreferences(){
+ const current=get('mo_saved_pickup_preferences_v1',{method:'Counter pickup',window:'Any time',note:'',useFavoriteStore:true});
+ const out=sheet('Saved Pickup Preferences','Remember the customer’s preferred pickup method, time window, and default notes.');
+ out.innerHTML='<div class="mo-form"><select id="moSavedPickupMethod"><option '+(current.method==='Counter pickup'?'selected':'')+'>Counter pickup</option><option '+(current.method==='Curbside pickup'?'selected':'')+'>Curbside pickup</option><option '+(current.method==='Call on arrival'?'selected':'')+'>Call on arrival</option></select><select id="moSavedPickupWindow"><option '+(current.window==='Any time'?'selected':'')+'>Any time</option><option '+(current.window==='Morning'?'selected':'')+'>Morning</option><option '+(current.window==='Afternoon'?'selected':'')+'>Afternoon</option><option '+(current.window==='Evening'?'selected':'')+'>Evening</option></select><textarea id="moSavedPickupNote" placeholder="Default pickup note">'+esc(current.note||'')+'</textarea><label class="mo-pref"><span><b>Use Favorite Store by default</b><small>Apply your saved favorite store when planning pickup.</small></span><input id="moUseFavoriteStore" type="checkbox" '+(current.useFavoriteStore?'checked':'')+'></label><button class="mo-primary" id="moSavePickupPrefs">SAVE PICKUP PREFERENCES</button></div><div id="moSavedPickupStatus"></div>';
+ const render=()=>{const x=get('mo_saved_pickup_preferences_v1',null);$('#moSavedPickupStatus').innerHTML=x?'<div class="mo-saved-banner"><b>'+esc(x.method)+'</b> • '+esc(x.window)+(x.note?'<br>'+esc(x.note):'')+'</div>':''};render();
+ $('#moSavePickupPrefs').onclick=()=>{const x={method:$('#moSavedPickupMethod').value,window:$('#moSavedPickupWindow').value,note:$('#moSavedPickupNote').value.trim(),useFavoriteStore:$('#moUseFavoriteStore').checked};put('mo_saved_pickup_preferences_v1',x);if(x.useFavoriteStore){const fav=get('mo_favorite_store_v1','');if(fav){const p=get('menuOrbitPickup',{});p.store=fav;put('menuOrbitPickup',p)}}logAccountActivity('Pickup preferences',x.method+' • '+x.window);toast('Pickup preferences saved');render()};
+}
+function restoreCustomerFinalPrefs(){applyLanguage();updateConnectionBanner()}
+window.addEventListener('online',()=>{updateConnectionBanner();toast('Connection restored')});
+window.addEventListener('offline',updateConnectionBanner);
+
+window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter,openQuickOrder,openPickupNotes,openReceiptSearch,openAccessibilityProfile,openPrivacyDataControls,openRecentlyOrdered,openSavedBasket,openOrderSpendInsights,openIngredientAvailability,openPickupReminder,openSupportHistory,openAccountActivityLog,openLanguageSelector,openOfflineReconnect,openSavedPickupPreferences};
 
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
@@ -618,6 +675,6 @@ function addTools(){
 function refreshNewestHighlights(){
   // Visible NEW state is handled by the orbit nodes for the latest customer batch.
 }
-function init(){addTools();patchCart();hookSearchHistory();hookPresetButton();restoreAccessibilityProfile();refreshNewestHighlights();}
+function init(){addTools();patchCart();hookSearchHistory();hookPresetButton();restoreAccessibilityProfile();restoreCustomerFinalPrefs();refreshNewestHighlights();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1000));else setTimeout(init,1000);
 })();
