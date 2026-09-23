@@ -362,6 +362,32 @@
       .nav-orbit-center strong{font-size:18px}
     }
 
+    /* PRECISE NEW HIGHLIGHT — ONLY THE LATEST ORBIT UPGRADE */
+    #mainMenuDirect.mo-new-feature{animation:none!important;box-shadow:none!important}
+    #mainMenuDirect.mo-new-feature::after{display:none!important}
+    #navOrbitCenter.orbit-new-highlight{
+      box-shadow:0 0 0 5px rgba(244,200,111,.92),0 0 0 13px rgba(244,200,111,.16),0 0 34px rgba(244,200,111,.38)!important;
+      animation:orbitNewPulse 1.7s ease-in-out infinite;
+    }
+    #navOrbitCenter.orbit-new-highlight::before{
+      content:'NEW';
+      position:absolute;
+      top:-12px;right:-12px;
+      z-index:8;
+      padding:5px 8px;
+      border-radius:999px;
+      background:#f4c86f;
+      color:#07331f;
+      font:950 9px/1 system-ui;
+      letter-spacing:.09em;
+      box-shadow:0 7px 18px rgba(0,0,0,.28);
+      pointer-events:none;
+    }
+    @keyframes orbitNewPulse{
+      50%{box-shadow:0 0 0 5px rgba(244,200,111,1),0 0 0 18px rgba(244,200,111,0),0 0 42px rgba(244,200,111,.46)!important}
+    }
+    @media(prefers-reduced-motion:reduce){#navOrbitCenter.orbit-new-highlight{animation:none!important}}
+
     /* ORBIT FINISHING LAYER */
     .orbit-breadcrumb{
       max-width:620px;margin:2px auto 0;padding:2px 10px 0;
@@ -398,7 +424,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-ORBIT-FINISH -->
+<!-- BUILD 20260924-ORBIT-HIGHLIGHT -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -799,6 +825,25 @@
     nav.style.setProperty('display',open?'none':'','important');
     document.body.classList.toggle('product-detail-open',open);
   }
+  const ORBIT_NEW_KEY='menu-orbit-nav-upgrade-2026-09-24-v1';
+  function orbitUpgradeSeen(){
+    try{return localStorage.getItem(ORBIT_NEW_KEY)==='seen'}catch(e){return false}
+  }
+  function applyOrbitNewHighlight(){
+    const center=document.getElementById('navOrbitCenter');
+    const container=document.getElementById('mainMenuDirect');
+    if(container){
+      container.classList.remove('mo-new-feature');
+      container.removeAttribute('data-mo-new-label');
+      container.removeAttribute('data-mo-feature-key');
+    }
+    if(center&&!orbitUpgradeSeen())center.classList.add('orbit-new-highlight');
+  }
+  function clearOrbitNewHighlight(){
+    try{localStorage.setItem(ORBIT_NEW_KEY,'seen')}catch(e){}
+    document.getElementById('navOrbitCenter')?.classList.remove('orbit-new-highlight');
+  }
+
   function init(){
     document.getElementById('resultsBack')?.addEventListener('click',()=>{
       document.body.classList.remove('show-product-results');
@@ -809,6 +854,7 @@
       activeMain?renderGroups(activeMain):renderMainOrbit();
     });
     document.getElementById('navOrbitCenter')?.addEventListener('click',()=>{
+      clearOrbitNewHighlight();
       if(level==='main')return;
       if(level==='groups')renderMainOrbit();
       else renderGroups(activeMain);
@@ -819,6 +865,7 @@
     let saved=null;
     try{saved=JSON.parse(localStorage.getItem(STATE_KEY)||'null')}catch(e){}
     restoreFrom(saved);
+    applyOrbitNewHighlight();
     history.replaceState({orbit:true,level,activeMain,activeGroup},'',location.hash||'#orbit');
 
     const detail=document.getElementById('detail');
