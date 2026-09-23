@@ -1096,6 +1096,15 @@
       max-height:calc(100dvh - 28px)!important;
       margin:auto!important;
     }
+  
+    /* CALL STAFF NEW FEATURE TEXT */
+    #mainMenuDirect button[aria-label="Call Staff"] .call-staff-new-text{
+      display:block!important;
+      margin-top:5px!important;
+      color:#ffd86b!important;
+      font:950 8px/1 system-ui!important;
+      letter-spacing:.12em!important;
+    }
   </style>
 </head>
 <body>
@@ -1335,7 +1344,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-25"></script>
+  <script src="customer-next.js?v=20260924-26"></script>
 
 <script>
 (function(){
@@ -2024,7 +2033,7 @@
     'Smart Wellness Filters':'customer-smart-wellness-filters-2026-09-24-v8',
     'Dine In':'customer-dine-in-2026-09-24-v12',
     'Table / QR Ordering':'customer-table-qr-ordering-2026-09-24-v13',
-    'Call Staff':'customer-call-staff-2026-09-24-v3'
+    'Call Staff':'customer-call-staff-2026-09-24-v4'
   };
   const CUSTOMER_LATEST_BATCH=[
     'Smart Wellness Filters',
@@ -2051,7 +2060,8 @@
   }
   function mainHasNew(key){
     if(key==='menu'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
-    if((key==='order'||key==='stores')&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
+    if(key==='order'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')||customerFeatureUnseen('Call Staff')))return true;
+    if(key==='stores'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
     return false;
   }
   function groupHasNew(main,group){
@@ -2079,11 +2089,19 @@
     b.setAttribute('aria-label',raw);
     if(customerFeatureUnseen(raw)){b.classList.add('customer-new-node');decorateNewButton(b)}
     if(raw==='Dine In'&&customerFeatureUnseen('Dine In')){b.classList.add('customer-new-node');decorateNewButton(b)}
-    if(raw==='Call Staff'&&customerFeatureUnseen('Call Staff')){b.classList.add('customer-new-node');decorateNewButton(b)}
+    if(raw==='Call Staff'&&customerFeatureUnseen('Call Staff')){
+      b.classList.add('customer-new-node');decorateNewButton(b);
+      if(!b.querySelector('.call-staff-new-text')){
+        const t=document.createElement('span');
+        t.className='call-staff-new-text';
+        t.textContent='NEW FEATURE';
+        b.appendChild(t);
+      }
+    }
     b.addEventListener('click',e=>{
       e.preventDefault();
       e.stopPropagation();
-      if(customerFeatureUnseen(raw)){markCustomerFeatureSeen(raw);b.classList.remove('customer-new-node');b.querySelector('.customer-new-badge')?.remove()}
+      if(customerFeatureUnseen(raw)){markCustomerFeatureSeen(raw);b.classList.remove('customer-new-node');b.querySelector('.customer-new-badge')?.remove();b.querySelector('.call-staff-new-text')?.remove()}
       fn?.();
     });
     return b;
