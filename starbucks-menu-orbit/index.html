@@ -73,6 +73,15 @@
     @media(max-width:430px){
       .stage{top:230px!important}
     }
+  
+    /* FIX CLIPPED MAIN MENU NEW BADGE */
+    #mainMenuDirect.mo-new-feature{overflow:visible!important}
+    #mainMenuDirect.mo-new-feature::after{
+      top:6px!important;
+      right:8px!important;
+      transform:none!important;
+      z-index:250!important;
+    }
   </style>
 </head>
 <body>
@@ -294,7 +303,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js"></script>
 <script src="completion-layer.js"></script>
-  <script src="customer-next.js?v=20260924-6"></script>
+  <script src="customer-next.js?v=20260924-7"></script>
 
 <script>
 (function(){
@@ -325,6 +334,14 @@
 
 <script>
 (function(){
+  function looksLikeLegacyBottomNav(el){
+    if(!el || el.id==='mainMenuDirect' || el.closest?.('#mainMenuDirect')) return false;
+    const txt=(el.innerText||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(!(txt.includes('menu')&&txt.includes('pickup')&&txt.includes('cart')&&txt.includes('account'))) return false;
+    const cs=getComputedStyle(el);
+    const r=el.getBoundingClientRect();
+    return (cs.position==='fixed'||cs.position==='sticky') && r.top > innerHeight*0.65 && r.width > innerWidth*0.65;
+  }
   function cleanLegacyNav(){
     // Remove any older JS-injected duplicate main menu.
     document.querySelectorAll('#moMainMenuWrap,.mo-mainmenu-wrap').forEach(el=>el.remove());
@@ -336,6 +353,11 @@
     // Remove floating controls that now live inside submenus.
     ['#moReceiptsBtn','.mo-live-btn','#demoTourBtn','#rewardsFloat'].forEach(sel=>{
       document.querySelectorAll(sel).forEach(el=>el.remove());
+    });
+
+    // Remove old bottom Menu / Pickup / Cart / Account navigation.
+    [...document.body.querySelectorAll('*')].forEach(el=>{
+      if(looksLikeLegacyBottomNav(el)) el.remove();
     });
 
     // Remove any duplicate direct menu if somehow rendered twice.
