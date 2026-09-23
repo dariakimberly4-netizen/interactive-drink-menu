@@ -56,9 +56,7 @@
     .main-submenu-direct{max-width:1180px;margin:8px auto 0;display:flex;gap:8px;overflow:auto;scrollbar-width:none}
     .main-submenu-direct:empty{margin-top:0}.main-submenu-direct button{white-space:nowrap;min-height:38px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.06);color:#fff;padding:0 12px;font-weight:800}
     .main-submenu-direct button.sub-active{background:#e8f3ed;color:#07331f;border-color:#65a987}
-    .main-submenu-secondary{max-width:1180px;margin:8px auto 0;display:flex;gap:7px;overflow:auto;scrollbar-width:none}
-    .main-submenu-secondary:empty{display:none}
-    .main-submenu-secondary button{white-space:nowrap;min-height:36px;border:1px solid rgba(244,200,111,.42);border-radius:999px;background:rgba(244,200,111,.09);color:#fff;padding:0 12px;font-weight:800}
+    .main-submenu-secondary{display:none!important}
     @media(max-width:800px){.main-menu-direct-row{grid-template-columns:repeat(3,1fr)}.main-menu-direct-row button{min-height:44px}.main-menu-direct-row button span{font-size:9px}}
   
     /* CLEAN MAIN MENU HIERARCHY */
@@ -108,18 +106,7 @@
         padding:7px 10px;
         line-height:1.15;
       }
-      .main-submenu-secondary{
-        display:flex!important;
-        gap:7px!important;
-        overflow-x:auto!important;
-        padding-bottom:2px;
-      }
-      .main-submenu-secondary button{
-        flex:0 0 auto;
-        min-height:38px;
-        padding:6px 12px;
-        font-size:12px;
-      }
+      .main-submenu-secondary{display:none!important}
     }
   
     .force-mobile-subgrid{display:flex;gap:8px;overflow:auto}
@@ -405,32 +392,40 @@
       ['Display',[['Presentation Mode',()=>clickEl('#moPresentationBtn')]]]
     ]
   };
+  let activeMain='menu';
   function clickEl(sel){const el=document.querySelector(sel);if(el)el.click();}
   function clickCat(name){const b=[...document.querySelectorAll('[data-cat]')].find(x=>x.dataset.cat===name||x.textContent.trim()===name);if(b)b.click();}
-  function openGroup(groupButton,items){
-    document.querySelectorAll('#mainSubmenuDirect button').forEach(b=>b.classList.toggle('sub-active',b===groupButton));
-    const detail=document.getElementById('mainSubmenuSecondary'); if(!detail)return;
-    detail.innerHTML='';
-    items.forEach(([label,fn])=>{
-      const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;detail.appendChild(b);
+  function renderGroups(name){
+    activeMain=name;
+    document.querySelectorAll('[data-direct-main]').forEach(b=>b.classList.toggle('active',b.dataset.directMain===name));
+    const sub=document.getElementById('mainSubmenuDirect'); if(!sub)return;
+    sub.innerHTML='';
+    (maps[name]||[]).forEach(([label,items])=>{
+      const b=document.createElement('button');
+      b.type='button';b.textContent=label;
+      b.onclick=()=>renderItems(label,items);
+      sub.appendChild(b);
     });
   }
-  function open(name){
-    document.querySelectorAll('[data-direct-main]').forEach(b=>b.classList.toggle('active',b.dataset.directMain===name));
-    const sub=document.getElementById('mainSubmenuDirect');
-    const detail=document.getElementById('mainSubmenuSecondary');
-    if(!sub||!detail)return;
-    sub.innerHTML=''; detail.innerHTML='';
-    const groups=maps[name]||[];
-    groups.forEach(([label,items],i)=>{
-      const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=()=>openGroup(b,items);sub.appendChild(b);
-      if(i===0)setTimeout(()=>openGroup(b,items),0);
+  function renderItems(groupLabel,items){
+    const sub=document.getElementById('mainSubmenuDirect'); if(!sub)return;
+    sub.innerHTML='';
+    const back=document.createElement('button');
+    back.type='button';back.textContent='‹ Back';
+    back.setAttribute('aria-label','Back to '+activeMain+' groups');
+    back.onclick=()=>renderGroups(activeMain);
+    sub.appendChild(back);
+    items.forEach(([label,fn])=>{
+      const b=document.createElement('button');
+      b.type='button';b.textContent=label;
+      b.onclick=fn;
+      sub.appendChild(b);
     });
   }
   function init(){
-    document.querySelectorAll('[data-direct-main]').forEach(b=>b.onclick=()=>open(b.dataset.directMain));
-    open('menu');
-    setTimeout(()=>window.NewFeatureHighlight?.register('#mainMenuDirect','customer-main-menu-direct-v2','NEW'),400);
+    document.querySelectorAll('[data-direct-main]').forEach(b=>b.onclick=()=>renderGroups(b.dataset.directMain));
+    const secondary=document.getElementById('mainSubmenuSecondary');if(secondary)secondary.innerHTML='';
+    renderGroups('menu');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
