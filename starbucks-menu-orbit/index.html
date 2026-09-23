@@ -362,6 +362,19 @@
       .nav-orbit-center strong{font-size:18px}
     }
 
+    /* NEWEST CUSTOMER BATCH */
+    #mainSubmenuDirect>button.customer-new-node{
+      border-color:#f4c86f!important;
+      box-shadow:0 0 0 3px rgba(244,200,111,.8),0 0 26px rgba(244,200,111,.35)!important;
+      background:linear-gradient(145deg,#143c30,#0c281f)!important;
+    }
+    #mainSubmenuDirect>button.customer-new-node::after{
+      content:'NEW';
+      position:absolute;top:-8px;right:-7px;z-index:9;
+      padding:4px 7px;border-radius:999px;background:#f4c86f;color:#07331f;
+      font:950 9px/1 system-ui;letter-spacing:.08em;box-shadow:0 6px 14px rgba(0,0,0,.28);
+    }
+
     /* PRECISE NEW HIGHLIGHT — ONLY THE LATEST ORBIT UPGRADE */
     #mainMenuDirect.mo-new-feature{animation:none!important;box-shadow:none!important}
     #mainMenuDirect.mo-new-feature::after{display:none!important}
@@ -424,7 +437,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-TRENDING-FIX -->
+<!-- BUILD 20260924-CUSTOMER-BATCH -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -512,7 +525,7 @@
     function renderCats(){ $('#categories').innerHTML=cats.map(c=>`<button class="chip ${c===state.cat?'active':''}" data-cat="${c}">${c}</button>`).join(''); document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{state.cat=b.dataset.cat;state.angle=0;renderCats();renderOrbit()}) }
     function renderOrbit(){const list=visible();orbit.innerHTML=list.length?list.map(p=>`<button class="product" data-id="${p.id}" aria-label="${p.name}, ${money(p.price)}"><div class="photo"><img src="${p.img}" alt="${p.name}" loading="lazy" onerror="fallback(this,'${p.name.replaceAll("'",'')}')"><span class="card-name">${p.name}</span><span class="card-price">${money(p.price)}</span></div></button>`).join(''):`<div class="empty" style="position:absolute;inset:25% 10%">No matching products</div>`;document.querySelectorAll('.product').forEach(b=>b.onclick=()=>openDetail(b.dataset.id));positionOrbit()}
     function positionOrbit(){const list=[...document.querySelectorAll('.product')],w=stage.clientWidth,h=stage.clientHeight,rx=Math.min(w*.39,430)*state.zoom,ry=Math.min(h*.34,235)*state.zoom;list.forEach((el,i)=>{const a=state.angle+(i/list.length)*Math.PI*2,x=w/2+Math.cos(a)*rx,y=h*.48+Math.sin(a)*ry,depth=(Math.sin(a)+1)/2,scale=.72+depth*.38;el.style.left=x+'px';el.style.top=y+'px';el.style.transform=`translate(-50%,-50%) scale(${scale})`;el.classList.toggle('back',depth<.44);el.classList.toggle('front',depth>.68)})}
-    function openDetail(id){const p=products.find(x=>x.id===id);state.selected=p;const isFood=p.kind==='food';$('#detail').innerHTML=`<div class="drawer-head"><h2>${p.name}</h2><button class="close" id="detailClose" aria-label="Close">×</button></div><img class="detail-img" src="${p.img}" alt="${p.name}" onerror="fallback(this,'${p.name.replaceAll("'",'')}')"><div class="price-line"><strong id="livePrice">${money(p.price)}</strong><span class="badge">Listed now</span></div><p class="desc">${p.desc}</p><div class="facts"><div class="fact"><b>${p.cal??'See store'}</b><span>CALORIES*</span></div><div class="fact"><b>${p.temps[0]}</b><span>DEFAULT</span></div><div class="fact"><b>⚠</b><span>${p.allergen}</span></div></div><div class="section-title">${isFood?'Serving':'Size'}</div><div class="options" id="sizeOpts">${isFood?`<label><input type="radio" name="size" value="Regular" data-add="0" checked> Regular</label>`:[['Short',-15],['Tall',0],['Grande',20],['Venti',35]].map((x,i)=>`<label><input type="radio" name="size" value="${x[0]}" data-add="${x[1]}" ${i===1?'checked':''}> ${x[0]}</label>`).join('')}</div><div class="section-title">Style</div><div class="options">${p.temps.map((t,i)=>`<label><input type="radio" name="temp" value="${t}" ${i===0?'checked':''}> ${t}</label>`).join('')}</div>${isFood?'':`<div class="section-title">Milk</div><div class="options"><select id="milk"><option>Whole milk</option><option>Nonfat milk</option><option>Soy milk +₱30</option><option>Oat milk +₱30</option><option>Almond milk +₱30</option></select><select id="shots"><option value="0">Standard shots</option><option value="25">+1 shot +₱25</option><option value="50">+2 shots +₱50</option><option value="-10">Decaf −₱10</option></select></div><div class="section-title">Finishing touches</div><div class="options"><label><input type="checkbox" id="whip"> Whipped cream</label><label><input type="checkbox" id="drizzle"> Extra drizzle +₱20</label></div>`}<button class="add" id="addBtn">Add to Order • <span>${money(p.price)}</span></button><p class="notice">*Menu, nutrition, availability, and starting delivery prices use the current SM City Manila listing as this prototype's reference. Confirm official branch information before ordering.</p>`;$('#detail').classList.add('open');$('#detail').setAttribute('aria-hidden','false');$('#detailClose').onclick=closeDetail;document.querySelectorAll('#detail input,#detail select').forEach(el=>el.onchange=calcPrice);$('#addBtn').onclick=addCart;calcPrice()}
+    function openDetail(id){const p=products.find(x=>x.id===id);if(!p)return;state.selected=p;try{const key='mo_recently_viewed_v1',old=JSON.parse(localStorage.getItem(key)||'[]').filter(x=>x&&x.id!==p.id);old.unshift({id:p.id,name:p.name,img:p.img,price:p.price,cat:p.cat,viewedAt:new Date().toISOString()});localStorage.setItem(key,JSON.stringify(old.slice(0,20)))}catch(e){}const isFood=p.kind==='food';$('#detail').innerHTML=`<div class="drawer-head"><h2>${p.name}</h2><button class="close" id="detailClose" aria-label="Close">×</button></div><img class="detail-img" src="${p.img}" alt="${p.name}" onerror="fallback(this,'${p.name.replaceAll("'",'')}')"><div class="price-line"><strong id="livePrice">${money(p.price)}</strong><span class="badge">Listed now</span></div><p class="desc">${p.desc}</p><div class="facts"><div class="fact"><b>${p.cal??'See store'}</b><span>CALORIES*</span></div><div class="fact"><b>${p.temps[0]}</b><span>DEFAULT</span></div><div class="fact"><b>⚠</b><span>${p.allergen}</span></div></div><div class="section-title">${isFood?'Serving':'Size'}</div><div class="options" id="sizeOpts">${isFood?`<label><input type="radio" name="size" value="Regular" data-add="0" checked> Regular</label>`:[['Short',-15],['Tall',0],['Grande',20],['Venti',35]].map((x,i)=>`<label><input type="radio" name="size" value="${x[0]}" data-add="${x[1]}" ${i===1?'checked':''}> ${x[0]}</label>`).join('')}</div><div class="section-title">Style</div><div class="options">${p.temps.map((t,i)=>`<label><input type="radio" name="temp" value="${t}" ${i===0?'checked':''}> ${t}</label>`).join('')}</div>${isFood?'':`<div class="section-title">Milk</div><div class="options"><select id="milk"><option>Whole milk</option><option>Nonfat milk</option><option>Soy milk +₱30</option><option>Oat milk +₱30</option><option>Almond milk +₱30</option></select><select id="shots"><option value="0">Standard shots</option><option value="25">+1 shot +₱25</option><option value="50">+2 shots +₱50</option><option value="-10">Decaf −₱10</option></select></div><div class="section-title">Finishing touches</div><div class="options"><label><input type="checkbox" id="whip"> Whipped cream</label><label><input type="checkbox" id="drizzle"> Extra drizzle +₱20</label></div>`}<button class="add" id="addBtn">Add to Order • <span>${money(p.price)}</span></button><p class="notice">*Menu, nutrition, availability, and starting delivery prices use the current SM City Manila listing as this prototype's reference. Confirm official branch information before ordering.</p>`;$('#detail').classList.add('open');$('#detail').setAttribute('aria-hidden','false');$('#detailClose').onclick=closeDetail;document.querySelectorAll('#detail input,#detail select').forEach(el=>el.onchange=calcPrice);$('#addBtn').onclick=addCart;calcPrice()}
     function calcPrice(){if(!state.selected)return;const isFood=state.selected.kind==='food';let total=state.selected.price;const size=document.querySelector('[name=size]:checked');total+=Number(size?.dataset.add||0);if(!isFood){const milk=$('#milk')?.value||'';if(milk.includes('+'))total+=30;total+=Number($('#shots')?.value||0);if($('#drizzle')?.checked)total+=20}$('#livePrice').textContent=money(total);$('#addBtn span').textContent=money(total);return total}
     function closeDetail(){$('#detail').classList.remove('open');$('#detail').setAttribute('aria-hidden','true')}
     function updateCartBadge(){const count=$('#cartCount');count.textContent=state.cart.length;const cart=$('#cartBtn');cart.classList.remove('cart-pulse');void cart.offsetWidth;cart.classList.add('cart-pulse');setTimeout(()=>cart.classList.remove('cart-pulse'),460)}
@@ -642,6 +655,15 @@
     function earnStars(drinks,orderCode){if(!drinks)return;let total=reward.stars+drinks,unlocked=0;while(total>=5){total-=5;unlocked++}reward.stars=total;reward.rewards+=unlocked;reward.orders.unshift({code:orderCode,drinks,stars:drinks,at:new Date().toLocaleString('en-PH')});auditReward('STARS EARNED',`+${drinks} from ${orderCode}`);if(unlocked)auditReward('FREE DRINK UNLOCKED',`${unlocked} reward unlocked`);saveReward();burstStars();toast(unlocked?`★ ${drinks} Stars added — FREE DRINK REWARD unlocked!`:`★ ${drinks} Star${drinks===1?'':'s'} added to Star Rewards.`)}
     openCart=function(){const sub=cartSubtotal(),drinks=state.cart.filter(x=>products.find(p=>p.id===x.id)?.kind==='drink').reduce((n,x)=>n+x.qty,0),canUse=reward.rewards>0&&drinks>0;$('#cartContent').innerHTML=`<div class="drawer-head"><h2 id="cartTitle">Your Order</h2><button class="close" id="cartClose" aria-label="Close">×</button></div>${state.cart.length?state.cart.map(x=>`<div class="cart-row"><img src="${x.img}" alt=""><div><b>${x.name}</b><small>${x.size} • ${x.style}</small><div class="qty"><button data-qty="${x.key}" data-step="-1" aria-label="Reduce quantity">−</button><b>${x.qty}</b><button data-qty="${x.key}" data-step="1" aria-label="Increase quantity">+</button></div></div><div><b>${money(x.price*x.qty)}</b><button class="remove" data-remove="${x.key}">Remove</button></div></div>`).join(''):'<div class="empty">Your orbit cart is empty. Select a drink to start earning Stars.</div>'}${state.cart.length?`<div class="total"><span>Total</span><span>${money(sub)}</span></div><section class="reward-voucher"><strong>★ STAR REWARDS</strong><br><small>${drinks?`This order earns ${drinks} Star${drinks===1?'':'s'} after successful checkout.`:'Add an eligible drink to earn Stars.'}</small>${canUse?`<div class="checkout" style="margin-top:11px"><button id="useReward">Use Reward</button><button id="saveReward" class="active">Save Reward for Later</button></div><small id="rewardChoice" style="display:block;margin-top:8px">Your reward is saved.</small>`:''}</section><button class="add" id="completeOrder">Complete Demo Checkout</button>`:''}<p class="notice">This is a local interactive prototype: no payment is processed and no real order is sent.</p>`;$('#cartModal').classList.add('open');$('#cartClose').onclick=()=>$('#cartModal').classList.remove('open');document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{state.cart=state.cart.filter(x=>x.key!==Number(b.dataset.remove));saveCart();openCart()});document.querySelectorAll('[data-qty]').forEach(b=>b.onclick=()=>{const item=state.cart.find(x=>x.key===Number(b.dataset.qty));item.qty=Math.max(1,item.qty+Number(b.dataset.step));saveCart();openCart()});let use=false;$('#useReward')?.addEventListener('click',()=>{use=true;$('#useReward').classList.add('active');$('#saveReward').classList.remove('active');$('#rewardChoice').textContent='Free drink reward will be redeemed at checkout.'});$('#saveReward')?.addEventListener('click',()=>{use=false;$('#saveReward').classList.add('active');$('#useReward').classList.remove('active');$('#rewardChoice').textContent='Your reward is saved.'});$('#completeOrder')?.addEventListener('click',()=>{const code='MO-'+Date.now().toString().slice(-6);if(use){reward.rewards--;auditReward('REWARD REDEEMED',`Free drink on ${code}`);saveReward();burstStars();toast('✓ Free drink reward redeemed successfully!')}earnStars(drinks,code);const history=JSON.parse(localStorage.getItem('menuOrbitOrders')||'[]');history.unshift({code,items:state.cart,total:sub,status:'Completed demo order',createdAt:new Date().toLocaleString('en-PH')});localStorage.setItem('menuOrbitOrders',JSON.stringify(history));state.cart=[];saveCart();updateCartBadge();$('#cartContent').innerHTML=rewardHeader('Order complete')+`<div class="status-card"><p class="badge">✓ Checkout successful</p><h3>${code}</h3><p>${drinks?`${drinks} Star${drinks===1?'':'s'} added to your wallet.`:'No eligible drinks in this order.'}</p><button class="add" id="viewRewards">View Star Rewards</button></div>`;$('#rewardClose').onclick=()=>$('#cartModal').classList.remove('open');$('#viewRewards').onclick=()=>{ $('#cartModal').classList.remove('open');openRewards()}})};
     $('#rewardsBtn').onclick=openRewards;$('#rewardsFloat').onclick=openRewards;
+    window.MenuOrbitApp={
+      products,
+      getState:()=>state,
+      openProduct:id=>openDetail(id),
+      openCart:()=>openCart(),
+      saveCart:()=>saveCart(),
+      renderOrbit:()=>renderOrbit(),
+      addToCart:item=>{state.cart.push({...item,key:item.key||Date.now()+Math.random(),qty:item.qty||1});saveCart();updateCartBadge();return true}
+    };
     renderCats();renderOrbit();saveCart();saveReward();
   </script>
   
@@ -650,7 +672,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-12"></script>
+  <script src="customer-next.js?v=20260924-14"></script>
 
 <script>
 (function(){
@@ -664,16 +686,16 @@
   ];
   const maps={
     menu:[
-      ['Browse',[['Featured',()=>showCategory('Featured')],['Trending',()=>{closeOrbitOverlays();if(typeof window.openMenuOrbitTrending==='function')window.openMenuOrbitTrending();else clickEl('#moTrending')}],['New / Seasonal',()=>showCategory('Featured')]]],
+      ['Browse',[['Featured',()=>showCategory('Featured')],['Trending',()=>{closeOrbitOverlays();if(typeof window.openMenuOrbitTrending==='function')window.openMenuOrbitTrending();else clickEl('#moTrending')}],['New / Seasonal',()=>showCategory('Featured')],['Recently Viewed',()=>window.MenuOrbitCustomer?.openRecentlyViewed?.()],['Recommended for You',()=>window.MenuOrbitCustomer?.openRecommended?.()]]],
       ['Find',[['Search',()=>clickEl('#searchBtn')],['Visual Search',()=>clickEl('#moVisualSearch')]]],
-      ['Preferences',[['Diet Filters',()=>clickEl('#moDiet')],['Favorites',()=>showCategory('Favorites')],['Your Usual',()=>clickEl('#moUsual')]]],
+      ['Preferences',[['Diet Filters',()=>clickEl('#moDiet')],['Favorites',()=>showCategory('Favorites')],['Your Usual',()=>clickEl('#moUsual')],['Saved Drink Presets',()=>window.MenuOrbitCustomer?.openPresets?.()]]],
       ['Compare',[['Compare Drinks',()=>clickEl('#moCompare')],['Pairings',()=>clickEl('#moPairings')]]]
     ],
     order:[
       ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')]]],
       ['Plan Order',[['Schedule Order',()=>clickEl('#moSchedule')],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
-      ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Previous Orders',()=>clickEl('#moReceiptsBtn')]]],
+      ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
       ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')]]]
     ],
     stores:[
@@ -779,12 +801,36 @@
     const detail=document.getElementById('detail');
     if(detail){detail.classList.remove('open');detail.setAttribute('aria-hidden','true')}
   }
+  const CUSTOMER_NEW_FEATURES={
+    'Order Tracking':'customer-order-tracking-2026-09-24-v1',
+    'Reorder':'customer-reorder-2026-09-24-v1',
+    'Recently Viewed':'customer-recently-viewed-2026-09-24-v1',
+    'Recommended for You':'customer-recommended-2026-09-24-v1',
+    'Saved Drink Presets':'customer-drink-presets-2026-09-24-v1'
+  };
+  const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
+  function customerSeen(){
+    try{return JSON.parse(localStorage.getItem(CUSTOMER_SEEN_KEY)||'{}')}catch(e){return{}}
+  }
+  function customerFeatureUnseen(label){
+    const id=CUSTOMER_NEW_FEATURES[label];if(!id)return false;
+    return customerSeen()[id]!==true;
+  }
+  function markCustomerFeatureSeen(label){
+    const id=CUSTOMER_NEW_FEATURES[label];if(!id)return;
+    const seen=customerSeen();seen[id]=true;
+    try{localStorage.setItem(CUSTOMER_SEEN_KEY,JSON.stringify(seen))}catch(e){}
+  }
+
   function button(label,fn,cls){
     const b=document.createElement('button');
     b.type='button';b.innerHTML=label;if(cls)b.className=cls;
+    const raw=String(label).replace(/<[^>]+>/g,'').trim();
+    if(customerFeatureUnseen(raw))b.classList.add('customer-new-node');
     b.addEventListener('click',e=>{
       e.preventDefault();
       e.stopPropagation();
+      if(customerFeatureUnseen(raw)){markCustomerFeatureSeen(raw);b.classList.remove('customer-new-node')}
       fn?.();
     });
     return b;
@@ -858,7 +904,7 @@
       container.removeAttribute('data-mo-new-label');
       container.removeAttribute('data-mo-feature-key');
     }
-    if(center&&!orbitUpgradeSeen())center.classList.add('orbit-new-highlight');
+    center?.classList.remove('orbit-new-highlight');
   }
   function clearOrbitNewHighlight(){
     try{localStorage.setItem(ORBIT_NEW_KEY,'seen')}catch(e){}
