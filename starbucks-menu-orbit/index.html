@@ -294,7 +294,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js"></script>
 <script src="completion-layer.js"></script>
-  <script src="customer-next.js?v=20260924-5"></script>
+  <script src="customer-next.js?v=20260924-6"></script>
 
 <script>
 (function(){
@@ -320,6 +320,40 @@
     setTimeout(()=>window.NewFeatureHighlight?.register('#mainMenuDirect','customer-main-menu-direct-v1','NEW'),400);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+<script>
+(function(){
+  function cleanLegacyNav(){
+    // Remove any older JS-injected duplicate main menu.
+    document.querySelectorAll('#moMainMenuWrap,.mo-mainmenu-wrap').forEach(el=>el.remove());
+
+    // Hide legacy category/tool rows from the old navigation layer.
+    const cats=document.getElementById('categories');
+    if(cats){cats.style.setProperty('display','none','important');cats.setAttribute('aria-hidden','true');}
+
+    // Remove floating controls that now live inside submenus.
+    ['#moReceiptsBtn','.mo-live-btn','#demoTourBtn','#rewardsFloat'].forEach(sel=>{
+      document.querySelectorAll(sel).forEach(el=>el.remove());
+    });
+
+    // Remove any duplicate direct menu if somehow rendered twice.
+    const directs=[...document.querySelectorAll('#mainMenuDirect')];
+    directs.slice(1).forEach(el=>el.remove());
+
+    // Keep the new direct menu above the Orbit.
+    const main=document.getElementById('mainMenuDirect');
+    if(main) main.style.setProperty('display','block','important');
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cleanLegacyNav);
+  else cleanLegacyNav();
+
+  // Old add-on scripts render after DOMContentLoaded, so clean again after them.
+  [500,1000,1600,2600,4000].forEach(ms=>setTimeout(cleanLegacyNav,ms));
+  const obs=new MutationObserver(()=>cleanLegacyNav());
+  obs.observe(document.documentElement,{childList:true,subtree:true});
+  setTimeout(()=>obs.disconnect(),8000);
 })();
 </script>
 </body>
