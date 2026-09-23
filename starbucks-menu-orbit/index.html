@@ -1013,6 +1013,20 @@
     @media(prefers-reduced-motion:reduce){
       #mainMenuDirect .customer-new-node{animation:none!important}
     }
+  
+    /* TABLE QR ORDERING */
+    .table-qr-hero{display:flex;align-items:center;gap:13px;padding:14px;border:1px solid rgba(244,200,111,.28);border-radius:18px;background:rgba(244,200,111,.06);margin:8px 0 16px}
+    .table-qr-icon{width:52px;height:52px;flex:0 0 52px;display:grid;place-items:center;border-radius:16px;background:#f4efe6;color:#07331f;font-size:28px;font-weight:900}
+    .table-qr-hero b{display:block;color:#fff;margin-bottom:4px}
+    .table-qr-hero span{display:block;color:#b8cbc1;font-size:12px;line-height:1.4}
+    .table-qr-input{width:100%;min-height:54px;border-radius:14px;border:1px solid var(--line);background:#f5f0e7;color:#09271d;padding:0 15px;font-size:18px;font-weight:850;box-sizing:border-box}
+    .table-qr-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+    .table-qr-actions .pill{min-height:46px}
+    .table-qr-camera-wrap{margin:12px 0;border:1px solid rgba(244,200,111,.28);border-radius:18px;overflow:hidden;background:#071d15;text-align:center}
+    .table-qr-camera-wrap video{width:100%;max-height:280px;object-fit:cover;display:block}
+    #tableQrScanStatus{padding:10px;color:#d5e2dc;font-size:12px}
+    .table-qr-saved{margin-top:11px;padding:11px 12px;border-radius:13px;background:rgba(0,168,98,.12);border:1px solid rgba(0,168,98,.28);color:#cfe9dc;font-size:12px}
+    @media(max-width:520px){.table-qr-actions{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -1252,7 +1266,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-17"></script>
+  <script src="customer-next.js?v=20260924-18"></script>
 
 <script>
 (function(){
@@ -1273,13 +1287,13 @@
     ],
     order:[
       ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Saved Basket',()=>window.MenuOrbitCustomer?.openSavedBasket?.()],['Price Change Notice',()=>window.MenuOrbitCustomer?.openPriceChangeNotice?.()],['Quick Order',()=>window.MenuOrbitCustomer?.openQuickOrder?.()],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
-      ['Plan Order',[['Dine In',()=>openDineIn()],['Schedule Order',()=>clickEl('#moSchedule')],['Pickup Reminder',()=>window.MenuOrbitCustomer?.openPickupReminder?.()],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
+      ['Plan Order',[['Dine In',()=>openDineIn()],['Table / QR Ordering',()=>openTableQrOrdering()],['Schedule Order',()=>clickEl('#moSchedule')],['Pickup Reminder',()=>window.MenuOrbitCustomer?.openPickupReminder?.()],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
       ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Receipt Search',()=>window.MenuOrbitCustomer?.openReceiptSearch?.()],['Recently Ordered',()=>window.MenuOrbitCustomer?.openRecentlyOrdered?.()],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
       ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')],['Support History',()=>window.MenuOrbitCustomer?.openSupportHistory?.()],['Refund / Issue Status',()=>window.MenuOrbitCustomer?.openRefundIssueStatus?.()],['Post-Pickup Feedback',()=>window.MenuOrbitCustomer?.openPostPickupFeedback?.()]]]
     ],
     stores:[
-      ['Find Store',[['Nearby Stores',()=>clickEl('#pickupBtn')],['Pickup',()=>clickEl('#pickupBtn')],['Dine In',()=>openDineIn()]]],
+      ['Find Store',[['Nearby Stores',()=>clickEl('#pickupBtn')],['Pickup',()=>clickEl('#pickupBtn')],['Dine In',()=>openDineIn()],['Table / QR Ordering',()=>openTableQrOrdering()]]],
       ['My Store',[['Selected Branch',()=>clickEl('#moBranch')],['Favorite Store',()=>window.MenuOrbitCustomer?.openFavoriteStore?.()],['Pickup Notes',()=>window.MenuOrbitCustomer?.openPickupNotes?.()],['Saved Pickup Preferences',()=>window.MenuOrbitCustomer?.openSavedPickupPreferences?.()]]],
       ['Branch Details',[['Hours & Services',()=>clickEl('#moBranch')],['Availability',()=>clickEl('#moBranch')],['Store Availability',()=>window.MenuOrbitCustomer?.openStoreAvailability?.()],['Ingredient Availability',()=>window.MenuOrbitCustomer?.openIngredientAvailability?.()]]],
       ['Compare Stores',[['Compare Branches',()=>clickEl('#moBranchCompare')]]]
@@ -1335,6 +1349,96 @@
     setTimeout(selectDine,80);
     setTimeout(selectDine,220);
   }
+  function openTableQrOrdering(){
+    markCustomerFeatureSeen('Table / QR Ordering');
+    let modal=document.getElementById('tableQrOrderModal');
+    if(!modal){
+      modal=document.createElement('div');
+      modal.className='modal';
+      modal.id='tableQrOrderModal';
+      modal.setAttribute('role','dialog');
+      modal.setAttribute('aria-modal','true');
+      modal.innerHTML='<div class="modal-card" id="tableQrOrderContent"></div>';
+      document.body.appendChild(modal);
+    }
+    const content=document.getElementById('tableQrOrderContent');
+    const saved=readLocal('mo_dine_table_v1',null);
+    const pickup=readLocal('menuOrbitPickup',null);
+    const store=pickup?.store||'Selected store';
+    content.innerHTML=`
+      <div class="drawer-head">
+        <div><h2>Table / QR Ordering</h2><small style="color:#abc0b6">Dine In • ${store}</small></div>
+        <button class="close" id="tableQrClose" aria-label="Close">×</button>
+      </div>
+      <div class="table-qr-hero">
+        <div class="table-qr-icon">▦</div>
+        <div><b>Order from your table</b><span>Enter your table number or scan the QR displayed on your table.</span></div>
+      </div>
+      <div class="section-title">Table number</div>
+      <input id="tableNumberInput" inputmode="numeric" autocomplete="off" placeholder="Example: 12" value="${saved?.table||''}" class="table-qr-input">
+      <div class="table-qr-actions">
+        <button type="button" class="pill" id="scanTableQr">▦ Scan Table QR</button>
+        <button type="button" class="pill" id="useDemoTable">Use Demo Table 12</button>
+      </div>
+      <div id="tableQrCameraWrap" class="table-qr-camera-wrap" hidden>
+        <video id="tableQrVideo" autoplay muted playsinline></video>
+        <div id="tableQrScanStatus">Point the camera at the table QR code.</div>
+      </div>
+      <button class="add" id="saveDineTable">Save Table & Continue</button>
+      <div id="tableQrSaved" class="table-qr-saved">${saved?('✓ Saved table: <b>'+saved.table+'</b>'):'No table saved yet.'}</div>
+      <p class="notice">Prototype feature. QR scanning uses your device camera only after you tap Scan Table QR.</p>
+    `;
+    modal.classList.add('open');
+
+    let stream=null,scanTimer=null,detector=null;
+    const stopScan=()=>{
+      if(scanTimer){clearInterval(scanTimer);scanTimer=null}
+      if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+      const wrap=document.getElementById('tableQrCameraWrap');if(wrap)wrap.hidden=true;
+    };
+    document.getElementById('tableQrClose').onclick=()=>{stopScan();modal.classList.remove('open')};
+    document.getElementById('useDemoTable').onclick=()=>{document.getElementById('tableNumberInput').value='12'};
+    document.getElementById('scanTableQr').onclick=async()=>{
+      const wrap=document.getElementById('tableQrCameraWrap'),video=document.getElementById('tableQrVideo'),status=document.getElementById('tableQrScanStatus');
+      wrap.hidden=false;
+      if(!('BarcodeDetector' in window)){
+        status.textContent='QR scanning is not supported on this browser. Enter the table number manually.';
+        return;
+      }
+      try{
+        detector=new BarcodeDetector({formats:['qr_code']});
+        stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
+        video.srcObject=stream;
+        status.textContent='Scanning…';
+        scanTimer=setInterval(async()=>{
+          try{
+            const codes=await detector.detect(video);
+            if(!codes.length)return;
+            const raw=String(codes[0].rawValue||'').trim();
+            const match=raw.match(/(?:table|tbl)[\s:#-]*(\d+)/i)||raw.match(/^(\d{1,4})$/);
+            document.getElementById('tableNumberInput').value=match?match[1]:raw.slice(0,20);
+            status.textContent='✓ Table QR detected';
+            stopScan();
+          }catch(e){}
+        },650);
+      }catch(err){
+        status.textContent='Camera unavailable. Enter the table number manually.';
+        stopScan();
+      }
+    };
+    document.getElementById('saveDineTable').onclick=()=>{
+      const value=document.getElementById('tableNumberInput').value.trim();
+      if(!value){document.getElementById('tableNumberInput').focus();return}
+      const assignment={table:value,store,mode:'Dine In',savedAt:new Date().toISOString()};
+      try{localStorage.setItem('mo_dine_table_v1',JSON.stringify(assignment))}catch(e){}
+      const current=readLocal('menuOrbitPickup',{});
+      try{localStorage.setItem('menuOrbitPickup',JSON.stringify({...current,store:current?.store||store,type:'Dine In',table:value}))}catch(e){}
+      document.getElementById('tableQrSaved').innerHTML='✓ Dine In set for <b>Table '+value+'</b>';
+      stopScan();
+      setTimeout(()=>modal.classList.remove('open'),650);
+    };
+  }
+
   function clickCat(name){
     const b=[...document.querySelectorAll('[data-cat]')].find(x=>x.dataset.cat===name||x.textContent.trim()===name);
     if(b)b.click();
@@ -1701,11 +1805,13 @@
     'Price Change Notice':'customer-price-change-notice-2026-09-24-v7',
     'Clear All Customer Data':'customer-clear-all-data-2026-09-24-v7',
     'Smart Wellness Filters':'customer-smart-wellness-filters-2026-09-24-v8',
-    'Dine In':'customer-dine-in-2026-09-24-v10'
+    'Dine In':'customer-dine-in-2026-09-24-v10',
+    'Table / QR Ordering':'customer-table-qr-ordering-2026-09-24-v11'
   };
   const CUSTOMER_LATEST_BATCH=[
     'Smart Wellness Filters',
-    'Dine In'
+    'Dine In',
+    'Table / QR Ordering'
   ];
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
@@ -1726,13 +1832,13 @@
   }
   function mainHasNew(key){
     if(key==='menu'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
-    if((key==='order'||key==='stores')&&customerFeatureUnseen('Dine In'))return true;
+    if((key==='order'||key==='stores')&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
     return false;
   }
   function groupHasNew(main,group){
     if(main==='menu'&&group==='Preferences'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
-    if(main==='order'&&group==='Plan Order'&&customerFeatureUnseen('Dine In'))return true;
-    if(main==='stores'&&group==='Find Store'&&customerFeatureUnseen('Dine In'))return true;
+    if(main==='order'&&group==='Plan Order'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
+    if(main==='stores'&&group==='Find Store'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
     return false;
   }
 
