@@ -551,7 +551,63 @@ function openPrivacyDataControls(){
  $('#moClearPersonalization').onclick=()=>{['mo_recently_viewed_v1','mo_search_history_v1','mo_drink_presets_v1','mo_favorite_collections_v1','mo_favorite_store_v1','mo_pickup_notes_v1'].forEach(k=>localStorage.removeItem(k));toast('Personalization data cleared');openPrivacyDataControls()};
 }
 
-window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter,openQuickOrder,openPickupNotes,openReceiptSearch,openAccessibilityProfile,openPrivacyDataControls};
+
+function openRecentlyOrdered(){
+ const orders=get('menuOrbitOrders',[]),a=app(),seen=new Map();
+ orders.flatMap(o=>(o.items||[]).map(x=>({...x,orderCode:o.code,createdAt:o.createdAt}))).forEach(x=>{if(x.id&&!seen.has(x.id))seen.set(x.id,x)});
+ const items=[...seen.values()].slice(0,12),out=sheet('Recently Ordered','Jump back to items you ordered most recently.');
+ out.innerHTML=items.length?items.map(x=>'<div class="mo-result"><img src="'+esc(x.img||'')+'" alt=""><div><b>'+esc(x.name)+'</b><small>'+esc(x.orderCode||'Previous order')+' • '+esc(x.createdAt||'')+'</small></div><button data-recent-order="'+esc(x.id)+'">View</button></div>').join(''):'<div class="empty">No recently ordered items yet.</div>';
+ out.querySelectorAll('[data-recent-order]').forEach(b=>b.onclick=()=>{document.querySelector('#moCustomerNextSheet')?.classList.remove('open');a?.openProduct?.(b.dataset.recentOrder)});
+}
+
+function openSavedBasket(){
+ const a=app(),saved=get('mo_saved_baskets_v1',[]),cart=a?.getState?.()?.cart||get('menuOrbitCart',[]),out=sheet('Saved Basket','Save an entire multi-item cart and restore it later.');
+ out.innerHTML='<div class="mo-form"><input id="moBasketName" placeholder="Basket name" value="My saved order"><button class="mo-primary" id="moSaveBasket" '+(!cart.length?'disabled':'')+'>SAVE CURRENT CART</button></div><div class="section-title">Saved baskets</div>'+
+ (saved.length?saved.map((b,i)=>'<div class="mo-next-card" style="margin-bottom:12px"><h4>'+esc(b.name)+'</h4><small>'+b.items.reduce((n,x)=>n+(x.qty||1),0)+' item(s) • '+money(b.items.reduce((n,x)=>n+(x.price||0)*(x.qty||1),0))+'</small><div class="mo-complete-row" style="margin-top:8px"><button data-basket-load="'+i+'">Add to Cart</button><button data-basket-delete="'+i+'">Delete</button></div></div>').join(''):'<div class="empty">No saved baskets yet.</div>');
+ $('#moSaveBasket')?.addEventListener('click',()=>{const name=$('#moBasketName').value.trim()||'Saved Basket',items=(a?.getState?.()?.cart||get('menuOrbitCart',[])).map(x=>({...x}));if(!items.length)return;const arr=get('mo_saved_baskets_v1',[]);arr.unshift({id:'BASK-'+Date.now(),name,items,createdAt:new Date().toISOString()});put('mo_saved_baskets_v1',arr.slice(0,12));toast('Basket saved');openSavedBasket()});
+ out.querySelectorAll('[data-basket-load]').forEach(b=>b.onclick=()=>{const basket=get('mo_saved_baskets_v1',[])[+b.dataset.basketLoad];if(!basket)return;basket.items.forEach(x=>a?.addToCart?.({...x,key:Date.now()+Math.random()}));toast('Saved basket added to cart')});
+ out.querySelectorAll('[data-basket-delete]').forEach(b=>b.onclick=()=>{const arr=get('mo_saved_baskets_v1',[]);arr.splice(+b.dataset.basketDelete,1);put('mo_saved_baskets_v1',arr);toast('Saved basket deleted');openSavedBasket()});
+}
+
+function openOrderSpendInsights(){
+ const orders=get('menuOrbitOrders',[]);
+ const total=orders.reduce((n,o)=>n+Number(o.total||0),0);
+ const items=orders.flatMap(o=>o.items||[]);
+ const countByName={},storeCount={};
+ items.forEach(x=>countByName[x.name]=(countByName[x.name]||0)+(x.qty||1));
+ orders.forEach(o=>{const s=o.pickup?.store||'Selected branch';storeCount[s]=(storeCount[s]||0)+1});
+ const favorite=Object.entries(countByName).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+ const topStore=Object.entries(storeCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+ const monthKey=new Date().toISOString().slice(0,7);
+ const monthOrders=orders.filter(o=>{const d=new Date(o.createdAt||0);return !isNaN(d)&&d.toISOString().slice(0,7)===monthKey}).length;
+ const out=sheet('Order & Spend Insights','A local summary of your demo ordering activity.');
+ out.innerHTML='<div class="mo-statgrid"><div class="mo-stat"><b>'+orders.length+'</b><small>Total orders</small></div><div class="mo-stat"><b>'+monthOrders+'</b><small>This month</small></div><div class="mo-stat"><b>'+money(total)+'</b><small>Demo spend</small></div></div><div class="mo-next-grid" style="margin-top:12px"><div class="mo-next-card"><h4>Favorite item</h4><small>'+esc(favorite)+'</small></div><div class="mo-next-card"><h4>Most-used store</h4><small>'+esc(topStore)+'</small></div></div><p class="demo-banner">Insights use only order data stored in this browser.</p>';
+}
+
+function openIngredientAvailability(){
+ const a=app(),products=a?.products||[],store=get('menuOrbitPickup',{}).store||get('mo_favorite_store_v1','Starbucks SM City Bacoor'),out=sheet('Ingredient Availability','Check demo customization availability at your selected branch.');
+ const profiles={
+  'Starbucks Molino Boulevard':{milk:['Whole milk','Soy milk','Almond milk'],syrup:['Vanilla','Caramel'],size:['Tall','Grande','Venti']},
+  'Starbucks Vista Mall Daang Hari':{milk:['Whole milk','Nonfat milk','Oat milk'],syrup:['Vanilla','Hazelnut'],size:['Tall','Grande']},
+  default:{milk:['Whole milk','Nonfat milk','Soy milk','Oat milk','Almond milk'],syrup:['Vanilla','Caramel','Hazelnut'],size:['Short','Tall','Grande','Venti']}
+ };
+ const p=profiles[store]||profiles.default;
+ out.innerHTML='<div class="mo-saved-banner"><b>'+esc(store)+'</b></div><div class="mo-next-grid">'+
+ '<div class="mo-next-card"><h4>Milk</h4><small>'+p.milk.map(x=>'✓ '+esc(x)).join('<br>')+'</small></div>'+
+ '<div class="mo-next-card"><h4>Syrups</h4><small>'+p.syrup.map(x=>'✓ '+esc(x)).join('<br>')+'</small></div>'+
+ '<div class="mo-next-card"><h4>Sizes</h4><small>'+p.size.map(x=>'✓ '+esc(x)).join('<br>')+'</small></div>'+
+ '<div class="mo-next-card"><h4>Menu items</h4><small>'+products.length+' items in the current reference catalog.</small></div>'+
+ '</div><p class="demo-banner">Ingredient availability is prototype data and is not connected to live branch inventory.</p>';
+}
+
+function openPickupReminder(){
+ const scheduled=get('mo_scheduled_order_v1',null),pickup=get('menuOrbitPickup',{}),saved=get('mo_pickup_reminder_v1',{enabled:false,minutes:15,ready:true}),out=sheet('Pickup Reminder','Save a local reminder preference for scheduled or ready orders.');
+ out.innerHTML='<div class="mo-saved-banner"><b>Pickup:</b> '+esc(pickup.store||get('mo_favorite_store_v1','Selected branch'))+(scheduled?'<br>'+esc(scheduled.date)+' at '+esc(scheduled.time):'<br>No scheduled pickup yet.')+'</div><div class="mo-form"><label class="mo-pref"><span><b>Enable pickup reminder</b><small>Remember this preference on this device.</small></span><input id="moPickupReminderEnabled" type="checkbox" '+(saved.enabled?'checked':'')+'></label><select id="moPickupReminderMinutes"><option value="10" '+(saved.minutes===10?'selected':'')+'>10 minutes before</option><option value="15" '+(saved.minutes===15?'selected':'')+'>15 minutes before</option><option value="30" '+(saved.minutes===30?'selected':'')+'>30 minutes before</option></select><label class="mo-pref"><span><b>Ready-for-pickup alert</b><small>Include order-ready status in the local notification center.</small></span><input id="moPickupReadyAlert" type="checkbox" '+(saved.ready?'checked':'')+'></label><button class="mo-primary" id="moSavePickupReminder">SAVE REMINDER</button></div><div id="moPickupReminderStatus"></div><p class="demo-banner">This prototype stores reminder preferences locally; it does not send background push notifications.</p>';
+ const render=()=>{const x=get('mo_pickup_reminder_v1',null);$('#moPickupReminderStatus').innerHTML=x&&x.enabled?'<div class="mo-saved-banner">Reminder on • '+x.minutes+' minutes before pickup'+(x.ready?' • ready alerts on':'')+'</div>':''};render();
+ $('#moSavePickupReminder').onclick=()=>{put('mo_pickup_reminder_v1',{enabled:$('#moPickupReminderEnabled').checked,minutes:Number($('#moPickupReminderMinutes').value),ready:$('#moPickupReadyAlert').checked});toast('Pickup reminder saved');render()};
+}
+
+window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter,openQuickOrder,openPickupNotes,openReceiptSearch,openAccessibilityProfile,openPrivacyDataControls,openRecentlyOrdered,openSavedBasket,openOrderSpendInsights,openIngredientAvailability,openPickupReminder};
 
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
