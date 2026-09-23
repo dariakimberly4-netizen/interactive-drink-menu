@@ -971,6 +971,9 @@
 
 
     .main-menu-mode-note{max-width:1180px;margin:6px auto 0;text-align:center;font-size:10px;color:#9eb2a8;letter-spacing:.04em}
+  
+    .dine-new-direct{position:relative!important;overflow:visible!important;border-color:#f4c86f!important;box-shadow:0 0 0 2px rgba(244,200,111,.9)!important}
+    .dine-new-direct::after{content:"NEW";position:absolute;top:-9px;right:-7px;background:#f4c86f;color:#07331f;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:950;letter-spacing:.07em;z-index:50;box-shadow:0 5px 14px rgba(0,0,0,.28)}
   </style>
 </head>
 <body>
@@ -1210,7 +1213,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-14"></script>
+  <script src="customer-next.js?v=20260924-15"></script>
 
 <script>
 (function(){
@@ -1926,26 +1929,34 @@
 })();
 </script>
 
+
 <script>
 (function(){
-  function markDineIn(){
-    const labels=[...document.querySelectorAll('label')];
-    const dine=labels.find(l=>(l.textContent||'').trim().toLowerCase()==='dine in');
-    if(dine){
-      dine.style.position='relative';
-      window.NewFeatureHighlight?.register(dine,'dine-in-highlight-v1','NEW');
-    }
-    const subs=[...document.querySelectorAll('#mainSubmenuDirect button')];
-    const entry=subs.find(b=>(b.textContent||'').trim().toLowerCase()==='pickup / dine in');
-    if(entry){
-      window.NewFeatureHighlight?.register(entry,'pickup-dinein-submenu-v1','NEW');
-    }
+  const KEY_DINE='mo_seen_dine_in_v2';
+  const KEY_SUB='mo_seen_pickup_dinein_v2';
+  function mark(el,key){
+    if(!el||localStorage.getItem(key))return;
+    el.classList.add('dine-new-direct');
+    el.addEventListener('click',function once(){
+      localStorage.setItem(key,'1');
+      el.classList.remove('dine-new-direct');
+      el.removeEventListener('click',once);
+    },{once:false});
+  }
+  function scan(){
+    const dine=[...document.querySelectorAll('label')].find(l=>(l.textContent||'').replace(/\s+/g,' ').trim().toLowerCase()==='dine in');
+    mark(dine,KEY_DINE);
+    const sub=[...document.querySelectorAll('#mainSubmenuDirect button')].find(b=>(b.textContent||'').replace(/\s+/g,' ').trim().toLowerCase()==='pickup / dine in');
+    mark(sub,KEY_SUB);
   }
   document.addEventListener('click',e=>{
-    if(e.target.closest('#pickupBtn')||e.target.closest('[data-direct-main="stores"]')) setTimeout(markDineIn,120);
+    if(e.target.closest('[data-direct-main="stores"]')||e.target.closest('#pickupBtn')||e.target.closest('#mainSubmenuDirect')){
+      setTimeout(scan,80);setTimeout(scan,250);
+    }
   });
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(markDineIn,700));
-  else setTimeout(markDineIn,700);
+  const obs=new MutationObserver(scan);
+  obs.observe(document.body,{childList:true,subtree:true});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',scan);else scan();
 })();
 </script>
 </body>
