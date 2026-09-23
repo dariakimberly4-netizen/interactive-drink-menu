@@ -144,9 +144,67 @@ function openShareCart(){
  $('#moNativeShare').onclick=async()=>{if(navigator.share){try{await navigator.share({title:'Menu Orbit Cart',text})}catch{}}else{navigator.clipboard?.writeText(text);toast('Cart copied')}};
  $('#moCopyCart').onclick=()=>navigator.clipboard?.writeText(text).then(()=>toast('Cart copied'));
 }
+
+function openProfileDashboard(){
+ const orders=get('menuOrbitOrders',[]),favs=get('menuOrbitFavorites',[]),saved=get('mo_saved_for_later_v1',[]),prefs=get('mo_notification_prefs_v1',{}),payments=get('mo_saved_payments_v1',[]),notices=get('mo_demo_notifications_v1',[]);
+ const out=sheet('Customer Profile','Orders, rewards, favorites, payments, receipts, and notification settings in one place.');
+ const stars=(()=>{try{return JSON.parse(localStorage.getItem('starRewardsMember')||'{}').stars||0}catch{return 0}})();
+ out.innerHTML='<div class="mo-statgrid"><div class="mo-stat"><b>'+orders.length+'</b><small>Orders</small></div><div class="mo-stat"><b>'+stars+'</b><small>Stars</small></div><div class="mo-stat"><b>'+favs.length+'</b><small>Favorites</small></div></div>'+
+ '<div class="mo-next-grid">'+
+ '<div class="mo-next-card"><h4>🧾 Receipts</h4><small>'+orders.length+' receipt'+(orders.length===1?'':'s')+' available</small><button id="moProfileReceipts">Open</button></div>'+
+ '<div class="mo-next-card"><h4>♡ Saved</h4><small>'+saved.length+' saved for later</small><button id="moProfileSaved">Open</button></div>'+
+ '<div class="mo-next-card"><h4>💳 Payments</h4><small>'+payments.length+' demo payment method'+(payments.length===1?'':'s')+'</small><button id="moProfilePayments">Manage</button></div>'+
+ '<div class="mo-next-card"><h4>🔔 Notifications</h4><small>'+notices.filter(x=>!x.read).length+' unread • '+Object.values(prefs).filter(Boolean).length+' preferences on</small><button id="moProfilePrefs">Manage</button></div>'+
+ '</div>';
+ $('#moProfileReceipts').onclick=()=>document.querySelector('#moReceiptsBtn')?.click();
+ $('#moProfileSaved').onclick=openSaved;
+ $('#moProfilePayments').onclick=openPayments;
+ $('#moProfilePrefs').onclick=openPrefs;
+}
+function openScheduledOrder(){
+ const current=get('mo_scheduled_order_v1',null),out=sheet('Scheduled Ordering','Choose a later pickup date and time for this demo.');
+ const now=new Date(),min=new Date(now.getTime()+30*60000),date=min.toISOString().slice(0,10),time=min.toTimeString().slice(0,5);
+ out.innerHTML='<div class="mo-form"><input id="moScheduleDate" type="date" min="'+date+'" value="'+esc(current?.date||date)+'"><input id="moScheduleTime" type="time" value="'+esc(current?.time||time)+'"><select id="moScheduleType"><option '+(current?.type==='Pickup'?'selected':'')+'>Pickup</option><option '+(current?.type==='Curbside'?'selected':'')+'>Curbside</option></select><button class="mo-primary" id="moSaveSchedule">SAVE SCHEDULE</button></div><div id="moScheduleStatus"></div><p class="demo-banner">Demo scheduling only. Real deployment requires verified branch hours and live capacity.</p>';
+ const status=()=>{const s=get('mo_scheduled_order_v1',null);$('#moScheduleStatus').innerHTML=s?'<div class="mo-saved-banner"><b>Scheduled:</b> '+esc(s.date)+' at '+esc(s.time)+' • '+esc(s.type)+'</div>':''};status();
+ $('#moSaveSchedule').onclick=()=>{put('mo_scheduled_order_v1',{date:$('#moScheduleDate').value,time:$('#moScheduleTime').value,type:$('#moScheduleType').value});toast('Scheduled pickup saved');status()};
+}
+function openDietFilters(){
+ const s=st(),out=sheet('Allergen & Diet Filters','Filter the Orbit using demo dietary preferences.');
+ const prefs=get('mo_diet_filters_v1',[]);
+ const filters=[['vegetarian','Vegetarian'],['dairyfree','Dairy-Free'],['lowerSugar','Lower Sugar'],['noCoffee','No Coffee'],['lowCal','Under 200 Calories']];
+ out.innerHTML='<div class="mo-filterbar" style="flex-wrap:wrap">'+filters.map(([k,l])=>'<button data-diet="'+k+'" class="'+(prefs.includes(k)?'on':'')+'">'+l+'</button>').join('')+'</div><button class="mo-primary" style="width:100%" id="moApplyDiet">APPLY TO ORBIT</button><p class="demo-banner">These are demo filters based on menu metadata and name/category heuristics. Always confirm official allergen information before ordering.</p>';
+ out.querySelectorAll('[data-diet]').forEach(b=>b.onclick=()=>b.classList.toggle('on'));
+ $('#moApplyDiet').onclick=()=>{const active=out.querySelectorAll('[data-diet].on');const keys=[...active].map(x=>x.dataset.diet);put('mo_diet_filters_v1',keys);
+   try{
+     const prods=catalog(),match=p=>{
+       return keys.every(k=>{
+         if(k==='vegetarian')return !/ham|pork|chicken|beef|tuna/i.test(p.name);
+         if(k==='dairyfree')return !/cream|cheese|milk|mocha|chocolate/i.test(p.name);
+         if(k==='lowerSugar')return !/caramel|white mocha|frappuccino|chocolate/i.test(p.name);
+         if(k==='noCoffee')return !/coffee|espresso|latte|americano|mocha|cold brew|macchiato/i.test(p.name);
+         if(k==='lowCal')return Number(p.cal||999)<200;
+         return true;
+       })
+     };
+     const ids=prods.filter(match).map(p=>p.id);
+     document.querySelectorAll('.product').forEach(el=>el.style.display=ids.includes(el.dataset.id)?'':'none');
+     toast(ids.length+' items match');
+   }catch{}
+ };
+}
+function openDealReminders(){
+ const saved=get('mo_deal_reminders_v1',[]),out=sheet('Deal Reminders','Save demo reminders for Happy Hour and expiring offers.');
+ const deals=[
+   {id:'happy-hour',name:'Happy Hour',when:'Today • 3:00 PM'},
+   {id:'voucher-expiry',name:'₱50 Voucher',when:'Expires tonight'},
+   {id:'seasonal',name:'Seasonal Menu Drop',when:'Demo reminder'}
+ ];
+ out.innerHTML=deals.map(d=>'<div class="mo-result" style="grid-template-columns:1fr auto"><div><b>'+esc(d.name)+'</b><small>'+esc(d.when)+'</small></div><button data-remind="'+d.id+'">'+(saved.includes(d.id)?'Reminder On ✓':'Remind Me')+'</button></div>').join('')+'<p class="demo-banner">Reminders are stored locally for this prototype.</p>';
+ out.querySelectorAll('[data-remind]').forEach(b=>b.onclick=()=>{let arr=get('mo_deal_reminders_v1',[]),id=b.dataset.remind;arr=arr.includes(id)?arr.filter(x=>x!==id):[...arr,id];put('mo_deal_reminders_v1',arr);openDealReminders()});
+}
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
- [['moSavedLater','♡ Saved Later',openSaved,'saved-for-later-v1'],['moBranchCompare','⇄ Compare Branches',openBranchCompare,'branch-comparison-v1'],['moReviewFilters','★ Review Filters',openReviews,'review-filters-v1'],['moNotifPrefs','⚙ Notifications',openPrefs,'notification-preferences-v1'],['moSearchHistory','⌕ Search History',openSearchHistory,'search-history-v2'],['moPayments','💳 Payments',openPayments,'saved-payments-v2'],['moPairings','🥐 Pairings',openPairings,'pairing-recommendations-v2'],['moShareCart','↗ Share Cart',openShareCart,'share-cart-v2']].forEach(([id,label,fn,key])=>{
+ [['moSavedLater','♡ Saved Later',openSaved,'saved-for-later-v1'],['moBranchCompare','⇄ Compare Branches',openBranchCompare,'branch-comparison-v1'],['moReviewFilters','★ Review Filters',openReviews,'review-filters-v1'],['moNotifPrefs','⚙ Notifications',openPrefs,'notification-preferences-v1'],['moSearchHistory','⌕ Search History',openSearchHistory,'search-history-v2'],['moPayments','💳 Payments',openPayments,'saved-payments-v2'],['moPairings','🥐 Pairings',openPairings,'pairing-recommendations-v2'],['moShareCart','↗ Share Cart',openShareCart,'share-cart-v2'],['moProfileDash','👤 Profile',openProfileDashboard,'customer-profile-dashboard-v1'],['moSchedule','🗓 Schedule',openScheduledOrder,'scheduled-ordering-v1'],['moDiet','🥗 Diet Filters',openDietFilters,'allergen-diet-filters-v1'],['moDealReminders','⏰ Deal Reminders',openDealReminders,'deal-reminders-v1']].forEach(([id,label,fn,key])=>{
   if($('#'+id))return;const b=document.createElement('button');b.className='mo-tool';b.id=id;b.textContent=label;b.onclick=fn;tools.appendChild(b);window.NewFeatureHighlight?.register(b,key,'NEW');
  });
 }
