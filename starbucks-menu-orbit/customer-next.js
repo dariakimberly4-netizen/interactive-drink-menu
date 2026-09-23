@@ -404,7 +404,81 @@ function openPostPickupFeedback(){
  out.querySelectorAll('[data-save-feedback]').forEach(b=>b.onclick=()=>{const i=+b.dataset.saveFeedback,o=orders[i],wrap=out.querySelector('[data-rate-wrap="'+i+'"]'),rating=Number(wrap.querySelector('.on')?.dataset.rate||0),comment=out.querySelector('[data-feedback="'+i+'"]').value.trim();const all=get('mo_order_feedback_v1',{});all[o.code]={rating,comment,savedAt:new Date().toISOString()};put('mo_order_feedback_v1',all);toast('Feedback saved')});
 }
 
-window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback};
+
+function openFavoriteStore(){
+ const branches=['Starbucks SM City Bacoor','Starbucks Molino Boulevard','Starbucks Vista Mall Daang Hari'];
+ const current=get('mo_favorite_store_v1',''),pickup=get('menuOrbitPickup',{});
+ const out=sheet('Favorite Store','Save a default branch for faster pickup planning.');
+ out.innerHTML='<div class="mo-form">'+branches.map(name=>'<label class="mo-pref"><span><b>'+esc(name)+'</b><small>'+(name===pickup.store?'Current pickup branch':'Tap to save as favorite')+'</small></span><input type="radio" name="moFavoriteStore" value="'+esc(name)+'" '+(current===name?'checked':'')+'></label>').join('')+'<button class="mo-primary" id="moSaveFavoriteStore">SAVE FAVORITE STORE</button></div><div id="moFavoriteStoreStatus"></div><p class="demo-banner">Saved on this browser only.</p>';
+ const status=()=>{const fav=get('mo_favorite_store_v1','');$('#moFavoriteStoreStatus').innerHTML=fav?'<div class="mo-saved-banner"><b>Favorite store:</b> '+esc(fav)+'</div>':''};status();
+ $('#moSaveFavoriteStore').onclick=()=>{const selected=out.querySelector('input[name="moFavoriteStore"]:checked')?.value;if(!selected)return toast('Choose a store first');put('mo_favorite_store_v1',selected);const p=get('menuOrbitPickup',{});p.store=selected;put('menuOrbitPickup',p);toast('Favorite store saved');status()};
+}
+
+function unavailableIdsForStore(store){
+ if((store||'').includes('Molino'))return ['raclette-lasagna','mango-dragonfruit-lemonade'];
+ if((store||'').includes('Vista'))return ['ham-cheese-croffle','cold-brew'];
+ return [];
+}
+function substitutionFor(p,products,unavailable){
+ const candidates=products.filter(x=>x.id!==p.id&&!unavailable.includes(x.id));
+ return candidates.find(x=>x.cat===p.cat&&x.kind===p.kind)||
+        candidates.find(x=>x.kind===p.kind)||
+        candidates[0]||null;
+}
+function openSmartSubstitutions(){
+ const a=app(),products=a?.products||[],store=get('menuOrbitPickup',{}).store||get('mo_favorite_store_v1','Starbucks SM City Bacoor');
+ const unavailable=unavailableIdsForStore(store),items=products.filter(p=>unavailable.includes(p.id));
+ const out=sheet('Smart Substitutions','Find a similar available choice when a selected branch is out of an item.');
+ out.innerHTML='<div class="mo-saved-banner"><b>'+esc(store)+'</b></div>'+
+ (items.length?items.map(p=>{const alt=substitutionFor(p,products,unavailable);return '<div class="mo-pair-card"><img src="'+esc(p.img||'')+'" alt=""><div><b>'+esc(p.name)+'</b><small>Unavailable at this demo branch'+(alt?'<br>Try: '+esc(alt.name)+' • '+money(alt.price):'')+'</small></div>'+(alt?'<button data-substitute="'+esc(alt.id)+'">View Alternative</button>':'')+'</div>'}).join(''):'<div class="empty">No unavailable items at this demo branch right now.</div>')+
+ '<p class="demo-banner">Substitutions are demo suggestions based on category/type similarity, not live Starbucks inventory.</p>';
+ out.querySelectorAll('[data-substitute]').forEach(b=>b.onclick=()=>{document.querySelector('#moCustomerNextSheet')?.classList.remove('open');a?.openProduct?.(b.dataset.substitute)});
+}
+
+function openFavoriteCollections(){
+ const a=app(),products=a?.products||[],favoriteIds=get('menuOrbitFavorites',[]),collections=get('mo_favorite_collections_v1',[]);
+ const favProducts=favoriteIds.map(id=>products.find(p=>p.id===id)).filter(Boolean);
+ const out=sheet('Favorites Collections','Organize saved drinks and food into your own groups.');
+ out.innerHTML='<div class="mo-form"><input id="moCollectionName" placeholder="Collection name, e.g. Weekend"><button class="mo-primary" id="moCreateCollection">CREATE COLLECTION</button></div>'+
+ '<div class="section-title">Collections</div>'+
+ (collections.length?collections.map((col,i)=>'<div class="mo-next-card" style="margin-bottom:12px"><h4>'+esc(col.name)+'</h4><small>'+col.ids.length+' saved item'+(col.ids.length===1?'':'s')+'</small><div class="mo-complete-row" style="margin-top:8px"><button data-collection-open="'+i+'">Open</button><button data-collection-delete="'+i+'">Delete</button></div></div>').join(''):'<div class="empty">No collections yet.</div>')+
+ '<div class="section-title">Saved favorites</div>'+
+ (favProducts.length?favProducts.map(p=>'<div class="mo-result"><img src="'+esc(p.img||'')+'" alt=""><div><b>'+esc(p.name)+'</b><small>'+esc(p.cat)+' • '+money(p.price)+'</small></div><select data-fav-collection="'+esc(p.id)+'"><option value="">Add to…</option>'+collections.map((col,i)=>'<option value="'+i+'">'+esc(col.name)+'</option>').join('')+'</select></div>').join(''):'<div class="empty">Favorite a product first.</div>');
+ $('#moCreateCollection').onclick=()=>{const name=$('#moCollectionName').value.trim();if(!name)return;const arr=get('mo_favorite_collections_v1',[]);arr.push({name,ids:[]});put('mo_favorite_collections_v1',arr);toast('Collection created');openFavoriteCollections()};
+ out.querySelectorAll('[data-fav-collection]').forEach(sel=>sel.onchange=()=>{if(sel.value==='')return;const arr=get('mo_favorite_collections_v1',[]),col=arr[+sel.value],id=sel.dataset.favCollection;if(col&&!col.ids.includes(id)){col.ids.push(id);put('mo_favorite_collections_v1',arr);toast('Added to '+col.name)}});
+ out.querySelectorAll('[data-collection-open]').forEach(b=>b.onclick=()=>{const col=get('mo_favorite_collections_v1',[])[+b.dataset.collectionOpen];if(!col)return;out.innerHTML='<div class="mo-saved-banner"><b>'+esc(col.name)+'</b></div>'+(col.ids.map(id=>products.find(p=>p.id===id)).filter(Boolean).map(p=>'<div class="mo-result"><img src="'+esc(p.img||'')+'" alt=""><div><b>'+esc(p.name)+'</b><small>'+esc(p.cat)+' • '+money(p.price)+'</small></div><button data-open-col-product="'+esc(p.id)+'">View</button></div>').join('')||'<div class="empty">This collection is empty.</div>');out.querySelectorAll('[data-open-col-product]').forEach(x=>x.onclick=()=>{document.querySelector('#moCustomerNextSheet')?.classList.remove('open');a?.openProduct?.(x.dataset.openColProduct)})});
+ out.querySelectorAll('[data-collection-delete]').forEach(b=>b.onclick=()=>{const arr=get('mo_favorite_collections_v1',[]);arr.splice(+b.dataset.collectionDelete,1);put('mo_favorite_collections_v1',arr);toast('Collection deleted');openFavoriteCollections()});
+}
+
+function openRefundIssueStatus(){
+ const orders=get('menuOrbitOrders',[]),issues=get('mo_customer_issues_v1',[]);
+ const out=sheet('Refund / Issue Status','Submit and track demo order issues from reported to resolved.');
+ out.innerHTML='<div class="mo-form"><select id="moIssueOrder"><option value="">Choose order</option>'+orders.slice(0,10).map(o=>'<option value="'+esc(o.code||'')+'">'+esc(o.code||'Order')+'</option>').join('')+'</select><select id="moIssueType"><option>Missing item</option><option>Wrong item</option><option>Quality issue</option><option>Refund request</option></select><textarea id="moIssueNote" placeholder="Describe the issue"></textarea><button class="mo-primary" id="moSubmitIssue">SUBMIT ISSUE</button></div><div class="section-title">My requests</div>'+
+ (issues.length?issues.map((x,i)=>'<div class="mo-next-card" style="margin-bottom:12px"><h4>'+esc(x.type)+' • '+esc(x.orderCode)+'</h4><small>'+esc(x.status)+'<br>'+esc(x.note||'')+'</small>'+(x.status!=='Resolved'?'<button data-issue-advance="'+i+'" style="margin-top:8px;width:100%">ADVANCE DEMO STATUS</button>':'')+'</div>').join(''):'<div class="empty">No issue requests yet.</div>')+
+ '<p class="demo-banner">Demo workflow only. No real refund is processed.</p>';
+ $('#moSubmitIssue').onclick=()=>{const orderCode=$('#moIssueOrder').value,type=$('#moIssueType').value,note=$('#moIssueNote').value.trim();if(!orderCode)return toast('Choose an order');const arr=get('mo_customer_issues_v1',[]);arr.unshift({id:'ISS-'+Date.now().toString().slice(-6),orderCode,type,note,status:'Reported',createdAt:new Date().toISOString()});put('mo_customer_issues_v1',arr);toast('Issue submitted');openRefundIssueStatus()};
+ out.querySelectorAll('[data-issue-advance]').forEach(b=>b.onclick=()=>{const arr=get('mo_customer_issues_v1',[]),x=arr[+b.dataset.issueAdvance];if(!x)return;const flow=['Reported','Reviewing','Resolved'];x.status=flow[Math.min(flow.length-1,flow.indexOf(x.status)+1)];put('mo_customer_issues_v1',arr);toast('Issue status updated');openRefundIssueStatus()});
+}
+
+function buildNotifications(){
+ const orders=get('menuOrbitOrders',[]),issues=get('mo_customer_issues_v1',[]),vouchers=get('mo_voucher_wallet_v1',[]),reminders=get('mo_deal_reminders_v1',[]);
+ const list=[];
+ orders.slice(0,4).forEach(o=>list.push({id:'order-'+(o.code||''),type:'Order',title:(o.code||'Order')+' • '+orderTrackingStatus(o),time:o.createdAt||''}));
+ issues.slice(0,4).forEach(x=>list.push({id:'issue-'+x.id,type:'Support',title:x.type+' • '+x.status,time:x.createdAt||''}));
+ vouchers.filter(v=>v.status==='active').slice(0,3).forEach(v=>list.push({id:'voucher-'+v.id,type:'Voucher',title:v.name+' • expires '+v.expires,time:''}));
+ reminders.slice(0,3).forEach(id=>list.push({id:'reminder-'+id,type:'Reminder',title:'Deal reminder: '+id,time:''}));
+ return list;
+}
+function openNotificationCenter(){
+ const read=get('mo_notification_center_read_v1',{}),list=buildNotifications(),out=sheet('Notification Center','Order, support, voucher, reward, and reminder updates in one place.');
+ out.innerHTML='<div class="mo-complete-row"><button id="moMarkAllRead">MARK ALL READ</button><button id="moClearNotifRead">RESET READ STATE</button></div><div class="section-title">Updates</div>'+
+ (list.length?list.map(n=>'<div class="mo-next-card" style="margin-bottom:10px;opacity:'+(read[n.id]?.read?'.62':'1')+'"><h4>'+(!read[n.id]?.read?'● ':'')+esc(n.title)+'</h4><small>'+esc(n.type)+(n.time?' • '+esc(n.time):'')+'</small><button data-notif-read="'+esc(n.id)+'" style="margin-top:8px">'+(read[n.id]?.read?'Read ✓':'Mark Read')+'</button></div>').join(''):'<div class="empty">No notifications yet.</div>');
+ out.querySelectorAll('[data-notif-read]').forEach(b=>b.onclick=()=>{const r=get('mo_notification_center_read_v1',{});r[b.dataset.notifRead]={read:true,at:new Date().toISOString()};put('mo_notification_center_read_v1',r);openNotificationCenter()});
+ $('#moMarkAllRead').onclick=()=>{const r={};list.forEach(n=>r[n.id]={read:true,at:new Date().toISOString()});put('mo_notification_center_read_v1',r);toast('All notifications marked read');openNotificationCenter()};
+ $('#moClearNotifRead').onclick=()=>{put('mo_notification_center_read_v1',{});openNotificationCenter()};
+}
+
+window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter};
 
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
