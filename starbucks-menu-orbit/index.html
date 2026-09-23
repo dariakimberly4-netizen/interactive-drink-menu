@@ -47,6 +47,15 @@
     .reward-card{position:relative;overflow:hidden;border:1px solid rgba(244,200,111,.72);border-radius:24px;padding:22px;background:linear-gradient(135deg,#00533a,#012c20 62%,#0c4635);box-shadow:inset 0 1px rgba(255,255,255,.22),0 18px 45px rgba(0,0,0,.35);transform-style:preserve-3d;animation:rewardFlip .65s cubic-bezier(.2,.85,.28,1)}.reward-card:after{content:'★  ★  ★';position:absolute;right:-7px;top:8px;color:rgba(244,200,111,.2);font-size:40px;letter-spacing:8px;transform:rotate(18deg)}@keyframes rewardFlip{from{opacity:0;transform:rotateY(-24deg) scale(.94)}to{opacity:1;transform:none}}
     .reward-card h3{position:relative;margin:10px 0 3px;font:700 28px Georgia,serif}.reward-card p{position:relative;margin:0;color:#d8e9df}.reward-qr{width:150px;height:150px;padding:9px;border-radius:18px;background:#fff;display:block;margin:18px auto 8px}.reward-stars{display:flex;gap:8px;font-size:28px;color:#f4c86f;margin:13px 0}.reward-stars .off{color:rgba(255,255,255,.28)}.reward-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.reward-panel{padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.06)}.reward-panel b{display:block;font-size:18px;color:#f4c86f}.reward-panel small{display:block;color:#bed1c6;margin-top:4px;line-height:1.35}.reward-voucher{border:1px dashed #f4c86f;border-radius:17px;padding:14px;background:rgba(212,173,98,.12);margin:12px 0}.reward-voucher strong{color:#ffe2a0}.star-burst{position:fixed;z-index:150;left:50%;top:48%;pointer-events:none;color:#f4c86f;font-size:31px;text-shadow:0 0 18px #f4c86f;animation:starBurst 1s ease-out forwards}@keyframes starBurst{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}25%{opacity:1}100%{transform:translate(var(--x),var(--y)) scale(1.4) rotate(190deg);opacity:0}}
     @media(max-width:700px){.rewards-nav{font-size:0;min-width:46px;padding:0 11px}.rewards-nav:after{content:'★';font-size:18px}.rewards-float{display:grid;place-items:center}.reward-card{padding:18px}.reward-qr{width:126px;height:126px}}
+  
+    .main-menu-direct{position:relative;z-index:135;padding:8px 12px;background:rgba(4,24,17,.96);border-bottom:1px solid rgba(255,255,255,.08)}
+    .main-menu-direct-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;max-width:1180px;margin:0 auto}
+    .main-menu-direct-row button{min-height:48px;border:1px solid rgba(255,255,255,.14);border-radius:15px;background:rgba(255,255,255,.06);color:#fff;font-weight:900;cursor:pointer}
+    .main-menu-direct-row button span{display:block;font-size:11px;margin-top:3px}
+    .main-menu-direct-row button.active{background:#f4efe6;color:#07331f;border-color:#f4c86f}
+    .main-submenu-direct{max-width:1180px;margin:8px auto 0;display:flex;gap:8px;overflow:auto;scrollbar-width:none}
+    .main-submenu-direct:empty{margin-top:0}.main-submenu-direct button{white-space:nowrap;min-height:38px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.06);color:#fff;padding:0 12px;font-weight:800}
+    @media(max-width:800px){.main-menu-direct-row{grid-template-columns:repeat(3,1fr)}.main-menu-direct-row button{min-height:44px}.main-menu-direct-row button span{font-size:9px}}
   </style>
 </head>
 <body>
@@ -61,7 +70,18 @@
     <button class="icon-btn rewards-nav" id="rewardsBtn" aria-label="Open Star Rewards">★ <span class="label">STAR REWARDS</span></button>
     <button class="customer-account" id="customerAccountBtn">👤 My Account</button>
   </header>
-  <nav class="toolbar" id="categories" aria-label="Menu categories"></nav>
+  <section id="mainMenuDirect" class="main-menu-direct" aria-label="Main customer navigation">
+      <div class="main-menu-direct-row">
+        <button type="button" data-direct-main="menu">☕<span>MENU</span></button>
+        <button type="button" data-direct-main="order">🛒<span>MY ORDER</span></button>
+        <button type="button" data-direct-main="stores">📍<span>STORES</span></button>
+        <button type="button" data-direct-main="rewards">★<span>REWARDS</span></button>
+        <button type="button" data-direct-main="account">👤<span>MY ACCOUNT</span></button>
+        <button type="button" data-direct-main="settings">⚙<span>SETTINGS</span></button>
+      </div>
+      <div class="main-submenu-direct" id="mainSubmenuDirect"></div>
+    </section>
+    <nav class="toolbar" id="categories" aria-label="Menu categories"></nav>
   <div class="search-panel" id="searchPanel"><input id="searchInput" type="search" placeholder="Search drinks and food…" aria-label="Search products" /></div>
   <main class="stage" id="stage" aria-label="Interactive product orbit">
     <div class="orbit-line"></div><div class="orbit" id="orbit"></div>
@@ -259,5 +279,32 @@
 <script src="completion-layer.js"></script>
   <script src="customer-next.js?v=20260923-4"></script>
   <script src="main-submenu.js?v=20260924-1"></script>
+
+<script>
+(function(){
+  const maps={
+    menu:[['Featured',()=>clickCat('Featured')],['Search',()=>clickEl('#searchBtn')],['Trending',()=>clickEl('#moTrending')],['Visual Search',()=>clickEl('#moVisualSearch')],['Diet Filters',()=>clickEl('#moDiet')],['Compare Drinks',()=>clickEl('#moCompare')]],
+    order:[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Your Usual',()=>clickEl('#moUsual')],['Schedule',()=>clickEl('#moSchedule')],['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')],['Pickup ETA',()=>clickEl('#moDynamicEta')],['Receipts',()=>clickEl('#moReceiptsBtn')],['Order Chat',()=>clickEl('#moOrderChat')],['Order Help',()=>clickEl('#moProblem')]],
+    stores:[['Find a Store',()=>clickEl('#pickupBtn')],['Branch Profile',()=>clickEl('#moBranch')],['Compare Branches',()=>clickEl('#moBranchCompare')]],
+    rewards:[['Star Rewards',()=>clickEl('#rewardsBtn')],['Milestones',()=>clickEl('#moLoyalty')],['Voucher',()=>clickEl('#moVoucherTimer')],['Deal Reminders',()=>clickEl('#moDealReminders')],['Pairings',()=>clickEl('#moPairings')],['Inbox',()=>clickEl('#moInbox')]],
+    account:[['Profile',()=>clickEl('#moProfileDash')],['Saved Payments',()=>clickEl('#moPayments')],['Search History',()=>clickEl('#moSearchHistory')],['Notifications',()=>clickEl('#moNotifPrefs')],['Review Filters',()=>clickEl('#moReviewFilters')]],
+    settings:[['Reduce Motion',()=>clickEl('#motionBtn')],['Gestures',()=>clickEl('#gestureBtn')],['Voice Control',()=>clickEl('#voiceCta')],['Help',()=>clickEl('#helpBtn')],['Presentation Mode',()=>clickEl('#moPresentationBtn')]]
+  };
+  function clickEl(sel){const el=document.querySelector(sel);if(el)el.click();}
+  function clickCat(name){const b=[...document.querySelectorAll('[data-cat]')].find(x=>x.dataset.cat===name||x.textContent.trim()===name);if(b)b.click();}
+  function open(name){
+    document.querySelectorAll('[data-direct-main]').forEach(b=>b.classList.toggle('active',b.dataset.directMain===name));
+    const sub=document.getElementById('mainSubmenuDirect'); if(!sub)return;
+    sub.innerHTML='';
+    (maps[name]||[]).forEach(([label,fn])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;sub.appendChild(b);});
+  }
+  function init(){
+    document.querySelectorAll('[data-direct-main]').forEach(b=>b.onclick=()=>open(b.dataset.directMain));
+    open('menu');
+    setTimeout(()=>window.NewFeatureHighlight?.register('#mainMenuDirect','customer-main-menu-direct-v1','NEW'),400);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
 </body>
 </html>
