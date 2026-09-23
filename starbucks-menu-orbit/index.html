@@ -322,6 +322,144 @@
       #mainMenuDirect #navOrbitCenter.smart-center[data-order-state="ready"]::before{animation:none!important}
     }
 
+    /* SMART ORBIT EXPANSION: quick actions, outer badges, resume, suggestions */
+    #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button .orbit-live-badge{
+      position:absolute;
+      top:-7px;
+      left:-7px;
+      z-index:18;
+      min-width:24px;
+      height:24px;
+      padding:0 6px;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      border:2px solid #0c281f;
+      background:#f4c86f;
+      color:#07331f;
+      font:950 9px/1 system-ui;
+      box-shadow:0 6px 16px rgba(0,0,0,.30);
+      pointer-events:none;
+    }
+    #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button .orbit-live-badge.ready{
+      background:#7ee2aa;
+    }
+    #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button .orbit-live-badge.offline{
+      background:#a94332;color:#fff;
+    }
+    #mainMenuDirect .orbit-smart-suggestion{
+      width:min(92vw,520px);
+      margin:4px auto 2px;
+      min-height:36px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:7px 12px;
+      border:1px solid rgba(244,200,111,.32);
+      border-radius:999px;
+      background:rgba(7,51,31,.80);
+      color:#fff;
+      box-shadow:0 8px 22px rgba(0,0,0,.16);
+      font:800 11px/1.2 system-ui;
+      cursor:pointer;
+    }
+    #mainMenuDirect .orbit-smart-suggestion b{
+      color:#f4d992;
+      font-size:9px;
+      letter-spacing:.09em;
+    }
+    #mainMenuDirect .orbit-resume-card{
+      width:min(92vw,520px);
+      margin:6px auto 4px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:9px 11px;
+      border:1px solid rgba(126,226,170,.38);
+      border-radius:16px;
+      background:rgba(10,43,31,.94);
+      color:#fff;
+      box-shadow:0 10px 26px rgba(0,0,0,.20);
+    }
+    #mainMenuDirect .orbit-resume-card span{
+      min-width:0;
+      font:750 10px/1.25 system-ui;
+    }
+    #mainMenuDirect .orbit-resume-card span b{
+      display:block;color:#7ee2aa;font-size:9px;letter-spacing:.08em;margin-bottom:2px;
+    }
+    #mainMenuDirect .orbit-resume-card .resume-actions{
+      display:flex;gap:6px;flex:0 0 auto;
+    }
+    #mainMenuDirect .orbit-resume-card button{
+      border:1px solid rgba(244,200,111,.45);
+      border-radius:999px;
+      padding:7px 9px;
+      background:#143d30;
+      color:#fff;
+      font:850 9px/1 system-ui;
+    }
+    #mainMenuDirect .orbit-resume-card button.primary{
+      background:#f4c86f;color:#07331f;
+    }
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring{
+      position:absolute;
+      inset:0;
+      z-index:30;
+      pointer-events:none;
+    }
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring::before{
+      content:'';
+      position:absolute;
+      left:50%;top:50%;
+      width:218px;height:218px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(7,51,31,.88) 0 44%,rgba(7,51,31,.22) 45% 68%,transparent 69%);
+      border:1px solid rgba(244,200,111,.20);
+      pointer-events:auto;
+    }
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring button{
+      position:absolute;
+      left:50%;top:50%;
+      width:70px;height:70px;
+      margin:0;
+      padding:7px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      border:2px solid rgba(244,200,111,.65);
+      background:#12352a;
+      color:#fff;
+      box-shadow:0 9px 22px rgba(0,0,0,.32);
+      font:850 10px/1.08 system-ui;
+      text-align:center;
+      pointer-events:auto;
+    }
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(1){transform:translate(-50%,-50%) translate(0,-104px)}
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(2){transform:translate(-50%,-50%) translate(90px,-52px)}
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(3){transform:translate(-50%,-50%) translate(90px,52px)}
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(4){transform:translate(-50%,-50%) translate(0,104px)}
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(5){transform:translate(-50%,-50%) translate(-90px,52px)}
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(6){transform:translate(-50%,-50%) translate(-90px,-52px)}
+    #mainMenuDirect #navOrbitDirect .smart-quick-ring .quick-close{
+      width:44px;height:44px;
+      background:#f4efe6;color:#07331f;
+      border-color:#f4c86f;
+      font-size:18px;
+      transform:translate(-50%,-50%)!important;
+    }
+    @media(max-width:430px){
+      #mainMenuDirect #navOrbitDirect .smart-quick-ring button{width:62px;height:62px;font-size:9px}
+      #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(1){transform:translate(-50%,-50%) translate(0,-92px)}
+      #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(2){transform:translate(-50%,-50%) translate(80px,-46px)}
+      #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(3){transform:translate(-50%,-50%) translate(80px,46px)}
+      #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(4){transform:translate(-50%,-50%) translate(0,92px)}
+      #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(5){transform:translate(-50%,-50%) translate(-80px,46px)}
+      #mainMenuDirect #navOrbitDirect .smart-quick-ring button:nth-of-type(6){transform:translate(-50%,-50%) translate(-80px,-46px)}
+    }
+
     /* HARD OVERRIDE: SUBMENUS ARE ORBIT NODES, NOT GRID CARDS */
     #mainMenuDirect #navOrbitDirect{
       position:relative!important;
@@ -559,7 +697,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-LIVE-SMART-CENTER -->
+<!-- BUILD 20260924-SMART-ORBIT-EXPANSION -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -965,6 +1103,122 @@
       ((s.isReady||s.isActive)?'<i class="smart-badge order '+orderClass+'" aria-hidden="true">'+(s.isReady?'✓':'●')+'</i>':'')+
       (s.offline?'<i class="smart-badge offline" aria-hidden="true">OFFLINE</i>':'');
   }
+  function mainNodeLiveBadge(key){
+    const s=smartCenterState();
+    if(key==='order'){
+      if(s.isReady)return {text:'READY',cls:'ready'};
+      if(s.isActive)return {text:'●',cls:''};
+      if(s.cartCount)return {text:String(s.cartCount),cls:''};
+    }
+    if(key==='stores'){
+      const fav=readLocal('mo_favorite_store_v1','');
+      if(fav)return {text:'★',cls:'ready'};
+    }
+    if(key==='rewards'){
+      const rewards=readLocal('starRewardsMember',{});
+      const count=Number(rewards?.rewards||0);
+      const stars=Number(rewards?.stars||0);
+      if(count>0)return {text:String(count),cls:'ready'};
+      if(stars>0)return {text:String(stars)+'★',cls:''};
+    }
+    if(key==='account'&&s.unread>0)return {text:String(s.unread),cls:''};
+    if(key==='settings'&&s.offline)return {text:'!',cls:'offline'};
+    return null;
+  }
+  function decorateMainLiveBadge(buttonEl,key){
+    if(!buttonEl)return;
+    buttonEl.dataset.mainKey=key;
+    buttonEl.querySelector('.orbit-live-badge')?.remove();
+    const data=mainNodeLiveBadge(key);
+    if(!data)return;
+    const badge=document.createElement('span');
+    badge.className='orbit-live-badge '+(data.cls||'');
+    badge.textContent=data.text;
+    badge.setAttribute('aria-hidden','true');
+    buttonEl.appendChild(badge);
+  }
+  function refreshMainLiveBadges(){
+    if(level!=='main')return;
+    document.querySelectorAll('#mainSubmenuDirect>button[data-main-key]').forEach(b=>decorateMainLiveBadge(b,b.dataset.mainKey));
+  }
+  function suggestionForState(){
+    const s=smartCenterState();
+    const favorite=readLocal('mo_favorite_store_v1','');
+    const orders=readLocal('menuOrbitOrders',[]);
+    if(s.offline)return {label:'Connection unavailable — open Offline / Reconnect',action:()=>window.MenuOrbitCustomer?.openOfflineReconnect?.()};
+    if(s.isReady||s.isActive)return {label:(s.isReady?'Order ready — ':'Order active — ')+'track your order',action:()=>window.MenuOrbitCustomer?.openOrderTracking?.()};
+    if(s.cartCount>0)return {label:'Continue your cart ('+s.cartCount+' item'+(s.cartCount===1?'':'s')+')',action:()=>window.MenuOrbitApp?.openCart?.()};
+    if(s.unread>0)return {label:'Review '+s.unread+' new update'+(s.unread===1?'':'s'),action:()=>window.MenuOrbitCustomer?.openNotificationCenter?.()};
+    if(!favorite)return {label:'Choose a Favorite Store for faster pickup',action:()=>window.MenuOrbitCustomer?.openFavoriteStore?.()};
+    if(Array.isArray(orders)&&orders.length)return {label:'Reorder your most recent order',action:()=>window.MenuOrbitCustomer?.openReorder?.()};
+    return {label:'Start with Quick Order',action:()=>window.MenuOrbitCustomer?.openQuickOrder?.()};
+  }
+  function renderSmartSuggestion(){
+    let el=document.getElementById('orbitSmartSuggestion');
+    const host=document.getElementById('orbitBreadcrumb');
+    if(!host)return;
+    if(level!=='main'){el?.remove();return}
+    if(!el){
+      el=document.createElement('button');
+      el.type='button';
+      el.id='orbitSmartSuggestion';
+      el.className='orbit-smart-suggestion';
+      host.insertAdjacentElement('afterend',el);
+    }
+    const s=suggestionForState();
+    el.innerHTML='<b>SUGGESTED</b><span>'+s.label+'</span><span aria-hidden="true">›</span>';
+    el.onclick=e=>{e.preventDefault();e.stopPropagation();s.action?.()};
+  }
+  function sessionLabel(state){
+    const parts=['MENU ORBIT'];
+    if(state?.activeMain)parts.push(mainItems.find(x=>x[0]===state.activeMain)?.[2]||String(state.activeMain).toUpperCase());
+    if(state?.activeGroup)parts.push(state.activeGroup);
+    return parts.join(' › ');
+  }
+  function showResumePrompt(state){
+    document.getElementById('orbitResumeCard')?.remove();
+    if(!state||state.level==='main'||!state.activeMain)return;
+    const host=document.getElementById('orbitBreadcrumb');if(!host)return;
+    const card=document.createElement('div');
+    card.id='orbitResumeCard';
+    card.className='orbit-resume-card';
+    card.innerHTML='<span><b>RESUME LAST SESSION</b>'+sessionLabel(state)+'</span><div class="resume-actions"><button type="button" data-resume-skip>Start fresh</button><button type="button" class="primary" data-resume-go>Resume</button></div>';
+    host.insertAdjacentElement('afterend',card);
+    card.querySelector('[data-resume-go]').onclick=()=>{card.remove();restoreFrom(state)};
+    card.querySelector('[data-resume-skip]').onclick=()=>{card.remove();renderMainOrbit({instant:true})};
+  }
+  function closeSmartQuickRing(){
+    document.getElementById('smartQuickRing')?.remove();
+  }
+  function openSmartQuickRing(){
+    closeSmartQuickRing();
+    const wrap=document.getElementById('navOrbitDirect');if(!wrap)return;
+    const ring=document.createElement('div');
+    ring.id='smartQuickRing';
+    ring.className='smart-quick-ring';
+    const actions=[
+      ['🛒<br>Cart',()=>window.MenuOrbitApp?.openCart?.()],
+      ['⌕<br>Search',()=>window.MenuOrbitCustomer?.openGlobalCustomerSearch?.()],
+      ['⚡<br>Quick Order',()=>window.MenuOrbitCustomer?.openQuickOrder?.()],
+      ['📦<br>Track',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],
+      ['★<br>Favorite Store',()=>window.MenuOrbitCustomer?.openFavoriteStore?.()],
+      ['🔔<br>Updates',()=>window.MenuOrbitCustomer?.openNotificationCenter?.()]
+    ];
+    actions.forEach(([label,fn])=>{
+      const b=document.createElement('button');
+      b.type='button';b.innerHTML=label;
+      b.onclick=e=>{e.preventDefault();e.stopPropagation();closeSmartQuickRing();fn?.()};
+      ring.appendChild(b);
+    });
+    const close=document.createElement('button');
+    close.type='button';close.className='quick-close';close.textContent='×';
+    close.setAttribute('aria-label','Close quick actions');
+    close.onclick=e=>{e.preventDefault();e.stopPropagation();closeSmartQuickRing()};
+    ring.appendChild(close);
+    ring.addEventListener('click',e=>{if(e.target===ring)closeSmartQuickRing()});
+    wrap.appendChild(ring);
+  }
+
   function layoutOrbit(){
     const wrap=document.getElementById('navOrbitDirect');
     const buttons=[...document.querySelectorAll('#mainSubmenuDirect>button')];
@@ -1092,9 +1346,10 @@
       mainItems.forEach(([key,icon,label])=>{
         const b=button('<span style="font-size:24px;display:block;margin-bottom:4px">'+icon+'</span>'+label,()=>renderGroups(key));
         if(mainHasNew(key)){b.classList.add('customer-new-node');decorateNewButton(b)}
+        decorateMainLiveBadge(b,key);
         sub.appendChild(b);
       });
-      updateBreadcrumb();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
+      updateBreadcrumb();renderSmartSuggestion();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
     };
     opts.instant?draw():animateSwap(draw);
   }
@@ -1106,7 +1361,7 @@
       const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
       sub.innerHTML='';
       const title=mainItems.find(x=>x[0]===name)?.[2]||name.toUpperCase();
-      center(title,'Choose a path');
+      center(title,'Choose a path');document.getElementById('orbitSmartSuggestion')?.remove();document.getElementById('orbitResumeCard')?.remove();
       (maps[name]||[]).forEach(([label,items])=>{
         const b=button(label,()=>renderItems(label,items));
         if(groupHasNew(name,label)){b.classList.add('customer-new-node');decorateNewButton(b)}
@@ -1122,7 +1377,7 @@
     const draw=()=>{
       level='items';activeGroup=groupLabel;activeItems=items;
       const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
-      sub.innerHTML='';center(groupLabel,'Choose an option');
+      sub.innerHTML='';center(groupLabel,'Choose an option');document.getElementById('orbitSmartSuggestion')?.remove();document.getElementById('orbitResumeCard')?.remove();
       items.forEach(([label,fn])=>sub.appendChild(button(label,fn)));
       sub.appendChild(button('‹ Back',()=>renderGroups(activeMain),'nav-back'));
       updateBreadcrumb();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
@@ -1175,8 +1430,13 @@
       }
       activeMain?renderGroups(activeMain):renderMainOrbit();
     });
-    document.getElementById('navOrbitCenter')?.addEventListener('click',()=>{
+    let lastCenterTap=0,longPressTimer=null,longPressOpened=false;
+    document.getElementById('navOrbitCenter')?.addEventListener('click',e=>{
       clearOrbitNewHighlight();
+      if(longPressOpened){longPressOpened=false;return}
+      const now=Date.now(),isDouble=now-lastCenterTap<340;
+      lastCenterTap=now;
+      if(level!=='main'&&isDouble){renderMainOrbit();return}
       if(level==='main'){
         closeOrbitOverlays();
         window.MenuOrbitCustomer?.openCustomerHomeSummary?.();
@@ -1184,6 +1444,24 @@
       }
       if(level==='groups')renderMainOrbit();
       else renderGroups(activeMain);
+    });
+    const centerEl=document.getElementById('navOrbitCenter');
+    centerEl?.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      longPressOpened=false;
+      clearTimeout(longPressTimer);
+      longPressTimer=setTimeout(()=>{
+        if(level==='main'){
+          longPressOpened=true;
+          if(navigator.vibrate)navigator.vibrate(30);
+          openSmartQuickRing();
+        }
+      },560);
+    });
+    ['pointerup','pointercancel','pointerleave'].forEach(type=>centerEl?.addEventListener(type,()=>clearTimeout(longPressTimer)));
+    centerEl?.addEventListener('contextmenu',e=>{if(level==='main'){e.preventDefault();openSmartQuickRing()}});
+    document.getElementById('navOrbitDirect')?.addEventListener('dblclick',e=>{
+      if(e.target.closest('#navOrbitCenter')&&level!=='main'){e.preventDefault();renderMainOrbit()}
     });
     document.getElementById('navOrbitCenter')?.addEventListener('keydown',e=>{
       if(e.key==='Enter'||e.key===' '){e.preventDefault();document.getElementById('navOrbitCenter')?.click()}
@@ -1193,7 +1471,9 @@
 
     let saved=null;
     try{saved=JSON.parse(localStorage.getItem(STATE_KEY)||'null')}catch(e){}
-    restoreFrom(saved);
+    const resumable=saved&&saved.level!=='main'&&saved.activeMain?{...saved}:null;
+    renderMainOrbit({instant:true,noHistory:true});
+    if(resumable)showResumePrompt(resumable);
     applyOrbitNewHighlight();
     history.replaceState({orbit:true,level,activeMain,activeGroup},'',location.hash||'#orbit');
 
@@ -1201,7 +1481,12 @@
     if(detail)new MutationObserver(syncDetailState).observe(detail,{attributes:true,attributeFilter:['class','aria-hidden']});
     syncDetailState();
     window.addEventListener('resize',()=>requestAnimationFrame(layoutOrbit));
-    const refreshSmartCenter=()=>{if(level==='main')renderSmartCenter()};
+    const refreshSmartCenter=()=>{
+      if(level!=='main')return;
+      renderSmartCenter();
+      refreshMainLiveBadges();
+      renderSmartSuggestion();
+    };
     window.addEventListener('online',refreshSmartCenter);
     window.addEventListener('offline',refreshSmartCenter);
     window.addEventListener('storage',refreshSmartCenter);
