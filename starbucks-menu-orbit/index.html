@@ -460,7 +460,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-CUSTOMER-BATCH-3 -->
+<!-- BUILD 20260924-CUSTOMER-BATCH-4 -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -695,7 +695,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-16"></script>
+  <script src="customer-next.js?v=20260924-17"></script>
 
 <script>
 (function(){
@@ -715,15 +715,15 @@
       ['Compare',[['Compare Drinks',()=>clickEl('#moCompare')],['Pairings',()=>clickEl('#moPairings')]]]
     ],
     order:[
-      ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
+      ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Quick Order',()=>window.MenuOrbitCustomer?.openQuickOrder?.()],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
       ['Plan Order',[['Schedule Order',()=>clickEl('#moSchedule')],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
-      ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
+      ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Receipt Search',()=>window.MenuOrbitCustomer?.openReceiptSearch?.()],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
       ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')],['Refund / Issue Status',()=>window.MenuOrbitCustomer?.openRefundIssueStatus?.()],['Post-Pickup Feedback',()=>window.MenuOrbitCustomer?.openPostPickupFeedback?.()]]]
     ],
     stores:[
       ['Find Store',[['Nearby Stores',()=>clickEl('#pickupBtn')],['Find a Store',()=>clickEl('#pickupBtn')]]],
-      ['My Store',[['Selected Branch',()=>clickEl('#moBranch')],['Favorite Store',()=>window.MenuOrbitCustomer?.openFavoriteStore?.()]]],
+      ['My Store',[['Selected Branch',()=>clickEl('#moBranch')],['Favorite Store',()=>window.MenuOrbitCustomer?.openFavoriteStore?.()],['Pickup Notes',()=>window.MenuOrbitCustomer?.openPickupNotes?.()]]],
       ['Branch Details',[['Hours & Services',()=>clickEl('#moBranch')],['Availability',()=>clickEl('#moBranch')],['Store Availability',()=>window.MenuOrbitCustomer?.openStoreAvailability?.()]]],
       ['Compare Stores',[['Compare Branches',()=>clickEl('#moBranchCompare')]]]
     ],
@@ -742,10 +742,11 @@
       ['Preferences',[['Notifications',()=>clickEl('#moNotifPrefs')],['Review Filters',()=>clickEl('#moReviewFilters')]]]
     ],
     settings:[
-      ['Accessibility',[['Reduce Motion',()=>clickEl('#motionBtn')],['Gestures',()=>clickEl('#gestureBtn')],['Voice Control',()=>clickEl('#voiceCta')]]],
+      ['Accessibility',[['Accessibility Profile',()=>window.MenuOrbitCustomer?.openAccessibilityProfile?.()],['Reduce Motion',()=>clickEl('#motionBtn')],['Gestures',()=>clickEl('#gestureBtn')],['Voice Control',()=>clickEl('#voiceCta')]]],
       ['Display',[['Presentation Mode',()=>clickEl('#moPresentationBtn')]]],
       ['Notifications',[['Notification Preferences',()=>clickEl('#moNotifPrefs')]]],
       ['Help & Support',[['Help',()=>clickEl('#helpBtn')]]],
+      ['Privacy & Data',[['Privacy & Data Controls',()=>window.MenuOrbitCustomer?.openPrivacyDataControls?.()]]],
       ['About',[['Menu Orbit Information',()=>showAbout()]]]
     ]
   };
@@ -839,14 +840,19 @@
     'Smart Substitutions':'customer-smart-substitutions-2026-09-24-v3',
     'Favorites Collections':'customer-favorites-collections-2026-09-24-v3',
     'Refund / Issue Status':'customer-refund-issue-status-2026-09-24-v3',
-    'Notification Center':'customer-notification-center-2026-09-24-v3'
+    'Notification Center':'customer-notification-center-2026-09-24-v3',
+    'Quick Order':'customer-quick-order-2026-09-24-v4',
+    'Pickup Notes':'customer-pickup-notes-2026-09-24-v4',
+    'Receipt Search':'customer-receipt-search-2026-09-24-v4',
+    'Accessibility Profile':'customer-accessibility-profile-2026-09-24-v4',
+    'Privacy & Data Controls':'customer-privacy-data-controls-2026-09-24-v4'
   };
   const CUSTOMER_LATEST_BATCH=[
-    'Favorite Store',
-    'Smart Substitutions',
-    'Favorites Collections',
-    'Refund / Issue Status',
-    'Notification Center'
+    'Quick Order',
+    'Pickup Notes',
+    'Receipt Search',
+    'Accessibility Profile',
+    'Privacy & Data Controls'
   ];
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
@@ -866,24 +872,27 @@
   }
   function mainHasNew(key){
     if(key==='menu')return anyCustomerUnseen(['Recently Viewed','Recommended for You','Saved Drink Presets','Smart Substitutions']);
-    if(key==='order')return anyCustomerUnseen(['Order Tracking','Reorder','Modify / Cancel Order','Post-Pickup Feedback','Refund / Issue Status']);
-    if(key==='stores')return anyCustomerUnseen(['Store Availability','Favorite Store']);
+    if(key==='order')return anyCustomerUnseen(['Order Tracking','Reorder','Modify / Cancel Order','Post-Pickup Feedback','Refund / Issue Status','Quick Order','Receipt Search']);
+    if(key==='stores')return anyCustomerUnseen(['Store Availability','Favorite Store','Pickup Notes']);
     if(key==='rewards')return anyCustomerUnseen(['Voucher Wallet','Rewards History']);
     if(key==='account')return anyCustomerUnseen(['Favorites Collections','Notification Center']);
+    if(key==='settings')return anyCustomerUnseen(['Accessibility Profile','Privacy & Data Controls']);
     return false;
   }
   function groupHasNew(main,group){
     if(main==='menu'&&group==='Browse')return anyCustomerUnseen(['Recently Viewed','Recommended for You']);
     if(main==='menu'&&group==='Preferences')return anyCustomerUnseen(['Saved Drink Presets','Smart Substitutions']);
-    if(main==='order'&&group==='Current Order')return customerFeatureUnseen('Modify / Cancel Order');
-    if(main==='order'&&group==='Order History')return anyCustomerUnseen(['Order Tracking','Reorder']);
+    if(main==='order'&&group==='Current Order')return anyCustomerUnseen(['Modify / Cancel Order','Quick Order']);
+    if(main==='order'&&group==='Order History')return anyCustomerUnseen(['Order Tracking','Reorder','Receipt Search']);
     if(main==='order'&&group==='Help')return anyCustomerUnseen(['Post-Pickup Feedback','Refund / Issue Status']);
-    if(main==='stores'&&group==='My Store')return customerFeatureUnseen('Favorite Store');
+    if(main==='stores'&&group==='My Store')return anyCustomerUnseen(['Favorite Store','Pickup Notes']);
     if(main==='stores'&&group==='Branch Details')return customerFeatureUnseen('Store Availability');
     if(main==='rewards'&&group==='Offers')return customerFeatureUnseen('Voucher Wallet');
     if(main==='rewards'&&group==='Rewards Home')return customerFeatureUnseen('Rewards History');
     if(main==='account'&&group==='Favorites')return customerFeatureUnseen('Favorites Collections');
     if(main==='account'&&group==='Activity')return customerFeatureUnseen('Notification Center');
+    if(main==='settings'&&group==='Accessibility')return customerFeatureUnseen('Accessibility Profile');
+    if(main==='settings'&&group==='Privacy & Data')return customerFeatureUnseen('Privacy & Data Controls');
     return false;
   }
 
