@@ -306,18 +306,19 @@
       to{background:conic-gradient(#f4c86f 360deg,rgba(244,200,111,.10) 360deg)}
     }
     #mainMenuDirect .orbit-longpress-coach{
-      position:absolute;
-      left:50%;
-      top:calc(50% + 86px);
-      transform:translateX(-50%);
+      position:relative;
+      left:auto;
+      top:auto;
+      transform:none;
       z-index:45;
-      width:min(250px,74vw);
-      padding:10px 12px;
+      width:min(92vw,420px);
+      margin:6px auto 2px;
+      padding:9px 12px;
       border-radius:14px;
-      border:1px solid rgba(244,200,111,.55);
+      border:1px solid rgba(244,200,111,.42);
       background:#0b3025;
       color:#fff;
-      box-shadow:0 14px 30px rgba(0,0,0,.34);
+      box-shadow:0 10px 24px rgba(0,0,0,.24);
       text-align:center;
       font:800 10px/1.3 system-ui;
       pointer-events:auto;
@@ -339,19 +340,10 @@
       color:#fff;
       font:850 9px/1 system-ui;
     }
-    #mainMenuDirect .orbit-longpress-coach::before{
-      content:'';
-      position:absolute;
-      left:50%;top:-7px;
-      width:12px;height:12px;
-      transform:translateX(-50%) rotate(45deg);
-      background:#0b3025;
-      border-left:1px solid rgba(244,200,111,.55);
-      border-top:1px solid rgba(244,200,111,.55);
-    }
+    #mainMenuDirect .orbit-longpress-coach::before{display:none}
     @keyframes orbitCoachIn{
-      from{opacity:0;transform:translate(-50%,6px)}
-      to{opacity:1;transform:translate(-50%,0)}
+      from{opacity:0;transform:translateY(6px)}
+      to{opacity:1;transform:translateY(0)}
     }
     @media(prefers-reduced-motion:reduce){
       #mainMenuDirect #navOrbitCenter.holding .hold-progress{animation:none!important;opacity:.7}
@@ -632,13 +624,16 @@
       z-index:4!important;
     }
     @media(max-width:430px){
-      #mainMenuDirect #navOrbitDirect{height:330px!important;min-height:330px!important}
+      #mainMenuDirect #navOrbitDirect{height:390px!important;min-height:390px!important;margin-top:2px!important}
       #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
-        width:92px!important;height:92px!important;min-height:92px!important;
-        font-size:12.5px!important;
+        width:88px!important;height:88px!important;min-height:88px!important;
+        font-size:11.5px!important;padding:8px!important;
       }
-      #mainMenuDirect #navOrbitDirect .nav-orbit-ring{width:220px!important;height:220px!important}
-      #mainMenuDirect #navOrbitDirect .nav-orbit-center{width:112px!important;height:112px!important}
+      #mainMenuDirect #navOrbitDirect .nav-orbit-ring{width:232px!important;height:232px!important}
+      #mainMenuDirect #navOrbitDirect .nav-orbit-center{width:124px!important;height:124px!important}
+      #mainMenuDirect #navOrbitCenter .smart-main{font-size:11px;max-width:94px}
+      #mainMenuDirect #navOrbitCenter .smart-sub{font-size:7.5px;max-width:94px}
+      #mainMenuDirect #navOrbitCenter .smart-gesture-hint{font-size:6.8px;max-width:96px}
     }
 
     /* Products are results, never orbit navigation */
@@ -807,7 +802,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-CUSTOMER-QA-CLEANUP -->
+<!-- BUILD 20260924-MOBILE-ORBIT-FIX -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -1211,7 +1206,7 @@
       '<span class="smart-kicker">CUSTOMER HOME</span>'+
       '<strong class="smart-main">'+s.main+'</strong>'+
       '<span class="smart-sub">'+s.sub+'</span>'+
-      '<span class="smart-gesture-hint">Tap Home • Hold Quick Actions</span>'+
+      '<span class="smart-gesture-hint">Tap Home • Hold for Actions</span>'+
       '<i class="hold-progress" aria-hidden="true"></i>'+
       (s.cartCount?'<i class="smart-badge cart" aria-hidden="true">🛒 '+s.cartCount+'</i>':'')+
       (s.unread?'<i class="smart-badge updates" aria-hidden="true">🔔 '+s.unread+'</i>':'')+
@@ -1234,14 +1229,15 @@
   }
   function showLongPressCoach(){
     if(level!=='main'||longPressCoachSeen()||document.getElementById('orbitLongpressCoach'))return;
-    const wrap=document.getElementById('navOrbitDirect');if(!wrap)return;
+    const anchor=document.getElementById('orbitQuickAccessBtn')||document.getElementById('orbitSmartSuggestion')||document.getElementById('orbitBreadcrumb');
+    if(!anchor)return;
     const coach=document.createElement('div');
     coach.id='orbitLongpressCoach';
     coach.className='orbit-longpress-coach';
     coach.setAttribute('role','status');
-    coach.innerHTML='<b>QUICK ACTION TIP</b>Press and hold the center for shortcuts.<button type="button">GOT IT</button>';
+    coach.innerHTML='<b>QUICK ACTION TIP</b>Hold the center circle for shortcuts.<button type="button">GOT IT</button>';
     coach.querySelector('button').onclick=e=>{e.preventDefault();e.stopPropagation();markLongPressCoachSeen()};
-    wrap.appendChild(coach);
+    anchor.insertAdjacentElement('afterend',coach);
   }
 
   function mainNodeLiveBadge(key){
@@ -1386,10 +1382,10 @@
     const w=wrap.clientWidth||360,h=wrap.clientHeight||330,cx=w/2,cy=h/2,count=buttons.length;
     const compact=w<440;
     const crowded=count>=7,veryCrowded=count>=8;
-    const node=compact?(veryCrowded?72:crowded?78:92):(veryCrowded?82:crowded?90:104);
-    const font=compact?(veryCrowded?9.5:crowded?10.5:12.5):(veryCrowded?11:crowded?12:14);
-    const rx=Math.min(w*(veryCrowded?.405:crowded?.385:count>=6?.36:.34),compact?174:220);
-    const ry=Math.min(h*(veryCrowded?.415:crowded?.40:count>=6?.38:.34),compact?137:142);
+    const node=compact?(veryCrowded?68:crowded?74:88):(veryCrowded?82:crowded?90:104);
+    const font=compact?(veryCrowded?9:crowded?10:11.5):(veryCrowded?11:crowded?12:14);
+    const rx=Math.min(w*(veryCrowded?.41:crowded?.395:count>=6?.365:.34),compact?176:220);
+    const ry=Math.min(h*(veryCrowded?.42:crowded?.405:count>=6?.385:.34),compact?150:142);
     buttons.forEach((b,i)=>{
       const a=-Math.PI/2+(i/count)*Math.PI*2;
       b.style.setProperty('left',(cx+Math.cos(a)*rx)+'px','important');
