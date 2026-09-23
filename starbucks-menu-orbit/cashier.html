@@ -51,5 +51,5 @@ function ordersView(){document.querySelector('#view').innerHTML=`<section class=
 document.querySelector('#closeProblem').onclick=()=>document.querySelector('#problemModal').classList.remove('open');document.querySelector('#submitProblem').onclick=()=>{const note=document.querySelector('#problemNote').value.trim();if(document.querySelector('#problemReason').value==='Other'&&!note){alert('Please add details for Other.');return}document.querySelector('#problemModal').classList.remove('open');document.querySelector('#problemNote').value='';alert(demo?'Demo problem recorded for manager review.':'Problem flagged for Branch Manager review.')};
 if(!db)login();else init();
 </script>
-</body>
+<script src="new-feature-highlights.js"></script><script src="ecosystem-sync.js"></script></body>
 </html>
