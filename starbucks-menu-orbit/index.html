@@ -424,7 +424,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-ORBIT-HIGHLIGHT -->
+<!-- BUILD 20260924-BROWSE-ROUTING-FIX -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -735,9 +735,13 @@
     const wrap=document.getElementById('navOrbitDirect');if(!wrap){draw();return}
     clearTimeout(transitionTimer);
     wrap.classList.add('orbit-changing');
+    wrap.style.pointerEvents='none';
     transitionTimer=setTimeout(()=>{
       draw();
-      requestAnimationFrame(()=>wrap.classList.remove('orbit-changing'));
+      requestAnimationFrame(()=>{
+        wrap.classList.remove('orbit-changing');
+        setTimeout(()=>{wrap.style.pointerEvents=''},80);
+      });
     },140);
   }
   function showCategory(name){
@@ -768,10 +772,25 @@
       b.style.setProperty('top',(cy+Math.sin(a)*ry)+'px','important');
     });
   }
+  function closeOrbitOverlays(){
+    ['cartModal','pickupModal','accountModal','adminModal','hubModal'].forEach(id=>document.getElementById(id)?.classList.remove('open'));
+    ['moCommerceSheet','moCustomerNextSheet','moCompleteSheet'].forEach(id=>document.getElementById(id)?.classList.remove('open'));
+    document.body.classList.remove('show-product-results','product-detail-open');
+    const detail=document.getElementById('detail');
+    if(detail){detail.classList.remove('open');detail.setAttribute('aria-hidden','true')}
+  }
   function button(label,fn,cls){
-    const b=document.createElement('button');b.type='button';b.innerHTML=label;b.onclick=fn;if(cls)b.className=cls;return b;
+    const b=document.createElement('button');
+    b.type='button';b.innerHTML=label;if(cls)b.className=cls;
+    b.addEventListener('click',e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      fn?.();
+    });
+    return b;
   }
   function renderMainOrbit(opts={}){
+    closeOrbitOverlays();
     const draw=()=>{
       level='main';activeMain=null;activeGroup=null;activeItems=[];
       document.body.classList.remove('show-product-results');
@@ -783,6 +802,7 @@
     opts.instant?draw():animateSwap(draw);
   }
   function renderGroups(name,opts={}){
+    closeOrbitOverlays();
     const draw=()=>{
       activeMain=name;level='groups';activeGroup=null;activeItems=[];
       document.body.classList.remove('show-product-results');
@@ -797,6 +817,7 @@
     opts.instant?draw():animateSwap(draw);
   }
   function renderItems(groupLabel,items,opts={}){
+    closeOrbitOverlays();
     const draw=()=>{
       level='items';activeGroup=groupLabel;activeItems=items;
       const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
