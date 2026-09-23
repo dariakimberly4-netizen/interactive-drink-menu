@@ -1128,6 +1128,44 @@
       font:950 8px/1 system-ui!important;
       letter-spacing:.12em!important;
     }
+  
+    /* ADD MORE TABLE CONTINUE MODE */
+    body.add-more-table-mode #stage{padding-top:88px!important}
+    .add-more-table-banner{
+      position:fixed;
+      left:50%;
+      top:78px;
+      transform:translateX(-50%);
+      z-index:190;
+      width:min(720px,calc(100% - 28px));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:11px 13px;
+      box-sizing:border-box;
+      border:1px solid rgba(244,200,111,.55);
+      border-radius:16px;
+      background:rgba(7,42,30,.96);
+      box-shadow:0 12px 30px rgba(0,0,0,.28);
+      color:#fff;
+    }
+    .add-more-table-banner b{display:block;color:#ffd86b;font:900 11px/1.2 system-ui;letter-spacing:.08em}
+    .add-more-table-banner span{display:block;margin-top:3px;color:#c7d9cf;font:700 10px/1.2 system-ui}
+    .add-more-table-banner button{
+      flex:0 0 auto;
+      min-height:38px;
+      padding:0 13px;
+      border:1px solid #ffd86b;
+      border-radius:999px;
+      background:#f4efe6;
+      color:#07331f;
+      font-weight:900;
+    }
+    @media(max-width:430px){
+      .add-more-table-banner{top:72px}
+      body.add-more-table-mode #stage{padding-top:100px!important}
+    }
   </style>
 </head>
 <body>
@@ -1367,7 +1405,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-27"></script>
+  <script src="customer-next.js?v=20260924-28"></script>
 
 <script>
 (function(){
@@ -1497,6 +1535,38 @@
     document.body.style.removeProperty('overflow');
   }
 
+  function enterAddMoreTableMode(tableNo,store){
+    try{
+      localStorage.setItem('mo_add_more_table_mode_v1',JSON.stringify({
+        active:true,table:String(tableNo||''),store:store||'Selected store',startedAt:new Date().toISOString()
+      }));
+    }catch(e){}
+    document.body.classList.add('add-more-table-mode');
+    const back=document.getElementById('resultsBack');
+    if(back)back.textContent='‹ Back to Dine In Service';
+
+    let banner=document.getElementById('addMoreTableBanner');
+    if(!banner){
+      banner=document.createElement('div');
+      banner.id='addMoreTableBanner';
+      banner.className='add-more-table-banner';
+      document.body.appendChild(banner);
+    }
+    banner.innerHTML='<div><b>ADDING TO TABLE '+String(tableNo||'')+'</b><span>Dine In • '+String(store||'Selected store')+'</span></div><button type="button" id="addMoreTableCartBtn">View Cart</button>';
+    document.getElementById('addMoreTableCartBtn').onclick=()=>window.MenuOrbitApp?.openCart?.();
+
+    showCategory('Featured');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function exitAddMoreTableMode(){
+    document.body.classList.remove('add-more-table-mode');
+    document.getElementById('addMoreTableBanner')?.remove();
+    try{localStorage.removeItem('mo_add_more_table_mode_v1')}catch(e){}
+    const back=document.getElementById('resultsBack');
+    if(back)back.textContent='‹ Back to Menu Orbit';
+  }
+
   function openAddMoreToTable(){
     markCustomerFeatureSeen('Add More to My Table');
     let modal=document.getElementById('addMoreTableModal');
@@ -1565,7 +1635,7 @@
       }
       ensureDineIn();
       modal.classList.remove('open');
-      showCategory('Featured');
+      enterAddMoreTableMode(tableNo,store);
     };
     document.getElementById('addMoreCart').onclick=()=>{
       ensureDineIn();
@@ -2309,6 +2379,14 @@
 
   function init(){
     document.getElementById('resultsBack')?.addEventListener('click',()=>{
+      if(document.body.classList.contains('add-more-table-mode')){
+        exitAddMoreTableMode();
+        document.body.classList.remove('show-product-results');
+        activeMain='order';
+        const group=(maps.order||[]).find(x=>x[0]==='Dine In Service');
+        if(group)return renderItems(group[0],group[1]);
+        return renderGroups('order');
+      }
       document.body.classList.remove('show-product-results');
       if(level==='items'&&activeMain&&activeGroup){
         const group=(maps[activeMain]||[]).find(x=>x[0]===activeGroup);
