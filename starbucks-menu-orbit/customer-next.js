@@ -1,5 +1,5 @@
 (()=>{
-if(window.__moCustomerNext)return;window.__moCustomerNext=true;/* QA-CLEANUP-20260924 */
+if(window.__moCustomerNext)return;window.__moCustomerNext=true;/* QA-CLEANUP-20260924 • SMART-WELLNESS-V8 */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const get=(k,d)=>{try{const raw=localStorage.getItem(k);if(raw==null)return d;return JSON.parse(raw)??d}catch(e){try{localStorage.setItem('mo_storage_recovery_v1',JSON.stringify({key:k,at:new Date().toISOString(),message:String(e)}))}catch{}return d}};
 const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));window.dispatchEvent(new CustomEvent('menuorbit:datachange',{detail:{key:k}}));return true}catch(e){console.warn('Menu Orbit storage write failed',k,e);return false}};
@@ -39,6 +39,15 @@ const style=document.createElement('style');style.textContent=`
   box-shadow:0 5px 14px rgba(0,0,0,.28)!important
 }
 .mo-next-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mo-next-card{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;background:rgba(255,255,255,.04)}.mo-next-card h4{margin:0 0 7px}.mo-next-card small{color:#abc0b6;display:block;line-height:1.45}.mo-next-card button{margin-top:10px;width:100%;min-height:42px;border:0;border-radius:11px;background:#f4efe6;color:#07331f;font-weight:900}.mo-pref{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-pref input{width:20px;height:20px}.mo-save-later{margin-top:7px;width:100%;min-height:36px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.05);color:#fff;font-weight:800}.mo-review-stars{color:#f4c86f;font-weight:900}.mo-review-row{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-review-row small{color:#abc0b6}.mo-branch-table{width:100%;border-collapse:collapse}.mo-branch-table th,.mo-branch-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.09);text-align:left;font-size:12px}.mo-branch-table th{color:#f4c86f}.mo-saved-banner{padding:11px;border:1px solid rgba(244,200,111,.35);border-radius:13px;background:rgba(244,200,111,.08);margin:10px 0}
+.mo-wellness-goals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0}
+.mo-wellness-goal{min-height:52px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,255,255,.05);color:#fff;padding:10px;font-weight:850;text-align:left}
+.mo-wellness-goal.on{border-color:#f4c86f;background:rgba(244,200,111,.13);box-shadow:0 0 0 2px rgba(244,200,111,.12)}
+.mo-wellness-goal small{display:block;color:#abc0b6;font-weight:650;margin-top:3px;line-height:1.25}
+.mo-wellness-result{display:grid;grid-template-columns:54px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.09)}
+.mo-wellness-result img{width:54px;height:54px;object-fit:cover;border-radius:12px}
+.mo-wellness-result small{display:block;color:#abc0b6;line-height:1.35;margin-top:3px}
+.mo-wellness-score{min-width:48px;text-align:center;border:1px solid rgba(126,226,170,.35);border-radius:999px;padding:5px 8px;color:#7ee2aa;font-size:10px;font-weight:900}
+
 @media(max-width:700px){.mo-next-grid{grid-template-columns:1fr}.mo-branch-table{font-size:10px}.mo-branch-table th,.mo-branch-table td{padding:7px 4px}}
 .mo-pay-card{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;background:rgba(255,255,255,.04);margin:9px 0}.mo-pay-card strong{display:block}.mo-pay-card small{color:#abc0b6}.mo-pair-card{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-pair-card img{width:70px;height:70px;object-fit:cover;border-radius:14px}.mo-pair-card button{min-height:40px;border:0;border-radius:11px;background:#f4efe6;color:#07331f;font-weight:900;padding:0 11px}.mo-share-box{width:100%;min-height:110px;border:1px solid rgba(255,255,255,.14);border-radius:13px;background:#0d3628;color:#fff;padding:10px}
 `;document.head.appendChild(style);
@@ -193,6 +202,104 @@ function openDietFilters(){
    }catch{}
  };
 }
+function openSmartWellnessFilters(){
+ const a=app(),products=a?.products||catalog(),saved=get('mo_smart_wellness_v1',{goals:[],prefs:[]}),out=sheet('Smart Wellness Filters','Choose what matters most today and see menu choices that better match those preferences.');
+ const goals=[
+  ['lessSugar','Less Sugar','Prioritize simpler, less-sweet options.'],
+  ['lighter','Lighter Choice','Favor lower-calorie items when calorie data is available.'],
+  ['moreProtein','More Protein','Favor food choices more likely to be protein-forward.'],
+  ['plantBased','Plant-Based','Favor non-dairy and plant-forward choices where detectable.'],
+  ['lessCaffeine','Less Caffeine','Favor tea, food, and non-coffee choices.'],
+  ['balanced','Balanced Meal','Favor practical drink + food combinations.']
+ ];
+ const prefs=[
+  ['lowerSodium','Lower Sodium'],
+  ['lowerSatFat','Lower Saturated Fat'],
+  ['vegetarian','Vegetarian'],
+  ['smallerPortion','Smaller Portion'],
+  ['wholeFood','Whole-Food Focus'],
+  ['allergenAware','Allergen Awareness']
+ ];
+ const selectedGoals=new Set(saved.goals||[]),selectedPrefs=new Set(saved.prefs||[]);
+ const renderShell=()=>{
+  out.innerHTML=
+   '<div class="section-title">What matters most today?</div>'+
+   '<div class="mo-wellness-goals">'+goals.map(([k,l,d])=>'<button type="button" class="mo-wellness-goal '+(selectedGoals.has(k)?'on':'')+'" data-well-goal="'+k+'"><b>'+esc(l)+'</b><small>'+esc(d)+'</small></button>').join('')+'</div>'+
+   '<div class="section-title">Additional preferences</div>'+
+   '<div class="mo-filterbar" style="flex-wrap:wrap">'+prefs.map(([k,l])=>'<button type="button" data-well-pref="'+k+'" class="'+(selectedPrefs.has(k)?'on':'')+'">'+esc(l)+'</button>').join('')+'</div>'+
+   '<div class="mo-complete-row" style="margin-top:12px"><button class="mo-primary" id="moWellnessApply">SHOW MY PICKS</button><button id="moWellnessClear">Clear</button></div>'+
+   '<div id="moWellnessResults"></div>'+
+   '<p class="demo-banner"><b>Preference guidance only.</b> Suggestions use available menu metadata plus simple name/category heuristics. They are not medical or nutrition advice. Confirm official nutrition, ingredients, allergens, and cross-contact information before ordering.</p>';
+  out.querySelectorAll('[data-well-goal]').forEach(b=>b.onclick=()=>{const k=b.dataset.wellGoal;selectedGoals.has(k)?selectedGoals.delete(k):selectedGoals.add(k);b.classList.toggle('on')});
+  out.querySelectorAll('[data-well-pref]').forEach(b=>b.onclick=()=>{const k=b.dataset.wellPref;selectedPrefs.has(k)?selectedPrefs.delete(k):selectedPrefs.add(k);b.classList.toggle('on')});
+  $('#moWellnessApply').onclick=showResults;
+  $('#moWellnessClear').onclick=()=>{selectedGoals.clear();selectedPrefs.clear();put('mo_smart_wellness_v1',{goals:[],prefs:[]});renderShell()};
+ };
+ const scoreProduct=p=>{
+   const text=((p.name||'')+' '+(p.cat||'')).toLowerCase(),cal=Number(p.cal||0);
+   let score=0,reasons=[];
+   const add=(n,r)=>{score+=n;if(r&&!reasons.includes(r))reasons.push(r)};
+   if(selectedGoals.has('lessSugar')){
+     if(!/caramel|white mocha|frappuccino|chocolate|cookie|cake|cream|syrup/i.test(text))add(18,'less-sweet profile');
+     if(/americano|cold brew|brewed coffee|tea/i.test(text))add(12,'simpler beverage');
+   }
+   if(selectedGoals.has('lighter')){
+     if(cal>0&&cal<150)add(26,'under 150 cal in demo data');
+     else if(cal>0&&cal<220)add(14,'lighter calorie range');
+     else if(/americano|tea|brewed coffee/i.test(text))add(12,'typically simpler choice');
+   }
+   if(selectedGoals.has('moreProtein')){
+     if(/egg|chicken|tuna|cheese|ham|protein|sandwich|wrap/i.test(text))add(24,'protein-forward food');
+   }
+   if(selectedGoals.has('plantBased')){
+     if(/plant|oat|soy|almond|matcha|tea|fruit|vegetable|spinach|tomato|mushroom/i.test(text))add(22,'plant-forward');
+     if(/beef|pork|ham|chicken|tuna|egg/i.test(text))score-=18;
+   }
+   if(selectedGoals.has('lessCaffeine')){
+     if(p.kind==='food')add(18,'caffeine-free food');
+     if(/tea|chocolate|refresher|juice/i.test(text)&&!/coffee|espresso|cold brew/i.test(text))add(10,'non-coffee option');
+     if(/espresso|americano|cold brew|brewed coffee/i.test(text))score-=18;
+   }
+   if(selectedGoals.has('balanced')){
+     if(p.kind==='food')add(12,'meal component');
+     if(/wrap|sandwich|egg|vegetable|spinach|tomato|mushroom/i.test(text))add(12,'more balanced food profile');
+   }
+   if(selectedPrefs.has('vegetarian')){
+     if(!/ham|pork|chicken|beef|tuna|spam|chorizo/i.test(text))add(12,'vegetarian-compatible heuristic');
+     else score-=20;
+   }
+   if(selectedPrefs.has('smallerPortion')){
+     if(p.kind==='drink')add(5,'choose a smaller size');
+     if(/slice|muffin|wrap/i.test(text))add(4,'portion-friendly option');
+   }
+   if(selectedPrefs.has('wholeFood')){
+     if(/egg|fruit|vegetable|spinach|tomato|mushroom|tea|brewed coffee|americano/i.test(text))add(12,'simpler ingredient profile');
+     if(/frappuccino|cake|mousse|cookie/i.test(text))score-=10;
+   }
+   if(selectedPrefs.has('lowerSodium')){
+     if(p.kind==='drink')add(6,'drink-first lower-sodium preference');
+     if(/spam|ham|chorizo|sausage/i.test(text))score-=16;
+   }
+   if(selectedPrefs.has('lowerSatFat')){
+     if(!/cream|cheese|mousse|butter|croissant/i.test(text))add(7,'lower-richness heuristic');
+   }
+   if(selectedPrefs.has('allergenAware'))add(2,'review ingredients before ordering');
+   return {score,reasons};
+ };
+ const showResults=()=>{
+   put('mo_smart_wellness_v1',{goals:[...selectedGoals],prefs:[...selectedPrefs],updatedAt:new Date().toISOString()});
+   const box=$('#moWellnessResults');if(!box)return;
+   if(!selectedGoals.size&&!selectedPrefs.size){box.innerHTML='<div class="empty" style="margin-top:12px">Choose at least one goal or preference.</div>';return}
+   const ranked=products.map(p=>({p,...scoreProduct(p)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,12);
+   box.innerHTML='<div class="section-title" style="margin-top:14px">Your preference-matched picks</div>'+
+    (ranked.length?ranked.map(x=>'<div class="mo-wellness-result"><img src="'+esc(x.p.img||'')+'" alt=""><div><b>'+esc(x.p.name)+'</b><small>'+esc(x.p.cat||'')+(x.p.cal?' • '+esc(x.p.cal)+' cal':'')+'<br>'+esc(x.reasons.slice(0,2).join(' • ')||'Matches selected preferences')+'</small></div><div><div class="mo-wellness-score">MATCH</div><button data-well-open="'+esc(x.p.id)+'" style="margin-top:6px">View</button></div></div>').join(''):'<div class="empty">No strong matches found. Try fewer filters.</div>');
+   box.querySelectorAll('[data-well-open]').forEach(b=>b.onclick=()=>{document.querySelector('#moCustomerNextSheet')?.classList.remove('open');a?.openProduct?.(b.dataset.wellOpen)});
+   logAccountActivity?.('Wellness preferences',[...selectedGoals,...selectedPrefs].join(', '));
+ };
+ renderShell();
+ if(selectedGoals.size||selectedPrefs.size)showResults();
+}
+
 function openDealReminders(){
  const saved=get('mo_deal_reminders_v1',[]),out=sheet('Deal Reminders','Save demo reminders for Happy Hour and expiring offers.');
  const deals=[
@@ -669,7 +776,7 @@ window.addEventListener('offline',updateConnectionBanner);
 const CUSTOMER_DATA_KEYS=[
  'menuOrbitCart','menuOrbitOrders','menuOrbitLastOrder','menuOrbitFavorites','menuOrbitPickup',
  'mo_saved_for_later_v1','mo_search_history_v1','mo_saved_payments_v1','mo_notification_prefs_v1',
- 'mo_demo_notifications_v1','mo_scheduled_order_v1','mo_diet_filters_v1','mo_deal_reminders_v1',
+ 'mo_demo_notifications_v1','mo_scheduled_order_v1','mo_diet_filters_v1','mo_smart_wellness_v1','mo_deal_reminders_v1',
  'mo_gift_order_v1','mo_group_order_v1','mo_saved_baskets_v1','mo_recently_viewed_v1',
  'mo_order_tracking_v1','mo_drink_presets_v1','mo_voucher_wallet_v1','mo_order_feedback_v1',
  'mo_favorite_store_v1','mo_favorite_collections_v1','mo_customer_issues_v1',
@@ -778,11 +885,11 @@ function openClearAllCustomerData(){
  btn.onclick=()=>{snapshotCustomerData('Clear All Customer Data');CUSTOMER_DATA_KEYS.forEach(k=>localStorage.removeItem(k));logAccountActivity('Data reset','Customer demo data cleared');toast('Customer data cleared');setTimeout(()=>location.reload(),550)};
 }
 
-window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter,openQuickOrder,openPickupNotes,openReceiptSearch,openAccessibilityProfile,openPrivacyDataControls,openRecentlyOrdered,openSavedBasket,openOrderSpendInsights,openIngredientAvailability,openPickupReminder,openSupportHistory,openAccountActivityLog,openLanguageSelector,openOfflineReconnect,openSavedPickupPreferences,openCustomerHomeSummary,openGlobalCustomerSearch,openUndoLastAction,openPriceChangeNotice,openClearAllCustomerData};
+window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter,openQuickOrder,openPickupNotes,openReceiptSearch,openAccessibilityProfile,openPrivacyDataControls,openRecentlyOrdered,openSavedBasket,openOrderSpendInsights,openIngredientAvailability,openPickupReminder,openSupportHistory,openAccountActivityLog,openLanguageSelector,openOfflineReconnect,openSavedPickupPreferences,openCustomerHomeSummary,openGlobalCustomerSearch,openUndoLastAction,openPriceChangeNotice,openClearAllCustomerData,openSmartWellnessFilters};
 
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
- [['moSavedLater','♡ Saved Later',openSaved,'saved-for-later-v1'],['moBranchCompare','⇄ Compare Branches',openBranchCompare,'branch-comparison-v1'],['moReviewFilters','★ Review Filters',openReviews,'review-filters-v1'],['moNotifPrefs','⚙ Notifications',openPrefs,'notification-preferences-v1'],['moSearchHistory','⌕ Search History',openSearchHistory,'search-history-v2'],['moPayments','💳 Payments',openPayments,'saved-payments-v2'],['moPairings','🥐 Pairings',openPairings,'pairing-recommendations-v2'],['moShareCart','↗ Share Cart',openShareCart,'share-cart-v2'],['moProfileDash','👤 Profile',openProfileDashboard,'customer-profile-dashboard-v1'],['moSchedule','🗓 Schedule',openScheduledOrder,'scheduled-ordering-v1'],['moDiet','🥗 Diet Filters',openDietFilters,'allergen-diet-filters-v1'],['moDealReminders','⏰ Deal Reminders',openDealReminders,'deal-reminders-v1'],['moGiftOrder','🎁 Gift Order',openGiftOrder,'gift-order-v1'],['moGroupOrder','👥 Group Order',openGroupOrder,'group-order-v1'],['moLoyalty','🏆 Milestones',openLoyaltyMilestones,'loyalty-milestones-v1'],['moDynamicEta','⏱ Pickup ETA',openDynamicEta,'dynamic-pickup-eta-v1']].forEach(([id,label,fn,key])=>{
+ [['moSavedLater','♡ Saved Later',openSaved,'saved-for-later-v1'],['moBranchCompare','⇄ Compare Branches',openBranchCompare,'branch-comparison-v1'],['moReviewFilters','★ Review Filters',openReviews,'review-filters-v1'],['moNotifPrefs','⚙ Notifications',openPrefs,'notification-preferences-v1'],['moSearchHistory','⌕ Search History',openSearchHistory,'search-history-v2'],['moPayments','💳 Payments',openPayments,'saved-payments-v2'],['moPairings','🥐 Pairings',openPairings,'pairing-recommendations-v2'],['moShareCart','↗ Share Cart',openShareCart,'share-cart-v2'],['moProfileDash','👤 Profile',openProfileDashboard,'customer-profile-dashboard-v1'],['moSchedule','🗓 Schedule',openScheduledOrder,'scheduled-ordering-v1'],['moDiet','🥗 Diet Filters',openDietFilters,'allergen-diet-filters-v1'],['moWellness','🌿 Smart Wellness Filters',openSmartWellnessFilters,'smart-wellness-filters-v8'],['moDealReminders','⏰ Deal Reminders',openDealReminders,'deal-reminders-v1'],['moGiftOrder','🎁 Gift Order',openGiftOrder,'gift-order-v1'],['moGroupOrder','👥 Group Order',openGroupOrder,'group-order-v1'],['moLoyalty','🏆 Milestones',openLoyaltyMilestones,'loyalty-milestones-v1'],['moDynamicEta','⏱ Pickup ETA',openDynamicEta,'dynamic-pickup-eta-v1']].forEach(([id,label,fn,key])=>{
   if($('#'+id))return;const b=document.createElement('button');b.className='mo-tool';b.id=id;b.textContent=label;b.onclick=fn;tools.appendChild(b);window.NewFeatureHighlight?.register(b,key,'NEW');
  });
 }
