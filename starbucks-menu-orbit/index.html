@@ -460,7 +460,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-CUSTOMER-BATCH-7 -->
+<!-- BUILD 20260924-CENTER-HOME -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -1018,7 +1018,11 @@
     });
     document.getElementById('navOrbitCenter')?.addEventListener('click',()=>{
       clearOrbitNewHighlight();
-      if(level==='main')return;
+      if(level==='main'){
+        closeOrbitOverlays();
+        window.MenuOrbitCustomer?.openCustomerHomeSummary?.();
+        return;
+      }
       if(level==='groups')renderMainOrbit();
       else renderGroups(activeMain);
     });
