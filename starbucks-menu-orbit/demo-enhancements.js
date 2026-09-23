@@ -85,21 +85,18 @@
   };
   document.getElementById('dtReset').onclick=()=>{
     ['menuOrbitCart','menuOrbitPickup','menuOrbitFavorites','menuOrbitLastOrder','menuOrbitPromo','menuOrbitOrders','menuOrbitCommerce','starRewardsMember','starRewardsAudit'].forEach(k=>localStorage.removeItem(k));
+    window.NewFeatureHighlight?.reset();
     sessionStorage.clear();
     location.reload();
   };
 
   setTimeout(()=>{
-    ['#cartBtn','#pickupBtn','#rewardsBtn','#hubChip'].forEach(sel=>{
-      const el=document.querySelector(sel); if(!el||el.dataset.demoBadged)return;
-      el.dataset.demoBadged='1';
-      const r=el.getBoundingClientRect();
-      if(r.width&&r.height){
-        const b=document.createElement('span');
-        b.textContent='NEW';
-        b.style.cssText='margin-left:5px;padding:2px 5px;border-radius:999px;background:#f4c86f;color:#07331f;font-size:8px;font-weight:950;letter-spacing:.05em';
-        el.appendChild(b);
-      }
-    });
+    const registry=[
+      ['#cartBtn','menu-orbit-cart-checkout-v1'],
+      ['#pickupBtn','menu-orbit-pickup-v1'],
+      ['#rewardsBtn','menu-orbit-star-rewards-v1'],
+      ['#hubChip','menu-orbit-coffee-hub-v1']
+    ];
+    registry.forEach(([sel,key])=>window.NewFeatureHighlight?.register(sel,key,'NEW'));
   },500);
 })();
