@@ -363,16 +363,29 @@
     }
 
     /* NEWEST CUSTOMER BATCH */
-    #mainSubmenuDirect>button.customer-new-node{
+    #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button.customer-new-node{
       border-color:#f4c86f!important;
-      box-shadow:0 0 0 3px rgba(244,200,111,.8),0 0 26px rgba(244,200,111,.35)!important;
-      background:linear-gradient(145deg,#143c30,#0c281f)!important;
+      box-shadow:0 0 0 4px rgba(244,200,111,.95),0 0 0 10px rgba(244,200,111,.16),0 0 34px rgba(244,200,111,.5)!important;
+      background:linear-gradient(145deg,#2b4633,#102a20)!important;
+      animation:customerNewPulse 1.55s ease-in-out infinite!important;
     }
-    #mainSubmenuDirect>button.customer-new-node::after{
-      content:'NEW';
-      position:absolute;top:-8px;right:-7px;z-index:9;
-      padding:4px 7px;border-radius:999px;background:#f4c86f;color:#07331f;
-      font:950 9px/1 system-ui;letter-spacing:.08em;box-shadow:0 6px 14px rgba(0,0,0,.28);
+    #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button.customer-new-node::after{
+      content:'NEW'!important;
+      position:absolute!important;
+      top:-10px!important;right:-8px!important;z-index:20!important;
+      padding:5px 8px!important;border-radius:999px!important;
+      background:#f4c86f!important;color:#07331f!important;
+      font:950 9px/1 system-ui!important;letter-spacing:.08em!important;
+      box-shadow:0 7px 18px rgba(0,0,0,.35)!important;
+      pointer-events:none!important;
+    }
+    @keyframes customerNewPulse{
+      50%{
+        box-shadow:0 0 0 4px rgba(244,200,111,1),0 0 0 16px rgba(244,200,111,0),0 0 44px rgba(244,200,111,.62)!important;
+      }
+    }
+    @media(prefers-reduced-motion:reduce){
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button.customer-new-node{animation:none!important}
     }
 
     /* PRECISE NEW HIGHLIGHT — ONLY THE LATEST ORBIT UPGRADE */
@@ -437,7 +450,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-CUSTOMER-HIGHLIGHT-PATH -->
+<!-- BUILD 20260924-CUSTOMER-HIGHLIGHT-FORCED -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
