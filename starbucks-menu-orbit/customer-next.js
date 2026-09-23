@@ -10,6 +10,7 @@ const st=()=>{try{return state}catch{return null}};
 const style=document.createElement('style');style.textContent=`
 .mo-next-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mo-next-card{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;background:rgba(255,255,255,.04)}.mo-next-card h4{margin:0 0 7px}.mo-next-card small{color:#abc0b6;display:block;line-height:1.45}.mo-next-card button{margin-top:10px;width:100%;min-height:42px;border:0;border-radius:11px;background:#f4efe6;color:#07331f;font-weight:900}.mo-pref{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-pref input{width:20px;height:20px}.mo-save-later{margin-top:7px;width:100%;min-height:36px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.05);color:#fff;font-weight:800}.mo-review-stars{color:#f4c86f;font-weight:900}.mo-review-row{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-review-row small{color:#abc0b6}.mo-branch-table{width:100%;border-collapse:collapse}.mo-branch-table th,.mo-branch-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.09);text-align:left;font-size:12px}.mo-branch-table th{color:#f4c86f}.mo-saved-banner{padding:11px;border:1px solid rgba(244,200,111,.35);border-radius:13px;background:rgba(244,200,111,.08);margin:10px 0}
 @media(max-width:700px){.mo-next-grid{grid-template-columns:1fr}.mo-branch-table{font-size:10px}.mo-branch-table th,.mo-branch-table td{padding:7px 4px}}
+.mo-pay-card{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;background:rgba(255,255,255,.04);margin:9px 0}.mo-pay-card strong{display:block}.mo-pay-card small{color:#abc0b6}.mo-pair-card{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-pair-card img{width:70px;height:70px;object-fit:cover;border-radius:14px}.mo-pair-card button{min-height:40px;border:0;border-radius:11px;background:#f4efe6;color:#07331f;font-weight:900;padding:0 11px}.mo-share-box{width:100%;min-height:110px;border:1px solid rgba(255,255,255,.14);border-radius:13px;background:#0d3628;color:#fff;padding:10px}
 `;document.head.appendChild(style);
 
 function sheet(title,sub){
@@ -74,12 +75,52 @@ function openPrefs(){
  out.innerHTML=rows.map(([k,t,d])=>'<label class="mo-pref"><span><b>'+t+'</b><small>'+d+'</small></span><input type="checkbox" data-pref="'+k+'" '+(prefs[k]?'checked':'')+'></label>').join('')+'<button class="mo-primary" style="width:100%;margin-top:14px" id="moSavePrefs">SAVE PREFERENCES</button>';
  $('#moSavePrefs').onclick=()=>{const p={};out.querySelectorAll('[data-pref]').forEach(i=>p[i.dataset.pref]=i.checked);put('mo_notification_prefs_v1',p);toast('Notification preferences saved');};
 }
+
+function openSearchHistory(){
+ const hist=get('mo_search_history_v1',[]),out=sheet('Search History','Recent Menu Orbit searches saved on this browser.');
+ out.innerHTML=hist.length?hist.map((q,i)=>'<div class="mo-result" style="grid-template-columns:1fr auto"><div><b>'+esc(q)+'</b><small>Recent search</small></div><button data-search-again="'+i+'">Search</button></div>').join('')+'<button class="mo-primary" style="width:100%;margin-top:12px" id="moClearSearchHistory">CLEAR HISTORY</button>':'<div class="empty">No recent searches yet.</div>';
+ out.querySelectorAll('[data-search-again]').forEach(b=>b.onclick=()=>{const q=hist[+b.dataset.searchAgain],input=$('#searchInput');if(input){input.value=q;input.dispatchEvent(new Event('input',{bubbles:true}));$('#moCustomerNextSheet')?.classList.remove('open');$('#searchPanel')?.classList.add('open')}});
+ $('#moClearSearchHistory')?.addEventListener('click',()=>{put('mo_search_history_v1',[]);openSearchHistory()});
+}
+function hookSearchHistory(){
+ const input=$('#searchInput');if(!input||input.dataset.historyHooked)return;input.dataset.historyHooked='1';
+ input.addEventListener('change',()=>{const q=input.value.trim();if(!q)return;let h=get('mo_search_history_v1',[]);h=[q,...h.filter(x=>x.toLowerCase()!==q.toLowerCase())].slice(0,10);put('mo_search_history_v1',h)});
+ input.addEventListener('keydown',e=>{if(e.key==='Enter'){const q=input.value.trim();if(!q)return;let h=get('mo_search_history_v1',[]);h=[q,...h.filter(x=>x.toLowerCase()!==q.toLowerCase())].slice(0,10);put('mo_search_history_v1',h)}});
+}
+function openPayments(){
+ const cards=get('mo_saved_payments_v1',[{type:'GCash',label:'GCash •••• 0917',default:true},{type:'Card',label:'Visa •••• 4242',default:false},{type:'Starbucks Card',label:'Starbucks Card •••• 2026',default:false}]),out=sheet('Saved Payments','Demo payment methods only. No real financial credentials are stored or processed.');
+ out.innerHTML='<div class="demo-banner">For presentation only. This prototype never stores real card, GCash, or wallet credentials.</div>'+cards.map((x,i)=>'<div class="mo-pay-card"><strong>'+esc(x.type)+'</strong><small>'+esc(x.label)+'</small><div class="mo-complete-row" style="margin-top:8px"><button data-default-pay="'+i+'">'+(x.default?'Default ✓':'Set Default')+'</button><button data-remove-pay="'+i+'">Remove</button></div></div>').join('')+'<button class="mo-primary" style="width:100%;margin-top:10px" id="moAddDemoPayment">ADD DEMO PAYMENT</button>';
+ out.querySelectorAll('[data-default-pay]').forEach(b=>b.onclick=()=>{cards.forEach((x,i)=>x.default=i===+b.dataset.defaultPay);put('mo_saved_payments_v1',cards);openPayments()});
+ out.querySelectorAll('[data-remove-pay]').forEach(b=>b.onclick=()=>{cards.splice(+b.dataset.removePay,1);put('mo_saved_payments_v1',cards);openPayments()});
+ $('#moAddDemoPayment').onclick=()=>{cards.push({type:'Card',label:'Demo Mastercard •••• '+String(Date.now()).slice(-4),default:cards.length===0});put('mo_saved_payments_v1',cards);openPayments()};
+}
+function openPairings(){
+ const last=get('menuOrbitLastOrder',{}),name=last?.items?.[0]?.name||'Caramel Macchiato';
+ const rules=[
+  {match:/matcha/i,names:['Cookies and Cream Cheesecake (Slice)','Cranberry Pistachio Crunch Blondies']},
+  {match:/cold brew|americano/i,names:['Ham and Cheese Croffle with Pork','Spinach, Tomato, Egg and Mushroom Wrap']},
+  {match:/caramel|latte|mocha/i,names:['Cookies and Cream Cheesecake (Slice)','Ham and Cheese Croffle with Pork']}
+ ];
+ const rule=rules.find(r=>r.match.test(name))||rules[2];
+ const items=rule.names.map(n=>catalog().find(p=>p.name===n)).filter(Boolean);
+ const out=sheet('Recommended Pairings','Suggested food pairings based on your recent drink.');
+ out.innerHTML='<div class="mo-saved-banner"><b>Because you ordered:</b> '+esc(name)+'</div>'+(items.length?items.map(p=>'<div class="mo-pair-card"><img src="'+esc(p.img)+'" alt=""><div><b>'+esc(p.name)+'</b><small>'+money(p.price)+' • '+esc(p.cat)+'</small></div><button data-pair-add="'+esc(p.id)+'">Add</button></div>').join(''):'<div class="empty">No pairing suggestions available.</div>');
+ out.querySelectorAll('[data-pair-add]').forEach(b=>b.onclick=()=>{const p=catalog().find(x=>x.id===b.dataset.pairAdd),s=st();if(p&&s){s.cart.push({key:Date.now()+Math.random(),id:p.id,name:p.name,price:p.price,img:p.img,qty:1,size:'Regular',style:p.temps?.[0]||'Ready to eat'});localStorage.setItem('menuOrbitCart',JSON.stringify(s.cart));try{saveCart()}catch{}toast('Pairing added to cart')}});
+}
+function openShareCart(){
+ const s=st(),cart=s?.cart||get('menuOrbitCart',[]),total=cart.reduce((a,b)=>a+(b.price||0)*(b.qty||1),0);
+ const text='Menu Orbit Cart\n'+(cart.length?cart.map(x=>(x.qty||1)+' × '+x.name+' — '+money((x.price||0)*(x.qty||1))).join('\n')+'\nTotal: '+money(total):'Cart is empty');
+ const out=sheet('Share Cart','Share a text summary of your current customized cart.');
+ out.innerHTML='<textarea class="mo-share-box" id="moShareText" readonly>'+esc(text)+'</textarea><div class="mo-complete-row" style="margin-top:10px"><button class="primary" id="moNativeShare">SHARE</button><button id="moCopyCart">COPY</button></div><p class="demo-banner">Only the cart summary is shared. No account or payment information is included.</p>';
+ $('#moNativeShare').onclick=async()=>{if(navigator.share){try{await navigator.share({title:'Menu Orbit Cart',text})}catch{}}else{navigator.clipboard?.writeText(text);toast('Cart copied')}};
+ $('#moCopyCart').onclick=()=>navigator.clipboard?.writeText(text).then(()=>toast('Cart copied'));
+}
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
- [['moSavedLater','♡ Saved Later',openSaved,'saved-for-later-v1'],['moBranchCompare','⇄ Compare Branches',openBranchCompare,'branch-comparison-v1'],['moReviewFilters','★ Review Filters',openReviews,'review-filters-v1'],['moNotifPrefs','⚙ Notifications',openPrefs,'notification-preferences-v1']].forEach(([id,label,fn,key])=>{
+ [['moSavedLater','♡ Saved Later',openSaved,'saved-for-later-v1'],['moBranchCompare','⇄ Compare Branches',openBranchCompare,'branch-comparison-v1'],['moReviewFilters','★ Review Filters',openReviews,'review-filters-v1'],['moNotifPrefs','⚙ Notifications',openPrefs,'notification-preferences-v1'],['moSearchHistory','⌕ Search History',openSearchHistory,'search-history-v1'],['moPayments','💳 Payments',openPayments,'saved-payments-v1'],['moPairings','🥐 Pairings',openPairings,'pairing-recommendations-v1'],['moShareCart','↗ Share Cart',openShareCart,'share-cart-v1']].forEach(([id,label,fn,key])=>{
   if($('#'+id))return;const b=document.createElement('button');b.className='mo-tool';b.id=id;b.textContent=label;b.onclick=fn;tools.appendChild(b);window.NewFeatureHighlight?.register(b,key,'NEW');
  });
 }
-function init(){addTools();patchCart();}
+function init(){addTools();patchCart();hookSearchHistory();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1000));else setTimeout(init,1000);
 })();
