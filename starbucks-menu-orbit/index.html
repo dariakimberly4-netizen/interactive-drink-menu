@@ -303,7 +303,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js"></script>
 <script src="completion-layer.js"></script>
-  <script src="customer-next.js?v=20260924-7"></script>
+  <script src="customer-next.js?v=20260924-8"></script>
 
 <script>
 (function(){
@@ -332,50 +332,39 @@
 })();
 </script>
 
+
 <script>
 (function(){
-  function looksLikeLegacyBottomNav(el){
-    if(!el || el.id==='mainMenuDirect' || el.closest?.('#mainMenuDirect')) return false;
-    const txt=(el.innerText||'').replace(/\s+/g,' ').trim().toLowerCase();
-    if(!(txt.includes('menu')&&txt.includes('pickup')&&txt.includes('cart')&&txt.includes('account'))) return false;
-    const cs=getComputedStyle(el);
-    const r=el.getBoundingClientRect();
-    return (cs.position==='fixed'||cs.position==='sticky') && r.top > innerHeight*0.65 && r.width > innerWidth*0.65;
+  function hideLegacyBottomNav(){
+    const candidates=[...document.querySelectorAll('nav,footer,div,section')];
+    for(const el of candidates){
+      if(el.id==='mainMenuDirect'||el.closest?.('#mainMenuDirect')) continue;
+      const txt=(el.innerText||'').replace(/\s+/g,' ').trim().toLowerCase();
+      if(!(txt.includes('menu')&&txt.includes('pickup')&&txt.includes('cart')&&txt.includes('account'))) continue;
+      const controls=[...el.querySelectorAll(':scope > button,:scope > a,:scope > * > button,:scope > * > a')];
+      const unique=[...new Set(controls)];
+      if(unique.length<3||unique.length>8) continue;
+      const cs=getComputedStyle(el),r=el.getBoundingClientRect();
+      if((cs.position==='fixed'||cs.position==='sticky') && r.top>innerHeight*.68 && r.height<190){
+        el.style.setProperty('display','none','important');
+      }
+    }
   }
-  function cleanLegacyNav(){
-    // Remove any older JS-injected duplicate main menu.
-    document.querySelectorAll('#moMainMenuWrap,.mo-mainmenu-wrap').forEach(el=>el.remove());
-
-    // Hide legacy category/tool rows from the old navigation layer.
-    const cats=document.getElementById('categories');
-    if(cats){cats.style.setProperty('display','none','important');cats.setAttribute('aria-hidden','true');}
-
-    // Remove floating controls that now live inside submenus.
-    ['#moReceiptsBtn','.mo-live-btn','#demoTourBtn','#rewardsFloat'].forEach(sel=>{
-      document.querySelectorAll(sel).forEach(el=>el.remove());
+  function restoreOrbit(){
+    const orbit=document.getElementById('orbit');
+    if(!orbit) return;
+    if(!orbit.querySelector('.product')){
+      try{ if(typeof renderOrbit==='function') renderOrbit(); }catch(e){}
+    }
+    orbit.querySelectorAll('.product').forEach(el=>{
+      if(el.style.display==='none' && !(localStorage.getItem('mo_diet_filters_v1')||'[]').includes('[')){
+        el.style.removeProperty('display');
+      }
     });
-
-    // Remove old bottom Menu / Pickup / Cart / Account navigation.
-    [...document.body.querySelectorAll('*')].forEach(el=>{
-      if(looksLikeLegacyBottomNav(el)) el.remove();
-    });
-
-    // Remove any duplicate direct menu if somehow rendered twice.
-    const directs=[...document.querySelectorAll('#mainMenuDirect')];
-    directs.slice(1).forEach(el=>el.remove());
-
-    // Keep the new direct menu above the Orbit.
-    const main=document.getElementById('mainMenuDirect');
-    if(main) main.style.setProperty('display','block','important');
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cleanLegacyNav);
-  else cleanLegacyNav();
-
-  // Old add-on scripts render after DOMContentLoaded, so clean again after them.
-  [500,1000,1600,2600,4000].forEach(ms=>setTimeout(cleanLegacyNav,ms));
-  const obs=new MutationObserver(()=>cleanLegacyNav());
-  obs.observe(document.documentElement,{childList:true,subtree:true});
-  setTimeout(()=>obs.disconnect(),8000);
+  function run(){hideLegacyBottomNav();restoreOrbit();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run); else run();
+  [400,900,1600,2600,4200].forEach(ms=>setTimeout(run,ms));
 })();
 </script>
 </body>
