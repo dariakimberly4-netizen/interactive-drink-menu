@@ -1105,6 +1105,29 @@
       font:950 8px/1 system-ui!important;
       letter-spacing:.12em!important;
     }
+  
+    /* ADD MORE TO MY TABLE */
+    .add-table-summary{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:6px 0 14px}
+    .add-table-summary>div{padding:12px;border-radius:15px;border:1px solid rgba(244,200,111,.25);background:rgba(244,200,111,.05)}
+    .add-table-summary span{display:block;color:#9fb4aa;font-size:9px;font-weight:900;letter-spacing:.1em;margin-bottom:5px}
+    .add-table-summary strong{display:block;color:#fff;font-size:14px;line-height:1.25}
+    .add-table-message{padding:15px;border-radius:17px;background:rgba(0,168,98,.11);border:1px solid rgba(0,168,98,.3);margin-bottom:12px}
+    .add-table-message b{display:block;color:#f4d992;margin-bottom:5px}
+    .add-table-message span{display:block;color:#c9ddd3;font-size:12px;line-height:1.45}
+    .add-table-actions{display:grid;gap:9px}
+    .add-table-actions .add{margin-top:0}
+    .add-table-actions .pill{min-height:48px}
+    #mainMenuDirect button[aria-label="Add More to My Table"].customer-new-node{
+      border-color:#ffd86b!important;
+      box-shadow:0 0 0 4px rgba(255,216,107,.95),0 0 34px rgba(255,216,107,.6)!important;
+    }
+    #mainMenuDirect button[aria-label="Add More to My Table"] .add-table-new-text{
+      display:block!important;
+      margin-top:5px!important;
+      color:#ffd86b!important;
+      font:950 8px/1 system-ui!important;
+      letter-spacing:.12em!important;
+    }
   </style>
 </head>
 <body>
@@ -1344,7 +1367,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-26"></script>
+  <script src="customer-next.js?v=20260924-27"></script>
 
 <script>
 (function(){
@@ -1366,7 +1389,7 @@
     order:[
       ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Saved Basket',()=>window.MenuOrbitCustomer?.openSavedBasket?.()],['Price Change Notice',()=>window.MenuOrbitCustomer?.openPriceChangeNotice?.()],['Quick Order',()=>window.MenuOrbitCustomer?.openQuickOrder?.()],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
       ['Plan Order',[['Dine In',()=>openDineIn()],['Table / QR Ordering',()=>openTableQrOrdering()],['Schedule Order',()=>clickEl('#moSchedule')],['Pickup Reminder',()=>window.MenuOrbitCustomer?.openPickupReminder?.()],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
-      ['Dine In Service',[['Call Staff',()=>openCallStaff()]]],
+      ['Dine In Service',[['Call Staff',()=>openCallStaff()],['Add More to My Table',()=>openAddMoreToTable()]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
       ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Receipt Search',()=>window.MenuOrbitCustomer?.openReceiptSearch?.()],['Recently Ordered',()=>window.MenuOrbitCustomer?.openRecentlyOrdered?.()],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
       ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')],['Support History',()=>window.MenuOrbitCustomer?.openSupportHistory?.()],['Refund / Issue Status',()=>window.MenuOrbitCustomer?.openRefundIssueStatus?.()],['Post-Pickup Feedback',()=>window.MenuOrbitCustomer?.openPostPickupFeedback?.()]]]
@@ -1472,6 +1495,87 @@
     });
     document.body.classList.remove('call-staff-open');
     document.body.style.removeProperty('overflow');
+  }
+
+  function openAddMoreToTable(){
+    markCustomerFeatureSeen('Add More to My Table');
+    let modal=document.getElementById('addMoreTableModal');
+    if(!modal){
+      modal=document.createElement('div');
+      modal.className='modal';
+      modal.id='addMoreTableModal';
+      modal.setAttribute('role','dialog');
+      modal.setAttribute('aria-modal','true');
+      modal.innerHTML='<div class="modal-card" id="addMoreTableContent"></div>';
+      document.body.appendChild(modal);
+    }
+    const content=document.getElementById('addMoreTableContent');
+    const table=readLocal('mo_dine_table_v1',null);
+    const pickup=readLocal('menuOrbitPickup',null);
+    const appState=window.MenuOrbitApp?.getState?.();
+    const cart=Array.isArray(appState?.cart)?appState.cart:readLocal('menuOrbitCart',[]);
+    const tableNo=table?.table||pickup?.table||'';
+    const store=table?.store||pickup?.store||'Selected store';
+    const itemCount=(cart||[]).reduce((n,x)=>n+(Number(x?.qty)||1),0);
+    const total=(cart||[]).reduce((n,x)=>n+(Number(x?.price)||0)*(Number(x?.qty)||1),0);
+
+    content.innerHTML=`
+      <div class="drawer-head">
+        <div><h2>Add More to My Table</h2><small style="color:#abc0b6">Continue your Dine In order</small></div>
+        <button class="close" id="addMoreTableClose" aria-label="Close">×</button>
+      </div>
+
+      <div class="add-table-summary">
+        <div><span>TABLE</span><strong>${tableNo||'Not set'}</strong></div>
+        <div><span>STORE</span><strong>${store}</strong></div>
+        <div><span>CART</span><strong>${itemCount} item${itemCount===1?'':'s'}</strong></div>
+        <div><span>TOTAL</span><strong>₱${total.toLocaleString('en-PH')}</strong></div>
+      </div>
+
+      <div class="add-table-message">
+        <b>Same table. Same order.</b>
+        <span>Add another drink or food item without creating a new Dine In session.</span>
+      </div>
+
+      <div class="add-table-actions">
+        <button type="button" class="add" id="addMoreBrowse">☕ Browse Menu</button>
+        <button type="button" class="pill" id="addMoreCart">🛒 Open Current Cart</button>
+        <button type="button" class="pill" id="addMoreSetTable">${tableNo?'Change Table':'Set Table'}</button>
+      </div>
+
+      <p class="notice">Your saved table stays attached to the current Dine In order while you add more items.</p>
+    `;
+    modal.classList.add('open');
+
+    const ensureDineIn=()=>{
+      const current=readLocal('menuOrbitPickup',{});
+      const savedTable=readLocal('mo_dine_table_v1',null);
+      const t=savedTable?.table||current?.table||tableNo||'';
+      try{
+        localStorage.setItem('menuOrbitPickup',JSON.stringify({...current,store:current?.store||store,type:'Dine In',table:t}));
+      }catch(e){}
+    };
+
+    document.getElementById('addMoreTableClose').onclick=()=>modal.classList.remove('open');
+    document.getElementById('addMoreBrowse').onclick=()=>{
+      if(!tableNo){
+        modal.classList.remove('open');
+        openTableQrOrdering();
+        return;
+      }
+      ensureDineIn();
+      modal.classList.remove('open');
+      showCategory('Featured');
+    };
+    document.getElementById('addMoreCart').onclick=()=>{
+      ensureDineIn();
+      modal.classList.remove('open');
+      window.MenuOrbitApp?.openCart?.();
+    };
+    document.getElementById('addMoreSetTable').onclick=()=>{
+      modal.classList.remove('open');
+      openTableQrOrdering();
+    };
   }
 
   function openCallStaff(){
@@ -2033,13 +2137,15 @@
     'Smart Wellness Filters':'customer-smart-wellness-filters-2026-09-24-v8',
     'Dine In':'customer-dine-in-2026-09-24-v12',
     'Table / QR Ordering':'customer-table-qr-ordering-2026-09-24-v13',
-    'Call Staff':'customer-call-staff-2026-09-24-v4'
+    'Call Staff':'customer-call-staff-2026-09-24-v4',
+    'Add More to My Table':'customer-add-more-table-2026-09-24-v1'
   };
   const CUSTOMER_LATEST_BATCH=[
     'Smart Wellness Filters',
     'Dine In',
     'Table / QR Ordering',
-    'Call Staff'
+    'Call Staff',
+    'Add More to My Table'
   ];
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
@@ -2060,14 +2166,14 @@
   }
   function mainHasNew(key){
     if(key==='menu'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
-    if(key==='order'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')||customerFeatureUnseen('Call Staff')))return true;
+    if(key==='order'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')||customerFeatureUnseen('Call Staff')||customerFeatureUnseen('Add More to My Table')))return true;
     if(key==='stores'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
     return false;
   }
   function groupHasNew(main,group){
     if(main==='menu'&&group==='Preferences'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
     if(main==='order'&&group==='Plan Order'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
-    if(main==='order'&&group==='Dine In Service'&&customerFeatureUnseen('Call Staff'))return true;
+    if(main==='order'&&group==='Dine In Service'&&(customerFeatureUnseen('Call Staff')||customerFeatureUnseen('Add More to My Table')))return true;
     if(main==='stores'&&group==='Find Store'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
     return false;
   }
@@ -2098,10 +2204,19 @@
         b.appendChild(t);
       }
     }
+    if(raw==='Add More to My Table'&&customerFeatureUnseen('Add More to My Table')){
+      b.classList.add('customer-new-node');decorateNewButton(b);
+      if(!b.querySelector('.add-table-new-text')){
+        const t=document.createElement('span');
+        t.className='add-table-new-text';
+        t.textContent='NEW FEATURE';
+        b.appendChild(t);
+      }
+    }
     b.addEventListener('click',e=>{
       e.preventDefault();
       e.stopPropagation();
-      if(customerFeatureUnseen(raw)){markCustomerFeatureSeen(raw);b.classList.remove('customer-new-node');b.querySelector('.customer-new-badge')?.remove();b.querySelector('.call-staff-new-text')?.remove()}
+      if(customerFeatureUnseen(raw)){markCustomerFeatureSeen(raw);b.classList.remove('customer-new-node');b.querySelector('.customer-new-badge')?.remove();b.querySelector('.call-staff-new-text')?.remove();b.querySelector('.add-table-new-text')?.remove()}
       fn?.();
     });
     return b;
