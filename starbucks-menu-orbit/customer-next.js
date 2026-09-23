@@ -1,8 +1,9 @@
 (()=>{
-if(window.__moCustomerNext)return;window.__moCustomerNext=true;
+if(window.__moCustomerNext)return;window.__moCustomerNext=true;/* QA-CLEANUP-20260924 */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??d}catch{return d}};
-const put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const get=(k,d)=>{try{const raw=localStorage.getItem(k);if(raw==null)return d;return JSON.parse(raw)??d}catch(e){try{localStorage.setItem('mo_storage_recovery_v1',JSON.stringify({key:k,at:new Date().toISOString(),message:String(e)}))}catch{}return d}};
+const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));window.dispatchEvent(new CustomEvent('menuorbit:datachange',{detail:{key:k}}));return true}catch(e){console.warn('Menu Orbit storage write failed',k,e);return false}};
+const askConfirm=(message)=>window.confirm(message);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const money=n=>'₱'+Number(n||0).toLocaleString('en-PH',{maximumFractionDigits:0});
 const catalog=()=>{try{return products}catch{return []}};
@@ -109,7 +110,7 @@ function openSearchHistory(){
  const hist=get('mo_search_history_v1',[]),out=sheet('Search History','Recent Menu Orbit searches saved on this browser.');
  out.innerHTML=hist.length?hist.map((q,i)=>'<div class="mo-result" style="grid-template-columns:1fr auto"><div><b>'+esc(q)+'</b><small>Recent search</small></div><button data-search-again="'+i+'">Search</button></div>').join('')+'<button class="mo-primary" style="width:100%;margin-top:12px" id="moClearSearchHistory">CLEAR HISTORY</button>':'<div class="empty">No recent searches yet.</div>';
  out.querySelectorAll('[data-search-again]').forEach(b=>b.onclick=()=>{const q=hist[+b.dataset.searchAgain],input=$('#searchInput');if(input){input.value=q;input.dispatchEvent(new Event('input',{bubbles:true}));$('#moCustomerNextSheet')?.classList.remove('open');$('#searchPanel')?.classList.add('open')}});
- $('#moClearSearchHistory')?.addEventListener('click',()=>{put('mo_search_history_v1',[]);openSearchHistory()});
+ $('#moClearSearchHistory')?.addEventListener('click',()=>{if(!askConfirm('Clear all recent searches?'))return;put('mo_search_history_v1',[]);toast('Search history cleared');openSearchHistory()});
 }
 function hookSearchHistory(){
  const input=$('#searchInput');if(!input||input.dataset.historyHooked)return;input.dataset.historyHooked='1';
@@ -120,7 +121,7 @@ function openPayments(){
  const cards=get('mo_saved_payments_v1',[{type:'GCash',label:'GCash •••• 0917',default:true},{type:'Card',label:'Visa •••• 4242',default:false},{type:'Starbucks Card',label:'Starbucks Card •••• 2026',default:false}]),out=sheet('Saved Payments','Demo payment methods only. No real financial credentials are stored or processed.');
  out.innerHTML='<div class="demo-banner">For presentation only. This prototype never stores real card, GCash, or wallet credentials.</div>'+cards.map((x,i)=>'<div class="mo-pay-card"><strong>'+esc(x.type)+'</strong><small>'+esc(x.label)+'</small><div class="mo-complete-row" style="margin-top:8px"><button data-default-pay="'+i+'">'+(x.default?'Default ✓':'Set Default')+'</button><button data-remove-pay="'+i+'">Remove</button></div></div>').join('')+'<button class="mo-primary" style="width:100%;margin-top:10px" id="moAddDemoPayment">ADD DEMO PAYMENT</button>';
  out.querySelectorAll('[data-default-pay]').forEach(b=>b.onclick=()=>{cards.forEach((x,i)=>x.default=i===+b.dataset.defaultPay);put('mo_saved_payments_v1',cards);openPayments()});
- out.querySelectorAll('[data-remove-pay]').forEach(b=>b.onclick=()=>{cards.splice(+b.dataset.removePay,1);put('mo_saved_payments_v1',cards);openPayments()});
+ out.querySelectorAll('[data-remove-pay]').forEach(b=>b.onclick=()=>{const x=cards[+b.dataset.removePay];if(!x||!askConfirm('Remove '+x.label+' from this demo profile?'))return;cards.splice(+b.dataset.removePay,1);put('mo_saved_payments_v1',cards);toast('Payment method removed');openPayments()});
  $('#moAddDemoPayment').onclick=()=>{cards.push({type:'Card',label:'Demo Mastercard •••• '+String(Date.now()).slice(-4),default:cards.length===0});put('mo_saved_payments_v1',cards);openPayments()};
 }
 function openPairings(){
@@ -447,7 +448,7 @@ function openFavoriteCollections(){
  $('#moCreateCollection').onclick=()=>{const name=$('#moCollectionName').value.trim();if(!name)return;const arr=get('mo_favorite_collections_v1',[]);arr.push({name,ids:[]});put('mo_favorite_collections_v1',arr);toast('Collection created');openFavoriteCollections()};
  out.querySelectorAll('[data-fav-collection]').forEach(sel=>sel.onchange=()=>{if(sel.value==='')return;const arr=get('mo_favorite_collections_v1',[]),col=arr[+sel.value],id=sel.dataset.favCollection;if(col&&!col.ids.includes(id)){col.ids.push(id);put('mo_favorite_collections_v1',arr);toast('Added to '+col.name)}});
  out.querySelectorAll('[data-collection-open]').forEach(b=>b.onclick=()=>{const col=get('mo_favorite_collections_v1',[])[+b.dataset.collectionOpen];if(!col)return;out.innerHTML='<div class="mo-saved-banner"><b>'+esc(col.name)+'</b></div>'+(col.ids.map(id=>products.find(p=>p.id===id)).filter(Boolean).map(p=>'<div class="mo-result"><img src="'+esc(p.img||'')+'" alt=""><div><b>'+esc(p.name)+'</b><small>'+esc(p.cat)+' • '+money(p.price)+'</small></div><button data-open-col-product="'+esc(p.id)+'">View</button></div>').join('')||'<div class="empty">This collection is empty.</div>');out.querySelectorAll('[data-open-col-product]').forEach(x=>x.onclick=()=>{document.querySelector('#moCustomerNextSheet')?.classList.remove('open');a?.openProduct?.(x.dataset.openColProduct)})});
- out.querySelectorAll('[data-collection-delete]').forEach(b=>b.onclick=()=>{const arr=get('mo_favorite_collections_v1',[]);arr.splice(+b.dataset.collectionDelete,1);put('mo_favorite_collections_v1',arr);toast('Collection deleted');openFavoriteCollections()});
+ out.querySelectorAll('[data-collection-delete]').forEach(b=>b.onclick=()=>{const arr=get('mo_favorite_collections_v1',[]),idx=+b.dataset.collectionDelete,col=arr[idx];if(!col||!askConfirm('Delete the "'+col.name+'" collection?'))return;snapshotCustomerData?.('Delete favorites collection');arr.splice(idx,1);put('mo_favorite_collections_v1',arr);toast('Collection deleted • Undo available');openFavoriteCollections()});
 }
 
 function openRefundIssueStatus(){
@@ -546,9 +547,9 @@ function openPrivacyDataControls(){
  out.innerHTML='<div class="mo-next-grid">'+actions.map(([id,label])=>'<div class="mo-next-card"><h4>'+esc(label)+'</h4><small>Clear this category from the current browser.</small><button data-clear-data="'+id+'">CLEAR</button></div>').join('')+'</div><button class="mo-primary" style="width:100%;margin-top:14px" id="moClearPersonalization">CLEAR PERSONALIZATION ONLY</button><p class="demo-banner">This prototype stores these items in your browser. These controls do not affect any external Starbucks account.</p>';
  out.querySelectorAll('[data-clear-data]').forEach(b=>b.onclick=()=>{
    const row=actions.find(x=>x[0]===b.dataset.clearData);if(!row)return;
-   row[2].split('|').forEach(k=>localStorage.removeItem(k));toast(row[1]+' cleared');openPrivacyDataControls();
+   if(!askConfirm('Clear '+row[1]+' from this browser?'))return;snapshotCustomerData?.('Clear '+row[1]);row[2].split('|').forEach(k=>localStorage.removeItem(k));toast(row[1]+' cleared • Undo available');openPrivacyDataControls();
  });
- $('#moClearPersonalization').onclick=()=>{['mo_recently_viewed_v1','mo_search_history_v1','mo_drink_presets_v1','mo_favorite_collections_v1','mo_favorite_store_v1','mo_pickup_notes_v1'].forEach(k=>localStorage.removeItem(k));toast('Personalization data cleared');openPrivacyDataControls()};
+ $('#moClearPersonalization').onclick=()=>{if(!askConfirm('Clear all personalization data from this browser?'))return;snapshotCustomerData?.('Clear personalization data');['mo_recently_viewed_v1','mo_search_history_v1','mo_drink_presets_v1','mo_favorite_collections_v1','mo_favorite_store_v1','mo_pickup_notes_v1'].forEach(k=>localStorage.removeItem(k));toast('Personalization data cleared • Undo available');openPrivacyDataControls()};
 }
 
 
@@ -566,7 +567,7 @@ function openSavedBasket(){
  (saved.length?saved.map((b,i)=>'<div class="mo-next-card" style="margin-bottom:12px"><h4>'+esc(b.name)+'</h4><small>'+b.items.reduce((n,x)=>n+(x.qty||1),0)+' item(s) • '+money(b.items.reduce((n,x)=>n+(x.price||0)*(x.qty||1),0))+'</small><div class="mo-complete-row" style="margin-top:8px"><button data-basket-load="'+i+'">Add to Cart</button><button data-basket-delete="'+i+'">Delete</button></div></div>').join(''):'<div class="empty">No saved baskets yet.</div>');
  $('#moSaveBasket')?.addEventListener('click',()=>{const name=$('#moBasketName').value.trim()||'Saved Basket',items=(a?.getState?.()?.cart||get('menuOrbitCart',[])).map(x=>({...x}));if(!items.length)return;const arr=get('mo_saved_baskets_v1',[]);arr.unshift({id:'BASK-'+Date.now(),name,items,createdAt:new Date().toISOString()});put('mo_saved_baskets_v1',arr.slice(0,12));toast('Basket saved');openSavedBasket()});
  out.querySelectorAll('[data-basket-load]').forEach(b=>b.onclick=()=>{const basket=get('mo_saved_baskets_v1',[])[+b.dataset.basketLoad];if(!basket)return;basket.items.forEach(x=>a?.addToCart?.({...x,key:Date.now()+Math.random()}));toast('Saved basket added to cart')});
- out.querySelectorAll('[data-basket-delete]').forEach(b=>b.onclick=()=>{const arr=get('mo_saved_baskets_v1',[]);arr.splice(+b.dataset.basketDelete,1);put('mo_saved_baskets_v1',arr);toast('Saved basket deleted');openSavedBasket()});
+ out.querySelectorAll('[data-basket-delete]').forEach(b=>b.onclick=()=>{const arr=get('mo_saved_baskets_v1',[]),idx=+b.dataset.basketDelete,basket=arr[idx];if(!basket||!askConfirm('Delete saved basket "'+basket.name+'"?'))return;snapshotCustomerData?.('Delete saved basket');arr.splice(idx,1);put('mo_saved_baskets_v1',arr);toast('Saved basket deleted • Undo available');openSavedBasket()});
 }
 
 function openOrderSpendInsights(){
@@ -696,29 +697,45 @@ function openCustomerHomeSummary(){
 }
 
 function openGlobalCustomerSearch(){
- const a=app(),products=a?.products||[],orders=get('menuOrbitOrders',[]),baskets=get('mo_saved_baskets_v1',[]),issues=get('mo_customer_issues_v1',[]),out=sheet('Global Customer Search','Search menu items, orders, saved baskets, stores, and support in one place.');
+ const a=app(),products=a?.products||[],orders=get('menuOrbitOrders',[]),baskets=get('mo_saved_baskets_v1',[]),issues=get('mo_customer_issues_v1',[]),recent=get('mo_recently_viewed_v1',[]),favorites=get('menuOrbitFavorites',[]),out=sheet('Global Customer Search','Search or type a command such as “track my order”, “open rewards”, or “favorite store”.');
  const stores=['Starbucks SM City Bacoor','Starbucks Molino Boulevard','Starbucks Vista Mall Daang Hari'];
  const features=[
-  {name:'Order Tracking',type:'Feature',open:openOrderTracking},
-  {name:'Quick Order',type:'Feature',open:openQuickOrder},
-  {name:'Receipt Search',type:'Feature',open:openReceiptSearch},
-  {name:'Notification Center',type:'Feature',open:openNotificationCenter},
-  {name:'Support History',type:'Feature',open:openSupportHistory}
+  {name:'Order Tracking',aliases:'track order my order status',type:'Feature',open:openOrderTracking},
+  {name:'Quick Order',aliases:'reorder fast order',type:'Feature',open:openQuickOrder},
+  {name:'Receipt Search',aliases:'receipt history previous order',type:'Feature',open:openReceiptSearch},
+  {name:'Notification Center',aliases:'notifications updates alerts inbox',type:'Feature',open:openNotificationCenter},
+  {name:'Support History',aliases:'support help issue refund',type:'Feature',open:openSupportHistory},
+  {name:'Favorite Store',aliases:'favorite store branch pickup',type:'Feature',open:openFavoriteStore},
+  {name:'Rewards History',aliases:'rewards stars points',type:'Feature',open:openRewardsHistory},
+  {name:'Customer Home',aliases:'home dashboard summary',type:'Feature',open:openCustomerHomeSummary}
  ];
- out.innerHTML='<div class="mo-form"><input id="moGlobalSearchInput" type="search" placeholder="Search everything"></div><div id="moGlobalSearchResults"><div class="empty">Start typing to search.</div></div>';
+ const commands=[
+  {re:/^(track|where).*(order)|order status/i,label:'Track my order',open:openOrderTracking},
+  {re:/reward|stars|points/i,label:'Open rewards',open:openRewardsHistory},
+  {re:/favorite.*store|store.*favorite/i,label:'Open favorite store',open:openFavoriteStore},
+  {re:/quick.*order|reorder/i,label:'Quick order',open:openQuickOrder},
+  {re:/notification|updates|alerts/i,label:'Open notifications',open:openNotificationCenter},
+  {re:/support|refund|issue/i,label:'Open support',open:openSupportHistory}
+ ];
+ out.innerHTML='<div class="mo-form"><input id="moGlobalSearchInput" type="search" placeholder="Search or type a command…" autocomplete="off"></div><div id="moGlobalSearchResults"><div class="empty">Try “track my order”, a drink name, an order code, or a store.</div></div>';
+ const scoreText=(text,q,bonus=0)=>{text=String(text||'').toLowerCase();if(text===q)return 100+bonus;if(text.startsWith(q))return 70+bonus;if(text.includes(q))return 40+bonus;const words=q.split(/\s+/).filter(Boolean);return words.every(w=>text.includes(w))?24+bonus:0};
  const render=()=>{
    const q=($('#moGlobalSearchInput').value||'').trim().toLowerCase(),rows=[];
-   if(!q){$('#moGlobalSearchResults').innerHTML='<div class="empty">Start typing to search.</div>';return}
-   products.filter(p=>(p.name+' '+p.cat).toLowerCase().includes(q)).slice(0,8).forEach(p=>rows.push({type:'Menu',title:p.name,sub:p.cat+' • '+money(p.price),action:'product',id:p.id}));
-   orders.filter(o=>((o.code||'')+' '+(o.items||[]).map(x=>x.name).join(' ')).toLowerCase().includes(q)).slice(0,6).forEach((o,i)=>rows.push({type:'Order',title:o.code||'Order',sub:(o.items||[]).map(x=>x.name).join(' • '),action:'order',id:o.code||String(i)}));
-   baskets.filter(b=>(b.name+' '+b.items.map(x=>x.name).join(' ')).toLowerCase().includes(q)).slice(0,5).forEach((b,i)=>rows.push({type:'Basket',title:b.name,sub:b.items.length+' saved item(s)',action:'basket',id:String(i)}));
-   stores.filter(s=>s.toLowerCase().includes(q)).forEach(s=>rows.push({type:'Store',title:s,sub:'Pickup store',action:'store',id:s}));
-   issues.filter(x=>(x.type+' '+x.orderCode+' '+(x.note||'')).toLowerCase().includes(q)).slice(0,5).forEach(x=>rows.push({type:'Support',title:x.type+' • '+x.orderCode,sub:x.status,action:'support',id:x.id}));
-   features.filter(x=>x.name.toLowerCase().includes(q)).forEach((x,i)=>rows.push({type:x.type,title:x.name,sub:'Customer tool',action:'feature',id:String(features.indexOf(x))}));
-   $('#moGlobalSearchResults').innerHTML=rows.length?rows.slice(0,20).map((r,i)=>'<div class="mo-result" style="grid-template-columns:1fr auto"><div><b>'+esc(r.title)+'</b><small>'+esc(r.type)+' • '+esc(r.sub||'')+'</small></div><button data-global-row="'+i+'">Open</button></div>').join(''):'<div class="empty">No matches.</div>';
+   if(!q){$('#moGlobalSearchResults').innerHTML='<div class="empty">Try “track my order”, a drink name, an order code, or a store.</div>';return}
+   commands.forEach((cmd,i)=>{if(cmd.re.test(q))rows.push({score:140,type:'Command',title:cmd.label,sub:'Direct action',action:'command',id:String(i)})});
+   products.forEach(p=>{const recentBonus=recent.some(x=>x.id===p.id)?12:0,favBonus=favorites.includes(p.id)?16:0,score=Math.max(scoreText(p.name,q,30+recentBonus+favBonus),scoreText(p.cat,q,5));if(score)rows.push({score,type:'Menu',title:p.name,sub:p.cat+' • '+money(p.price),action:'product',id:p.id})});
+   orders.forEach((o,i)=>{const hay=(o.code||'')+' '+(o.items||[]).map(x=>x.name).join(' ');const score=scoreText(hay,q,24)+(i===0?10:0);if(score)rows.push({score,type:'Order',title:o.code||'Order',sub:(o.items||[]).map(x=>x.name).join(' • '),action:'order',id:o.code||String(i)})});
+   baskets.forEach((b,i)=>{const score=scoreText(b.name+' '+b.items.map(x=>x.name).join(' '),q,14);if(score)rows.push({score,type:'Basket',title:b.name,sub:b.items.length+' saved item(s)',action:'basket',id:String(i)})});
+   stores.forEach(s=>{const score=scoreText(s,q,18);if(score)rows.push({score,type:'Store',title:s,sub:'Pickup store',action:'store',id:s})});
+   issues.forEach(x=>{const score=scoreText(x.type+' '+x.orderCode+' '+(x.note||''),q,10);if(score)rows.push({score,type:'Support',title:x.type+' • '+x.orderCode,sub:x.status,action:'support',id:x.id})});
+   features.forEach((x,i)=>{const score=Math.max(scoreText(x.name,q,28),scoreText(x.aliases,q,18));if(score)rows.push({score,type:x.type,title:x.name,sub:'Customer tool',action:'feature',id:String(i)})});
+   rows.sort((a,b)=>b.score-a.score||a.title.localeCompare(b.title));
+   const visible=rows.slice(0,20);
+   $('#moGlobalSearchResults').innerHTML=visible.length?visible.map((r,i)=>'<div class="mo-result" style="grid-template-columns:1fr auto"><div><b>'+esc(r.title)+'</b><small>'+esc(r.type)+' • '+esc(r.sub||'')+'</small></div><button data-global-row="'+i+'">Open</button></div>').join(''):'<div class="empty">No matches. Try a product, order code, store, or command.</div>';
    $('#moGlobalSearchResults').querySelectorAll('[data-global-row]').forEach(b=>b.onclick=()=>{
-     const r=rows[+b.dataset.globalRow];
-     if(r.action==='product'){document.querySelector('#moCustomerNextSheet')?.classList.remove('open');a?.openProduct?.(r.id)}
+     const r=visible[+b.dataset.globalRow];if(!r)return;
+     if(r.action==='command')commands[+r.id]?.open?.();
+     else if(r.action==='product'){document.querySelector('#moCustomerNextSheet')?.classList.remove('open');a?.openProduct?.(r.id)}
      else if(r.action==='order')openOrderTracking();
      else if(r.action==='basket')openSavedBasket();
      else if(r.action==='store'){put('mo_favorite_store_v1',r.id);toast('Store selected');openFavoriteStore()}
@@ -727,6 +744,8 @@ function openGlobalCustomerSearch(){
    });
  };
  $('#moGlobalSearchInput').addEventListener('input',render);
+ $('#moGlobalSearchInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const first=$('#moGlobalSearchResults [data-global-row]');if(first){e.preventDefault();first.click()}}});
+ setTimeout(()=>$('#moGlobalSearchInput')?.focus(),80);
 }
 
 function priceChanges(){
