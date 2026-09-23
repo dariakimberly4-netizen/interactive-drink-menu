@@ -210,6 +210,19 @@
     }
 
 
+    /* ONE CONTINUOUS ORBIT: MAIN + SUBMENUS */
+    #mainMenuDirect .main-menu-direct-row{display:none!important}
+    #mainMenuDirect{padding-top:8px!important}
+    #mainMenuDirect #navOrbitDirect{margin-top:0!important}
+    #mainMenuDirect #navOrbitCenter{cursor:pointer}
+    #mainMenuDirect #navOrbitCenter::after{
+      content:'';
+      position:absolute;inset:-14px;
+      border:1px dashed rgba(244,200,111,.22);
+      border-radius:50%;
+      pointer-events:none;
+    }
+
     /* HARD OVERRIDE: SUBMENUS ARE ORBIT NODES, NOT GRID CARDS */
     #mainMenuDirect #navOrbitDirect{
       position:relative!important;
@@ -357,7 +370,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-TRUE-ORBIT -->
+<!-- BUILD 20260924-ONE-ORBIT -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -586,6 +599,14 @@
 
 <script>
 (function(){
+  const mainItems=[
+    ['menu','☕','MENU'],
+    ['order','🛒','MY ORDER'],
+    ['stores','📍','STORES'],
+    ['rewards','★','REWARDS'],
+    ['account','👤','MY ACCOUNT'],
+    ['settings','⚙','SETTINGS']
+  ];
   const maps={
     menu:[
       ['Browse',[['Featured',()=>showCategory('Featured')],['Trending',()=>clickEl('#moTrending')],['New / Seasonal',()=>showCategory('Featured')]]],
@@ -629,7 +650,7 @@
     ]
   };
 
-  let activeMain='menu', mode='groups', activeItems=[];
+  let activeMain=null, level='main';
 
   function clickEl(sel){const el=document.querySelector(sel);if(el)el.click();}
   function clickCat(name){
@@ -643,13 +664,13 @@
   function showAbout(){
     const modal=document.getElementById('hubModal'), content=document.getElementById('hubContent');
     if(!modal||!content)return;
-    content.innerHTML='<div class="drawer-head"><div><h2>Menu Orbit</h2><small>Unofficial interactive prototype</small></div><button class="close" id="orbitAboutClose">×</button></div><p class="desc">A navigation-first menu experience where the orbit is used for discovery, ordering, stores, rewards, account tools, and settings.</p>';
+    content.innerHTML='<div class="drawer-head"><div><h2>Menu Orbit</h2><small>Unofficial interactive prototype</small></div><button class="close" id="orbitAboutClose">×</button></div><p class="desc">A navigation-first menu experience where the same orbit transforms through the main menu, submenus, and feature choices.</p>';
     modal.classList.add('open');
     document.getElementById('orbitAboutClose').onclick=()=>modal.classList.remove('open');
   }
   function center(title,sub){
-    const el=document.getElementById('navOrbitCenter'); if(!el)return;
-    el.innerHTML='<strong>'+title+'</strong><span>'+(sub||'Choose a path')+'</span>';
+    const el=document.getElementById('navOrbitCenter');if(!el)return;
+    el.innerHTML='<strong>'+title+'</strong><span>'+(sub||'')+'</span>';
   }
   function layoutOrbit(){
     const wrap=document.getElementById('navOrbitDirect');
@@ -657,50 +678,65 @@
     if(!wrap||!buttons.length)return;
     const w=wrap.clientWidth||360,h=wrap.clientHeight||330;
     const cx=w/2,cy=h/2;
-    const rx=Math.min(w*.34,205),ry=Math.min(h*.34,122);
+    const count=buttons.length;
+    const rx=Math.min(w*(count>=6?.36:.34),215);
+    const ry=Math.min(h*(count>=6?.38:.34),132);
     buttons.forEach((b,i)=>{
-      const a=-Math.PI/2+(i/buttons.length)*Math.PI*2;
+      const a=-Math.PI/2+(i/count)*Math.PI*2;
       b.style.setProperty('left',(cx+Math.cos(a)*rx)+'px','important');
       b.style.setProperty('top',(cy+Math.sin(a)*ry)+'px','important');
     });
   }
-  function renderGroups(name){
-    activeMain=name;mode='groups';activeItems=[];
+  function button(label,fn,cls){
+    const b=document.createElement('button');
+    b.type='button';b.innerHTML=label;b.onclick=fn;if(cls)b.className=cls;
+    return b;
+  }
+  function renderMainOrbit(){
+    level='main';activeMain=null;
     document.body.classList.remove('show-product-results');
-    document.querySelectorAll('[data-direct-main]').forEach(b=>b.classList.toggle('active',b.dataset.directMain===name));
+    const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
+    sub.innerHTML='';center('MENU ORBIT','Choose a section');
+    mainItems.forEach(([key,icon,label])=>{
+      sub.appendChild(button('<span style="font-size:24px;display:block;margin-bottom:4px">'+icon+'</span>'+label,()=>renderGroups(key)));
+    });
+    requestAnimationFrame(layoutOrbit);
+  }
+  function renderGroups(name){
+    activeMain=name;level='groups';
+    document.body.classList.remove('show-product-results');
     const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
     sub.innerHTML='';
-    const title=document.querySelector('[data-direct-main="'+name+'"] span')?.textContent||name.toUpperCase();
+    const title=mainItems.find(x=>x[0]===name)?.[2]||name.toUpperCase();
     center(title,'Choose a path');
-    (maps[name]||[]).forEach(([label,items])=>{
-      const b=document.createElement('button');b.type='button';b.textContent=label;
-      b.onclick=()=>renderItems(label,items);sub.appendChild(b);
-    });
+    (maps[name]||[]).forEach(([label,items])=>sub.appendChild(button(label,()=>renderItems(label,items))));
+    sub.appendChild(button('‹ Main Orbit',renderMainOrbit,'nav-back'));
     requestAnimationFrame(layoutOrbit);
   }
   function renderItems(groupLabel,items){
-    mode='items';activeItems=items;
+    level='items';
     const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
     sub.innerHTML='';center(groupLabel,'Choose an option');
-    const back=document.createElement('button');back.type='button';back.textContent='‹ Back';back.className='nav-back';
-    back.onclick=()=>renderGroups(activeMain);sub.appendChild(back);
-    items.forEach(([label,fn])=>{
-      const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;sub.appendChild(b);
-    });
+    items.forEach(([label,fn])=>sub.appendChild(button(label,fn)));
+    sub.appendChild(button('‹ Back',()=>renderGroups(activeMain),'nav-back'));
     requestAnimationFrame(layoutOrbit);
   }
   function syncDetailState(){
-    const detail=document.getElementById('detail'), nav=document.getElementById('mainMenuDirect');
+    const detail=document.getElementById('detail'),nav=document.getElementById('mainMenuDirect');
     if(!detail||!nav)return;
     const open=detail.classList.contains('open')||detail.getAttribute('aria-hidden')==='false';
     nav.style.setProperty('display',open?'none':'','important');
     document.body.classList.toggle('product-detail-open',open);
   }
   function init(){
-    document.querySelectorAll('[data-direct-main]').forEach(b=>b.onclick=()=>renderGroups(b.dataset.directMain));
-    document.getElementById('resultsBack')?.addEventListener('click',()=>renderGroups(activeMain));
+    document.getElementById('resultsBack')?.addEventListener('click',()=>activeMain?renderGroups(activeMain):renderMainOrbit());
+    document.getElementById('navOrbitCenter')?.addEventListener('click',()=>{
+      if(level==='main')return;
+      if(level==='groups')renderMainOrbit();
+      else renderGroups(activeMain);
+    });
     document.getElementById('mainSubmenuSecondary')?.replaceChildren();
-    renderGroups('menu');
+    renderMainOrbit();
     const detail=document.getElementById('detail');
     if(detail)new MutationObserver(syncDetailState).observe(detail,{attributes:true,attributeFilter:['class','aria-hidden']});
     syncDetailState();
