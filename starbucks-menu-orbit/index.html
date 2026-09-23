@@ -120,6 +120,13 @@
         min-height:44px!important;
       }
     }
+  
+    /* LEGACY HEADER CLEANUP */
+    #helpBtn,#cartBtn,#rewardsBtn,#customerAccountBtn{display:none!important}
+    @media(max-width:800px){
+      header{justify-content:flex-start!important}
+      .brand{margin-right:auto!important}
+    }
   </style>
 </head>
 <body>
@@ -130,10 +137,10 @@
     <button class="icon-btn" id="searchBtn" aria-label="Search menu" style="display:none!important">⌕ <span class="label">Search</span></button>
     <button class="icon-btn" id="gestureBtn" aria-pressed="false">☝ <span class="label">Gestures</span></button>
     <button class="icon-btn" id="motionBtn" aria-pressed="false" style="display:none!important">◌ <span class="label">Reduce</span></button>
-    <button class="icon-btn" id="helpBtn" aria-label="Help and support">? <span class="label">Help</span></button>
-    <button class="icon-btn" id="cartBtn" aria-label="Open cart">🛒 <span class="count" id="cartCount">0</span></button>
-    <button class="icon-btn rewards-nav" id="rewardsBtn" aria-label="Open Star Rewards">★ <span class="label">STAR REWARDS</span></button>
-    <button class="customer-account" id="customerAccountBtn">👤 My Account</button>
+    <button class="icon-btn" id="helpBtn" aria-label="Help and support" style="display:none!important">? <span class="label">Help</span></button>
+    <button class="icon-btn" id="cartBtn" aria-label="Open cart" style="display:none!important">🛒 <span class="count" id="cartCount">0</span></button>
+    <button class="icon-btn rewards-nav" id="rewardsBtn" aria-label="Open Star Rewards" style="display:none!important">★ <span class="label">STAR REWARDS</span></button>
+    <button class="customer-account" id="customerAccountBtn" style="display:none!important">👤 My Account</button>
   </header>
   <section id="mainMenuDirect" class="main-menu-direct" aria-label="Main customer navigation">
       <div class="main-menu-direct-row">
@@ -342,7 +349,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-11"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-11"></script>
+  <script src="customer-next.js?v=20260924-12"></script>
 
 <script>
 (function(){
@@ -373,60 +380,32 @@
 
 
 
+
 <script>
 (function(){
-  function norm(el){return (el?.innerText||el?.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();}
-  function commonAncestor(nodes){
-    if(!nodes.length)return null;
-    let a=nodes[0];
-    while(a && a!==document.body){
-      if(nodes.every(n=>a.contains(n))) return a;
-      a=a.parentElement;
-    }
-    return null;
-  }
-  function removeOldBottomBar(){
-    const controls=[...document.querySelectorAll('button,a')];
-    const pick=label=>controls.find(el=>norm(el)===label);
-    const menu=pick('menu'), pickup=pick('pickup'), cart=pick('cart'), account=pick('account');
-    if(menu&&pickup&&cart&&account){
-      let box=commonAncestor([menu,pickup,cart,account]);
-      if(box && box!==document.body && !box.closest('#mainMenuDirect')){
-        const r=box.getBoundingClientRect();
-        if(r.top > innerHeight*.55){
-          box.style.setProperty('display','none','important');
-          box.setAttribute('data-hidden-legacy-bottom','true');
-        }
+  function cleanBottomNav(){
+    const els=[...document.querySelectorAll('body *')];
+    for(const el of els){
+      if(el.closest('#mainMenuDirect')) continue;
+      const cs=getComputedStyle(el);
+      if(cs.position!=='fixed' && cs.position!=='sticky') continue;
+      const r=el.getBoundingClientRect();
+      if(r.width < innerWidth*.75) continue;
+      if(r.height < 45 || r.height > 150) continue;
+      if(r.bottom < innerHeight-40) continue;
+      const txt=(el.innerText||'').replace(/\s+/g,' ').trim().toLowerCase();
+      const hasMenu=txt.includes('menu');
+      const hasPickup=txt.includes('pickup');
+      const hasCart=txt.includes('cart');
+      const hasAccount=txt.includes('account');
+      if(hasMenu&&hasPickup&&hasCart&&hasAccount){
+        el.style.setProperty('display','none','important');
+        el.setAttribute('data-legacy-bottom-hidden','true');
       }
     }
   }
-  function rebuildProducts(){
-    const orbit=document.getElementById('orbit');
-    if(!orbit)return;
-    try{
-      if(typeof renderOrbit==='function') renderOrbit();
-    }catch(e){}
-    setTimeout(()=>{
-      const products=[...orbit.querySelectorAll('.product')];
-      if(!products.length){
-        try{
-          if(typeof renderCats==='function') renderCats();
-          if(typeof renderOrbit==='function') renderOrbit();
-        }catch(e){}
-      }
-      orbit.querySelectorAll('.product').forEach(el=>{
-        el.style.removeProperty('display');
-        el.style.removeProperty('visibility');
-        el.style.removeProperty('opacity');
-      });
-    },120);
-  }
-  function fix(){
-    removeOldBottomBar();
-    rebuildProducts();
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();
-  [250,700,1300,2200,3500].forEach(ms=>setTimeout(fix,ms));
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cleanBottomNav);else cleanBottomNav();
+  [300,700,1200,2000,3200,5000].forEach(ms=>setTimeout(cleanBottomNav,ms));
 })();
 </script>
 </body>
