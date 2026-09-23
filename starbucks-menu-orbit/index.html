@@ -1039,6 +1039,22 @@
     .call-staff-grid button:last-child{grid-column:1/-1}
     .call-staff-note{width:100%;min-height:82px;box-sizing:border-box;border-radius:14px;border:1px solid var(--line);background:#f5f0e7;color:#09271d;padding:12px;font:600 14px/1.4 system-ui;resize:vertical}
     .call-staff-status{margin-top:11px;padding:11px 12px;border-radius:13px;background:rgba(0,168,98,.12);border:1px solid rgba(0,168,98,.28);color:#d4e9de;font-size:12px;line-height:1.45}
+  
+    /* CALL STAFF FORCE HIGHLIGHT */
+    #mainMenuDirect .customer-new-node[aria-label="Call Staff"]{
+      border-color:#ffd86b!important;
+      box-shadow:0 0 0 4px rgba(255,216,107,.95),0 0 34px rgba(255,216,107,.6)!important;
+      animation:callStaffPulse 1.1s ease-in-out infinite!important;
+    }
+    #mainMenuDirect .customer-new-node[aria-label="Call Staff"] .customer-new-badge{
+      background:#ffd86b!important;
+      color:#062d1d!important;
+      transform:scale(1.08);
+    }
+    @keyframes callStaffPulse{
+      0%,100%{transform:translate(-50%,-50%) scale(1)}
+      50%{transform:translate(-50%,-50%) scale(1.07)}
+    }
   </style>
 </head>
 <body>
@@ -1278,7 +1294,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-21"></script>
+  <script src="customer-next.js?v=20260924-22"></script>
 
 <script>
 (function(){
@@ -1916,7 +1932,7 @@
     'Smart Wellness Filters':'customer-smart-wellness-filters-2026-09-24-v8',
     'Dine In':'customer-dine-in-2026-09-24-v12',
     'Table / QR Ordering':'customer-table-qr-ordering-2026-09-24-v13',
-    'Call Staff':'customer-call-staff-2026-09-24-v1'
+    'Call Staff':'customer-call-staff-2026-09-24-v2'
   };
   const CUSTOMER_LATEST_BATCH=[
     'Smart Wellness Filters',
@@ -1971,6 +1987,7 @@
     b.setAttribute('aria-label',raw);
     if(customerFeatureUnseen(raw)){b.classList.add('customer-new-node');decorateNewButton(b)}
     if(raw==='Dine In'&&customerFeatureUnseen('Dine In')){b.classList.add('customer-new-node');decorateNewButton(b)}
+    if(raw==='Call Staff'&&customerFeatureUnseen('Call Staff')){b.classList.add('customer-new-node');decorateNewButton(b)}
     b.addEventListener('click',e=>{
       e.preventDefault();
       e.stopPropagation();
