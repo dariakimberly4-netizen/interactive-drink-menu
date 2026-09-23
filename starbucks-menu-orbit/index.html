@@ -451,6 +451,34 @@
       font-size:9px;
       letter-spacing:.09em;
     }
+    #mainMenuDirect .orbit-quick-access{
+      display:block;
+      margin:5px auto 0;
+      min-height:34px;
+      padding:7px 12px;
+      border:1px solid rgba(244,200,111,.40);
+      border-radius:999px;
+      background:rgba(20,61,48,.92);
+      color:#f4d992;
+      font:900 10px/1 system-ui;
+      letter-spacing:.03em;
+      cursor:pointer;
+    }
+    #mainMenuDirect .orbit-quick-access:focus-visible,
+    #mainMenuDirect .orbit-smart-suggestion:focus-visible,
+    #mainMenuDirect #navOrbitDirect button:focus-visible,
+    #mainMenuDirect #navOrbitCenter:focus-visible{
+      outline:3px solid #7ee2aa!important;
+      outline-offset:3px!important;
+    }
+    .orbit-sr-only{
+      position:absolute!important;
+      width:1px!important;height:1px!important;
+      padding:0!important;margin:-1px!important;
+      overflow:hidden!important;
+      clip:rect(0,0,0,0)!important;
+      white-space:nowrap!important;border:0!important;
+    }
     #mainMenuDirect .orbit-resume-card{
       width:min(92vw,520px);
       margin:6px auto 4px;
@@ -779,7 +807,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-LONGPRESS-DISCOVERY -->
+<!-- BUILD 20260924-CUSTOMER-QA-CLEANUP -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -801,6 +829,7 @@
         <button type="button" data-direct-main="settings">⚙<span>SETTINGS</span></button>
       </div>
       <div class="orbit-breadcrumb" id="orbitBreadcrumb" aria-live="polite">MENU ORBIT</div>
+      <div class="orbit-sr-only" id="orbitLiveStatus" aria-live="polite" aria-atomic="true"></div>
       <div class="nav-orbit-direct" id="navOrbitDirect" aria-label="Navigation orbit">
         <div class="nav-orbit-ring" aria-hidden="true"></div>
         <div class="nav-orbit-center" id="navOrbitCenter"><strong>MENU</strong><span>Choose a path</span></div>
@@ -1014,7 +1043,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-20"></script>
+  <script src="customer-next.js?v=20260924-21"></script>
 
 <script>
 (function(){
@@ -1071,6 +1100,7 @@
   };
 
   const STATE_KEY='menu-orbit-navigation-state-v1';
+  const STATE_VERSION=2;
   let activeMain=null, level='main', activeGroup=null, activeItems=[], restoring=false, transitionTimer=null;
 
   function clickEl(sel){const el=document.querySelector(sel);if(el)el.click();}
@@ -1080,7 +1110,7 @@
   }
   function saveState(extra={}){
     try{
-      localStorage.setItem(STATE_KEY,JSON.stringify({level,activeMain,activeGroup,...extra}));
+      localStorage.setItem(STATE_KEY,JSON.stringify({version:STATE_VERSION,level,activeMain,activeGroup,...extra}));
     }catch(e){}
   }
   function updateBreadcrumb(){
@@ -1164,6 +1194,7 @@
     else if(stars>0){main=stars+' STAR'+(stars===1?'':'S')+' AVAILABLE';sub='Tap for your live summary'}
     return {cartCount,unread,stars,offline,isReady,isActive,status,main,sub};
   }
+  let lastSmartAnnouncement='';
   function renderSmartCenter(){
     if(level!=='main')return;
     const el=document.getElementById('navOrbitCenter');if(!el)return;
@@ -1186,6 +1217,12 @@
       (s.unread?'<i class="smart-badge updates" aria-hidden="true">🔔 '+s.unread+'</i>':'')+
       ((s.isReady||s.isActive)?'<i class="smart-badge order '+orderClass+'" aria-hidden="true">'+(s.isReady?'✓':'●')+'</i>':'')+
       (s.offline?'<i class="smart-badge offline" aria-hidden="true">OFFLINE</i>':'');
+    const announce=s.main+(s.status?' • '+s.status:'');
+    if(announce!==lastSmartAnnouncement){
+      lastSmartAnnouncement=announce;
+      const live=document.getElementById('orbitLiveStatus');
+      if(live)live.textContent=announce;
+    }
   }
   const LONGPRESS_COACH_KEY='menu-orbit-longpress-coach-v1';
   function longPressCoachSeen(){
@@ -1193,7 +1230,7 @@
   }
   function markLongPressCoachSeen(){
     try{localStorage.setItem(LONGPRESS_COACH_KEY,'seen')}catch(e){}
-    document.getElementById('orbitLongpressCoach')?.remove();
+    document.getElementById('orbitLongpressCoach')?.remove();document.getElementById('orbitQuickAccessBtn')?.remove();document.getElementById('orbitQuickAccessBtn')?.remove();
   }
   function showLongPressCoach(){
     if(level!=='main'||longPressCoachSeen()||document.getElementById('orbitLongpressCoach'))return;
@@ -1272,6 +1309,24 @@
     const s=suggestionForState();
     el.innerHTML='<b>SUGGESTED</b><span>'+s.label+'</span><span aria-hidden="true">›</span>';
     el.onclick=e=>{e.preventDefault();e.stopPropagation();s.action?.()};
+    renderAccessibleQuickActionsButton();
+  }
+  function renderAccessibleQuickActionsButton(){
+    let b=document.getElementById('orbitQuickAccessBtn');
+    const host=document.getElementById('orbitSmartSuggestion')||document.getElementById('orbitBreadcrumb');
+    if(level!=='main'){b?.remove();return}
+    if(!b){
+      b=document.createElement('button');
+      b.type='button';
+      b.id='orbitQuickAccessBtn';
+      b.className='orbit-quick-access';
+      b.textContent='⚡ Quick Actions';
+      b.setAttribute('aria-label','Open quick actions. Alternative to pressing and holding the center.');
+      b.onclick=e=>{e.preventDefault();e.stopPropagation();openSmartQuickRing()};
+      host.insertAdjacentElement('afterend',b);
+    }else if(host&&b.previousElementSibling!==host){
+      host.insertAdjacentElement('afterend',b);
+    }
   }
   function sessionLabel(state){
     const parts=['MENU ORBIT'];
@@ -1329,11 +1384,22 @@
     const buttons=[...document.querySelectorAll('#mainSubmenuDirect>button')];
     if(!wrap||!buttons.length)return;
     const w=wrap.clientWidth||360,h=wrap.clientHeight||330,cx=w/2,cy=h/2,count=buttons.length;
-    const rx=Math.min(w*(count>=6?.36:.34),215),ry=Math.min(h*(count>=6?.38:.34),132);
+    const compact=w<440;
+    const crowded=count>=7,veryCrowded=count>=8;
+    const node=compact?(veryCrowded?72:crowded?78:92):(veryCrowded?82:crowded?90:104);
+    const font=compact?(veryCrowded?9.5:crowded?10.5:12.5):(veryCrowded?11:crowded?12:14);
+    const rx=Math.min(w*(veryCrowded?.405:crowded?.385:count>=6?.36:.34),compact?174:220);
+    const ry=Math.min(h*(veryCrowded?.415:crowded?.40:count>=6?.38:.34),compact?137:142);
     buttons.forEach((b,i)=>{
       const a=-Math.PI/2+(i/count)*Math.PI*2;
       b.style.setProperty('left',(cx+Math.cos(a)*rx)+'px','important');
       b.style.setProperty('top',(cy+Math.sin(a)*ry)+'px','important');
+      b.style.setProperty('width',node+'px','important');
+      b.style.setProperty('height',node+'px','important');
+      b.style.setProperty('min-height',node+'px','important');
+      b.style.setProperty('font-size',font+'px','important');
+      b.setAttribute('aria-posinset',String(i+1));
+      b.setAttribute('aria-setsize',String(count));
     });
   }
   function closeOrbitOverlays(){
@@ -1432,6 +1498,7 @@
     const b=document.createElement('button');
     b.type='button';b.innerHTML=label;if(cls)b.className=cls;
     const raw=String(label).replace(/<[^>]+>/g,'').trim();
+    b.setAttribute('aria-label',raw);
     if(customerFeatureUnseen(raw)){b.classList.add('customer-new-node');decorateNewButton(b)}
     b.addEventListener('click',e=>{
       e.preventDefault();
@@ -1580,11 +1647,35 @@
     document.getElementById('navOrbitCenter')?.addEventListener('keydown',e=>{
       if(e.key==='Enter'||e.key===' '){e.preventDefault();document.getElementById('navOrbitCenter')?.click()}
     });
+    document.getElementById('navOrbitDirect')?.addEventListener('keydown',e=>{
+      if(e.target.matches('input,textarea,select'))return;
+      const nav=[document.getElementById('navOrbitCenter'),...document.querySelectorAll('#mainSubmenuDirect>button')].filter(Boolean);
+      const current=nav.indexOf(document.activeElement);
+      if(['ArrowRight','ArrowDown','ArrowLeft','ArrowUp'].includes(e.key)){
+        e.preventDefault();
+        const dir=(e.key==='ArrowRight'||e.key==='ArrowDown')?1:-1;
+        nav[(current<0?0:(current+dir+nav.length)%nav.length)]?.focus();
+      }else if(e.key==='Escape'){
+        e.preventDefault();
+        closeSmartQuickRing();
+        if(level==='items')renderGroups(activeMain);
+        else if(level==='groups')renderMainOrbit();
+      }else if(e.key==='Home'){
+        e.preventDefault();document.getElementById('navOrbitCenter')?.focus();
+      }
+    });
     window.addEventListener('popstate',e=>restoreFrom(e.state));
     document.getElementById('mainSubmenuSecondary')?.replaceChildren();
 
     let saved=null;
-    try{saved=JSON.parse(localStorage.getItem(STATE_KEY)||'null')}catch(e){}
+    try{
+      saved=JSON.parse(localStorage.getItem(STATE_KEY)||'null');
+      if(saved&&saved.version&&saved.version>STATE_VERSION)saved=null;
+      if(saved&&!['main','groups','items'].includes(saved.level))saved=null;
+    }catch(e){
+      try{localStorage.removeItem(STATE_KEY)}catch{}
+      saved=null;
+    }
     const resumable=saved&&saved.level!=='main'&&saved.activeMain?{...saved}:null;
     renderMainOrbit({instant:true,noHistory:true});
     if(resumable)showResumePrompt(resumable);
@@ -1604,8 +1695,9 @@
     window.addEventListener('online',refreshSmartCenter);
     window.addEventListener('offline',refreshSmartCenter);
     window.addEventListener('storage',refreshSmartCenter);
+    window.addEventListener('menuorbit:datachange',refreshSmartCenter);
     document.addEventListener('click',()=>setTimeout(refreshSmartCenter,80),true);
-    setInterval(refreshSmartCenter,1200);
+    setInterval(()=>{if(document.visibilityState==='visible')refreshSmartCenter()},4500);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
