@@ -974,6 +974,45 @@
   
     .dine-new-direct{position:relative!important;overflow:visible!important;border-color:#f4c86f!important;box-shadow:0 0 0 2px rgba(244,200,111,.9)!important}
     .dine-new-direct::after{content:"NEW";position:absolute;top:-9px;right:-7px;background:#f4c86f;color:#07331f;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:950;letter-spacing:.07em;z-index:50;box-shadow:0 5px 14px rgba(0,0,0,.28)}
+  
+    /* DINE IN STRONG HIGHLIGHT */
+    #mainMenuDirect .customer-new-node{
+      position:absolute!important;
+      overflow:visible!important;
+      border-color:#f4c86f!important;
+      box-shadow:
+        0 0 0 3px rgba(244,200,111,.95),
+        0 0 0 8px rgba(244,200,111,.18),
+        0 0 28px rgba(244,200,111,.42),
+        0 10px 26px rgba(0,0,0,.28)!important;
+      animation:dineNewPulse 1.35s ease-in-out infinite!important;
+    }
+    #mainMenuDirect .customer-new-node .customer-new-badge{
+      position:absolute!important;
+      top:-11px!important;
+      right:-10px!important;
+      z-index:80!important;
+      display:inline-grid!important;
+      place-items:center!important;
+      min-width:38px!important;
+      height:22px!important;
+      padding:0 8px!important;
+      border-radius:999px!important;
+      background:#f4c86f!important;
+      color:#07331f!important;
+      border:2px solid #fff7df!important;
+      font:950 9px/1 system-ui!important;
+      letter-spacing:.08em!important;
+      box-shadow:0 7px 16px rgba(0,0,0,.38)!important;
+      pointer-events:none!important;
+    }
+    @keyframes dineNewPulse{
+      0%,100%{transform:translate(-50%,-50%) scale(1)}
+      50%{transform:translate(-50%,-50%) scale(1.045)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      #mainMenuDirect .customer-new-node{animation:none!important}
+    }
   </style>
 </head>
 <body>
@@ -1213,7 +1252,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-16"></script>
+  <script src="customer-next.js?v=20260924-17"></script>
 
 <script>
 (function(){
@@ -1662,7 +1701,7 @@
     'Price Change Notice':'customer-price-change-notice-2026-09-24-v7',
     'Clear All Customer Data':'customer-clear-all-data-2026-09-24-v7',
     'Smart Wellness Filters':'customer-smart-wellness-filters-2026-09-24-v8',
-    'Dine In':'customer-dine-in-2026-09-24-v9'
+    'Dine In':'customer-dine-in-2026-09-24-v10'
   };
   const CUSTOMER_LATEST_BATCH=[
     'Smart Wellness Filters',
@@ -1713,6 +1752,7 @@
     const raw=String(label).replace(/<[^>]+>/g,'').trim();
     b.setAttribute('aria-label',raw);
     if(customerFeatureUnseen(raw)){b.classList.add('customer-new-node');decorateNewButton(b)}
+    if(raw==='Dine In'&&customerFeatureUnseen('Dine In')){b.classList.add('customer-new-node');decorateNewButton(b)}
     b.addEventListener('click',e=>{
       e.preventDefault();
       e.stopPropagation();
