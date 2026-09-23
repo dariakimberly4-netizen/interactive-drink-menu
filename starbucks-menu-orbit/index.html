@@ -437,7 +437,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-CUSTOMER-BATCH -->
+<!-- BUILD 20260924-CUSTOMER-HIGHLIGHT-PATH -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -821,6 +821,20 @@
     const seen=customerSeen();seen[id]=true;
     try{localStorage.setItem(CUSTOMER_SEEN_KEY,JSON.stringify(seen))}catch(e){}
   }
+  function anyCustomerUnseen(labels){
+    return labels.some(customerFeatureUnseen);
+  }
+  function mainHasNew(key){
+    if(key==='menu')return anyCustomerUnseen(['Recently Viewed','Recommended for You','Saved Drink Presets']);
+    if(key==='order')return anyCustomerUnseen(['Order Tracking','Reorder']);
+    return false;
+  }
+  function groupHasNew(main,group){
+    if(main==='menu'&&group==='Browse')return anyCustomerUnseen(['Recently Viewed','Recommended for You']);
+    if(main==='menu'&&group==='Preferences')return customerFeatureUnseen('Saved Drink Presets');
+    if(main==='order'&&group==='Order History')return anyCustomerUnseen(['Order Tracking','Reorder']);
+    return false;
+  }
 
   function button(label,fn,cls){
     const b=document.createElement('button');
@@ -842,7 +856,11 @@
       document.body.classList.remove('show-product-results');
       const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
       sub.innerHTML='';center('MENU ORBIT','Choose a section');
-      mainItems.forEach(([key,icon,label])=>sub.appendChild(button('<span style="font-size:24px;display:block;margin-bottom:4px">'+icon+'</span>'+label,()=>renderGroups(key))));
+      mainItems.forEach(([key,icon,label])=>{
+        const b=button('<span style="font-size:24px;display:block;margin-bottom:4px">'+icon+'</span>'+label,()=>renderGroups(key));
+        if(mainHasNew(key))b.classList.add('customer-new-node');
+        sub.appendChild(b);
+      });
       updateBreadcrumb();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
     };
     opts.instant?draw():animateSwap(draw);
@@ -856,7 +874,11 @@
       sub.innerHTML='';
       const title=mainItems.find(x=>x[0]===name)?.[2]||name.toUpperCase();
       center(title,'Choose a path');
-      (maps[name]||[]).forEach(([label,items])=>sub.appendChild(button(label,()=>renderItems(label,items))));
+      (maps[name]||[]).forEach(([label,items])=>{
+        const b=button(label,()=>renderItems(label,items));
+        if(groupHasNew(name,label))b.classList.add('customer-new-node');
+        sub.appendChild(b);
+      });
       sub.appendChild(button('‹ Main Orbit',()=>renderMainOrbit(),'nav-back'));
       updateBreadcrumb();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
     };
