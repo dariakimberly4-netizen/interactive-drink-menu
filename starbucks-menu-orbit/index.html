@@ -799,10 +799,25 @@
       header{justify-content:flex-start!important}
       .brand{margin-right:auto!important}
     }
-  </style>
+      @media(max-width:430px){
+      #mainMenuDirect .orbit-longpress-coach{display:none!important}
+      #mainMenuDirect #navOrbitCenter .smart-kicker{font-size:7px!important;margin-bottom:3px!important}
+      #mainMenuDirect #navOrbitCenter .smart-main{font-size:10.5px!important;line-height:1.02!important}
+      #mainMenuDirect #navOrbitCenter .smart-sub{display:none!important}
+      #mainMenuDirect #navOrbitCenter .smart-gesture-hint{
+        display:block!important;
+        margin-top:5px!important;
+        padding-top:4px!important;
+        font-size:7px!important;
+        line-height:1.05!important;
+        max-width:92px!important;
+      }
+      #mainMenuDirect #navOrbitDirect{height:420px!important;min-height:420px!important}
+    }
+</style>
 </head>
 <body>
-<!-- BUILD 20260924-MOBILE-ORBIT-FIX -->
+<!-- BUILD 20260924-MOBILE-ORBIT-FIX-V2 -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -1206,7 +1221,7 @@
       '<span class="smart-kicker">CUSTOMER HOME</span>'+
       '<strong class="smart-main">'+s.main+'</strong>'+
       '<span class="smart-sub">'+s.sub+'</span>'+
-      '<span class="smart-gesture-hint">Tap Home • Hold for Actions</span>'+
+      '<span class="smart-gesture-hint">Tap = Home • Hold = Actions</span>'+
       '<i class="hold-progress" aria-hidden="true"></i>'+
       (s.cartCount?'<i class="smart-badge cart" aria-hidden="true">🛒 '+s.cartCount+'</i>':'')+
       (s.unread?'<i class="smart-badge updates" aria-hidden="true">🔔 '+s.unread+'</i>':'')+
@@ -1228,7 +1243,7 @@
     document.getElementById('orbitLongpressCoach')?.remove();document.getElementById('orbitQuickAccessBtn')?.remove();document.getElementById('orbitQuickAccessBtn')?.remove();
   }
   function showLongPressCoach(){
-    if(level!=='main'||longPressCoachSeen()||document.getElementById('orbitLongpressCoach'))return;
+    if(level!=='main'||window.matchMedia('(max-width:430px)').matches||longPressCoachSeen()||document.getElementById('orbitLongpressCoach'))return;
     const anchor=document.getElementById('orbitQuickAccessBtn')||document.getElementById('orbitSmartSuggestion')||document.getElementById('orbitBreadcrumb');
     if(!anchor)return;
     const coach=document.createElement('div');
@@ -1376,6 +1391,7 @@
   }
 
   function layoutOrbit(){
+    if(window.matchMedia('(max-width:430px)').matches)document.getElementById('orbitLongpressCoach')?.remove();
     const wrap=document.getElementById('navOrbitDirect');
     const buttons=[...document.querySelectorAll('#mainSubmenuDirect>button')];
     if(!wrap||!buttons.length)return;
@@ -1385,7 +1401,7 @@
     const node=compact?(veryCrowded?68:crowded?74:88):(veryCrowded?82:crowded?90:104);
     const font=compact?(veryCrowded?9:crowded?10:11.5):(veryCrowded?11:crowded?12:14);
     const rx=Math.min(w*(veryCrowded?.41:crowded?.395:count>=6?.365:.34),compact?176:220);
-    const ry=Math.min(h*(veryCrowded?.42:crowded?.405:count>=6?.385:.34),compact?150:142);
+    const ry=Math.min(h*(veryCrowded?.43:crowded?.415:count>=6?.405:.34),compact?166:142);
     buttons.forEach((b,i)=>{
       const a=-Math.PI/2+(i/count)*Math.PI*2;
       b.style.setProperty('left',(cx+Math.cos(a)*rx)+'px','important');
