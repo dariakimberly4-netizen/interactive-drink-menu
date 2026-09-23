@@ -21,29 +21,11 @@
 @media(max-width:520px){.ops-grid{grid-template-columns:1fr 1fr}}
 
 
-
-
-/* Clean NEW treatment: subtle gold outline + small badge, dismissed after first click */
-#liveOpsHub .mo-new-feature{
-  position:relative!important;
-  border-color:#f4c86f!important;
-  box-shadow:0 0 0 2px rgba(244,200,111,.95),0 10px 26px rgba(0,0,0,.28)!important;
-  animation:none!important
-}
-#liveOpsHub .mo-new-feature::before{display:none!important}
-#liveOpsHub .mo-new-feature::after{
-  content:"NEW";
-  top:-8px;
-  right:-6px;
-  padding:4px 7px;
-  border-radius:999px;
-  background:#f4c86f;
-  color:#07331f;
-  font-size:9px;
-  font-weight:950;
-  letter-spacing:.07em;
-  box-shadow:0 6px 14px rgba(0,0,0,.25)
-}
+/* Strong visual treatment for newly-added staff portal features */
+#liveOpsHub .mo-new-feature{transform:translateZ(0);border-color:#f4c86f!important;background:linear-gradient(145deg,rgba(244,200,111,.20),rgba(0,117,74,.24))!important}
+#liveOpsHub .mo-new-feature::after{content:"NEW";top:7px;right:7px;font-size:10px;padding:5px 8px}
+#liveOpsHub .mo-new-feature::before{content:"";position:absolute;inset:-5px;border:2px solid rgba(244,200,111,.9);border-radius:18px;pointer-events:none;animation:staffNewRing 1.5s ease-in-out infinite}
+@keyframes staffNewRing{50%{inset:-10px;opacity:.18}}
 
 </style>
 </head>
