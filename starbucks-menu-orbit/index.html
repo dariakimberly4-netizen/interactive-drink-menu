@@ -1055,6 +1055,26 @@
       0%,100%{transform:translate(-50%,-50%) scale(1)}
       50%{transform:translate(-50%,-50%) scale(1.07)}
     }
+  
+    /* CALL STAFF FOREGROUND FIX */
+    #callStaffModal{
+      z-index:9999!important;
+      background:rgba(0,18,12,.82)!important;
+      backdrop-filter:blur(10px)!important;
+    }
+    #callStaffModal .modal-card{
+      position:relative!important;
+      z-index:10000!important;
+      max-height:92vh!important;
+      overflow:auto!important;
+    }
+    body.call-staff-open #mainMenuDirect,
+    body.call-staff-open .stage,
+    body.call-staff-open .instructions,
+    body.call-staff-open .control-dock{
+      visibility:hidden!important;
+      pointer-events:none!important;
+    }
   </style>
 </head>
 <body>
@@ -1294,7 +1314,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-22"></script>
+  <script src="customer-next.js?v=20260924-23"></script>
 
 <script>
 (function(){
@@ -1431,11 +1451,13 @@
       <p class="notice">Prototype feature. Requests are saved on this browser for demo use.</p>
     `;
     modal.classList.add('open');
+    document.body.classList.add('call-staff-open');
 
     let selected='';
-    document.getElementById('callStaffClose').onclick=()=>modal.classList.remove('open');
+    document.getElementById('callStaffClose').onclick=()=>{modal.classList.remove('open');document.body.classList.remove('call-staff-open')};
     document.getElementById('callStaffSetTable').onclick=()=>{
       modal.classList.remove('open');
+      document.body.classList.remove('call-staff-open');
       openTableQrOrdering();
     };
     content.querySelectorAll('[data-staff-request]').forEach(btn=>{
