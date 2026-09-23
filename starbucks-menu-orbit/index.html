@@ -55,6 +55,10 @@
     .main-menu-direct-row button.active{background:#f4efe6;color:#07331f;border-color:#f4c86f}
     .main-submenu-direct{max-width:1180px;margin:8px auto 0;display:flex;gap:8px;overflow:auto;scrollbar-width:none}
     .main-submenu-direct:empty{margin-top:0}.main-submenu-direct button{white-space:nowrap;min-height:38px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.06);color:#fff;padding:0 12px;font-weight:800}
+    .main-submenu-direct button.sub-active{background:#e8f3ed;color:#07331f;border-color:#65a987}
+    .main-submenu-secondary{max-width:1180px;margin:8px auto 0;display:flex;gap:7px;overflow:auto;scrollbar-width:none}
+    .main-submenu-secondary:empty{display:none}
+    .main-submenu-secondary button{white-space:nowrap;min-height:36px;border:1px solid rgba(244,200,111,.42);border-radius:999px;background:rgba(244,200,111,.09);color:#fff;padding:0 12px;font-weight:800}
     @media(max-width:800px){.main-menu-direct-row{grid-template-columns:repeat(3,1fr)}.main-menu-direct-row button{min-height:44px}.main-menu-direct-row button span{font-size:9px}}
   
     /* CLEAN MAIN MENU HIERARCHY */
@@ -104,6 +108,18 @@
         padding:7px 10px;
         line-height:1.15;
       }
+      .main-submenu-secondary{
+        display:flex!important;
+        gap:7px!important;
+        overflow-x:auto!important;
+        padding-bottom:2px;
+      }
+      .main-submenu-secondary button{
+        flex:0 0 auto;
+        min-height:38px;
+        padding:6px 12px;
+        font-size:12px;
+      }
     }
   
     .force-mobile-subgrid{display:flex;gap:8px;overflow:auto}
@@ -152,6 +168,7 @@
         <button type="button" data-direct-main="settings">⚙<span>SETTINGS</span></button>
       </div>
       <div class="main-submenu-direct force-mobile-subgrid" id="mainSubmenuDirect"></div>
+      <div class="main-submenu-secondary" id="mainSubmenuSecondary" aria-live="polite"></div>
     </section>
     <nav class="toolbar" id="categories" aria-label="Menu categories"></nav>
   <div class="search-panel" id="searchPanel"><input id="searchInput" type="search" placeholder="Search drinks and food…" aria-label="Search products" /></div>
@@ -354,25 +371,66 @@
 <script>
 (function(){
   const maps={
-    menu:[['Featured',()=>clickCat('Featured')],['Search',()=>clickEl('#searchBtn')],['Trending',()=>clickEl('#moTrending')],['Visual Search',()=>clickEl('#moVisualSearch')],['Diet Filters',()=>clickEl('#moDiet')],['Compare Drinks',()=>clickEl('#moCompare')]],
-    order:[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Your Usual',()=>clickEl('#moUsual')],['Schedule',()=>clickEl('#moSchedule')],['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')],['Pickup ETA',()=>clickEl('#moDynamicEta')],['Receipts',()=>clickEl('#moReceiptsBtn')],['Order Chat',()=>clickEl('#moOrderChat')],['Order Help',()=>clickEl('#moProblem')]],
-    stores:[['Find a Store',()=>clickEl('#pickupBtn')],['Branch Profile',()=>clickEl('#moBranch')],['Compare Branches',()=>clickEl('#moBranchCompare')]],
-    rewards:[['Star Rewards',()=>clickEl('#rewardsBtn')],['Milestones',()=>clickEl('#moLoyalty')],['Voucher',()=>clickEl('#moVoucherTimer')],['Deal Reminders',()=>clickEl('#moDealReminders')],['Pairings',()=>clickEl('#moPairings')],['Inbox',()=>clickEl('#moInbox')]],
-    account:[['Profile',()=>clickEl('#moProfileDash')],['Saved Payments',()=>clickEl('#moPayments')],['Search History',()=>clickEl('#moSearchHistory')],['Notifications',()=>clickEl('#moNotifPrefs')],['Review Filters',()=>clickEl('#moReviewFilters')]],
-    settings:[['Reduce Motion',()=>clickEl('#motionBtn')],['Gestures',()=>clickEl('#gestureBtn')],['Voice Control',()=>clickEl('#voiceCta')],['Help',()=>clickEl('#helpBtn')],['Presentation Mode',()=>clickEl('#moPresentationBtn')]]
+    menu:[
+      ['Browse',[['Featured',()=>clickCat('Featured')],['Trending',()=>clickEl('#moTrending')]]],
+      ['Find',[['Search',()=>clickEl('#searchBtn')],['Visual Search',()=>clickEl('#moVisualSearch')]]],
+      ['Preferences',[['Diet Filters',()=>clickEl('#moDiet')]]],
+      ['Compare',[['Compare Drinks',()=>clickEl('#moCompare')]]]
+    ],
+    order:[
+      ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Your Usual',()=>clickEl('#moUsual')]]],
+      ['Plan Order',[['Schedule',()=>clickEl('#moSchedule')],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
+      ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
+      ['History & Help',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Order Chat',()=>clickEl('#moOrderChat')],['Order Help',()=>clickEl('#moProblem')]]]
+    ],
+    stores:[
+      ['Find Store',[['Find a Store',()=>clickEl('#pickupBtn')]]],
+      ['Branch Details',[['Branch Profile',()=>clickEl('#moBranch')],['Compare Branches',()=>clickEl('#moBranchCompare')]]]
+    ],
+    rewards:[
+      ['Rewards Home',[['Star Rewards',()=>clickEl('#rewardsBtn')],['Milestones',()=>clickEl('#moLoyalty')]]],
+      ['Offers',[['Voucher',()=>clickEl('#moVoucherTimer')],['Deal Reminders',()=>clickEl('#moDealReminders')]]],
+      ['Discover',[['Pairings',()=>clickEl('#moPairings')]]],
+      ['Inbox',[['Inbox',()=>clickEl('#moInbox')]]]
+    ],
+    account:[
+      ['Profile',[['Profile',()=>clickEl('#moProfileDash')]]],
+      ['Payments',[['Saved Payments',()=>clickEl('#moPayments')]]],
+      ['Activity',[['Search History',()=>clickEl('#moSearchHistory')]]],
+      ['Preferences',[['Notifications',()=>clickEl('#moNotifPrefs')],['Review Filters',()=>clickEl('#moReviewFilters')]]]
+    ],
+    settings:[
+      ['Accessibility',[['Reduce Motion',()=>clickEl('#motionBtn')],['Gestures',()=>clickEl('#gestureBtn')],['Voice Control',()=>clickEl('#voiceCta')]]],
+      ['Help',[['Help',()=>clickEl('#helpBtn')]]],
+      ['Display',[['Presentation Mode',()=>clickEl('#moPresentationBtn')]]]
+    ]
   };
   function clickEl(sel){const el=document.querySelector(sel);if(el)el.click();}
   function clickCat(name){const b=[...document.querySelectorAll('[data-cat]')].find(x=>x.dataset.cat===name||x.textContent.trim()===name);if(b)b.click();}
+  function openGroup(groupButton,items){
+    document.querySelectorAll('#mainSubmenuDirect button').forEach(b=>b.classList.toggle('sub-active',b===groupButton));
+    const detail=document.getElementById('mainSubmenuSecondary'); if(!detail)return;
+    detail.innerHTML='';
+    items.forEach(([label,fn])=>{
+      const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;detail.appendChild(b);
+    });
+  }
   function open(name){
     document.querySelectorAll('[data-direct-main]').forEach(b=>b.classList.toggle('active',b.dataset.directMain===name));
-    const sub=document.getElementById('mainSubmenuDirect'); if(!sub)return;
-    sub.innerHTML='';
-    (maps[name]||[]).forEach(([label,fn])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;sub.appendChild(b);});
+    const sub=document.getElementById('mainSubmenuDirect');
+    const detail=document.getElementById('mainSubmenuSecondary');
+    if(!sub||!detail)return;
+    sub.innerHTML=''; detail.innerHTML='';
+    const groups=maps[name]||[];
+    groups.forEach(([label,items],i)=>{
+      const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=()=>openGroup(b,items);sub.appendChild(b);
+      if(i===0)setTimeout(()=>openGroup(b,items),0);
+    });
   }
   function init(){
     document.querySelectorAll('[data-direct-main]').forEach(b=>b.onclick=()=>open(b.dataset.directMain));
     open('menu');
-    setTimeout(()=>window.NewFeatureHighlight?.register('#mainMenuDirect','customer-main-menu-direct-v1','NEW'),400);
+    setTimeout(()=>window.NewFeatureHighlight?.register('#mainMenuDirect','customer-main-menu-direct-v2','NEW'),400);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
