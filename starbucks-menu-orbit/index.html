@@ -361,6 +361,34 @@
       .nav-orbit-direct .main-submenu-direct button{width:36%!important;min-height:54px!important;font-size:13px!important}
       .nav-orbit-center strong{font-size:18px}
     }
+
+    /* ORBIT FINISHING LAYER */
+    .orbit-breadcrumb{
+      max-width:620px;margin:2px auto 0;padding:2px 10px 0;
+      text-align:center;color:#d9e7df;font-size:11px;font-weight:800;
+      letter-spacing:.09em;text-transform:uppercase;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
+      opacity:1;
+      transition:left .38s cubic-bezier(.22,.85,.28,1),top .38s cubic-bezier(.22,.85,.28,1),opacity .2s ease,transform .38s cubic-bezier(.22,.85,.28,1),background .2s ease,border-color .2s ease;
+    }
+    #mainMenuDirect #navOrbitDirect.orbit-changing #mainSubmenuDirect>button{
+      opacity:0;
+      transform:translate(-50%,-50%) scale(.72)!important;
+    }
+    #mainMenuDirect #navOrbitCenter{
+      transition:transform .28s ease,box-shadow .28s ease;
+    }
+    #mainMenuDirect #navOrbitDirect.orbit-changing #navOrbitCenter{
+      transform:translate(-50%,-50%) scale(.92)!important;
+      box-shadow:0 0 0 5px rgba(212,173,98,.36),0 8px 24px rgba(0,0,0,.24)!important;
+    }
+    @media(prefers-reduced-motion:reduce){
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button,
+      #mainMenuDirect #navOrbitCenter{transition:none!important}
+    }
+
     /* LEGACY HEADER CLEANUP */
     #helpBtn,#cartBtn,#rewardsBtn,#customerAccountBtn{display:none!important}
     @media(max-width:800px){
@@ -370,7 +398,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-ONE-ORBIT -->
+<!-- BUILD 20260924-ORBIT-FINISH -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -391,6 +419,7 @@
         <button type="button" data-direct-main="account">👤<span>MY ACCOUNT</span></button>
         <button type="button" data-direct-main="settings">⚙<span>SETTINGS</span></button>
       </div>
+      <div class="orbit-breadcrumb" id="orbitBreadcrumb" aria-live="polite">MENU ORBIT</div>
       <div class="nav-orbit-direct" id="navOrbitDirect" aria-label="Navigation orbit">
         <div class="nav-orbit-ring" aria-hidden="true"></div>
         <div class="nav-orbit-center" id="navOrbitCenter"><strong>MENU</strong><span>Choose a path</span></div>
@@ -650,14 +679,43 @@
     ]
   };
 
-  let activeMain=null, level='main';
+  const STATE_KEY='menu-orbit-navigation-state-v1';
+  let activeMain=null, level='main', activeGroup=null, activeItems=[], restoring=false, transitionTimer=null;
 
   function clickEl(sel){const el=document.querySelector(sel);if(el)el.click();}
   function clickCat(name){
     const b=[...document.querySelectorAll('[data-cat]')].find(x=>x.dataset.cat===name||x.textContent.trim()===name);
     if(b)b.click();
   }
+  function saveState(extra={}){
+    try{
+      localStorage.setItem(STATE_KEY,JSON.stringify({level,activeMain,activeGroup,...extra}));
+    }catch(e){}
+  }
+  function updateBreadcrumb(){
+    const bc=document.getElementById('orbitBreadcrumb');if(!bc)return;
+    const parts=['MENU ORBIT'];
+    if(activeMain)parts.push(mainItems.find(x=>x[0]===activeMain)?.[2]||activeMain.toUpperCase());
+    if(activeGroup)parts.push(activeGroup);
+    bc.textContent=parts.join(' › ');
+  }
+  function pushState(){
+    if(restoring)return;
+    const hash=level==='main'?'#orbit':level==='groups'?'#orbit/'+activeMain:'#orbit/'+activeMain+'/'+encodeURIComponent(activeGroup||'');
+    if(location.hash!==hash)history.pushState({orbit:true,level,activeMain,activeGroup},'',hash);
+    else history.replaceState({orbit:true,level,activeMain,activeGroup},'',hash);
+  }
+  function animateSwap(draw){
+    const wrap=document.getElementById('navOrbitDirect');if(!wrap){draw();return}
+    clearTimeout(transitionTimer);
+    wrap.classList.add('orbit-changing');
+    transitionTimer=setTimeout(()=>{
+      draw();
+      requestAnimationFrame(()=>wrap.classList.remove('orbit-changing'));
+    },140);
+  }
   function showCategory(name){
+    saveState({resultCategory:name});
     clickCat(name);
     document.body.classList.add('show-product-results');
   }
@@ -676,11 +734,8 @@
     const wrap=document.getElementById('navOrbitDirect');
     const buttons=[...document.querySelectorAll('#mainSubmenuDirect>button')];
     if(!wrap||!buttons.length)return;
-    const w=wrap.clientWidth||360,h=wrap.clientHeight||330;
-    const cx=w/2,cy=h/2;
-    const count=buttons.length;
-    const rx=Math.min(w*(count>=6?.36:.34),215);
-    const ry=Math.min(h*(count>=6?.38:.34),132);
+    const w=wrap.clientWidth||360,h=wrap.clientHeight||330,cx=w/2,cy=h/2,count=buttons.length;
+    const rx=Math.min(w*(count>=6?.36:.34),215),ry=Math.min(h*(count>=6?.38:.34),132);
     buttons.forEach((b,i)=>{
       const a=-Math.PI/2+(i/count)*Math.PI*2;
       b.style.setProperty('left',(cx+Math.cos(a)*rx)+'px','important');
@@ -688,38 +743,54 @@
     });
   }
   function button(label,fn,cls){
-    const b=document.createElement('button');
-    b.type='button';b.innerHTML=label;b.onclick=fn;if(cls)b.className=cls;
-    return b;
+    const b=document.createElement('button');b.type='button';b.innerHTML=label;b.onclick=fn;if(cls)b.className=cls;return b;
   }
-  function renderMainOrbit(){
-    level='main';activeMain=null;
-    document.body.classList.remove('show-product-results');
-    const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
-    sub.innerHTML='';center('MENU ORBIT','Choose a section');
-    mainItems.forEach(([key,icon,label])=>{
-      sub.appendChild(button('<span style="font-size:24px;display:block;margin-bottom:4px">'+icon+'</span>'+label,()=>renderGroups(key)));
-    });
-    requestAnimationFrame(layoutOrbit);
+  function renderMainOrbit(opts={}){
+    const draw=()=>{
+      level='main';activeMain=null;activeGroup=null;activeItems=[];
+      document.body.classList.remove('show-product-results');
+      const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
+      sub.innerHTML='';center('MENU ORBIT','Choose a section');
+      mainItems.forEach(([key,icon,label])=>sub.appendChild(button('<span style="font-size:24px;display:block;margin-bottom:4px">'+icon+'</span>'+label,()=>renderGroups(key))));
+      updateBreadcrumb();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
+    };
+    opts.instant?draw():animateSwap(draw);
   }
-  function renderGroups(name){
-    activeMain=name;level='groups';
-    document.body.classList.remove('show-product-results');
-    const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
-    sub.innerHTML='';
-    const title=mainItems.find(x=>x[0]===name)?.[2]||name.toUpperCase();
-    center(title,'Choose a path');
-    (maps[name]||[]).forEach(([label,items])=>sub.appendChild(button(label,()=>renderItems(label,items))));
-    sub.appendChild(button('‹ Main Orbit',renderMainOrbit,'nav-back'));
-    requestAnimationFrame(layoutOrbit);
+  function renderGroups(name,opts={}){
+    const draw=()=>{
+      activeMain=name;level='groups';activeGroup=null;activeItems=[];
+      document.body.classList.remove('show-product-results');
+      const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
+      sub.innerHTML='';
+      const title=mainItems.find(x=>x[0]===name)?.[2]||name.toUpperCase();
+      center(title,'Choose a path');
+      (maps[name]||[]).forEach(([label,items])=>sub.appendChild(button(label,()=>renderItems(label,items))));
+      sub.appendChild(button('‹ Main Orbit',()=>renderMainOrbit(),'nav-back'));
+      updateBreadcrumb();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
+    };
+    opts.instant?draw():animateSwap(draw);
   }
-  function renderItems(groupLabel,items){
-    level='items';
-    const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
-    sub.innerHTML='';center(groupLabel,'Choose an option');
-    items.forEach(([label,fn])=>sub.appendChild(button(label,fn)));
-    sub.appendChild(button('‹ Back',()=>renderGroups(activeMain),'nav-back'));
-    requestAnimationFrame(layoutOrbit);
+  function renderItems(groupLabel,items,opts={}){
+    const draw=()=>{
+      level='items';activeGroup=groupLabel;activeItems=items;
+      const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
+      sub.innerHTML='';center(groupLabel,'Choose an option');
+      items.forEach(([label,fn])=>sub.appendChild(button(label,fn)));
+      sub.appendChild(button('‹ Back',()=>renderGroups(activeMain),'nav-back'));
+      updateBreadcrumb();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
+    };
+    opts.instant?draw():animateSwap(draw);
+  }
+  function restoreFrom(state){
+    restoring=true;
+    try{
+      if(state?.level==='items'&&state.activeMain&&state.activeGroup){
+        const group=(maps[state.activeMain]||[]).find(x=>x[0]===state.activeGroup);
+        if(group){renderItems(group[0],group[1],{instant:true,noHistory:true});return}
+      }
+      if(state?.level==='groups'&&state.activeMain){renderGroups(state.activeMain,{instant:true,noHistory:true});return}
+      renderMainOrbit({instant:true,noHistory:true});
+    }finally{restoring=false}
   }
   function syncDetailState(){
     const detail=document.getElementById('detail'),nav=document.getElementById('mainMenuDirect');
@@ -729,14 +800,27 @@
     document.body.classList.toggle('product-detail-open',open);
   }
   function init(){
-    document.getElementById('resultsBack')?.addEventListener('click',()=>activeMain?renderGroups(activeMain):renderMainOrbit());
+    document.getElementById('resultsBack')?.addEventListener('click',()=>{
+      document.body.classList.remove('show-product-results');
+      if(level==='items'&&activeMain&&activeGroup){
+        const group=(maps[activeMain]||[]).find(x=>x[0]===activeGroup);
+        if(group)return renderItems(group[0],group[1]);
+      }
+      activeMain?renderGroups(activeMain):renderMainOrbit();
+    });
     document.getElementById('navOrbitCenter')?.addEventListener('click',()=>{
       if(level==='main')return;
       if(level==='groups')renderMainOrbit();
       else renderGroups(activeMain);
     });
+    window.addEventListener('popstate',e=>restoreFrom(e.state));
     document.getElementById('mainSubmenuSecondary')?.replaceChildren();
-    renderMainOrbit();
+
+    let saved=null;
+    try{saved=JSON.parse(localStorage.getItem(STATE_KEY)||'null')}catch(e){}
+    restoreFrom(saved);
+    history.replaceState({orbit:true,level,activeMain,activeGroup},'',location.hash||'#orbit');
+
     const detail=document.getElementById('detail');
     if(detail)new MutationObserver(syncDetailState).observe(detail,{attributes:true,attributeFilter:['class','aria-hidden']});
     syncDetailState();
