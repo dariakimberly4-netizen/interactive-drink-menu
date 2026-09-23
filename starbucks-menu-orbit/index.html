@@ -209,6 +209,78 @@
       background:#f4efe6;color:#07331f;border-color:#f4c86f;
     }
 
+
+    /* HARD OVERRIDE: SUBMENUS ARE ORBIT NODES, NOT GRID CARDS */
+    #mainMenuDirect #navOrbitDirect{
+      position:relative!important;
+      display:block!important;
+      width:min(94vw,620px)!important;
+      height:360px!important;
+      min-height:360px!important;
+      margin:8px auto 0!important;
+      overflow:visible!important;
+    }
+    #mainMenuDirect #navOrbitDirect #mainSubmenuDirect{
+      position:absolute!important;
+      inset:0!important;
+      display:block!important;
+      grid-template-columns:none!important;
+      gap:0!important;
+      width:100%!important;
+      height:100%!important;
+      margin:0!important;
+      padding:0!important;
+      overflow:visible!important;
+    }
+    #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
+      position:absolute!important;
+      display:grid!important;
+      place-items:center!important;
+      width:104px!important;
+      height:104px!important;
+      min-height:104px!important;
+      padding:10px!important;
+      margin:0!important;
+      border-radius:50%!important;
+      transform:translate(-50%,-50%)!important;
+      white-space:normal!important;
+      text-align:center!important;
+      font-size:14px!important;
+      line-height:1.1!important;
+      font-weight:900!important;
+      background:#0c281f!important;
+      border:2px solid rgba(244,200,111,.52)!important;
+      color:#fff!important;
+      box-shadow:0 10px 24px rgba(0,0,0,.25)!important;
+      z-index:3!important;
+    }
+    #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button.nav-back{
+      background:#f4efe6!important;
+      color:#07331f!important;
+      border-color:#f4c86f!important;
+    }
+    #mainMenuDirect #navOrbitDirect .nav-orbit-ring{
+      width:250px!important;
+      height:250px!important;
+      aspect-ratio:auto!important;
+      border:2px solid rgba(244,200,111,.32)!important;
+    }
+    #mainMenuDirect #navOrbitDirect .nav-orbit-center{
+      width:124px!important;
+      height:124px!important;
+      aspect-ratio:auto!important;
+      z-index:4!important;
+    }
+    @media(max-width:430px){
+      #mainMenuDirect #navOrbitDirect{height:330px!important;min-height:330px!important}
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
+        width:92px!important;height:92px!important;min-height:92px!important;
+        font-size:12.5px!important;
+      }
+      #mainMenuDirect #navOrbitDirect .nav-orbit-ring{width:220px!important;height:220px!important}
+      #mainMenuDirect #navOrbitDirect .nav-orbit-center{width:112px!important;height:112px!important}
+    }
+
     /* Products are results, never orbit navigation */
     body:not(.show-product-results) #stage{display:none!important}
     body.show-product-results #mainMenuDirect{display:none!important}
@@ -285,7 +357,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-NAV-ORBIT -->
+<!-- BUILD 20260924-TRUE-ORBIT -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -579,6 +651,19 @@
     const el=document.getElementById('navOrbitCenter'); if(!el)return;
     el.innerHTML='<strong>'+title+'</strong><span>'+(sub||'Choose a path')+'</span>';
   }
+  function layoutOrbit(){
+    const wrap=document.getElementById('navOrbitDirect');
+    const buttons=[...document.querySelectorAll('#mainSubmenuDirect>button')];
+    if(!wrap||!buttons.length)return;
+    const w=wrap.clientWidth||360,h=wrap.clientHeight||330;
+    const cx=w/2,cy=h/2;
+    const rx=Math.min(w*.34,205),ry=Math.min(h*.34,122);
+    buttons.forEach((b,i)=>{
+      const a=-Math.PI/2+(i/buttons.length)*Math.PI*2;
+      b.style.setProperty('left',(cx+Math.cos(a)*rx)+'px','important');
+      b.style.setProperty('top',(cy+Math.sin(a)*ry)+'px','important');
+    });
+  }
   function renderGroups(name){
     activeMain=name;mode='groups';activeItems=[];
     document.body.classList.remove('show-product-results');
@@ -591,6 +676,7 @@
       const b=document.createElement('button');b.type='button';b.textContent=label;
       b.onclick=()=>renderItems(label,items);sub.appendChild(b);
     });
+    requestAnimationFrame(layoutOrbit);
   }
   function renderItems(groupLabel,items){
     mode='items';activeItems=items;
@@ -601,6 +687,7 @@
     items.forEach(([label,fn])=>{
       const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;sub.appendChild(b);
     });
+    requestAnimationFrame(layoutOrbit);
   }
   function syncDetailState(){
     const detail=document.getElementById('detail'), nav=document.getElementById('mainMenuDirect');
@@ -617,6 +704,7 @@
     const detail=document.getElementById('detail');
     if(detail)new MutationObserver(syncDetailState).observe(detail,{attributes:true,attributeFilter:['class','aria-hidden']});
     syncDetailState();
+    window.addEventListener('resize',()=>requestAnimationFrame(layoutOrbit));
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
