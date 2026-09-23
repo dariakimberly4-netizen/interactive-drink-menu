@@ -664,7 +664,102 @@ function restoreCustomerFinalPrefs(){applyLanguage();updateConnectionBanner()}
 window.addEventListener('online',()=>{updateConnectionBanner();toast('Connection restored')});
 window.addEventListener('offline',updateConnectionBanner);
 
-window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter,openQuickOrder,openPickupNotes,openReceiptSearch,openAccessibilityProfile,openPrivacyDataControls,openRecentlyOrdered,openSavedBasket,openOrderSpendInsights,openIngredientAvailability,openPickupReminder,openSupportHistory,openAccountActivityLog,openLanguageSelector,openOfflineReconnect,openSavedPickupPreferences};
+
+const CUSTOMER_DATA_KEYS=[
+ 'menuOrbitCart','menuOrbitOrders','menuOrbitLastOrder','menuOrbitFavorites','menuOrbitPickup',
+ 'mo_saved_for_later_v1','mo_search_history_v1','mo_saved_payments_v1','mo_notification_prefs_v1',
+ 'mo_demo_notifications_v1','mo_scheduled_order_v1','mo_diet_filters_v1','mo_deal_reminders_v1',
+ 'mo_gift_order_v1','mo_group_order_v1','mo_saved_baskets_v1','mo_recently_viewed_v1',
+ 'mo_order_tracking_v1','mo_drink_presets_v1','mo_voucher_wallet_v1','mo_order_feedback_v1',
+ 'mo_favorite_store_v1','mo_favorite_collections_v1','mo_customer_issues_v1',
+ 'mo_notification_center_read_v1','mo_pickup_notes_v1','mo_accessibility_profile_v1',
+ 'mo_language_v1','mo_saved_pickup_preferences_v1','mo_pickup_reminder_v1',
+ 'mo_account_activity_v1','mo_support_history_v1'
+];
+
+function openCustomerHomeSummary(){
+ const a=app(),orders=get('menuOrbitOrders',[]),cart=a?.getState?.()?.cart||get('menuOrbitCart',[]),favStore=get('mo_favorite_store_v1','Not set'),issues=get('mo_customer_issues_v1',[]),unread=buildNotifications().filter(n=>!get('mo_notification_center_read_v1',{})[n.id]?.read).length;
+ const last=orders[0],status=last?orderTrackingStatus(last):'No recent order';
+ const stars=(()=>{try{return JSON.parse(localStorage.getItem('starRewardsMember')||'{}').stars||0}catch{return 0}})();
+ const out=sheet('Customer Home','A compact summary of the customer’s current Menu Orbit activity.');
+ out.innerHTML='<div class="mo-statgrid"><div class="mo-stat"><b>'+cart.reduce((n,x)=>n+(x.qty||1),0)+'</b><small>Cart items</small></div><div class="mo-stat"><b>'+stars+'</b><small>Stars</small></div><div class="mo-stat"><b>'+unread+'</b><small>Unread updates</small></div></div>'+
+ '<div class="mo-next-grid" style="margin-top:12px">'+
+ '<div class="mo-next-card"><h4>Latest order</h4><small>'+(last?esc(last.code||'Order')+'<br>'+esc(status):'No recent order')+'</small><button id="moHomeTrack" '+(!last?'disabled':'')+'>TRACK</button></div>'+
+ '<div class="mo-next-card"><h4>Favorite store</h4><small>'+esc(favStore)+'</small><button id="moHomeStore">OPEN STORE</button></div>'+
+ '<div class="mo-next-card"><h4>Open support</h4><small>'+issues.filter(x=>x.status!=='Resolved').length+' active request(s)</small><button id="moHomeSupport">VIEW</button></div>'+
+ '<div class="mo-next-card"><h4>Quick order</h4><small>Reorder or use a saved preset.</small><button id="moHomeQuick">OPEN</button></div>'+
+ '</div>';
+ $('#moHomeTrack')?.addEventListener('click',openOrderTracking);
+ $('#moHomeStore').onclick=openFavoriteStore;
+ $('#moHomeSupport').onclick=openSupportHistory;
+ $('#moHomeQuick').onclick=openQuickOrder;
+}
+
+function openGlobalCustomerSearch(){
+ const a=app(),products=a?.products||[],orders=get('menuOrbitOrders',[]),baskets=get('mo_saved_baskets_v1',[]),issues=get('mo_customer_issues_v1',[]),out=sheet('Global Customer Search','Search menu items, orders, saved baskets, stores, and support in one place.');
+ const stores=['Starbucks SM City Bacoor','Starbucks Molino Boulevard','Starbucks Vista Mall Daang Hari'];
+ const features=[
+  {name:'Order Tracking',type:'Feature',open:openOrderTracking},
+  {name:'Quick Order',type:'Feature',open:openQuickOrder},
+  {name:'Receipt Search',type:'Feature',open:openReceiptSearch},
+  {name:'Notification Center',type:'Feature',open:openNotificationCenter},
+  {name:'Support History',type:'Feature',open:openSupportHistory}
+ ];
+ out.innerHTML='<div class="mo-form"><input id="moGlobalSearchInput" type="search" placeholder="Search everything"></div><div id="moGlobalSearchResults"><div class="empty">Start typing to search.</div></div>';
+ const render=()=>{
+   const q=($('#moGlobalSearchInput').value||'').trim().toLowerCase(),rows=[];
+   if(!q){$('#moGlobalSearchResults').innerHTML='<div class="empty">Start typing to search.</div>';return}
+   products.filter(p=>(p.name+' '+p.cat).toLowerCase().includes(q)).slice(0,8).forEach(p=>rows.push({type:'Menu',title:p.name,sub:p.cat+' • '+money(p.price),action:'product',id:p.id}));
+   orders.filter(o=>((o.code||'')+' '+(o.items||[]).map(x=>x.name).join(' ')).toLowerCase().includes(q)).slice(0,6).forEach((o,i)=>rows.push({type:'Order',title:o.code||'Order',sub:(o.items||[]).map(x=>x.name).join(' • '),action:'order',id:o.code||String(i)}));
+   baskets.filter(b=>(b.name+' '+b.items.map(x=>x.name).join(' ')).toLowerCase().includes(q)).slice(0,5).forEach((b,i)=>rows.push({type:'Basket',title:b.name,sub:b.items.length+' saved item(s)',action:'basket',id:String(i)}));
+   stores.filter(s=>s.toLowerCase().includes(q)).forEach(s=>rows.push({type:'Store',title:s,sub:'Pickup store',action:'store',id:s}));
+   issues.filter(x=>(x.type+' '+x.orderCode+' '+(x.note||'')).toLowerCase().includes(q)).slice(0,5).forEach(x=>rows.push({type:'Support',title:x.type+' • '+x.orderCode,sub:x.status,action:'support',id:x.id}));
+   features.filter(x=>x.name.toLowerCase().includes(q)).forEach((x,i)=>rows.push({type:x.type,title:x.name,sub:'Customer tool',action:'feature',id:String(features.indexOf(x))}));
+   $('#moGlobalSearchResults').innerHTML=rows.length?rows.slice(0,20).map((r,i)=>'<div class="mo-result" style="grid-template-columns:1fr auto"><div><b>'+esc(r.title)+'</b><small>'+esc(r.type)+' • '+esc(r.sub||'')+'</small></div><button data-global-row="'+i+'">Open</button></div>').join(''):'<div class="empty">No matches.</div>';
+   $('#moGlobalSearchResults').querySelectorAll('[data-global-row]').forEach(b=>b.onclick=()=>{
+     const r=rows[+b.dataset.globalRow];
+     if(r.action==='product'){document.querySelector('#moCustomerNextSheet')?.classList.remove('open');a?.openProduct?.(r.id)}
+     else if(r.action==='order')openOrderTracking();
+     else if(r.action==='basket')openSavedBasket();
+     else if(r.action==='store'){put('mo_favorite_store_v1',r.id);toast('Store selected');openFavoriteStore()}
+     else if(r.action==='support')openSupportHistory();
+     else if(r.action==='feature')features[+r.id]?.open?.();
+   });
+ };
+ $('#moGlobalSearchInput').addEventListener('input',render);
+}
+
+function priceChanges(){
+ const products=app()?.products||[],orders=get('menuOrbitOrders',[]),baskets=get('mo_saved_baskets_v1',[]);
+ const historical=[...orders.flatMap(o=>o.items||[]),...baskets.flatMap(b=>b.items||[])],seen=new Map();
+ historical.forEach(x=>{if(!x.id||seen.has(x.id))return;const now=products.find(p=>p.id===x.id);if(now&&Number(now.price)!==Number(x.price))seen.set(x.id,{name:x.name||now.name,old:Number(x.price),now:Number(now.price)})});
+ return [...seen.values()];
+}
+function openPriceChangeNotice(){
+ const changes=priceChanges(),out=sheet('Price Change Notice','Compare saved or previously ordered item prices with the current reference catalog.');
+ out.innerHTML=changes.length?changes.map(x=>'<div class="mo-next-card" style="margin-bottom:10px"><h4>'+esc(x.name)+'</h4><small>Previous: '+money(x.old)+'<br>Current: '+money(x.now)+'<br><b>'+(x.now>x.old?'Increased by ':'Decreased by ')+money(Math.abs(x.now-x.old))+'</b></small></div>').join(''):'<div class="empty">No price changes detected in your saved or previously ordered items.</div>';
+}
+
+function snapshotCustomerData(label){
+ const data={};
+ CUSTOMER_DATA_KEYS.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)data[k]=v});
+ localStorage.setItem('mo_undo_snapshot_v1',JSON.stringify({label,at:new Date().toISOString(),data}));
+}
+function openUndoLastAction(){
+ const snap=get('mo_undo_snapshot_v1',null),out=sheet('Undo Last Action','Restore the most recent reversible customer-data action.');
+ out.innerHTML=snap?'<div class="mo-saved-banner"><b>'+esc(snap.label||'Last action')+'</b><br>'+esc(snap.at||'')+'</div><button class="mo-primary" style="width:100%;margin-top:12px" id="moUndoAction">UNDO NOW</button><p class="demo-banner">Undo restores the saved browser snapshot from immediately before that action.</p>':'<div class="empty">There is no reversible action saved yet.</div>';
+ $('#moUndoAction')?.addEventListener('click',()=>{Object.entries(snap.data||{}).forEach(([k,v])=>localStorage.setItem(k,v));localStorage.removeItem('mo_undo_snapshot_v1');toast('Last action restored');setTimeout(()=>location.reload(),450)});
+}
+
+function openClearAllCustomerData(){
+ const out=sheet('Clear All Customer Data','Reset this browser’s Menu Orbit customer demo profile.');
+ out.innerHTML='<div class="mo-saved-banner"><b>This clears:</b><br>cart, orders, favorites, saved baskets, preferences, recent activity, support records, reminders, pickup settings, and other locally stored customer data.</div><div class="mo-form" style="margin-top:12px"><input id="moClearAllConfirm" placeholder="Type CLEAR to confirm"><button class="mo-primary" id="moClearAllCustomer" disabled>CLEAR ALL CUSTOMER DATA</button></div><p class="demo-banner">A one-step Undo snapshot is created before clearing. This does not affect any external Starbucks account.</p>';
+ const input=$('#moClearAllConfirm'),btn=$('#moClearAllCustomer');
+ input.addEventListener('input',()=>btn.disabled=input.value.trim().toUpperCase()!=='CLEAR');
+ btn.onclick=()=>{snapshotCustomerData('Clear All Customer Data');CUSTOMER_DATA_KEYS.forEach(k=>localStorage.removeItem(k));logAccountActivity('Data reset','Customer demo data cleared');toast('Customer data cleared');setTimeout(()=>location.reload(),550)};
+}
+
+window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter,openQuickOrder,openPickupNotes,openReceiptSearch,openAccessibilityProfile,openPrivacyDataControls,openRecentlyOrdered,openSavedBasket,openOrderSpendInsights,openIngredientAvailability,openPickupReminder,openSupportHistory,openAccountActivityLog,openLanguageSelector,openOfflineReconnect,openSavedPickupPreferences,openCustomerHomeSummary,openGlobalCustomerSearch,openUndoLastAction,openPriceChangeNotice,openClearAllCustomerData};
 
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
