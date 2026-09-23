@@ -27,6 +27,8 @@
   .mo-form{display:grid;gap:9px}.mo-form select,.mo-form textarea,.mo-form input{width:100%;min-height:50px;border:1px solid rgba(255,255,255,.14);border-radius:13px;background:#0d3628;color:#fff;padding:10px;font:inherit}.mo-form textarea{min-height:90px}.mo-primary{min-height:50px;border:0;border-radius:14px;background:linear-gradient(135deg,#00a862,#00754a);color:#fff;font-weight:950;padding:0 15px}
   .mo-search-suggest{position:fixed;z-index:160;top:145px;left:50%;transform:translateX(-50%);width:min(600px,calc(100% - 30px));max-height:52vh;overflow:auto;border:1px solid rgba(255,255,255,.14);border-radius:0 0 18px 18px;background:#08251b;box-shadow:0 24px 65px rgba(0,0,0,.5);display:none}.mo-search-suggest.open{display:block}.mo-suggest-row{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.08);cursor:pointer}.mo-suggest-row:hover{background:rgba(255,255,255,.06)}.mo-suggest-row img{width:42px;height:42px;border-radius:10px;object-fit:cover}.mo-suggest-row b{font-size:12px}.mo-suggest-row small{color:#a8b9af;margin-left:auto}
   .mo-shop-toast{position:fixed;z-index:190;left:50%;bottom:90px;transform:translate(-50%,15px);opacity:0;pointer-events:none;transition:.2s;padding:10px 14px;border-radius:999px;background:#f4efe6;color:#07331f;font-weight:900;box-shadow:0 15px 35px rgba(0,0,0,.35)}.mo-shop-toast.show{opacity:1;transform:translate(-50%,0)}
+  .mo-compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mo-compare-card{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px;background:rgba(255,255,255,.04)}.mo-compare-card img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px}.mo-compare-card h4{margin:8px 0 5px}.mo-compare-card small{display:block;color:#abc0b6;margin:3px 0}.mo-chat-log{display:grid;gap:8px;max-height:280px;overflow:auto;margin:10px 0}.mo-chat-msg{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.06);max-width:84%}.mo-chat-msg.me{margin-left:auto;background:#0d6b49}.mo-countdown{font-size:24px;font-weight:950;color:#f4c86f;letter-spacing:.04em}
+  @media(max-width:700px){.mo-compare-grid{grid-template-columns:1fr}}
   @media(max-width:700px){.mo-statgrid{grid-template-columns:1fr 1fr 1fr}.mo-result{grid-template-columns:54px 1fr}.mo-result img{width:54px;height:54px}.mo-result button{grid-column:2}.mo-search-suggest{top:136px}.mo-sheet-card{padding:16px}}
   `;
   document.head.appendChild(style);
@@ -74,10 +76,14 @@
       '<button class="mo-tool" id="moVisualSearch">📷 Visual Search</button>'+
       '<button class="mo-tool" id="moInbox">🔔 Inbox <span id="moInboxCount"></span></button>'+
       '<button class="mo-tool" id="moBranch">📍 Branch</button>'+
-      '<button class="mo-tool" id="moProblem">⚠ Order Help</button>';
+      '<button class="mo-tool" id="moProblem">⚠ Order Help</button>'+
+      '<button class="mo-tool" id="moCompare">⚖ Compare</button>'+
+      '<button class="mo-tool" id="moUsual">↻ Your Usual</button>'+
+      '<button class="mo-tool" id="moOrderChat">💬 Order Chat</button>'+
+      '<button class="mo-tool" id="moVoucherTimer">⏳ Voucher</button>';
     nav.appendChild(box);
-    by('#moTrending').onclick=openTrending;by('#moVisualSearch').onclick=openVisual;by('#moInbox').onclick=openInbox;by('#moBranch').onclick=openBranch;by('#moProblem').onclick=openProblem;
-    [['#moTrending','trending-orbit-v1'],['#moVisualSearch','visual-drink-search-v1'],['#moInbox','commerce-inbox-v1'],['#moBranch','branch-profile-v1'],['#moProblem','order-problem-center-v1']].forEach(([s,k])=>window.NewFeatureHighlight?.register(s,k,'NEW'));
+    by('#moTrending').onclick=openTrending;by('#moVisualSearch').onclick=openVisual;by('#moInbox').onclick=openInbox;by('#moBranch').onclick=openBranch;by('#moProblem').onclick=openProblem;by('#moCompare').onclick=openCompare;by('#moUsual').onclick=openUsual;by('#moOrderChat').onclick=openOrderChat;by('#moVoucherTimer').onclick=openVoucherTimer;
+    [['#moTrending','trending-orbit-v1'],['#moVisualSearch','visual-drink-search-v1'],['#moInbox','commerce-inbox-v1'],['#moBranch','branch-profile-v1'],['#moProblem','order-problem-center-v1'],['#moCompare','compare-drinks-v1'],['#moUsual','your-usual-v1'],['#moOrderChat','order-chat-v1'],['#moVoucherTimer','voucher-countdown-v1']].forEach(([s,k])=>window.NewFeatureHighlight?.register(s,k,'NEW'));
     refreshInboxCount();
   }
 
@@ -137,6 +143,47 @@
     const orders=get('mo_demo_orders_v1',[]).slice().reverse(),last=orders[0],cases=get('mo_order_cases_v1',[]),out=sheet('Order Problem Center','Structured demo support for wrong, missing, spilled, or incorrectly customized orders.');
     out.innerHTML=(last?'<div class="mo-banner"><b>Order '+esc(last.code)+'</b><br>'+esc(last.status||'Current demo order')+'</div>':'<div class="mo-banner">No demo order found yet. You can still preview the case flow.</div>')+'<div class="mo-form"><select id="moIssue"><option>Wrong drink</option><option>Missing item</option><option>Spilled drink</option><option>Quality concern</option><option>Incorrect customization</option><option>Other</option></select><textarea id="moIssueNote" placeholder="Tell the branch what happened…"></textarea><input id="moEvidence" type="file" accept="image/*,video/*"><button class="mo-primary" id="moSubmitCase">SUBMIT DEMO CASE</button></div><div class="section-title">Case history</div><div id="moCases">'+(cases.length?cases.map(c=>'<div class="mo-result" style="grid-template-columns:1fr auto"><div><b>'+esc(c.id)+' • '+esc(c.issue)+'</b><small>'+esc(c.order)+' • '+esc(c.status)+' • '+esc(c.at)+'</small></div><span class="badge">'+esc(c.status)+'</span></div>').join(''):'<div class="empty">No support cases yet.</div>')+'</div>';
     by('#moSubmitCase').onclick=()=>{const issue=by('#moIssue').value,note=by('#moIssueNote').value.trim(),file=by('#moEvidence').files?.[0];const item={id:'CASE-'+Date.now().toString().slice(-6),order:last?.code||'DEMO',issue,note,evidence:file?file.name:'No file',status:'Under Review',at:new Date().toLocaleString('en-PH')};cases.unshift(item);put('mo_order_cases_v1',cases.slice(0,20));toast('Demo case submitted');openProblem()};
+  }
+
+
+  // COMPARE DRINKS
+  function openCompare(){
+    const drinks=catalog().filter(p=>p.kind==='drink').slice(0,18),saved=get('mo_compare_ids_v1',[]);
+    const out=sheet('Compare Drinks','Choose up to three drinks and compare price, calories, serving style, and menu category.');
+    out.innerHTML='<div class="mo-filterbar">'+drinks.map(p=>'<button class="'+(saved.includes(p.id)?'on':'')+'" data-compare-pick="'+esc(p.id)+'">'+esc(p.name)+'</button>').join('')+'</div><div id="moCompareResult"></div>';
+    const render=()=>{const ids=get('mo_compare_ids_v1',[]),items=ids.map(id=>catalog().find(p=>p.id===id)).filter(Boolean);by('#moCompareResult').innerHTML=items.length?'<div class="mo-compare-grid">'+items.map(p=>'<article class="mo-compare-card"><img src="'+esc(p.img)+'" alt=""><h4>'+esc(p.name)+'</h4><small><b>'+money(p.price)+'</b></small><small>Calories: '+esc(p.cal??'See store')+'</small><small>Style: '+esc((p.temps||[]).join(' / '))+'</small><small>Category: '+esc(p.cat)+'</small><button class="mo-primary" style="width:100%;margin-top:8px" data-open-product="'+esc(p.id)+'">View</button></article>').join('')+'</div>':'<div class="mo-banner">Select 2–3 drinks above to compare them.</div>';bindProducts(by('#moCompareResult'))};
+    out.querySelectorAll('[data-compare-pick]').forEach(b=>b.onclick=()=>{let ids=get('mo_compare_ids_v1',[]),id=b.dataset.comparePick;if(ids.includes(id))ids=ids.filter(x=>x!==id);else{if(ids.length>=3)ids.shift();ids.push(id)}put('mo_compare_ids_v1',ids);out.querySelectorAll('[data-compare-pick]').forEach(x=>x.classList.toggle('on',ids.includes(x.dataset.comparePick)));render()});render();
+  }
+
+  // YOUR USUAL / REORDER
+  function openUsual(){
+    const orders=get('menuOrbitOrders',[]),freq=new Map(),lastSeen=new Map();
+    orders.forEach((o,oi)=>(o.items||[]).forEach(x=>{const key=x.name||x.id||'Item';freq.set(key,(freq.get(key)||0)+(x.qty||1));if(!lastSeen.has(key))lastSeen.set(key,{...x,order:o,rank:oi})}));
+    let rows=[...freq.entries()].sort((a,b)=>b[1]-a[1]).slice(0,6).map(([name,count])=>({name,count,...lastSeen.get(name)}));
+    if(!rows.length){const fall=['Caramel Macchiato','Cold Brew','Caffè Latte'].map((name,i)=>{const p=catalog().find(x=>x.name.includes(name));return p?{name:p.name,count:Math.max(1,3-i),...p}:null}).filter(Boolean);rows=fall}
+    const out=sheet('Your Usual','Recently bought favorites and one-tap reorder.');
+    out.innerHTML=rows.length?rows.map((x,i)=>'<div class="mo-result"><img src="'+esc(x.img||catalog().find(p=>p.name===x.name)?.img||'')+'" alt=""><div><b>'+esc(x.name)+'</b><small>Ordered '+esc(x.count)+'× • '+(i===0?'Your top usual':'Recently bought')+'</small></div><button data-usual="'+esc(x.name)+'">Reorder</button></div>').join(''):'<div class="empty">No past orders yet.</div>';
+    out.querySelectorAll('[data-usual]').forEach(b=>b.onclick=()=>{const name=b.dataset.usual,src=rows.find(x=>x.name===name),p=catalog().find(x=>x.name===name);try{const s=appState();const item=src?.price?src:p;if(s&&item){s.cart.push({key:Date.now(),id:item.id||p?.id,name:item.name,price:item.price||p?.price||0,img:item.img||p?.img||'',qty:1,size:item.size||'Tall',style:item.style||item.temps?.[0]||'Iced'});localStorage.setItem('menuOrbitCart',JSON.stringify(s.cart));toast(name+' added to cart')}}catch{}});
+  }
+
+  // ORDER-SPECIFIC CHAT
+  function openOrderChat(){
+    const orders=get('mo_demo_orders_v1',[]).slice().reverse(),last=orders[0]||get('menuOrbitOrders',[])[0],code=last?.code||'DEMO';
+    const key='mo_order_chat_'+code,log=get(key,[{from:'branch',text:'Hi! This chat is linked to order '+code+'.',at:new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'})}]);
+    const out=sheet('Order Chat','Conversation tied specifically to '+code+'. Demo only.');
+    const render=()=>{by('#moChatLog').innerHTML=get(key,[]).map(m=>'<div class="mo-chat-msg '+(m.from==='me'?'me':'')+'"><b>'+(m.from==='me'?'You':'Branch')+'</b><br>'+esc(m.text)+'<br><small>'+esc(m.at)+'</small></div>').join('');by('#moChatLog').scrollTop=by('#moChatLog').scrollHeight};
+    out.innerHTML='<div class="mo-banner"><b>Order '+esc(code)+'</b><br>Messages here stay in this browser demo.</div><div class="mo-chat-log" id="moChatLog"></div><div class="mo-form"><textarea id="moChatText" placeholder="Message the branch about this order…"></textarea><button class="mo-primary" id="moSendOrderChat">SEND MESSAGE</button></div>';
+    by('#moSendOrderChat').onclick=()=>{const t=by('#moChatText').value.trim();if(!t)return;const l=get(key,[]);l.push({from:'me',text:t,at:new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'})});put(key,l);by('#moChatText').value='';render();setTimeout(()=>{const l2=get(key,[]);l2.push({from:'branch',text:'Thanks — your message is attached to '+code+' in this demo.',at:new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'})});put(key,l2);render()},500)};render();
+  }
+
+  // VOUCHER COUNTDOWN
+  function voucherExpiry(){
+    let ts=Number(localStorage.getItem('mo_voucher_expiry_v1'));if(!ts||ts<Date.now()){const d=new Date();d.setHours(23,59,59,999);ts=d.getTime();localStorage.setItem('mo_voucher_expiry_v1',String(ts))}return ts
+  }
+  function openVoucherTimer(){
+    const out=sheet('Voucher Countdown','See exactly how long your demo voucher remains available.');
+    out.innerHTML='<div class="mo-banner"><b>DEMO ₱50 OFF</b><br>Minimum spend ₱300 • Selected branches • Demo use only</div><div style="text-align:center;padding:22px"><div class="mo-kicker">Expires in</div><div class="mo-countdown" id="moVoucherClock">--:--:--</div><p style="color:#abc0b6">Eligibility is checked at checkout.</p></div><div class="mo-result" style="grid-template-columns:1fr"><div><b>Why a voucher may not apply</b><small>Minimum spend not met • branch restriction • product restriction • expired • already used.</small></div></div>';
+    const tick=()=>{const el=by('#moVoucherClock');if(!el)return;const ms=Math.max(0,voucherExpiry()-Date.now()),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);el.textContent=[h,m,s].map(x=>String(x).padStart(2,'0')).join(':');if(ms>0)setTimeout(tick,1000)};tick();
   }
 
   function init(){
