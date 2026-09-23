@@ -972,7 +972,7 @@
 </style>
 </head>
 <body>
-<!-- BUILD 20260924-FINAL-MOBILE-ORBIT -->
+<!-- BUILD 20260924-SMART-WELLNESS-V8 -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -1633,20 +1633,18 @@
     'Global Search':'customer-global-search-2026-09-24-v7',
     'Undo Last Action':'customer-undo-last-action-2026-09-24-v7',
     'Price Change Notice':'customer-price-change-notice-2026-09-24-v7',
-    'Clear All Customer Data':'customer-clear-all-data-2026-09-24-v7'
+    'Clear All Customer Data':'customer-clear-all-data-2026-09-24-v7',
+    'Smart Wellness Filters':'customer-smart-wellness-filters-2026-09-24-v8'
   };
   const CUSTOMER_LATEST_BATCH=[
-    'Customer Home',
-    'Global Search',
-    'Undo Last Action',
-    'Price Change Notice',
-    'Clear All Customer Data'
+    'Smart Wellness Filters'
   ];
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
     try{return JSON.parse(localStorage.getItem(CUSTOMER_SEEN_KEY)||'{}')}catch(e){return{}}
   }
   function customerFeatureUnseen(label){
+    if(!CUSTOMER_LATEST_BATCH.includes(label))return false;
     const id=CUSTOMER_NEW_FEATURES[label];if(!id)return false;
     return customerSeen()[id]!==true;
   }
@@ -1659,18 +1657,10 @@
     return labels.some(customerFeatureUnseen);
   }
   function mainHasNew(key){
-    if(key==='menu')return customerFeatureUnseen('Global Search');
-    if(key==='order')return customerFeatureUnseen('Price Change Notice');
-    if(key==='account')return customerFeatureUnseen('Customer Home');
-    if(key==='settings')return anyCustomerUnseen(['Undo Last Action','Clear All Customer Data']);
-    return false;
+    return key==='menu'&&customerFeatureUnseen('Smart Wellness Filters');
   }
   function groupHasNew(main,group){
-    if(main==='menu'&&group==='Find')return customerFeatureUnseen('Global Search');
-    if(main==='order'&&group==='Current Order')return customerFeatureUnseen('Price Change Notice');
-    if(main==='account'&&group==='Profile')return customerFeatureUnseen('Customer Home');
-    if(main==='settings'&&group==='Privacy & Data')return anyCustomerUnseen(['Undo Last Action','Clear All Customer Data']);
-    return false;
+    return main==='menu'&&group==='Preferences'&&customerFeatureUnseen('Smart Wellness Filters');
   }
 
   function decorateNewButton(b){
