@@ -84,6 +84,27 @@
     }
   
     [data-hidden-legacy-bottom="true"]{display:none!important}
+  
+    /* FINAL MOBILE NAV POLISH */
+    @media(max-width:800px){
+      header #searchBtn,
+      header #motionBtn{display:none!important}
+      header{justify-content:flex-start}
+      .brand{margin-right:auto}
+      .main-submenu-direct{
+        display:grid!important;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+        overflow:visible!important;
+      }
+      .main-submenu-direct button{
+        width:100%;
+        white-space:normal!important;
+        min-height:42px;
+        padding:7px 10px;
+        line-height:1.15;
+      }
+    }
   </style>
 </head>
 <body>
@@ -305,7 +326,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js"></script>
 <script src="completion-layer.js"></script>
-  <script src="customer-next.js?v=20260924-9"></script>
+  <script src="customer-next.js?v=20260924-10"></script>
 
 <script>
 (function(){
