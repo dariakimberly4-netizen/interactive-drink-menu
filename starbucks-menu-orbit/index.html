@@ -1027,6 +1027,18 @@
     #tableQrScanStatus{padding:10px;color:#d5e2dc;font-size:12px}
     .table-qr-saved{margin-top:11px;padding:11px 12px;border-radius:13px;background:rgba(0,168,98,.12);border:1px solid rgba(0,168,98,.28);color:#cfe9dc;font-size:12px}
     @media(max-width:520px){.table-qr-actions{grid-template-columns:1fr}}
+  
+    /* CALL STAFF DINE IN */
+    .call-staff-table{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:12px 13px;margin:6px 0 15px;border-radius:16px;border:1px solid rgba(244,200,111,.3);background:rgba(244,200,111,.06)}
+    .call-staff-table span{font-size:9px;font-weight:900;letter-spacing:.12em;color:#c8d7cf}
+    .call-staff-table strong{font-size:20px;color:#f4d992}
+    .call-staff-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+    .call-staff-grid button{min-height:76px;border-radius:17px;border:1px solid var(--line);background:#0c2d22;color:#fff;font-size:24px;font-weight:900;padding:10px;cursor:pointer}
+    .call-staff-grid button span{display:block;margin-top:5px;font-size:12px}
+    .call-staff-grid button.selected{border-color:#f4c86f;box-shadow:0 0 0 2px rgba(244,200,111,.55);background:#14392d}
+    .call-staff-grid button:last-child{grid-column:1/-1}
+    .call-staff-note{width:100%;min-height:82px;box-sizing:border-box;border-radius:14px;border:1px solid var(--line);background:#f5f0e7;color:#09271d;padding:12px;font:600 14px/1.4 system-ui;resize:vertical}
+    .call-staff-status{margin-top:11px;padding:11px 12px;border-radius:13px;background:rgba(0,168,98,.12);border:1px solid rgba(0,168,98,.28);color:#d4e9de;font-size:12px;line-height:1.45}
   </style>
 </head>
 <body>
@@ -1266,7 +1278,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-20"></script>
+  <script src="customer-next.js?v=20260924-21"></script>
 
 <script>
 (function(){
@@ -1288,6 +1300,7 @@
     order:[
       ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Saved Basket',()=>window.MenuOrbitCustomer?.openSavedBasket?.()],['Price Change Notice',()=>window.MenuOrbitCustomer?.openPriceChangeNotice?.()],['Quick Order',()=>window.MenuOrbitCustomer?.openQuickOrder?.()],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
       ['Plan Order',[['Dine In',()=>openDineIn()],['Table / QR Ordering',()=>openTableQrOrdering()],['Schedule Order',()=>clickEl('#moSchedule')],['Pickup Reminder',()=>window.MenuOrbitCustomer?.openPickupReminder?.()],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
+      ['Dine In Service',[['Call Staff',()=>openCallStaff()]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
       ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Receipt Search',()=>window.MenuOrbitCustomer?.openReceiptSearch?.()],['Recently Ordered',()=>window.MenuOrbitCustomer?.openRecentlyOrdered?.()],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
       ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')],['Support History',()=>window.MenuOrbitCustomer?.openSupportHistory?.()],['Refund / Issue Status',()=>window.MenuOrbitCustomer?.openRefundIssueStatus?.()],['Post-Pickup Feedback',()=>window.MenuOrbitCustomer?.openPostPickupFeedback?.()]]]
@@ -1349,6 +1362,102 @@
     setTimeout(selectDine,80);
     setTimeout(selectDine,220);
   }
+  function openCallStaff(){
+    markCustomerFeatureSeen('Call Staff');
+    let modal=document.getElementById('callStaffModal');
+    if(!modal){
+      modal=document.createElement('div');
+      modal.className='modal';
+      modal.id='callStaffModal';
+      modal.setAttribute('role','dialog');
+      modal.setAttribute('aria-modal','true');
+      modal.innerHTML='<div class="modal-card" id="callStaffContent"></div>';
+      document.body.appendChild(modal);
+    }
+    const content=document.getElementById('callStaffContent');
+    const table=readLocal('mo_dine_table_v1',null);
+    const pickup=readLocal('menuOrbitPickup',null);
+    const tableNo=table?.table||pickup?.table||'';
+    const store=table?.store||pickup?.store||'Selected store';
+    const requests=readLocal('mo_dine_staff_requests_v1',[]);
+    const latest=Array.isArray(requests)&&requests.length?requests[0]:null;
+
+    content.innerHTML=`
+      <div class="drawer-head">
+        <div><h2>Call Staff</h2><small style="color:#abc0b6">Dine In assistance • ${store}</small></div>
+        <button class="close" id="callStaffClose" aria-label="Close">×</button>
+      </div>
+
+      <div class="call-staff-table">
+        <span>TABLE</span>
+        <strong>${tableNo||'Not set'}</strong>
+        <button type="button" class="pill" id="callStaffSetTable">${tableNo?'Change':'Set table'}</button>
+      </div>
+
+      <div class="section-title">What do you need?</div>
+      <div class="call-staff-grid">
+        <button type="button" data-staff-request="Water">💧<span>Water</span></button>
+        <button type="button" data-staff-request="Utensils">🍴<span>Utensils</span></button>
+        <button type="button" data-staff-request="Clean Table">✨<span>Clean Table</span></button>
+        <button type="button" data-staff-request="Order Help">🧾<span>Order Help</span></button>
+        <button type="button" data-staff-request="Other">💬<span>Other</span></button>
+      </div>
+
+      <div id="callStaffOtherWrap" hidden>
+        <div class="section-title">Message</div>
+        <textarea id="callStaffOther" class="call-staff-note" maxlength="160" placeholder="Tell staff what you need…"></textarea>
+      </div>
+
+      <button class="add" id="sendStaffRequest" disabled>Send Request</button>
+      <div class="call-staff-status" id="callStaffStatus">
+        ${latest?('Last request: <b>'+latest.type+'</b> • '+(latest.status||'Sent')):'No active request yet.'}
+      </div>
+      <p class="notice">Prototype feature. Requests are saved on this browser for demo use.</p>
+    `;
+    modal.classList.add('open');
+
+    let selected='';
+    document.getElementById('callStaffClose').onclick=()=>modal.classList.remove('open');
+    document.getElementById('callStaffSetTable').onclick=()=>{
+      modal.classList.remove('open');
+      openTableQrOrdering();
+    };
+    content.querySelectorAll('[data-staff-request]').forEach(btn=>{
+      btn.onclick=()=>{
+        selected=btn.dataset.staffRequest||'';
+        content.querySelectorAll('[data-staff-request]').forEach(x=>x.classList.toggle('selected',x===btn));
+        const otherWrap=document.getElementById('callStaffOtherWrap');
+        otherWrap.hidden=selected!=='Other';
+        document.getElementById('sendStaffRequest').disabled=!selected;
+      };
+    });
+    document.getElementById('sendStaffRequest').onclick=()=>{
+      const currentTable=readLocal('mo_dine_table_v1',null);
+      const currentPickup=readLocal('menuOrbitPickup',null);
+      const currentTableNo=currentTable?.table||currentPickup?.table||'';
+      if(!currentTableNo){
+        document.getElementById('callStaffStatus').innerHTML='Please set your table number first.';
+        return;
+      }
+      const note=(document.getElementById('callStaffOther')?.value||'').trim();
+      const req={
+        id:'SR-'+Date.now(),
+        table:String(currentTableNo),
+        store:currentTable?.store||currentPickup?.store||store,
+        type:selected,
+        note:selected==='Other'?note:'',
+        status:'Sent',
+        createdAt:new Date().toISOString()
+      };
+      const list=readLocal('mo_dine_staff_requests_v1',[]);
+      list.unshift(req);
+      try{localStorage.setItem('mo_dine_staff_requests_v1',JSON.stringify(list.slice(0,30)))}catch(e){}
+      document.getElementById('callStaffStatus').innerHTML='✓ Request sent to staff for <b>Table '+req.table+'</b><br><small>'+req.type+' • Sent</small>';
+      content.querySelectorAll('[data-staff-request]').forEach(x=>x.disabled=true);
+      document.getElementById('sendStaffRequest').disabled=true;
+    };
+  }
+
   function openTableQrOrdering(){
     markCustomerFeatureSeen('Table / QR Ordering');
     let modal=document.getElementById('tableQrOrderModal');
@@ -1806,12 +1915,14 @@
     'Clear All Customer Data':'customer-clear-all-data-2026-09-24-v7',
     'Smart Wellness Filters':'customer-smart-wellness-filters-2026-09-24-v8',
     'Dine In':'customer-dine-in-2026-09-24-v12',
-    'Table / QR Ordering':'customer-table-qr-ordering-2026-09-24-v13'
+    'Table / QR Ordering':'customer-table-qr-ordering-2026-09-24-v13',
+    'Call Staff':'customer-call-staff-2026-09-24-v1'
   };
   const CUSTOMER_LATEST_BATCH=[
     'Smart Wellness Filters',
     'Dine In',
-    'Table / QR Ordering'
+    'Table / QR Ordering',
+    'Call Staff'
   ];
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
@@ -1838,6 +1949,7 @@
   function groupHasNew(main,group){
     if(main==='menu'&&group==='Preferences'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
     if(main==='order'&&group==='Plan Order'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
+    if(main==='order'&&group==='Dine In Service'&&customerFeatureUnseen('Call Staff'))return true;
     if(main==='stores'&&group==='Find Store'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
     return false;
   }
