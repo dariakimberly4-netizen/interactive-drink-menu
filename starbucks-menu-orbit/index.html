@@ -223,6 +223,105 @@
       pointer-events:none;
     }
 
+    /* LIVE SMART CENTER */
+    #mainMenuDirect #navOrbitCenter.smart-center{
+      overflow:visible!important;
+      border:2px solid rgba(244,200,111,.72)!important;
+      box-shadow:0 0 0 7px rgba(244,200,111,.08),0 16px 38px rgba(0,0,0,.28)!important;
+      transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease!important;
+    }
+    #mainMenuDirect #navOrbitCenter.smart-center::before{
+      content:'';
+      position:absolute;
+      inset:-8px;
+      border-radius:50%;
+      border:3px solid transparent;
+      pointer-events:none;
+      transition:border-color .25s ease,box-shadow .25s ease;
+    }
+    #mainMenuDirect #navOrbitCenter.smart-center[data-order-state="active"]::before{
+      border-color:#f4c86f;
+      box-shadow:0 0 18px rgba(244,200,111,.38);
+    }
+    #mainMenuDirect #navOrbitCenter.smart-center[data-order-state="ready"]::before{
+      border-color:#7ee2aa;
+      box-shadow:0 0 22px rgba(126,226,170,.48);
+      animation:smartCenterReady 1.45s ease-in-out infinite;
+    }
+    #mainMenuDirect #navOrbitCenter.smart-center[data-offline="true"]{
+      border-color:#ff9b7c!important;
+      box-shadow:0 0 0 7px rgba(255,155,124,.10),0 16px 38px rgba(0,0,0,.28)!important;
+    }
+    #mainMenuDirect #navOrbitCenter .smart-kicker{
+      display:block;
+      font:900 8px/1.1 system-ui;
+      letter-spacing:.12em;
+      color:#f4d992;
+      margin-bottom:5px;
+    }
+    #mainMenuDirect #navOrbitCenter .smart-main{
+      display:block;
+      max-width:98px;
+      font:950 12px/1.08 system-ui;
+      letter-spacing:.02em;
+      color:#fff;
+      text-align:center;
+    }
+    #mainMenuDirect #navOrbitCenter .smart-sub{
+      display:block;
+      max-width:98px;
+      margin-top:5px;
+      font:750 8px/1.15 system-ui;
+      color:#bcd0c7;
+      text-align:center;
+    }
+    #mainMenuDirect #navOrbitCenter .smart-badge{
+      position:absolute;
+      z-index:12;
+      min-width:25px;
+      height:25px;
+      padding:0 7px;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      border:2px solid #0c281f;
+      background:#f4c86f;
+      color:#07331f;
+      font:950 10px/1 system-ui;
+      box-shadow:0 6px 16px rgba(0,0,0,.32);
+      pointer-events:none;
+    }
+    #mainMenuDirect #navOrbitCenter .smart-badge.cart{top:-8px;right:-8px}
+    #mainMenuDirect #navOrbitCenter .smart-badge.updates{top:-8px;left:-8px}
+    #mainMenuDirect #navOrbitCenter .smart-badge.order{
+      bottom:-8px;right:-8px;
+      min-width:25px;padding:0;
+      background:#647a70;color:#fff;
+    }
+    #mainMenuDirect #navOrbitCenter .smart-badge.order.active{background:#f4c86f;color:#07331f}
+    #mainMenuDirect #navOrbitCenter .smart-badge.order.ready{background:#7ee2aa;color:#07331f}
+    #mainMenuDirect #navOrbitCenter .smart-badge.offline{
+      bottom:-8px;left:-8px;
+      min-width:auto;
+      background:#a94332;color:#fff;
+      padding:0 8px;
+      font-size:8px;
+      letter-spacing:.04em;
+    }
+    #mainMenuDirect #navOrbitCenter.smart-attention{
+      animation:smartCenterPulse 1.8s ease-in-out infinite;
+    }
+    @keyframes smartCenterPulse{
+      50%{box-shadow:0 0 0 11px rgba(244,200,111,.05),0 0 28px rgba(244,200,111,.28),0 16px 38px rgba(0,0,0,.28)}
+    }
+    @keyframes smartCenterReady{
+      50%{box-shadow:0 0 28px rgba(126,226,170,.68)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      #mainMenuDirect #navOrbitCenter.smart-attention,
+      #mainMenuDirect #navOrbitCenter.smart-center[data-order-state="ready"]::before{animation:none!important}
+    }
+
     /* HARD OVERRIDE: SUBMENUS ARE ORBIT NODES, NOT GRID CARDS */
     #mainMenuDirect #navOrbitDirect{
       position:relative!important;
@@ -460,7 +559,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-CENTER-HOME -->
+<!-- BUILD 20260924-LIVE-SMART-CENTER -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -804,7 +903,67 @@
   }
   function center(title,sub){
     const el=document.getElementById('navOrbitCenter');if(!el)return;
+    el.classList.remove('smart-center','smart-attention');
+    el.removeAttribute('data-order-state');
+    el.removeAttribute('data-offline');
     el.innerHTML='<strong>'+title+'</strong><span>'+(sub||'')+'</span>';
+  }
+  function readLocal(key,fallback){
+    try{const v=localStorage.getItem(key);return v==null?fallback:JSON.parse(v)}catch(e){return fallback}
+  }
+  function smartCenterState(){
+    const appState=window.MenuOrbitApp?.getState?.();
+    const cart=Array.isArray(appState?.cart)?appState.cart:readLocal('menuOrbitCart',[]);
+    const cartCount=(cart||[]).reduce((n,x)=>n+(Number(x?.qty)||1),0);
+    const orders=readLocal('menuOrbitOrders',[]);
+    const tracking=readLocal('mo_order_tracking_v1',{});
+    const latest=Array.isArray(orders)&&orders.length?orders[0]:null;
+    const status=latest?String(tracking[latest.code]||latest.status||'Order received'):'';
+    const statusLower=status.toLowerCase();
+    const isReady=/ready/.test(statusLower);
+    const isActive=!!latest&&!/completed|collected|cancel/.test(statusLower);
+    const reads=readLocal('mo_notification_center_read_v1',{});
+    const issues=readLocal('mo_customer_issues_v1',[]);
+    const vouchers=readLocal('mo_voucher_wallet_v1',[]);
+    const reminders=readLocal('mo_deal_reminders_v1',[]);
+    const noticeIds=[];
+    (orders||[]).slice(0,4).forEach(o=>noticeIds.push('order-'+(o.code||'')));
+    (issues||[]).slice(0,4).forEach(x=>noticeIds.push('issue-'+x.id));
+    (vouchers||[]).filter(v=>v.status==='active').slice(0,3).forEach(v=>noticeIds.push('voucher-'+v.id));
+    (reminders||[]).slice(0,3).forEach(id=>noticeIds.push('reminder-'+id));
+    const unread=noticeIds.filter(id=>!reads?.[id]?.read).length;
+    const rewards=readLocal('starRewardsMember',{});
+    const stars=Number(rewards?.stars||0);
+    const offline=!navigator.onLine;
+    let main='WELCOME BACK',sub='Tap for your live summary';
+    if(offline){main='OFFLINE MODE';sub='Saved data stays on this device'}
+    else if(isReady){main='ORDER READY';sub=latest?.code||'Tap to view order'}
+    else if(isActive){main='ORDER IN PROGRESS';sub=status||'Tap to track'}
+    else if(unread>0){main=unread+' NEW UPDATE'+(unread===1?'':'S');sub='Tap to open Customer Home'}
+    else if(cartCount>0){main=cartCount+' ITEM'+(cartCount===1?'':'S')+' IN CART';sub='Tap to open Customer Home'}
+    else if(stars>0){main=stars+' STAR'+(stars===1?'':'S')+' AVAILABLE';sub='Tap for your live summary'}
+    return {cartCount,unread,stars,offline,isReady,isActive,status,main,sub};
+  }
+  function renderSmartCenter(){
+    if(level!=='main')return;
+    const el=document.getElementById('navOrbitCenter');if(!el)return;
+    const s=smartCenterState();
+    const orderClass=s.isReady?'ready':s.isActive?'active':'';
+    el.classList.add('smart-center');
+    el.classList.toggle('smart-attention',s.offline||s.isReady||s.unread>0);
+    el.dataset.orderState=s.isReady?'ready':s.isActive?'active':'none';
+    el.dataset.offline=String(s.offline);
+    el.setAttribute('role','button');
+    el.setAttribute('tabindex','0');
+    el.setAttribute('aria-label','Customer Home. '+s.main+'. Tap to open your live summary.');
+    el.innerHTML=
+      '<span class="smart-kicker">CUSTOMER HOME</span>'+
+      '<strong class="smart-main">'+s.main+'</strong>'+
+      '<span class="smart-sub">'+s.sub+'</span>'+
+      (s.cartCount?'<i class="smart-badge cart" aria-hidden="true">🛒 '+s.cartCount+'</i>':'')+
+      (s.unread?'<i class="smart-badge updates" aria-hidden="true">🔔 '+s.unread+'</i>':'')+
+      ((s.isReady||s.isActive)?'<i class="smart-badge order '+orderClass+'" aria-hidden="true">'+(s.isReady?'✓':'●')+'</i>':'')+
+      (s.offline?'<i class="smart-badge offline" aria-hidden="true">OFFLINE</i>':'');
   }
   function layoutOrbit(){
     const wrap=document.getElementById('navOrbitDirect');
@@ -929,7 +1088,7 @@
       level='main';activeMain=null;activeGroup=null;activeItems=[];
       document.body.classList.remove('show-product-results');
       const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
-      sub.innerHTML='';center('MENU ORBIT','Choose a section');
+      sub.innerHTML='';renderSmartCenter();
       mainItems.forEach(([key,icon,label])=>{
         const b=button('<span style="font-size:24px;display:block;margin-bottom:4px">'+icon+'</span>'+label,()=>renderGroups(key));
         if(mainHasNew(key)){b.classList.add('customer-new-node');decorateNewButton(b)}
@@ -1026,6 +1185,9 @@
       if(level==='groups')renderMainOrbit();
       else renderGroups(activeMain);
     });
+    document.getElementById('navOrbitCenter')?.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();document.getElementById('navOrbitCenter')?.click()}
+    });
     window.addEventListener('popstate',e=>restoreFrom(e.state));
     document.getElementById('mainSubmenuSecondary')?.replaceChildren();
 
@@ -1039,6 +1201,12 @@
     if(detail)new MutationObserver(syncDetailState).observe(detail,{attributes:true,attributeFilter:['class','aria-hidden']});
     syncDetailState();
     window.addEventListener('resize',()=>requestAnimationFrame(layoutOrbit));
+    const refreshSmartCenter=()=>{if(level==='main')renderSmartCenter()};
+    window.addEventListener('online',refreshSmartCenter);
+    window.addEventListener('offline',refreshSmartCenter);
+    window.addEventListener('storage',refreshSmartCenter);
+    document.addEventListener('click',()=>setTimeout(refreshSmartCenter,80),true);
+    setInterval(refreshSmartCenter,1200);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
