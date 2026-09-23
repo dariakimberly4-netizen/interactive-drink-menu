@@ -20,6 +20,13 @@
 @media(max-width:900px){.ops-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:520px){.ops-grid{grid-template-columns:1fr 1fr}}
 
+
+/* Strong visual treatment for newly-added staff portal features */
+#liveOpsHub .mo-new-feature{transform:translateZ(0);border-color:#f4c86f!important;background:linear-gradient(145deg,rgba(244,200,111,.20),rgba(0,117,74,.24))!important}
+#liveOpsHub .mo-new-feature::after{content:"NEW";top:7px;right:7px;font-size:10px;padding:5px 8px}
+#liveOpsHub .mo-new-feature::before{content:"";position:absolute;inset:-5px;border:2px solid rgba(244,200,111,.9);border-radius:18px;pointer-events:none;animation:staffNewRing 1.5s ease-in-out infinite}
+@keyframes staffNewRing{50%{inset:-10px;opacity:.18}}
+
 </style>
 </head>
 <body>
@@ -92,14 +99,13 @@ document.querySelector('#opsInventory').onclick=()=>go('inventory-demo.html');
 document.querySelector('#opsManager').onclick=()=>go('manager.html');
 setTimeout(()=>{
   [
-    ['#liveOpsHub','staff-portal-live-operations-v1'],
-    ['#opsCustomer','staff-portal-customer-v1'],
-    ['#opsCashier','staff-portal-cashier-v1'],
-    ['#opsBarista','staff-portal-barista-v1'],
-    ['#opsInventory','staff-portal-inventory-v1'],
-    ['#opsManager','staff-portal-manager-v1']
+    ['#opsCustomer','staff-portal-customer-v2'],
+    ['#opsCashier','staff-portal-cashier-v2'],
+    ['#opsBarista','staff-portal-barista-v2'],
+    ['#opsInventory','staff-portal-inventory-v2'],
+    ['#opsManager','staff-portal-manager-v2']
   ].forEach(([sel,key])=>window.NewFeatureHighlight?.register(sel,key,'NEW'));
-},250);
+},350);
 
 document.querySelector('#staffQuickBtn').onclick=()=>{setMsg('Opening Barista / Service Crew demo…');go('staff.html')};
 document.querySelector('#studyQuickBtn').onclick=()=>{setMsg('Opening Café Floor / Study Seats demo…');go('study-seat-staff.html')};
