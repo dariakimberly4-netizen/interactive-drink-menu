@@ -814,10 +814,165 @@
       }
       #mainMenuDirect #navOrbitDirect{height:420px!important;min-height:420px!important}
     }
+
+    /* FINAL MOBILE ORBIT REDESIGN */
+    @media(max-width:430px){
+      #mainMenuDirect{
+        padding:6px 10px calc(18px + env(safe-area-inset-bottom,0px))!important;
+        overflow:hidden!important;
+      }
+      #mainMenuDirect .orbit-breadcrumb{
+        margin-top:0!important;
+        font-size:10px!important;
+        line-height:1.2!important;
+      }
+      #mainMenuDirect .orbit-smart-suggestion{
+        width:min(94vw,410px)!important;
+        min-height:34px!important;
+        margin:5px auto 0!important;
+        padding:7px 10px!important;
+        gap:6px!important;
+        font-size:10px!important;
+        white-space:nowrap!important;
+        overflow:hidden!important;
+        text-overflow:ellipsis!important;
+      }
+      #mainMenuDirect .orbit-smart-suggestion span:nth-of-type(1){
+        min-width:0!important;
+        overflow:hidden!important;
+        text-overflow:ellipsis!important;
+      }
+      #mainMenuDirect .orbit-quick-access{
+        min-height:32px!important;
+        margin:5px auto 1px!important;
+        padding:6px 12px!important;
+        font-size:9.5px!important;
+      }
+      #mainMenuDirect #navOrbitDirect{
+        width:min(96vw,400px)!important;
+        height:404px!important;
+        min-height:404px!important;
+        margin:0 auto!important;
+        overflow:visible!important;
+        touch-action:manipulation!important;
+      }
+      #mainMenuDirect #navOrbitDirect .nav-orbit-ring{
+        width:226px!important;
+        height:226px!important;
+        border-width:1.5px!important;
+        opacity:.78!important;
+      }
+      #mainMenuDirect #navOrbitDirect .nav-orbit-center{
+        width:116px!important;
+        height:116px!important;
+        border-width:1.5px!important;
+        box-shadow:0 0 0 5px rgba(244,200,111,.06),0 12px 28px rgba(0,0,0,.23)!important;
+      }
+      #mainMenuDirect #navOrbitCenter::after{
+        inset:-10px!important;
+        opacity:.65!important;
+      }
+      #mainMenuDirect #navOrbitCenter.smart-center::before{
+        inset:-6px!important;
+        border-width:2px!important;
+      }
+      #mainMenuDirect #navOrbitCenter .smart-kicker{
+        font-size:6.6px!important;
+        line-height:1!important;
+        margin-bottom:3px!important;
+        letter-spacing:.10em!important;
+      }
+      #mainMenuDirect #navOrbitCenter .smart-main{
+        max-width:88px!important;
+        font-size:10px!important;
+        line-height:1.02!important;
+      }
+      #mainMenuDirect #navOrbitCenter .smart-sub{display:none!important}
+      #mainMenuDirect #navOrbitCenter .smart-gesture-hint{
+        max-width:88px!important;
+        margin-top:5px!important;
+        padding-top:4px!important;
+        font-size:6.4px!important;
+        line-height:1.08!important;
+        white-space:normal!important;
+      }
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
+        width:84px!important;
+        height:84px!important;
+        min-height:84px!important;
+        padding:7px!important;
+        font-size:10.2px!important;
+        line-height:1.04!important;
+        border-width:1.5px!important;
+        touch-action:manipulation!important;
+        user-select:none!important;
+        -webkit-tap-highlight-color:transparent!important;
+        overflow:visible!important;
+      }
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button[data-main-key]{
+        white-space:nowrap!important;
+        font-size:9.7px!important;
+        letter-spacing:-.02em!important;
+      }
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button[data-main-key] > span:first-child{
+        font-size:19px!important;
+        line-height:1!important;
+        margin-bottom:3px!important;
+      }
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button.nav-back{
+        font-size:9.5px!important;
+      }
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button:active{
+        transform:translate(-50%,-50%) scale(.94)!important;
+      }
+      #mainMenuDirect #navOrbitDirect.orbit-changing #mainSubmenuDirect>button{
+        opacity:0!important;
+        transform:translate(-50%,-50%) scale(.82)!important;
+      }
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
+        transition:
+          left .42s cubic-bezier(.22,.85,.28,1),
+          top .42s cubic-bezier(.22,.85,.28,1),
+          opacity .20s ease,
+          transform .30s cubic-bezier(.22,.85,.28,1),
+          background .2s ease,
+          border-color .2s ease!important;
+      }
+      #mainMenuDirect .customer-new-badge{
+        transform:scale(.85)!important;
+        transform-origin:center!important;
+      }
+      #mainMenuDirect .orbit-live-badge{
+        transform:scale(.88)!important;
+        transform-origin:center!important;
+      }
+      #mainMenuDirect .orbit-longpress-coach{display:none!important}
+    }
+
+    @media(max-width:430px) and (orientation:landscape){
+      #mainMenuDirect #navOrbitDirect{
+        height:310px!important;
+        min-height:310px!important;
+        width:min(86vw,520px)!important;
+      }
+      #mainMenuDirect #navOrbitDirect .nav-orbit-center{
+        width:100px!important;height:100px!important;
+      }
+      #mainMenuDirect #navOrbitDirect .nav-orbit-ring{
+        width:200px!important;height:200px!important;
+      }
+      #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
+        width:72px!important;height:72px!important;min-height:72px!important;
+        font-size:9px!important;
+      }
+      #mainMenuDirect #navOrbitCenter .smart-gesture-hint{display:none!important}
+      #mainMenuDirect .orbit-smart-suggestion{max-width:70vw!important}
+    }
+
 </style>
 </head>
 <body>
-<!-- BUILD 20260924-MOBILE-ORBIT-FIX-V2 -->
+<!-- BUILD 20260924-FINAL-MOBILE-ORBIT -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -1196,9 +1351,9 @@
     const stars=Number(rewards?.stars||0);
     const offline=!navigator.onLine;
     let main='WELCOME BACK',sub='Tap for your live summary';
-    if(offline){main='OFFLINE MODE';sub='Saved data stays on this device'}
+    if(offline){main='OFFLINE';sub='Saved data stays on this device'}
     else if(isReady){main='ORDER READY';sub=latest?.code||'Tap to view order'}
-    else if(isActive){main='ORDER IN PROGRESS';sub=status||'Tap to track'}
+    else if(isActive){main='ORDER ACTIVE';sub=status||'Tap to track'}
     else if(unread>0){main=unread+' NEW UPDATE'+(unread===1?'':'S');sub='Tap to open Customer Home'}
     else if(cartCount>0){main=cartCount+' ITEM'+(cartCount===1?'':'S')+' IN CART';sub='Tap to open Customer Home'}
     else if(stars>0){main=stars+' STAR'+(stars===1?'':'S')+' AVAILABLE';sub='Tap for your live summary'}
@@ -1395,17 +1550,39 @@
     const wrap=document.getElementById('navOrbitDirect');
     const buttons=[...document.querySelectorAll('#mainSubmenuDirect>button')];
     if(!wrap||!buttons.length)return;
-    const w=wrap.clientWidth||360,h=wrap.clientHeight||330,cx=w/2,cy=h/2,count=buttons.length;
+    const w=wrap.clientWidth||360,h=wrap.clientHeight||404,cx=w/2,cy=h/2,count=buttons.length;
     const compact=w<440;
-    const crowded=count>=7,veryCrowded=count>=8;
-    const node=compact?(veryCrowded?68:crowded?74:88):(veryCrowded?82:crowded?90:104);
-    const font=compact?(veryCrowded?9:crowded?10:11.5):(veryCrowded?11:crowded?12:14);
-    const rx=Math.min(w*(veryCrowded?.41:crowded?.395:count>=6?.365:.34),compact?176:220);
-    const ry=Math.min(h*(veryCrowded?.43:crowded?.415:count>=6?.405:.34),compact?166:142);
+    const landscape=compact&&window.matchMedia('(orientation:landscape)').matches;
+
+    let node,font,rx,ry;
+    if(compact){
+      if(landscape){
+        node=count>=8?62:count>=7?66:72;
+        font=count>=8?8:count>=7?8.5:9;
+        rx=Math.min(w*.40,205);
+        ry=Math.min(h*.39,118);
+      }else{
+        node=count>=8?66:count>=7?72:84;
+        font=count>=8?8.8:count>=7?9.4:10.2;
+        rx=Math.min(w*(count>=8?.405:count>=7?.395:.375),158);
+        ry=Math.min(h*(count>=8?.41:count>=7?.405:.39),158);
+      }
+    }else{
+      node=count>=8?82:count>=7?90:104;
+      font=count>=8?11:count>=7?12:14;
+      rx=Math.min(w*(count>=8?.405:count>=7?.385:count>=6?.36:.34),220);
+      ry=Math.min(h*(count>=8?.415:count>=7?.40:count>=6?.38:.34),142);
+    }
+
     buttons.forEach((b,i)=>{
-      const a=-Math.PI/2+(i/count)*Math.PI*2;
-      b.style.setProperty('left',(cx+Math.cos(a)*rx)+'px','important');
-      b.style.setProperty('top',(cy+Math.sin(a)*ry)+'px','important');
+      let a=-Math.PI/2+(i/count)*Math.PI*2;
+      if(compact&&level==='main'&&count===6){
+        const mainAngles=[-90,-30,30,90,150,210];
+        a=mainAngles[i]*Math.PI/180;
+      }
+      const x=cx+Math.cos(a)*rx,y=cy+Math.sin(a)*ry;
+      b.style.setProperty('left',x+'px','important');
+      b.style.setProperty('top',y+'px','important');
       b.style.setProperty('width',node+'px','important');
       b.style.setProperty('height',node+'px','important');
       b.style.setProperty('min-height',node+'px','important');
@@ -1531,9 +1708,10 @@
         const b=button('<span style="font-size:24px;display:block;margin-bottom:4px">'+icon+'</span>'+label,()=>renderGroups(key));
         if(mainHasNew(key)){b.classList.add('customer-new-node');decorateNewButton(b)}
         decorateMainLiveBadge(b,key);
+        b.classList.add('main-orbit-node');
         sub.appendChild(b);
       });
-      updateBreadcrumb();renderSmartSuggestion();saveState();requestAnimationFrame(layoutOrbit);setTimeout(showLongPressCoach,450);if(!opts.noHistory)pushState();
+      updateBreadcrumb();renderSmartSuggestion();saveState();requestAnimationFrame(layoutOrbit);if(!window.matchMedia('(max-width:430px)').matches)setTimeout(showLongPressCoach,450);if(!opts.noHistory)pushState();
     };
     opts.instant?draw():animateSwap(draw);
   }
@@ -1630,6 +1808,16 @@
       else renderGroups(activeMain);
     });
     const centerEl=document.getElementById('navOrbitCenter');
+    let orbitPointerStart=null;
+    document.getElementById('mainSubmenuDirect')?.addEventListener('pointerdown',e=>{
+      orbitPointerStart={x:e.clientX,y:e.clientY,target:e.target.closest('button')};
+    },true);
+    document.getElementById('mainSubmenuDirect')?.addEventListener('pointerup',e=>{
+      if(!orbitPointerStart)return;
+      const moved=Math.hypot(e.clientX-orbitPointerStart.x,e.clientY-orbitPointerStart.y)>14;
+      if(moved){e.preventDefault();e.stopPropagation()}
+      orbitPointerStart=null;
+    },true);
     centerEl?.addEventListener('pointerdown',e=>{
       if(e.pointerType==='mouse'&&e.button!==0)return;
       longPressOpened=false;
