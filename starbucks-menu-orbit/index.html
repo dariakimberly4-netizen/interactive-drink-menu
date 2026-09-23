@@ -56,6 +56,23 @@
     .main-submenu-direct{max-width:1180px;margin:8px auto 0;display:flex;gap:8px;overflow:auto;scrollbar-width:none}
     .main-submenu-direct:empty{margin-top:0}.main-submenu-direct button{white-space:nowrap;min-height:38px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.06);color:#fff;padding:0 12px;font-weight:800}
     @media(max-width:800px){.main-menu-direct-row{grid-template-columns:repeat(3,1fr)}.main-menu-direct-row button{min-height:44px}.main-menu-direct-row button span{font-size:9px}}
+  
+    /* CLEAN MAIN MENU HIERARCHY */
+    #categories{display:none!important}
+    #moReceiptsBtn,
+    .mo-live-btn,
+    #demoTourBtn,
+    #rewardsFloat{display:none!important}
+    .main-menu-direct{position:relative!important;z-index:140!important}
+    .main-submenu-direct{padding-bottom:2px}
+    .stage{top:205px!important}
+    @media(max-width:800px){
+      .stage{top:238px!important}
+      .main-menu-direct{padding-bottom:8px}
+    }
+    @media(max-width:430px){
+      .stage{top:230px!important}
+    }
   </style>
 </head>
 <body>
@@ -277,8 +294,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js"></script>
 <script src="completion-layer.js"></script>
-  <script src="customer-next.js?v=20260923-4"></script>
-  <script src="main-submenu.js?v=20260924-1"></script>
+  <script src="customer-next.js?v=20260924-5"></script>
 
 <script>
 (function(){
