@@ -450,7 +450,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-CUSTOMER-HIGHLIGHT-FORCED -->
+<!-- BUILD 20260924-CUSTOMER-BATCH-2 -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -685,7 +685,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-14"></script>
+  <script src="customer-next.js?v=20260924-15"></script>
 
 <script>
 (function(){
@@ -705,21 +705,21 @@
       ['Compare',[['Compare Drinks',()=>clickEl('#moCompare')],['Pairings',()=>clickEl('#moPairings')]]]
     ],
     order:[
-      ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')]]],
+      ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
       ['Plan Order',[['Schedule Order',()=>clickEl('#moSchedule')],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
       ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
-      ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')]]]
+      ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')],['Post-Pickup Feedback',()=>window.MenuOrbitCustomer?.openPostPickupFeedback?.()]]]
     ],
     stores:[
       ['Find Store',[['Nearby Stores',()=>clickEl('#pickupBtn')],['Find a Store',()=>clickEl('#pickupBtn')]]],
       ['My Store',[['Selected Branch',()=>clickEl('#moBranch')]]],
-      ['Branch Details',[['Hours & Services',()=>clickEl('#moBranch')],['Availability',()=>clickEl('#moBranch')]]],
+      ['Branch Details',[['Hours & Services',()=>clickEl('#moBranch')],['Availability',()=>clickEl('#moBranch')],['Store Availability',()=>window.MenuOrbitCustomer?.openStoreAvailability?.()]]],
       ['Compare Stores',[['Compare Branches',()=>clickEl('#moBranchCompare')]]]
     ],
     rewards:[
-      ['Rewards Home',[['Stars',()=>clickEl('#rewardsBtn')],['Reward Status',()=>clickEl('#rewardsBtn')]]],
-      ['Offers',[['Vouchers',()=>clickEl('#moVoucherTimer')],['Deal Reminders',()=>clickEl('#moDealReminders')]]],
+      ['Rewards Home',[['Stars',()=>clickEl('#rewardsBtn')],['Reward Status',()=>clickEl('#rewardsBtn')],['Rewards History',()=>window.MenuOrbitCustomer?.openRewardsHistory?.()]]],
+      ['Offers',[['Vouchers',()=>clickEl('#moVoucherTimer')],['Voucher Wallet',()=>window.MenuOrbitCustomer?.openVoucherWallet?.()],['Deal Reminders',()=>clickEl('#moDealReminders')]]],
       ['Milestones',[['Progress / Achievements',()=>clickEl('#moLoyalty')]]],
       ['Discover',[['Pairings & Offers',()=>clickEl('#moPairings')]]],
       ['Inbox',[['Reward Notifications',()=>clickEl('#moInbox')]]]
@@ -819,7 +819,12 @@
     'Reorder':'customer-reorder-2026-09-24-v1',
     'Recently Viewed':'customer-recently-viewed-2026-09-24-v1',
     'Recommended for You':'customer-recommended-2026-09-24-v1',
-    'Saved Drink Presets':'customer-drink-presets-2026-09-24-v1'
+    'Saved Drink Presets':'customer-drink-presets-2026-09-24-v1',
+    'Modify / Cancel Order':'customer-modify-cancel-2026-09-24-v2',
+    'Store Availability':'customer-store-availability-2026-09-24-v2',
+    'Voucher Wallet':'customer-voucher-wallet-2026-09-24-v2',
+    'Rewards History':'customer-rewards-history-2026-09-24-v2',
+    'Post-Pickup Feedback':'customer-post-pickup-feedback-2026-09-24-v2'
   };
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
@@ -839,13 +844,20 @@
   }
   function mainHasNew(key){
     if(key==='menu')return anyCustomerUnseen(['Recently Viewed','Recommended for You','Saved Drink Presets']);
-    if(key==='order')return anyCustomerUnseen(['Order Tracking','Reorder']);
+    if(key==='order')return anyCustomerUnseen(['Order Tracking','Reorder','Modify / Cancel Order','Post-Pickup Feedback']);
+    if(key==='stores')return customerFeatureUnseen('Store Availability');
+    if(key==='rewards')return anyCustomerUnseen(['Voucher Wallet','Rewards History']);
     return false;
   }
   function groupHasNew(main,group){
     if(main==='menu'&&group==='Browse')return anyCustomerUnseen(['Recently Viewed','Recommended for You']);
     if(main==='menu'&&group==='Preferences')return customerFeatureUnseen('Saved Drink Presets');
+    if(main==='order'&&group==='Current Order')return customerFeatureUnseen('Modify / Cancel Order');
     if(main==='order'&&group==='Order History')return anyCustomerUnseen(['Order Tracking','Reorder']);
+    if(main==='order'&&group==='Help')return customerFeatureUnseen('Post-Pickup Feedback');
+    if(main==='stores'&&group==='Branch Details')return customerFeatureUnseen('Store Availability');
+    if(main==='rewards'&&group==='Offers')return customerFeatureUnseen('Voucher Wallet');
+    if(main==='rewards'&&group==='Rewards Home')return customerFeatureUnseen('Rewards History');
     return false;
   }
 
