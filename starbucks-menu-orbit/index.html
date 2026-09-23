@@ -1208,7 +1208,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-21"></script>
+  <script src="customer-next.js?v=20260924-22"></script>
 
 <script>
 (function(){
@@ -1224,7 +1224,7 @@
     menu:[
       ['Browse',[['Featured',()=>showCategory('Featured')],['Trending',()=>{closeOrbitOverlays();if(typeof window.openMenuOrbitTrending==='function')window.openMenuOrbitTrending();else clickEl('#moTrending')}],['New / Seasonal',()=>showCategory('Featured')],['Recently Viewed',()=>window.MenuOrbitCustomer?.openRecentlyViewed?.()],['Recommended for You',()=>window.MenuOrbitCustomer?.openRecommended?.()]]],
       ['Find',[['Search',()=>clickEl('#searchBtn')],['Global Search',()=>window.MenuOrbitCustomer?.openGlobalCustomerSearch?.()],['Visual Search',()=>clickEl('#moVisualSearch')]]],
-      ['Preferences',[['Diet Filters',()=>clickEl('#moDiet')],['Favorites',()=>showCategory('Favorites')],['Your Usual',()=>clickEl('#moUsual')],['Saved Drink Presets',()=>window.MenuOrbitCustomer?.openPresets?.()],['Smart Substitutions',()=>window.MenuOrbitCustomer?.openSmartSubstitutions?.()]]],
+      ['Preferences',[['Diet Filters',()=>clickEl('#moDiet')],['Smart Wellness Filters',()=>window.MenuOrbitCustomer?.openSmartWellnessFilters?.()],['Favorites',()=>showCategory('Favorites')],['Your Usual',()=>clickEl('#moUsual')],['Saved Drink Presets',()=>window.MenuOrbitCustomer?.openPresets?.()],['Smart Substitutions',()=>window.MenuOrbitCustomer?.openSmartSubstitutions?.()]]],
       ['Compare',[['Compare Drinks',()=>clickEl('#moCompare')],['Pairings',()=>clickEl('#moPairings')]]]
     ],
     order:[
