@@ -82,6 +82,8 @@
       transform:none!important;
       z-index:250!important;
     }
+  
+    [data-hidden-legacy-bottom="true"]{display:none!important}
   </style>
 </head>
 <body>
@@ -303,7 +305,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js"></script>
 <script src="completion-layer.js"></script>
-  <script src="customer-next.js?v=20260924-8"></script>
+  <script src="customer-next.js?v=20260924-9"></script>
 
 <script>
 (function(){
@@ -333,38 +335,61 @@
 </script>
 
 
+
 <script>
 (function(){
-  function hideLegacyBottomNav(){
-    const candidates=[...document.querySelectorAll('nav,footer,div,section')];
-    for(const el of candidates){
-      if(el.id==='mainMenuDirect'||el.closest?.('#mainMenuDirect')) continue;
-      const txt=(el.innerText||'').replace(/\s+/g,' ').trim().toLowerCase();
-      if(!(txt.includes('menu')&&txt.includes('pickup')&&txt.includes('cart')&&txt.includes('account'))) continue;
-      const controls=[...el.querySelectorAll(':scope > button,:scope > a,:scope > * > button,:scope > * > a')];
-      const unique=[...new Set(controls)];
-      if(unique.length<3||unique.length>8) continue;
-      const cs=getComputedStyle(el),r=el.getBoundingClientRect();
-      if((cs.position==='fixed'||cs.position==='sticky') && r.top>innerHeight*.68 && r.height<190){
-        el.style.setProperty('display','none','important');
+  function norm(el){return (el?.innerText||el?.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();}
+  function commonAncestor(nodes){
+    if(!nodes.length)return null;
+    let a=nodes[0];
+    while(a && a!==document.body){
+      if(nodes.every(n=>a.contains(n))) return a;
+      a=a.parentElement;
+    }
+    return null;
+  }
+  function removeOldBottomBar(){
+    const controls=[...document.querySelectorAll('button,a')];
+    const pick=label=>controls.find(el=>norm(el)===label);
+    const menu=pick('menu'), pickup=pick('pickup'), cart=pick('cart'), account=pick('account');
+    if(menu&&pickup&&cart&&account){
+      let box=commonAncestor([menu,pickup,cart,account]);
+      if(box && box!==document.body && !box.closest('#mainMenuDirect')){
+        const r=box.getBoundingClientRect();
+        if(r.top > innerHeight*.55){
+          box.style.setProperty('display','none','important');
+          box.setAttribute('data-hidden-legacy-bottom','true');
+        }
       }
     }
   }
-  function restoreOrbit(){
+  function rebuildProducts(){
     const orbit=document.getElementById('orbit');
-    if(!orbit) return;
-    if(!orbit.querySelector('.product')){
-      try{ if(typeof renderOrbit==='function') renderOrbit(); }catch(e){}
-    }
-    orbit.querySelectorAll('.product').forEach(el=>{
-      if(el.style.display==='none' && !(localStorage.getItem('mo_diet_filters_v1')||'[]').includes('[')){
-        el.style.removeProperty('display');
+    if(!orbit)return;
+    try{
+      if(typeof renderOrbit==='function') renderOrbit();
+    }catch(e){}
+    setTimeout(()=>{
+      const products=[...orbit.querySelectorAll('.product')];
+      if(!products.length){
+        try{
+          if(typeof renderCats==='function') renderCats();
+          if(typeof renderOrbit==='function') renderOrbit();
+        }catch(e){}
       }
-    });
+      orbit.querySelectorAll('.product').forEach(el=>{
+        el.style.removeProperty('display');
+        el.style.removeProperty('visibility');
+        el.style.removeProperty('opacity');
+      });
+    },120);
   }
-  function run(){hideLegacyBottomNav();restoreOrbit();}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run); else run();
-  [400,900,1600,2600,4200].forEach(ms=>setTimeout(run,ms));
+  function fix(){
+    removeOldBottomBar();
+    rebuildProducts();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();
+  [250,700,1300,2200,3500].forEach(ms=>setTimeout(fix,ms));
 })();
 </script>
 </body>
