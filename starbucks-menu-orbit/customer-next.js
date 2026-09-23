@@ -353,7 +353,58 @@ function hookPresetButton(){
  new MutationObserver(apply).observe(detail,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});apply();
 }
 
-window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets};
+
+function openModifyCancel(){
+ const orders=get('menuOrbitOrders',[]),statusMap=get('mo_order_tracking_v1',{}),out=sheet('Modify / Cancel Order','Changes are available only before preparation begins in this demo.');
+ if(!orders.length){out.innerHTML='<div class="empty">No active orders available.</div>';return}
+ out.innerHTML=orders.slice(0,8).map((o,i)=>{
+   const status=statusMap[o.code]||o.status||'Order received';
+   const locked=/prepar|ready|collected|cancel/i.test(status);
+   return '<div class="mo-next-card" style="margin-bottom:12px"><h4>'+esc(o.code||('Order '+(i+1)))+'</h4><small>'+esc(status)+' • '+esc(o.pickup?.store||'Selected branch')+'</small><div class="mo-complete-row" style="margin-top:10px"><button data-modify="'+i+'" '+(locked?'disabled':'')+'>Modify</button><button data-cancel="'+i+'" '+(locked?'disabled':'')+'>Cancel</button></div></div>'
+ }).join('')+'<p class="demo-banner">Demo rule: an order locks once preparation begins.</p>';
+ out.querySelectorAll('[data-modify]').forEach(b=>b.onclick=()=>{
+   const o=orders[+b.dataset.modify]; if(!o)return;
+   addOrderItemsToCart(o); toast('Items copied to cart for modification'); setTimeout(()=>app()?.openCart?.(),250);
+ });
+ out.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{
+   const o=orders[+b.dataset.cancel];if(!o)return;
+   const map=get('mo_order_tracking_v1',{});map[o.code]='Cancelled';put('mo_order_tracking_v1',map);toast('Order cancelled');openModifyCancel();
+ });
+}
+function openStoreAvailability(){
+ const a=app(),products=a?.products||[],pickup=get('menuOrbitPickup',{}),store=pickup.store||'Starbucks SM City Bacoor';
+ const unavailable=store.includes('Molino')?['raclette-lasagna','mango-dragonfruit-lemonade']:store.includes('Vista')?['ham-cheese-croffle','cold-brew']:[];
+ const out=sheet('Store Availability','Check demo item availability for your selected pickup branch.');
+ out.innerHTML='<div class="mo-saved-banner"><b>'+esc(store)+'</b></div>'+
+ (products.slice(0,30).map(p=>'<div class="mo-result" style="grid-template-columns:1fr auto"><div><b>'+esc(p.name)+'</b><small>'+esc(p.cat)+' • '+money(p.price)+'</small></div><button disabled>'+(unavailable.includes(p.id)?'Unavailable':'Available ✓')+'</button></div>').join('')||'<div class="empty">No catalog loaded.</div>')+
+ '<p class="demo-banner">Availability is prototype data and not connected to live store inventory.</p>';
+}
+function openVoucherWallet(){
+ const claimed=get('mo_voucher_wallet_v1',[{id:'WELCOME50',name:'₱50 Welcome Voucher',status:'active',expires:'2026-12-31'},{id:'PAIR10',name:'Pair & Save Demo',status:'used',expires:'2026-09-20'}]),out=sheet('Voucher Wallet','View active, used, and expired demo vouchers.');
+ const now=new Date().toISOString().slice(0,10);
+ const normalized=claimed.map(v=>({...v,status:v.status==='active'&&v.expires<now?'expired':v.status}));
+ const tabs=['active','used','expired'];
+ out.innerHTML='<div class="mo-filterbar" id="moVoucherTabs">'+tabs.map((t,i)=>'<button data-vtab="'+t+'" class="'+(i===0?'on':'')+'">'+t.toUpperCase()+'</button>').join('')+'</div><div id="moVoucherList"></div><p class="demo-banner">Demo voucher wallet only.</p>';
+ const render=tab=>{const list=normalized.filter(v=>v.status===tab);$('#moVoucherList').innerHTML=list.length?list.map(v=>'<div class="mo-next-card" style="margin-bottom:10px"><h4>'+esc(v.name)+'</h4><small>Code: '+esc(v.id)+' • Expires '+esc(v.expires)+'</small></div>').join(''):'<div class="empty">No '+tab+' vouchers.</div>'};
+ out.querySelectorAll('[data-vtab]').forEach(b=>b.onclick=()=>{out.querySelectorAll('[data-vtab]').forEach(x=>x.classList.remove('on'));b.classList.add('on');render(b.dataset.vtab)});render('active');
+}
+function openRewardsHistory(){
+ let audit=[];try{audit=JSON.parse(localStorage.getItem('starRewardsAudit')||'[]')}catch{}
+ const orders=get('menuOrbitOrders',[]),out=sheet('Rewards History','See demo Stars earned and rewards redeemed.');
+ if(!audit.length){
+   audit=orders.slice(0,8).map(o=>({label:'Stars earned',detail:(o.items||[]).filter(x=>!/cake|wrap|croffle|lasagna|blondie/i.test(x.name||'')).length+' Star(s) • '+(o.code||'Order'),date:o.createdAt||''}));
+ }
+ out.innerHTML=audit.length?audit.map(x=>'<div class="mo-next-card" style="margin-bottom:10px"><h4>'+esc(x.label||x.type||'Reward activity')+'</h4><small>'+esc(x.detail||x.note||'')+'<br>'+esc(x.date||x.createdAt||'')+'</small></div>').join(''):'<div class="empty">No rewards activity yet.</div>';
+}
+function openPostPickupFeedback(){
+ const orders=get('menuOrbitOrders',[]).filter(o=>/collected|completed/i.test(orderTrackingStatus(o))),feedback=get('mo_order_feedback_v1',{}),out=sheet('Post-Pickup Feedback','Rate completed orders and save a short comment.');
+ if(!orders.length){out.innerHTML='<div class="empty">Complete or collect an order first.</div>';return}
+ out.innerHTML=orders.slice(0,8).map((o,i)=>'<div class="mo-next-card" style="margin-bottom:12px"><h4>'+esc(o.code||('Order '+(i+1)))+'</h4><small>'+esc(o.pickup?.store||'Selected branch')+'</small><div class="mo-filterbar" data-rate-wrap="'+i+'" style="margin-top:10px">'+[1,2,3,4,5].map(n=>'<button data-rate-order="'+i+'" data-rate="'+n+'" class="'+(feedback[o.code]?.rating===n?'on':'')+'">'+n+'★</button>').join('')+'</div><textarea data-feedback="'+i+'" class="mo-share-box" style="min-height:70px" placeholder="Comment">'+esc(feedback[o.code]?.comment||'')+'</textarea><button data-save-feedback="'+i+'" style="margin-top:8px;width:100%">SAVE FEEDBACK</button></div>').join('');
+ out.querySelectorAll('[data-rate-order]').forEach(b=>b.onclick=()=>{const wrap=b.closest('[data-rate-wrap]');wrap.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on')});
+ out.querySelectorAll('[data-save-feedback]').forEach(b=>b.onclick=()=>{const i=+b.dataset.saveFeedback,o=orders[i],wrap=out.querySelector('[data-rate-wrap="'+i+'"]'),rating=Number(wrap.querySelector('.on')?.dataset.rate||0),comment=out.querySelector('[data-feedback="'+i+'"]').value.trim();const all=get('mo_order_feedback_v1',{});all[o.code]={rating,comment,savedAt:new Date().toISOString()};put('mo_order_feedback_v1',all);toast('Feedback saved')});
+}
+
+window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback};
 
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
