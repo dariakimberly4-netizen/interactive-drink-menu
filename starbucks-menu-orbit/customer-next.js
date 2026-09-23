@@ -478,7 +478,80 @@ function openNotificationCenter(){
  $('#moClearNotifRead').onclick=()=>{put('mo_notification_center_read_v1',{});openNotificationCenter()};
 }
 
-window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter};
+
+function openQuickOrder(){
+ const a=app(),orders=get('menuOrbitOrders',[]),favStore=get('mo_favorite_store_v1',''),pickup=get('menuOrbitPickup',{}),presets=get('mo_drink_presets_v1',[]);
+ const last=orders[0]||null;
+ const out=sheet('Quick Order','Build a cart in one tap using your saved store and recent choices.');
+ out.innerHTML='<div class="mo-saved-banner"><b>Default pickup:</b> '+esc(favStore||pickup.store||'Not set')+'</div>'+
+ '<div class="mo-next-grid">'+
+ '<div class="mo-next-card"><h4>↻ Reorder Last</h4><small>'+(last?esc((last.items||[]).map(x=>x.name).join(' • ')):'No previous order')+'</small><button id="moQuickReorder" '+(!last?'disabled':'')+'>ADD LAST ORDER</button></div>'+
+ '<div class="mo-next-card"><h4>★ Saved Preset</h4><small>'+(presets[0]?esc(presets[0].name):'No saved preset')+'</small><button id="moQuickPreset" '+(!presets.length?'disabled':'')+'>ADD PRESET</button></div>'+
+ '</div><button class="mo-primary" style="width:100%;margin-top:12px" id="moQuickOpenCart">OPEN CART</button><p class="demo-banner">Quick Order uses locally saved demo preferences only.</p>';
+ $('#moQuickReorder')?.addEventListener('click',()=>{if(last&&addOrderItemsToCart(last))toast('Last order added')});
+ $('#moQuickPreset')?.addEventListener('click',()=>{const p=presets[0];if(!p)return;a?.addToCart?.({id:p.productId,name:p.productName,img:p.img,size:p.size,style:p.style,milk:p.milk,price:p.price,qty:1,note:'Quick Order preset'});toast('Preset added')});
+ $('#moQuickOpenCart').onclick=()=>{document.querySelector('#moCustomerNextSheet')?.classList.remove('open');setTimeout(()=>a?.openCart?.(),160)};
+}
+
+function openPickupNotes(){
+ const saved=get('mo_pickup_notes_v1',{note:'',method:'Counter pickup',arrival:false}),out=sheet('Pickup Notes','Save instructions that can follow your demo pickup preference.');
+ out.innerHTML='<div class="mo-form"><select id="moPickupMethod"><option '+(saved.method==='Counter pickup'?'selected':'')+'>Counter pickup</option><option '+(saved.method==='Curbside pickup'?'selected':'')+'>Curbside pickup</option><option '+(saved.method==='Call on arrival'?'selected':'')+'>Call on arrival</option></select><textarea id="moPickupNote" placeholder="Special pickup instruction">'+esc(saved.note||'')+'</textarea><label class="mo-pref"><span><b>Arrival reminder</b><small>Show a local demo reminder when the order is ready.</small></span><input id="moArrivalReminder" type="checkbox" '+(saved.arrival?'checked':'')+'></label><button class="mo-primary" id="moSavePickupNotes">SAVE PICKUP NOTES</button></div><div id="moPickupNotesStatus"></div>';
+ const render=()=>{const x=get('mo_pickup_notes_v1',null);$('#moPickupNotesStatus').innerHTML=x?'<div class="mo-saved-banner"><b>'+esc(x.method)+'</b><br>'+esc(x.note||'No special note')+'</div>':''};render();
+ $('#moSavePickupNotes').onclick=()=>{put('mo_pickup_notes_v1',{method:$('#moPickupMethod').value,note:$('#moPickupNote').value.trim(),arrival:$('#moArrivalReminder').checked});toast('Pickup notes saved');render()};
+}
+
+function openReceiptSearch(){
+ const orders=get('menuOrbitOrders',[]),out=sheet('Receipt Search','Search previous receipts by order code, product, date, or branch.');
+ out.innerHTML='<div class="mo-form"><input id="moReceiptQuery" type="search" placeholder="Search receipts"><select id="moReceiptFilter"><option value="all">All fields</option><option value="code">Order code</option><option value="item">Product</option><option value="branch">Branch</option></select></div><div id="moReceiptResults"></div>';
+ const render=()=>{
+   const q=($('#moReceiptQuery').value||'').trim().toLowerCase(),filter=$('#moReceiptFilter').value;
+   const list=orders.filter(o=>{
+     const code=String(o.code||'').toLowerCase(),items=(o.items||[]).map(x=>x.name).join(' ').toLowerCase(),branch=String(o.pickup?.store||'').toLowerCase(),date=String(o.createdAt||'').toLowerCase();
+     if(!q)return true;
+     if(filter==='code')return code.includes(q);
+     if(filter==='item')return items.includes(q);
+     if(filter==='branch')return branch.includes(q);
+     return [code,items,branch,date].some(x=>x.includes(q));
+   });
+   $('#moReceiptResults').innerHTML=list.length?list.slice(0,30).map(o=>'<div class="mo-next-card" style="margin-bottom:10px"><h4>'+esc(o.code||'Order')+'</h4><small>'+esc(o.createdAt||'')+' • '+esc(o.pickup?.store||'')+'<br>'+esc((o.items||[]).map(x=>(x.qty||1)+' × '+x.name).join(' • '))+'<br><b>'+money(o.total||0)+'</b></small></div>').join(''):'<div class="empty">No matching receipts.</div>';
+ };
+ $('#moReceiptQuery').addEventListener('input',render);$('#moReceiptFilter').addEventListener('change',render);render();
+}
+
+function applyAccessibilityPrefs(prefs){
+ document.documentElement.style.fontSize=prefs.largeText?'112.5%':'';
+ document.body.classList.toggle('mo-high-contrast',!!prefs.highContrast);
+ document.body.classList.toggle('mo-simple-nav',!!prefs.simpleNav);
+ if(prefs.reduceMotion)document.documentElement.style.setProperty('scroll-behavior','auto');
+ else document.documentElement.style.removeProperty('scroll-behavior');
+}
+function openAccessibilityProfile(){
+ const prefs=get('mo_accessibility_profile_v1',{largeText:false,reduceMotion:false,highContrast:false,simpleNav:false}),out=sheet('Accessibility Profile','Save display and navigation preferences on this device.');
+ const rows=[['largeText','Larger text','Increase overall interface text size.'],['reduceMotion','Reduce motion','Minimize animated transitions.'],['highContrast','Higher contrast','Increase visual separation for controls.'],['simpleNav','Simplified navigation','Prefer clearer navigation presentation.']];
+ out.innerHTML='<div class="mo-form">'+rows.map(([k,t,s])=>'<label class="mo-pref"><span><b>'+t+'</b><small>'+s+'</small></span><input type="checkbox" data-access="'+k+'" '+(prefs[k]?'checked':'')+'></label>').join('')+'<button class="mo-primary" id="moSaveAccessibility">SAVE ACCESSIBILITY PROFILE</button></div>';
+ $('#moSaveAccessibility').onclick=()=>{const next={};out.querySelectorAll('[data-access]').forEach(x=>next[x.dataset.access]=x.checked);put('mo_accessibility_profile_v1',next);applyAccessibilityPrefs(next);toast('Accessibility profile saved')};
+}
+function restoreAccessibilityProfile(){applyAccessibilityPrefs(get('mo_accessibility_profile_v1',{largeText:false,reduceMotion:false,highContrast:false,simpleNav:false}))}
+
+function openPrivacyDataControls(){
+ const out=sheet('Privacy & Data Controls','Choose which locally stored demo activity to clear.');
+ const actions=[
+  ['recent','Recently viewed','mo_recently_viewed_v1'],
+  ['search','Search history','mo_search_history_v1'],
+  ['recommend','Recommendation activity','mo_recently_viewed_v1'],
+  ['favorites','Favorites & collections','menuOrbitFavorites|mo_favorite_collections_v1'],
+  ['orders','Orders & receipts','menuOrbitOrders|menuOrbitLastOrder|mo_order_tracking_v1'],
+  ['support','Support & feedback','mo_customer_issues_v1|mo_order_feedback_v1']
+ ];
+ out.innerHTML='<div class="mo-next-grid">'+actions.map(([id,label])=>'<div class="mo-next-card"><h4>'+esc(label)+'</h4><small>Clear this category from the current browser.</small><button data-clear-data="'+id+'">CLEAR</button></div>').join('')+'</div><button class="mo-primary" style="width:100%;margin-top:14px" id="moClearPersonalization">CLEAR PERSONALIZATION ONLY</button><p class="demo-banner">This prototype stores these items in your browser. These controls do not affect any external Starbucks account.</p>';
+ out.querySelectorAll('[data-clear-data]').forEach(b=>b.onclick=()=>{
+   const row=actions.find(x=>x[0]===b.dataset.clearData);if(!row)return;
+   row[2].split('|').forEach(k=>localStorage.removeItem(k));toast(row[1]+' cleared');openPrivacyDataControls();
+ });
+ $('#moClearPersonalization').onclick=()=>{['mo_recently_viewed_v1','mo_search_history_v1','mo_drink_presets_v1','mo_favorite_collections_v1','mo_favorite_store_v1','mo_pickup_notes_v1'].forEach(k=>localStorage.removeItem(k));toast('Personalization data cleared');openPrivacyDataControls()};
+}
+
+window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets,openModifyCancel,openStoreAvailability,openVoucherWallet,openRewardsHistory,openPostPickupFeedback,openFavoriteStore,openSmartSubstitutions,openFavoriteCollections,openRefundIssueStatus,openNotificationCenter,openQuickOrder,openPickupNotes,openReceiptSearch,openAccessibilityProfile,openPrivacyDataControls};
 
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
@@ -489,6 +562,6 @@ function addTools(){
 function refreshNewestHighlights(){
   // Visible NEW state is handled by the orbit nodes for the latest customer batch.
 }
-function init(){addTools();patchCart();hookSearchHistory();hookPresetButton();refreshNewestHighlights();}
+function init(){addTools();patchCart();hookSearchHistory();hookPresetButton();restoreAccessibilityProfile();refreshNewestHighlights();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1000));else setTimeout(init,1000);
 })();
