@@ -275,6 +275,88 @@
       color:#bcd0c7;
       text-align:center;
     }
+    #mainMenuDirect #navOrbitCenter .smart-gesture-hint{
+      display:block;
+      max-width:104px;
+      margin-top:5px;
+      padding-top:4px;
+      border-top:1px solid rgba(244,200,111,.18);
+      font:850 7px/1.15 system-ui;
+      color:#f4d992;
+      text-align:center;
+      letter-spacing:.01em;
+    }
+    #mainMenuDirect #navOrbitCenter .hold-progress{
+      position:absolute;
+      inset:-12px;
+      z-index:15;
+      border-radius:50%;
+      pointer-events:none;
+      opacity:0;
+      background:conic-gradient(#f4c86f 0deg,rgba(244,200,111,.10) 0deg);
+      -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 0);
+      mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 0);
+    }
+    #mainMenuDirect #navOrbitCenter.holding .hold-progress{
+      opacity:1;
+      animation:orbitHoldProgress .56s linear forwards;
+    }
+    @keyframes orbitHoldProgress{
+      from{background:conic-gradient(#f4c86f 0deg,rgba(244,200,111,.10) 0deg)}
+      to{background:conic-gradient(#f4c86f 360deg,rgba(244,200,111,.10) 360deg)}
+    }
+    #mainMenuDirect .orbit-longpress-coach{
+      position:absolute;
+      left:50%;
+      top:calc(50% + 86px);
+      transform:translateX(-50%);
+      z-index:45;
+      width:min(250px,74vw);
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(244,200,111,.55);
+      background:#0b3025;
+      color:#fff;
+      box-shadow:0 14px 30px rgba(0,0,0,.34);
+      text-align:center;
+      font:800 10px/1.3 system-ui;
+      pointer-events:auto;
+      animation:orbitCoachIn .28s ease both;
+    }
+    #mainMenuDirect .orbit-longpress-coach b{
+      display:block;
+      color:#f4d992;
+      font-size:9px;
+      letter-spacing:.08em;
+      margin-bottom:3px;
+    }
+    #mainMenuDirect .orbit-longpress-coach button{
+      margin-top:7px;
+      border:1px solid rgba(244,200,111,.45);
+      border-radius:999px;
+      padding:6px 10px;
+      background:#173f32;
+      color:#fff;
+      font:850 9px/1 system-ui;
+    }
+    #mainMenuDirect .orbit-longpress-coach::before{
+      content:'';
+      position:absolute;
+      left:50%;top:-7px;
+      width:12px;height:12px;
+      transform:translateX(-50%) rotate(45deg);
+      background:#0b3025;
+      border-left:1px solid rgba(244,200,111,.55);
+      border-top:1px solid rgba(244,200,111,.55);
+    }
+    @keyframes orbitCoachIn{
+      from{opacity:0;transform:translate(-50%,6px)}
+      to{opacity:1;transform:translate(-50%,0)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      #mainMenuDirect #navOrbitCenter.holding .hold-progress{animation:none!important;opacity:.7}
+      #mainMenuDirect .orbit-longpress-coach{animation:none!important}
+    }
     #mainMenuDirect #navOrbitCenter .smart-badge{
       position:absolute;
       z-index:12;
@@ -697,7 +779,7 @@
   </style>
 </head>
 <body>
-<!-- BUILD 20260924-SMART-ORBIT-EXPANSION -->
+<!-- BUILD 20260924-LONGPRESS-DISCOVERY -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
@@ -1098,11 +1180,33 @@
       '<span class="smart-kicker">CUSTOMER HOME</span>'+
       '<strong class="smart-main">'+s.main+'</strong>'+
       '<span class="smart-sub">'+s.sub+'</span>'+
+      '<span class="smart-gesture-hint">Tap Home • Hold Quick Actions</span>'+
+      '<i class="hold-progress" aria-hidden="true"></i>'+
       (s.cartCount?'<i class="smart-badge cart" aria-hidden="true">🛒 '+s.cartCount+'</i>':'')+
       (s.unread?'<i class="smart-badge updates" aria-hidden="true">🔔 '+s.unread+'</i>':'')+
       ((s.isReady||s.isActive)?'<i class="smart-badge order '+orderClass+'" aria-hidden="true">'+(s.isReady?'✓':'●')+'</i>':'')+
       (s.offline?'<i class="smart-badge offline" aria-hidden="true">OFFLINE</i>':'');
   }
+  const LONGPRESS_COACH_KEY='menu-orbit-longpress-coach-v1';
+  function longPressCoachSeen(){
+    try{return localStorage.getItem(LONGPRESS_COACH_KEY)==='seen'}catch(e){return false}
+  }
+  function markLongPressCoachSeen(){
+    try{localStorage.setItem(LONGPRESS_COACH_KEY,'seen')}catch(e){}
+    document.getElementById('orbitLongpressCoach')?.remove();
+  }
+  function showLongPressCoach(){
+    if(level!=='main'||longPressCoachSeen()||document.getElementById('orbitLongpressCoach'))return;
+    const wrap=document.getElementById('navOrbitDirect');if(!wrap)return;
+    const coach=document.createElement('div');
+    coach.id='orbitLongpressCoach';
+    coach.className='orbit-longpress-coach';
+    coach.setAttribute('role','status');
+    coach.innerHTML='<b>QUICK ACTION TIP</b>Press and hold the center for shortcuts.<button type="button">GOT IT</button>';
+    coach.querySelector('button').onclick=e=>{e.preventDefault();e.stopPropagation();markLongPressCoachSeen()};
+    wrap.appendChild(coach);
+  }
+
   function mainNodeLiveBadge(key){
     const s=smartCenterState();
     if(key==='order'){
@@ -1192,6 +1296,7 @@
   }
   function openSmartQuickRing(){
     closeSmartQuickRing();
+    markLongPressCoachSeen();
     const wrap=document.getElementById('navOrbitDirect');if(!wrap)return;
     const ring=document.createElement('div');
     ring.id='smartQuickRing';
@@ -1349,7 +1454,7 @@
         decorateMainLiveBadge(b,key);
         sub.appendChild(b);
       });
-      updateBreadcrumb();renderSmartSuggestion();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
+      updateBreadcrumb();renderSmartSuggestion();saveState();requestAnimationFrame(layoutOrbit);setTimeout(showLongPressCoach,450);if(!opts.noHistory)pushState();
     };
     opts.instant?draw():animateSwap(draw);
   }
@@ -1361,7 +1466,7 @@
       const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
       sub.innerHTML='';
       const title=mainItems.find(x=>x[0]===name)?.[2]||name.toUpperCase();
-      center(title,'Choose a path');document.getElementById('orbitSmartSuggestion')?.remove();document.getElementById('orbitResumeCard')?.remove();
+      center(title,'Choose a path');document.getElementById('orbitSmartSuggestion')?.remove();document.getElementById('orbitResumeCard')?.remove();document.getElementById('orbitLongpressCoach')?.remove();
       (maps[name]||[]).forEach(([label,items])=>{
         const b=button(label,()=>renderItems(label,items));
         if(groupHasNew(name,label)){b.classList.add('customer-new-node');decorateNewButton(b)}
@@ -1377,7 +1482,7 @@
     const draw=()=>{
       level='items';activeGroup=groupLabel;activeItems=items;
       const sub=document.getElementById('mainSubmenuDirect');if(!sub)return;
-      sub.innerHTML='';center(groupLabel,'Choose an option');document.getElementById('orbitSmartSuggestion')?.remove();document.getElementById('orbitResumeCard')?.remove();
+      sub.innerHTML='';center(groupLabel,'Choose an option');document.getElementById('orbitSmartSuggestion')?.remove();document.getElementById('orbitResumeCard')?.remove();document.getElementById('orbitLongpressCoach')?.remove();
       items.forEach(([label,fn])=>sub.appendChild(button(label,fn)));
       sub.appendChild(button('‹ Back',()=>renderGroups(activeMain),'nav-back'));
       updateBreadcrumb();saveState();requestAnimationFrame(layoutOrbit);if(!opts.noHistory)pushState();
@@ -1450,7 +1555,13 @@
       if(e.pointerType==='mouse'&&e.button!==0)return;
       longPressOpened=false;
       clearTimeout(longPressTimer);
+      if(level==='main'){
+        centerEl.classList.remove('holding');
+        void centerEl.offsetWidth;
+        centerEl.classList.add('holding');
+      }
       longPressTimer=setTimeout(()=>{
+        centerEl.classList.remove('holding');
         if(level==='main'){
           longPressOpened=true;
           if(navigator.vibrate)navigator.vibrate(30);
@@ -1458,7 +1569,10 @@
         }
       },560);
     });
-    ['pointerup','pointercancel','pointerleave'].forEach(type=>centerEl?.addEventListener(type,()=>clearTimeout(longPressTimer)));
+    ['pointerup','pointercancel','pointerleave'].forEach(type=>centerEl?.addEventListener(type,()=>{
+      clearTimeout(longPressTimer);
+      centerEl.classList.remove('holding');
+    }));
     centerEl?.addEventListener('contextmenu',e=>{if(level==='main'){e.preventDefault();openSmartQuickRing()}});
     document.getElementById('navOrbitDirect')?.addEventListener('dblclick',e=>{
       if(e.target.closest('#navOrbitCenter')&&level!=='main'){e.preventDefault();renderMainOrbit()}
