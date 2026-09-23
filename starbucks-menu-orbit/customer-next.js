@@ -8,6 +8,36 @@ const money=n=>'₱'+Number(n||0).toLocaleString('en-PH',{maximumFractionDigits:
 const catalog=()=>{try{return products}catch{return []}};
 const st=()=>{try{return state}catch{return null}};
 const style=document.createElement('style');style.textContent=`
+/* Newest customer feature highlight */
+#moSearchHistory.mo-new-feature,
+#moPayments.mo-new-feature,
+#moPairings.mo-new-feature,
+#moShareCart.mo-new-feature{
+  position:relative!important;
+  border-color:#f4c86f!important;
+  box-shadow:0 0 0 2px #f4c86f,0 0 24px rgba(244,200,111,.42)!important;
+  background:linear-gradient(135deg,rgba(244,200,111,.16),rgba(255,255,255,.06))!important;
+  overflow:visible!important
+}
+#moSearchHistory.mo-new-feature::after,
+#moPayments.mo-new-feature::after,
+#moPairings.mo-new-feature::after,
+#moShareCart.mo-new-feature::after{
+  content:"NEW"!important;
+  position:absolute!important;
+  top:-10px!important;
+  right:-8px!important;
+  z-index:10!important;
+  padding:4px 7px!important;
+  border-radius:999px!important;
+  background:#f4c86f!important;
+  color:#07331f!important;
+  font-size:9px!important;
+  font-weight:950!important;
+  letter-spacing:.08em!important;
+  box-shadow:0 5px 14px rgba(0,0,0,.28)!important
+}
+`
 .mo-next-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mo-next-card{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;background:rgba(255,255,255,.04)}.mo-next-card h4{margin:0 0 7px}.mo-next-card small{color:#abc0b6;display:block;line-height:1.45}.mo-next-card button{margin-top:10px;width:100%;min-height:42px;border:0;border-radius:11px;background:#f4efe6;color:#07331f;font-weight:900}.mo-pref{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-pref input{width:20px;height:20px}.mo-save-later{margin-top:7px;width:100%;min-height:36px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.05);color:#fff;font-weight:800}.mo-review-stars{color:#f4c86f;font-weight:900}.mo-review-row{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-review-row small{color:#abc0b6}.mo-branch-table{width:100%;border-collapse:collapse}.mo-branch-table th,.mo-branch-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.09);text-align:left;font-size:12px}.mo-branch-table th{color:#f4c86f}.mo-saved-banner{padding:11px;border:1px solid rgba(244,200,111,.35);border-radius:13px;background:rgba(244,200,111,.08);margin:10px 0}
 @media(max-width:700px){.mo-next-grid{grid-template-columns:1fr}.mo-branch-table{font-size:10px}.mo-branch-table th,.mo-branch-table td{padding:7px 4px}}
 .mo-pay-card{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;background:rgba(255,255,255,.04);margin:9px 0}.mo-pay-card strong{display:block}.mo-pay-card small{color:#abc0b6}.mo-pair-card{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-pair-card img{width:70px;height:70px;object-fit:cover;border-radius:14px}.mo-pair-card button{min-height:40px;border:0;border-radius:11px;background:#f4efe6;color:#07331f;font-weight:900;padding:0 11px}.mo-share-box{width:100%;min-height:110px;border:1px solid rgba(255,255,255,.14);border-radius:13px;background:#0d3628;color:#fff;padding:10px}
@@ -117,10 +147,16 @@ function openShareCart(){
 }
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
- [['moSavedLater','♡ Saved Later',openSaved,'saved-for-later-v1'],['moBranchCompare','⇄ Compare Branches',openBranchCompare,'branch-comparison-v1'],['moReviewFilters','★ Review Filters',openReviews,'review-filters-v1'],['moNotifPrefs','⚙ Notifications',openPrefs,'notification-preferences-v1'],['moSearchHistory','⌕ Search History',openSearchHistory,'search-history-v1'],['moPayments','💳 Payments',openPayments,'saved-payments-v1'],['moPairings','🥐 Pairings',openPairings,'pairing-recommendations-v1'],['moShareCart','↗ Share Cart',openShareCart,'share-cart-v1']].forEach(([id,label,fn,key])=>{
+ [['moSavedLater','♡ Saved Later',openSaved,'saved-for-later-v1'],['moBranchCompare','⇄ Compare Branches',openBranchCompare,'branch-comparison-v1'],['moReviewFilters','★ Review Filters',openReviews,'review-filters-v1'],['moNotifPrefs','⚙ Notifications',openPrefs,'notification-preferences-v1'],['moSearchHistory','⌕ Search History',openSearchHistory,'search-history-v2'],['moPayments','💳 Payments',openPayments,'saved-payments-v2'],['moPairings','🥐 Pairings',openPairings,'pairing-recommendations-v2'],['moShareCart','↗ Share Cart',openShareCart,'share-cart-v2']].forEach(([id,label,fn,key])=>{
   if($('#'+id))return;const b=document.createElement('button');b.className='mo-tool';b.id=id;b.textContent=label;b.onclick=fn;tools.appendChild(b);window.NewFeatureHighlight?.register(b,key,'NEW');
  });
 }
-function init(){addTools();patchCart();hookSearchHistory();}
+function refreshNewestHighlights(){
+  setTimeout(()=>{
+    [['#moSearchHistory','search-history-v2'],['#moPayments','saved-payments-v2'],['#moPairings','pairing-recommendations-v2'],['#moShareCart','share-cart-v2']]
+      .forEach(([s,k])=>window.NewFeatureHighlight?.register(s,k,'NEW'));
+  },250);
+}
+function init(){addTools();patchCart();hookSearchHistory();refreshNewestHighlights();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1000));else setTimeout(init,1000);
 })();
