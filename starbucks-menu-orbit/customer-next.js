@@ -227,6 +227,134 @@ function openDynamicEta(){
  const out=sheet('Dynamic Pickup ETA','Estimated preparation time based on the current demo queue.');
  out.innerHTML='<div class="mo-statgrid"><div class="mo-stat"><b>'+q+'</b><small>Active orders</small></div><div class="mo-stat"><b>'+eta+'m</b><small>Estimated prep</small></div><div class="mo-stat"><b>'+Math.max(1,q+1)+'</b><small>Your queue position</small></div></div><div class="mo-saved-banner"><b>'+esc(store)+'</b><br>Estimated pickup window: '+eta+'–'+(eta+4)+' minutes from now.</div><p class="demo-banner">ETA is calculated from demo queue data in this browser, not a live Starbucks branch queue.</p>';
 }
+
+/* Customer completion batch: tracking, reorder, recents, recommendations, presets */
+const app=()=>window.MenuOrbitApp||null;
+
+function orderTrackingStatus(order){
+ const saved=get('mo_order_tracking_v1',{});
+ return saved[order?.code]||order?.status||'Order received';
+}
+function openOrderTracking(){
+ const orders=get('menuOrbitOrders',[]);
+ const out=sheet('Order Tracking','Follow your latest demo order from receipt through pickup.');
+ if(!orders.length){out.innerHTML='<div class="empty">No orders to track yet.</div>';return}
+ out.innerHTML=orders.slice(0,8).map((o,i)=>{
+   const status=orderTrackingStatus(o);
+   const steps=['Order received','Preparing your order','Ready for pickup','Collected'];
+   const normalized=/collected/i.test(status)?3:/ready/i.test(status)?2:/prepar/i.test(status)?1:0;
+   return '<div class="mo-next-card" style="margin-bottom:12px"><h4>'+esc(o.code||('Order '+(i+1)))+'</h4><small>'+esc(o.createdAt||'')+' • '+esc(o.pickup?.store||'Selected branch')+'</small>'+
+     '<div style="margin-top:12px">'+steps.map((s,ix)=>'<div class="status-step '+(ix<=normalized?'active':'')+'"><b>'+(ix+1)+'</b>'+esc(s)+'</div>').join('')+'</div>'+
+     (normalized<3?'<button data-track-advance="'+i+'" style="margin-top:10px">ADVANCE DEMO STATUS</button>':'')+
+     '</div>'
+ }).join('');
+ out.querySelectorAll('[data-track-advance]').forEach(b=>b.onclick=()=>{
+   const o=orders[+b.dataset.trackAdvance],steps=['Order received','Preparing your order','Ready for pickup','Collected'];
+   const current=orderTrackingStatus(o);
+   let ix=/collected/i.test(current)?3:/ready/i.test(current)?2:/prepar/i.test(current)?1:0;
+   ix=Math.min(3,ix+1);
+   const map=get('mo_order_tracking_v1',{});map[o.code]=steps[ix];put('mo_order_tracking_v1',map);
+   toast('Order status updated');openOrderTracking();
+ });
+}
+
+function addOrderItemsToCart(order){
+ const a=app();
+ if(!order?.items?.length)return false;
+ if(a?.addToCart){
+   order.items.forEach(x=>a.addToCart({...x,key:Date.now()+Math.random(),qty:x.qty||1}));
+   return true;
+ }
+ const cart=get('menuOrbitCart',[]);
+ order.items.forEach(x=>cart.push({...x,key:Date.now()+Math.random(),qty:x.qty||1}));
+ put('menuOrbitCart',cart);
+ return true;
+}
+function openReorder(){
+ const orders=get('menuOrbitOrders',[]);
+ const out=sheet('Reorder','Add a previous order back to your current cart.');
+ out.innerHTML=orders.length?orders.slice(0,10).map((o,i)=>
+   '<div class="mo-result" style="grid-template-columns:1fr auto"><div><b>'+esc(o.code||('Order '+(i+1)))+'</b><small>'+esc((o.items||[]).map(x=>(x.qty||1)+' × '+x.name).join(' • '))+'<br>'+money(o.total||0)+'</small></div><button data-reorder="'+i+'">Reorder</button></div>'
+ ).join(''):'<div class="empty">No previous orders yet.</div>';
+ out.querySelectorAll('[data-reorder]').forEach(b=>b.onclick=()=>{
+   const o=orders[+b.dataset.reorder];
+   if(addOrderItemsToCart(o)){toast('Previous order added to cart');setTimeout(()=>app()?.openCart?.(),250)}
+ });
+}
+
+function openRecentlyViewed(){
+ const recent=get('mo_recently_viewed_v1',[]);
+ const out=sheet('Recently Viewed','Products you opened recently on this device.');
+ out.innerHTML=recent.length?recent.map((p,i)=>
+   '<div class="mo-result"><img src="'+esc(p.img||'')+'" alt=""><div><b>'+esc(p.name)+'</b><small>'+esc(p.cat||'Menu')+' • '+money(p.price)+'</small></div><button data-recent-view="'+esc(p.id)+'">View</button></div>'
+ ).join('')+'<button class="mo-primary" style="width:100%;margin-top:12px" id="moClearRecent">CLEAR RECENTLY VIEWED</button>':'<div class="empty">No recently viewed products yet. Open a menu item first.</div>';
+ out.querySelectorAll('[data-recent-view]').forEach(b=>b.onclick=()=>{document.querySelector('#moCustomerNextSheet')?.classList.remove('open');app()?.openProduct?.(b.dataset.recentView)});
+ $('#moClearRecent')?.addEventListener('click',()=>{put('mo_recently_viewed_v1',[]);openRecentlyViewed()});
+}
+
+function recommendationList(){
+ const a=app(),products=a?.products||[],recent=get('mo_recently_viewed_v1',[]),favs=get('menuOrbitFavorites',[]),orders=get('menuOrbitOrders',[]);
+ const seedIds=[...recent.map(x=>x.id),...favs,...orders.flatMap(o=>(o.items||[]).map(x=>x.id))].filter(Boolean);
+ const seedProducts=seedIds.map(id=>products.find(p=>p.id===id)).filter(Boolean);
+ const cats=new Map();
+ seedProducts.forEach(p=>cats.set(p.cat,(cats.get(p.cat)||0)+1));
+ return products.filter(p=>!seedIds.includes(p.id)).map(p=>({
+   p,score:(cats.get(p.cat)||0)*5+(p.cat==='Featured'?2:0)+(p.kind==='drink'?1:0)
+ })).sort((a,b)=>b.score-a.score||a.p.price-b.p.price).slice(0,8).map(x=>x.p);
+}
+function openRecommended(){
+ const list=recommendationList();
+ const out=sheet('Recommended for You','Demo suggestions based on your recent views, favorites, and previous orders.');
+ out.innerHTML=list.length?list.map(p=>
+   '<div class="mo-result"><img src="'+esc(p.img||'')+'" alt=""><div><b>'+esc(p.name)+'</b><small>'+esc(p.cat)+' • '+money(p.price)+'</small></div><button data-rec-open="'+esc(p.id)+'">View</button></div>'
+ ).join('')+'<p class="demo-banner">Recommendations are generated locally from this browser’s demo activity.</p>':'<div class="empty">Browse or favorite a few products first so recommendations can learn from your activity.</div>';
+ out.querySelectorAll('[data-rec-open]').forEach(b=>b.onclick=()=>{document.querySelector('#moCustomerNextSheet')?.classList.remove('open');app()?.openProduct?.(b.dataset.recOpen)});
+}
+
+function currentPresetDraft(){
+ const a=app(),s=a?.getState?.(),p=s?.selected;
+ if(!p)return null;
+ const size=document.querySelector('[name=size]:checked')?.value||'Regular';
+ const styleValue=document.querySelector('[name=temp]:checked')?.value||p.temps?.[0]||'';
+ const milk=$('#milk')?.value||'';
+ const shots=$('#shots')?.value||'0';
+ const whip=!!$('#whip')?.checked,drizzle=!!$('#drizzle')?.checked;
+ const live=String($('#livePrice')?.textContent||'').replace(/[^0-9.]/g,'');
+ return {id:'PRE-'+Date.now().toString().slice(-6),productId:p.id,productName:p.name,img:p.img,size,style:styleValue,milk,shots,whip,drizzle,price:Number(live)||p.price,name:p.name+' preset'};
+}
+function openPresets(){
+ const presets=get('mo_drink_presets_v1',[]),draft=currentPresetDraft(),out=sheet('Saved Drink Presets','Save a customized drink and add it back to your cart in one tap.');
+ out.innerHTML=(draft?'<div class="mo-form"><input id="moPresetName" value="'+esc(draft.productName+' preset')+'" placeholder="Preset name"><button class="mo-primary" id="moSaveCurrentPreset">SAVE CURRENT CUSTOMIZATION</button></div>':'<div class="mo-saved-banner">Open and customize a drink first, then return here to save it as a preset.</div>')+
+ '<div class="section-title">Saved presets</div>'+
+ (presets.length?presets.map((p,i)=>'<div class="mo-pair-card"><img src="'+esc(p.img||'')+'" alt=""><div><b>'+esc(p.name)+'</b><small>'+esc(p.productName)+' • '+esc(p.size)+' • '+esc(p.style)+' • '+money(p.price)+'</small></div><div><button data-preset-add="'+i+'">Add</button><button data-preset-remove="'+i+'" style="margin-top:6px">Remove</button></div></div>').join(''):'<div class="empty">No saved drink presets yet.</div>')+
+ '<p class="demo-banner">Presets are stored only in this browser.</p>';
+ $('#moSaveCurrentPreset')?.addEventListener('click',()=>{
+   const d=currentPresetDraft();if(!d)return;
+   d.name=$('#moPresetName').value.trim()||d.name;
+   const arr=get('mo_drink_presets_v1',[]);arr.unshift(d);put('mo_drink_presets_v1',arr.slice(0,20));toast('Drink preset saved');openPresets();
+ });
+ out.querySelectorAll('[data-preset-add]').forEach(b=>b.onclick=()=>{
+   const p=get('mo_drink_presets_v1',[])[+b.dataset.presetAdd];if(!p)return;
+   app()?.addToCart?.({id:p.productId,name:p.productName,img:p.img,size:p.size,style:p.style,milk:p.milk,price:p.price,qty:1,note:'Saved preset'});
+   toast('Preset added to cart');
+ });
+ out.querySelectorAll('[data-preset-remove]').forEach(b=>b.onclick=()=>{
+   const arr=get('mo_drink_presets_v1',[]);arr.splice(+b.dataset.presetRemove,1);put('mo_drink_presets_v1',arr);openPresets();
+ });
+}
+function hookPresetButton(){
+ const detail=$('#detail');if(!detail)return;
+ const apply=()=>{
+   if(!detail.classList.contains('open')||$('#moSavePresetFromDetail'))return;
+   const add=$('#addBtn');if(!add)return;
+   const b=document.createElement('button');b.id='moSavePresetFromDetail';b.className='favorite-toggle';b.style.cssText='float:none;width:100%;margin:10px 0 0';b.textContent='☆ Save as Drink Preset';b.onclick=openPresets;
+   add.insertAdjacentElement('beforebegin',b);
+ };
+ new MutationObserver(apply).observe(detail,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});apply();
+}
+
+window.MenuOrbitCustomer={openOrderTracking,openReorder,openRecentlyViewed,openRecommended,openPresets};
+
 function addTools(){
  const tools=$('.mo-commerce-tools');if(!tools)return;
  [['moSavedLater','♡ Saved Later',openSaved,'saved-for-later-v1'],['moBranchCompare','⇄ Compare Branches',openBranchCompare,'branch-comparison-v1'],['moReviewFilters','★ Review Filters',openReviews,'review-filters-v1'],['moNotifPrefs','⚙ Notifications',openPrefs,'notification-preferences-v1'],['moSearchHistory','⌕ Search History',openSearchHistory,'search-history-v2'],['moPayments','💳 Payments',openPayments,'saved-payments-v2'],['moPairings','🥐 Pairings',openPairings,'pairing-recommendations-v2'],['moShareCart','↗ Share Cart',openShareCart,'share-cart-v2'],['moProfileDash','👤 Profile',openProfileDashboard,'customer-profile-dashboard-v1'],['moSchedule','🗓 Schedule',openScheduledOrder,'scheduled-ordering-v1'],['moDiet','🥗 Diet Filters',openDietFilters,'allergen-diet-filters-v1'],['moDealReminders','⏰ Deal Reminders',openDealReminders,'deal-reminders-v1'],['moGiftOrder','🎁 Gift Order',openGiftOrder,'gift-order-v1'],['moGroupOrder','👥 Group Order',openGroupOrder,'group-order-v1'],['moLoyalty','🏆 Milestones',openLoyaltyMilestones,'loyalty-milestones-v1'],['moDynamicEta','⏱ Pickup ETA',openDynamicEta,'dynamic-pickup-eta-v1']].forEach(([id,label,fn,key])=>{
@@ -234,11 +362,8 @@ function addTools(){
  });
 }
 function refreshNewestHighlights(){
-  setTimeout(()=>{
-    [['#moSearchHistory','search-history-v2'],['#moPayments','saved-payments-v2'],['#moPairings','pairing-recommendations-v2'],['#moShareCart','share-cart-v2']]
-      .forEach(([s,k])=>window.NewFeatureHighlight?.register(s,k,'NEW'));
-  },250);
+  // Visible NEW state is handled by the orbit nodes for the latest customer batch.
 }
-function init(){addTools();patchCart();hookSearchHistory();refreshNewestHighlights();}
+function init(){addTools();patchCart();hookSearchHistory();hookPresetButton();refreshNewestHighlights();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1000));else setTimeout(init,1000);
 })();
