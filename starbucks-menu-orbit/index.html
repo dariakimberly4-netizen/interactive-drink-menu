@@ -105,15 +105,31 @@
         line-height:1.15;
       }
     }
+  
+    .force-mobile-subgrid{display:flex;gap:8px;overflow:auto}
+    @media(max-width:800px){
+      .force-mobile-subgrid{
+        display:grid!important;
+        grid-template-columns:repeat(2,minmax(0,1fr))!important;
+        overflow:visible!important;
+        width:100%!important;
+      }
+      .force-mobile-subgrid>button{
+        width:100%!important;
+        white-space:normal!important;
+        min-height:44px!important;
+      }
+    }
   </style>
 </head>
 <body>
+<!-- BUILD 20260924-11 -->
   <div class="grain"></div>
   <header>
     <div class="brand"><div class="mini-logo" aria-hidden="true">S</div><div><strong>Menu Orbit</strong><small>78-item reference catalog</small></div></div>
-    <button class="icon-btn" id="searchBtn" aria-label="Search menu">⌕ <span class="label">Search</span></button>
+    <button class="icon-btn" id="searchBtn" aria-label="Search menu" style="display:none!important">⌕ <span class="label">Search</span></button>
     <button class="icon-btn" id="gestureBtn" aria-pressed="false">☝ <span class="label">Gestures</span></button>
-    <button class="icon-btn" id="motionBtn" aria-pressed="false">◌ <span class="label">Reduce</span></button>
+    <button class="icon-btn" id="motionBtn" aria-pressed="false" style="display:none!important">◌ <span class="label">Reduce</span></button>
     <button class="icon-btn" id="helpBtn" aria-label="Help and support">? <span class="label">Help</span></button>
     <button class="icon-btn" id="cartBtn" aria-label="Open cart">🛒 <span class="count" id="cartCount">0</span></button>
     <button class="icon-btn rewards-nav" id="rewardsBtn" aria-label="Open Star Rewards">★ <span class="label">STAR REWARDS</span></button>
@@ -128,7 +144,7 @@
         <button type="button" data-direct-main="account">👤<span>MY ACCOUNT</span></button>
         <button type="button" data-direct-main="settings">⚙<span>SETTINGS</span></button>
       </div>
-      <div class="main-submenu-direct" id="mainSubmenuDirect"></div>
+      <div class="main-submenu-direct force-mobile-subgrid" id="mainSubmenuDirect"></div>
     </section>
     <nav class="toolbar" id="categories" aria-label="Menu categories"></nav>
   <div class="search-panel" id="searchPanel"><input id="searchInput" type="search" placeholder="Search drinks and food…" aria-label="Search products" /></div>
@@ -324,9 +340,9 @@
   <script src="new-feature-highlights.js"></script>
   <script src="demo-enhancements.js"></script>
   <script src="ecosystem-sync.js"></script>
-  <script src="commerce-upgrades.js"></script>
-<script src="completion-layer.js"></script>
-  <script src="customer-next.js?v=20260924-10"></script>
+  <script src="commerce-upgrades.js?v=20260924-11"></script>
+<script src="completion-layer.js?v=20260924-11"></script>
+  <script src="customer-next.js?v=20260924-11"></script>
 
 <script>
 (function(){
