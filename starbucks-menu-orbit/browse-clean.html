@@ -16,12 +16,39 @@ header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-betwe
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding-bottom:100px}.card{border:1px solid rgba(255,255,255,.1);border-radius:22px;overflow:hidden;background:linear-gradient(180deg,rgba(17,58,44,.92),rgba(7,36,27,.97));box-shadow:0 16px 34px rgba(0,0,0,.18)}.photo{aspect-ratio:4/3;position:relative;background:#0d3327}.photo img{width:100%;height:100%;object-fit:cover}.available{position:absolute;left:12px;bottom:12px;padding:6px 9px;border-radius:999px;background:rgba(3,24,17,.82);color:#bff2d4;font-size:9px;font-weight:850}.body{padding:14px}.meta{color:var(--muted);font-size:9px;font-weight:850;letter-spacing:.09em;text-transform:uppercase}.body h3{margin:7px 0 0;font-size:16px;min-height:38px}.price{display:flex;justify-content:space-between;align-items:end;margin-top:10px}.price strong{color:#f4d992;font-size:18px}.price span{font-size:9px;color:#8fa89c}.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.card-actions button{min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.055);color:#fff;font-weight:900;cursor:pointer}.card-actions .quick{background:var(--green);border:0}.card-actions .active{background:var(--cream);color:#07331f;border-color:var(--gold)}
 .modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.modal-card{width:min(900px,100%);max-height:90vh;overflow:auto;background:#0b2e23;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:18px}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.modal-head button{width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:#07331f;font-size:20px;cursor:pointer}.empty{text-align:center;padding:50px 20px;border:1px dashed rgba(255,255,255,.14);border-radius:18px;color:var(--muted)}.empty b{display:block;color:#fff;font-size:20px;margin-bottom:7px}.saved-row{display:grid;grid-template-columns:70px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:14px;margin-top:10px}.saved-row img{width:70px;height:70px;object-fit:cover;border-radius:10px}.row-actions{display:grid;gap:6px}.row-actions button{min-height:34px;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-weight:900;cursor:pointer}.row-actions .green{background:var(--green);border:0}.compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px}.compare-grid article{border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:12px;background:rgba(255,255,255,.04)}.compare-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(15px);opacity:0;pointer-events:none;transition:.2s;background:#f4efe6;color:#07331f;padding:11px 16px;border-radius:999px;font-weight:900;z-index:120}.toast.show{opacity:1;transform:translateX(-50%)}
 @media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){.wrap{width:calc(100% - 24px)}.hero{align-items:flex-start;flex-direction:column}.controls{align-items:stretch;flex-direction:column}.grid{grid-template-columns:repeat(2,1fr);gap:12px}.body h3{font-size:13px}.card-actions{grid-template-columns:1fr}.saved-row{grid-template-columns:56px 1fr}.saved-row img{width:56px;height:56px}.row-actions{grid-column:1/-1;grid-template-columns:repeat(3,1fr)}}@media(max-width:430px){.grid{grid-template-columns:1fr}}
+
+<style>
+/* FINAL CLEAN BROWSE POLISH V62 */
+.search-wrap{position:relative}
+.search-wrap #clearSearchBtn{
+  display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  width:38px;height:38px;border:0;border-radius:50%;background:#07331f;color:#fff;
+  font-size:20px;font-weight:900;cursor:pointer
+}
+.search-wrap.has-query #clearSearchBtn{display:block}
+.feature-new-v62{
+  position:relative!important;border-color:#ffd86b!important;
+  box-shadow:0 0 0 3px rgba(255,216,107,.18),0 0 22px rgba(255,216,107,.36)!important
+}
+.feature-new-v62::after{
+  content:'NEW';position:absolute;top:-9px;right:-7px;padding:4px 6px;border-radius:999px;
+  background:#ffd86b;color:#07331f;font:950 7px/1 Arial,sans-serif;letter-spacing:.08em
+}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}
+.cart-row-actions{display:flex;gap:6px;align-items:center}
+.cart-row-actions button{width:32px;height:32px;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-weight:900;cursor:pointer}
+.cart-remove{width:auto!important;padding:0 9px!important}
+@media(max-width:760px){
+  header{padding:10px 12px}.brand b{font-size:17px}.brand small{font-size:8px}
+  .hero{padding-top:24px}.hero h1{font-size:42px}.search{height:52px;font-size:15px}
+  .card-actions button{min-height:44px}
+}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn">‹ Back to Orbit</button></header>
 <div class="wrap">
 <section class="hero"><div><span class="eyebrow">MENU</span><h1 id="title">Browse Menu</h1><div class="count" id="count"></div></div><div class="actions"><button class="topbtn" id="savedBtn">♡ Saved <span id="savedCount">0</span></button><button class="topbtn primary" id="cartBtn">🛒 Cart <span id="cartCount">0</span></button></div></section>
-<input class="search" id="search" type="search" placeholder="Search drinks and food…">
+<div class="search-wrap"><input class="search" id="search" type="search" placeholder="Search drinks and food…"><button id="clearSearchBtn" type="button" aria-label="Clear search">×</button></div>
 <div class="controls"><div class="filters"><button class="active" data-filter="all">All</button><button data-filter="drinks">Drinks</button><button data-filter="food">Food</button><button data-filter="hot">Hot</button><button data-filter="iced">Iced</button><button data-filter="favorites">♡ Favorites</button></div><select id="sort"><option value="featured">Featured</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option><option value="name">Name: A–Z</option></select></div>
 <div class="comparebar" id="comparebar"><div><b id="compareCount">0 selected</b><div class="thumbs" id="thumbs"></div></div><div class="actions"><button class="topbtn" id="clearCompare">Clear</button><button class="topbtn primary" id="openCompare">Compare</button></div></div>
 <div class="grid" id="grid"></div></div>
@@ -71,5 +98,69 @@ function openSaved(){const a=read(savedKey,[]);$('#savedList').innerHTML=a.lengt
 function openCompare(){const a=read(compareKey,[]).map(product).filter(Boolean);$('#compareGrid').innerHTML=a.map(p=>`<article><img src="${p.img}"><h3>${p.name}</h3><p><b>${money(p.price)}</b></p><p>${p.cat}</p><p>${(p.temps||[]).join(' / ')}</p></article>`).join('');$('#compareModal').classList.add('open')}
 function openCart(){const a=read(cartKey,[]);$('#cartList').innerHTML=a.length?a.map(x=>`<div class="saved-row"><img src="${x.img}"><div><b>${x.name}</b><small style="display:block;color:#9eb5aa">${x.size||''} ${x.style||''}</small></div><b>${money(x.price*(x.qty||1))}</b></div>`).join(''):'<div class="empty"><b>Your cart is empty.</b></div>';$('#cartModal').classList.add('open')}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.view)return openDetail(b.dataset.view);if(b.dataset.quick)return quick(b.dataset.quick);if(b.dataset.save)return toggleSave(b.dataset.save);if(b.dataset.compare)return toggleCompare(b.dataset.compare);if(b.dataset.uncompare)return toggleCompare(b.dataset.uncompare);if(b.dataset.sview){$('#savedModal').classList.remove('open');return openDetail(b.dataset.sview)}if(b.dataset.scart){quick(b.dataset.scart);write(savedKey,read(savedKey,[]).filter(x=>x.id!==b.dataset.scart));openSaved();return render()}if(b.dataset.sremove){write(savedKey,read(savedKey,[]).filter(x=>x.id!==b.dataset.sremove));openSaved();return render()}if(b.dataset.close)return $('#'+b.dataset.close).classList.remove('open')});
-$('#search').addEventListener('input',e=>{query=e.target.value;render()});$$('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));render()});$('#sort').onchange=e=>{sort=e.target.value;render()};$('#savedBtn').onclick=openSaved;$('#cartBtn').onclick=openCart;$('#clearCompare').onclick=()=>{write(compareKey,[]);render()};$('#openCompare').onclick=openCompare;$('#backBtn').onclick=()=>location.href='index.html#orbit/menu/Browse';$$('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));render();
+$('#search').addEventListener('input',e=>{query=e.target.value;render()});$$('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));render()});$('#sort').onchange=e=>{sort=e.target.value;render()};$('#savedBtn').onclick=openSaved;$('#cartBtn').onclick=openCart;$('#clearCompare').onclick=()=>{write(compareKey,[]);render()};$('#openCompare').onclick=openCompare;$('#backBtn').onclick=()=>location.href='index.html#orbit/menu/Browse';
+/* FINAL CLEAN BROWSE JS V62 */
+const NEW_KEY_V62='mo_clean_browse_seen_v62';
+const newSeenV62=()=>read(NEW_KEY_V62,{});
+function markSeenV62(key){
+  const s=newSeenV62();s[key]=true;write(NEW_KEY_V62,s);applyNewV62();
+}
+function applyNewV62(){
+  const s=newSeenV62();
+  const saved=$('#savedBtn'),cart=$('#cartBtn');
+  saved?.classList.toggle('feature-new-v62',!s.saved);
+  cart?.classList.toggle('feature-new-v62',!s.cart);
+}
+$('#savedBtn')?.addEventListener('click',()=>markSeenV62('saved'));
+$('#cartBtn')?.addEventListener('click',()=>markSeenV62('cart'));
+
+const searchWrap=$('.search-wrap');
+const clearBtn=$('#clearSearchBtn');
+function syncSearchClearV62(){searchWrap?.classList.toggle('has-query',!!query)}
+$('#search')?.addEventListener('input',syncSearchClearV62);
+clearBtn?.addEventListener('click',()=>{
+  query='';$('#search').value='';syncSearchClearV62();render();$('#search').focus();
+});
+
+const originalOpenCartV62=openCart;
+openCart=function(){
+  const a=read(cartKey,[]);
+  const total=a.reduce((sum,x)=>sum+(Number(x.price)||0)*(Number(x.qty)||1),0);
+  $('#cartList').innerHTML=a.length
+    ? a.map(x=>`<div class="saved-row">
+        <img src="${x.img}">
+        <div><b>${x.name}</b><small style="display:block;color:#9eb5aa">${x.size||''} ${x.style||''}</small></div>
+        <div style="text-align:right">
+          <b>${money((Number(x.price)||0)*(Number(x.qty)||1))}</b>
+          <div class="cart-row-actions">
+            <button data-cart-minus="${x.key}">−</button>
+            <span>${x.qty||1}</span>
+            <button data-cart-plus="${x.key}">+</button>
+            <button class="cart-remove" data-cart-remove="${x.key}">Remove</button>
+          </div>
+        </div>
+      </div>`).join('')+`<div class="cart-total"><b>Total</b><strong>${money(total)}</strong></div>`
+    : '<div class="empty"><b>Your cart is empty.</b></div>';
+  $('#cartModal').classList.add('open');
+};
+
+document.addEventListener('click',e=>{
+  const minus=e.target.closest?.('[data-cart-minus]');
+  const plus=e.target.closest?.('[data-cart-plus]');
+  const remove=e.target.closest?.('[data-cart-remove]');
+  if(!minus&&!plus&&!remove)return;
+  let cart=read(cartKey,[]);
+  const key=String((minus||plus||remove).getAttribute(minus?'data-cart-minus':plus?'data-cart-plus':'data-cart-remove'));
+  const idx=cart.findIndex(x=>String(x.key)===key);
+  if(idx<0)return;
+  if(remove)cart.splice(idx,1);
+  else if(minus)cart[idx].qty=Math.max(1,(Number(cart[idx].qty)||1)-1);
+  else cart[idx].qty=(Number(cart[idx].qty)||1)+1;
+  write(cartKey,cart);render();openCart();
+});
+
+syncSearchClearV62();
+applyNewV62();
+$('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+render();
 </script></body></html>
