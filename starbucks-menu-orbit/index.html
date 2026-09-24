@@ -2336,6 +2336,98 @@
       visibility:hidden!important;
       pointer-events:none!important;
     }
+  
+    /* DEMO WALKTHROUGH PRESENTATION V55 */
+    .browse-demo-walkthrough-v55,.browse-presentation-v55{
+      min-height:42px;padding:0 13px;border-radius:14px;
+      border:1px solid rgba(244,200,111,.45);
+      background:#123a2c;color:#fff;font-weight:900;font-size:11px;cursor:pointer
+    }
+    .feature-new-v55{
+      position:relative!important;
+      border:2px solid #ffd86b!important;
+      box-shadow:0 0 0 3px rgba(255,216,107,.2),0 0 24px rgba(255,216,107,.42)!important;
+      animation:browseDirectNewPulseV44 1.2s ease-in-out infinite!important
+    }
+    .feature-new-v55::after{
+      content:'NEW';
+      position:absolute;top:-10px;right:-8px;
+      padding:5px 7px;border-radius:999px;
+      background:#ffd86b;color:#07331f;
+      font:950 8px/1 system-ui;letter-spacing:.08em
+    }
+
+    .browse-walkthrough-overlay-v55{
+      position:fixed;inset:0;z-index:2147483645;
+      background:rgba(0,18,12,.42);pointer-events:none
+    }
+    .browse-walkthrough-overlay-v55[hidden]{display:none!important}
+    .browse-walkthrough-card-v55{
+      position:fixed;right:20px;bottom:20px;
+      width:min(390px,calc(100vw - 32px));
+      padding:18px;border-radius:20px;
+      background:#f4efe6;color:#07331f;
+      box-shadow:0 24px 70px rgba(0,0,0,.44);
+      pointer-events:auto
+    }
+    .walkthrough-kicker-v55{font-size:9px;font-weight:950;letter-spacing:.12em;color:#8a6b17}
+    .browse-walkthrough-card-v55 h2{margin:7px 0 6px;font-size:24px}
+    .browse-walkthrough-card-v55 p{margin:0;color:#476456;font-size:13px;line-height:1.45}
+    .walkthrough-progress-v55{margin-top:14px;font-size:10px;font-weight:900;color:#8a6b17}
+    .walkthrough-actions-v55{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+    .walkthrough-actions-v55 button{
+      min-height:40px;padding:0 14px;border-radius:11px;border:1px solid #c7b98f;background:#fff;color:#07331f;font-weight:900
+    }
+    #browseWalkthroughNextV55{background:#00754a;color:#fff;border-color:#00754a}
+    .walkthrough-focus-v55{
+      position:relative!important;z-index:2147483646!important;
+      outline:5px solid #ffd86b!important;outline-offset:5px!important;
+      box-shadow:0 0 36px rgba(255,216,107,.8)!important
+    }
+
+    body.browse-presentation-v55 header{min-height:70px!important}
+    body.browse-presentation-v55 #browseCatalogHead{
+      width:min(1500px,calc(100% - 56px))!important;
+      padding-top:42px!important
+    }
+    body.browse-presentation-v55 #browseCatalogTitle{font-size:clamp(46px,5vw,74px)!important}
+    body.browse-presentation-v55 #browseCatalogCount{font-size:16px!important}
+    body.browse-presentation-v55 #searchPanel,
+    body.browse-presentation-v55 #browseCatalogControls,
+    body.browse-presentation-v55 #stage,
+    body.browse-presentation-v55 #browseRecentlyViewed{
+      width:min(1500px,calc(100% - 56px))!important
+    }
+    body.browse-presentation-v55 #searchPanel input{height:66px!important;font-size:20px!important}
+    body.browse-presentation-v55 .browse-filter-row button{min-height:48px!important;font-size:14px!important;padding:0 18px!important}
+    body.browse-presentation-v55 .browse-sort select{min-height:48px!important;font-size:14px!important}
+    body.browse-presentation-v55 #orbit{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:24px!important}
+    body.browse-presentation-v55 .catalog-card h3{font-size:20px!important}
+    body.browse-presentation-v55 .catalog-actions button{min-height:50px!important;font-size:13px!important}
+    body.browse-presentation-v55 .results-back,
+    body.browse-presentation-v55 #browseNewFeatureBannerV44,
+    body.browse-presentation-v55 #clearRecentlyViewed{
+      display:none!important
+    }
+    body.browse-presentation-v55::after{
+      content:'PRESENTATION MODE';
+      position:fixed;left:16px;bottom:16px;z-index:220;
+      padding:7px 11px;border-radius:999px;background:#ffd86b;color:#07331f;
+      font:950 9px/1 system-ui;letter-spacing:.1em;pointer-events:none
+    }
+
+    @media(max-width:760px){
+      .browse-demo-walkthrough-v55,.browse-presentation-v55{width:100%}
+      .browse-walkthrough-card-v55{left:12px;right:12px;bottom:12px;width:auto}
+      body.browse-presentation-v55 #browseCatalogHead,
+      body.browse-presentation-v55 #searchPanel,
+      body.browse-presentation-v55 #browseCatalogControls,
+      body.browse-presentation-v55 #stage,
+      body.browse-presentation-v55 #browseRecentlyViewed{
+        width:calc(100% - 24px)!important
+      }
+      body.browse-presentation-v55 #orbit{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+    }
   </style>
 </head>
 <body>
@@ -2377,6 +2469,8 @@
       </div>
       <div class="browse-head-actions">
         <button type="button" class="browse-demo-mode-v48" id="browseDemoModeV48">▶ Demo Mode</button>
+        <button type="button" class="browse-demo-walkthrough-v55 feature-new-v55" id="browseWalkthroughV55">✨ Demo Walkthrough</button>
+        <button type="button" class="browse-presentation-v55 feature-new-v55" id="browsePresentationV55">▣ Presentation Mode</button>
         <div class="browse-new-feature-banner-v44" id="browseNewFeatureBannerV44">
           <span>NEW</span>
           <b>Recently Viewed + Mobile Cart</b>
@@ -2438,6 +2532,18 @@
   <div class="modal" id="accountModal" role="dialog" aria-modal="true" aria-labelledby="accountTitle"><div class="modal-card" id="accountContent"></div></div>
   <div class="modal" id="adminModal" role="dialog" aria-modal="true" aria-labelledby="adminTitle"><div class="modal-card" id="adminContent"></div></div>
   <div class="modal" id="hubModal" role="dialog" aria-modal="true" aria-labelledby="hubTitle"><div class="modal-card" id="hubContent"></div></div>
+  <div class="browse-walkthrough-overlay-v55" id="browseWalkthroughOverlayV55" hidden>
+    <div class="browse-walkthrough-card-v55">
+      <span class="walkthrough-kicker-v55">DEMO WALKTHROUGH</span>
+      <h2 id="browseWalkthroughTitleV55">Search the catalog</h2>
+      <p id="browseWalkthroughTextV55">Type “cold brew” to demonstrate live search.</p>
+      <div class="walkthrough-progress-v55" id="browseWalkthroughProgressV55">1 / 6</div>
+      <div class="walkthrough-actions-v55">
+        <button type="button" id="browseWalkthroughExitV55">Exit</button>
+        <button type="button" id="browseWalkthroughNextV55">Next</button>
+      </div>
+    </div>
+  </div>
   <div class="modal" id="browseCompareModalV47" role="dialog" aria-modal="true" aria-labelledby="browseCompareTitleV47">
     <div class="modal-card">
       <div class="drawer-head">
@@ -2849,7 +2955,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-54"></script>
+  <script src="customer-next.js?v=20260924-55"></script>
 
 <script>
 (function(){
@@ -4770,6 +4876,99 @@
   }
 
   ownBrowseSearchInputV53();
+
+
+  const PRESENTATION_KEY_V55='mo_browse_presentation_v55';
+  const FEATURE_SEEN_V55='mo_browse_new_seen_v55';
+  const WALKTHROUGH_STEPS_V55=[
+    {title:'Search the catalog',text:'Type “cold brew” to demonstrate live search.',focus:'#searchInput',run:()=>{
+      const input=document.getElementById('searchInput');if(input){input.value='cold brew';input.dispatchEvent(new Event('input',{bubbles:true}));input.focus()}
+    }},
+    {title:'Filter Drinks',text:'Show how the catalog instantly narrows to drinks.',focus:'[data-browse-filter="drinks"]',run:()=>document.querySelector('[data-browse-filter="drinks"]')?.click()},
+    {title:'Filter Food',text:'Switch to food to demonstrate category filtering.',focus:'[data-browse-filter="food"]',run:()=>document.querySelector('[data-browse-filter="food"]')?.click()},
+    {title:'Compare products',text:'Select products using the Compare buttons, then open the compare tray.',focus:'.catalog-compare-v47',run:()=>{
+      document.querySelector('[data-browse-filter="all"]')?.click();
+      document.querySelectorAll('.catalog-compare-v47').forEach((b,i)=>{if(i<2&&!b.classList.contains('active'))b.click()});
+    }},
+    {title:'Save for Later',text:'Save a product and show that it stays saved in this browser.',focus:'.catalog-save-v47',run:()=>{
+      const b=document.querySelector('.catalog-save-v47:not(.active)');b?.click();
+    }},
+    {title:'Open the Cart',text:'Finish by opening the customer cart.',focus:'#browseCartBtn',run:()=>document.getElementById('browseCartBtn')?.click()}
+  ];
+  let walkthroughIndexV55=0;
+
+  function markFeatureSeenV55(key){
+    let seen={};try{seen=JSON.parse(localStorage.getItem(FEATURE_SEEN_V55)||'{}')}catch(e){}
+    seen[key]=true;try{localStorage.setItem(FEATURE_SEEN_V55,JSON.stringify(seen))}catch(e){}
+    document.getElementById(key==='walkthrough'?'browseWalkthroughV55':'browsePresentationV55')?.classList.remove('feature-new-v55');
+  }
+
+  function clearWalkthroughFocusV55(){
+    document.querySelectorAll('.walkthrough-focus-v55').forEach(el=>el.classList.remove('walkthrough-focus-v55'));
+  }
+
+  function renderWalkthroughStepV55(){
+    const overlay=document.getElementById('browseWalkthroughOverlayV55');
+    const step=WALKTHROUGH_STEPS_V55[walkthroughIndexV55];
+    if(!overlay||!step)return;
+    clearWalkthroughFocusV55();
+    overlay.hidden=false;
+    document.getElementById('browseWalkthroughTitleV55').textContent=step.title;
+    document.getElementById('browseWalkthroughTextV55').textContent=step.text;
+    document.getElementById('browseWalkthroughProgressV55').textContent=(walkthroughIndexV55+1)+' / '+WALKTHROUGH_STEPS_V55.length;
+    setTimeout(()=>{
+      step.run?.();
+      const target=document.querySelector(step.focus);
+      if(target){
+        target.classList.add('walkthrough-focus-v55');
+        target.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
+      }
+    },120);
+  }
+
+  function startWalkthroughV55(){
+    markFeatureSeenV55('walkthrough');
+    walkthroughIndexV55=0;
+    document.body.classList.add('browse-walkthrough-active-v55');
+    renderWalkthroughStepV55();
+  }
+
+  function exitWalkthroughV55(){
+    clearWalkthroughFocusV55();
+    document.body.classList.remove('browse-walkthrough-active-v55');
+    const overlay=document.getElementById('browseWalkthroughOverlayV55');
+    if(overlay)overlay.hidden=true;
+  }
+
+  function togglePresentationV55(){
+    const on=!document.body.classList.contains('browse-presentation-v55');
+    document.body.classList.toggle('browse-presentation-v55',on);
+    try{localStorage.setItem(PRESENTATION_KEY_V55,on?'1':'0')}catch(e){}
+    markFeatureSeenV55('presentation');
+    const btn=document.getElementById('browsePresentationV55');
+    if(btn)btn.textContent=on?'× Exit Presentation':'▣ Presentation Mode';
+    if(on)window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  document.getElementById('browseWalkthroughV55')?.addEventListener('click',startWalkthroughV55);
+  document.getElementById('browsePresentationV55')?.addEventListener('click',togglePresentationV55);
+  document.getElementById('browseWalkthroughExitV55')?.addEventListener('click',exitWalkthroughV55);
+  document.getElementById('browseWalkthroughNextV55')?.addEventListener('click',()=>{
+    walkthroughIndexV55++;
+    if(walkthroughIndexV55>=WALKTHROUGH_STEPS_V55.length){exitWalkthroughV55();return}
+    renderWalkthroughStepV55();
+  });
+
+  try{
+    const seen=JSON.parse(localStorage.getItem(FEATURE_SEEN_V55)||'{}');
+    if(seen.walkthrough)document.getElementById('browseWalkthroughV55')?.classList.remove('feature-new-v55');
+    if(seen.presentation)document.getElementById('browsePresentationV55')?.classList.remove('feature-new-v55');
+    if(localStorage.getItem(PRESENTATION_KEY_V55)==='1'){
+      document.body.classList.add('browse-presentation-v55');
+      const btn=document.getElementById('browsePresentationV55');
+      if(btn)btn.textContent='× Exit Presentation';
+    }
+  }catch(e){}
 
   document.getElementById('browseDemoModeV48')?.addEventListener('click',()=>{
     if(localStorage.getItem(DEMO_FLAG_V48)==='1')resetBrowseDemoV48();
