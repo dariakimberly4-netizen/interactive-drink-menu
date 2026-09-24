@@ -87,6 +87,39 @@
 .approval-row,.receipt-row,.hold-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:13px;margin-top:8px;background:rgba(255,255,255,.035)}
 .inventory-ok{color:#9fe5bc}.inventory-low{color:#ffd38d}.inventory-out{color:#ffaaaa}
 @media(max-width:620px){.tool-grid,.kpi-grid{grid-template-columns:1fr}.approval-row,.receipt-row,.hold-row{grid-template-columns:1fr}}
+
+/* CASHIER LIVE CENTER V3 */
+.cashier-orbit-center{
+  cursor:pointer!important;
+  user-select:none!important;
+  transition:.18s transform,.18s box-shadow,.18s border-color!important;
+}
+.cashier-orbit-center:hover{
+  transform:translate(-50%,-50%) scale(1.04)!important;
+  border-color:#ffd86b!important;
+  box-shadow:0 20px 56px rgba(0,0,0,.38),0 0 34px rgba(255,216,107,.25)!important;
+}
+.cashier-orbit-center:active{transform:translate(-50%,-50%) scale(.98)!important}
+.cashier-orbit-center .center-action{
+  font:950 18px/1.05 system-ui;
+  letter-spacing:.02em;
+}
+.cashier-orbit-center .center-status{
+  font-size:9px;
+  color:#c8dbd2;
+  line-height:1.3;
+  max-width:125px;
+}
+.cashier-orbit-center .center-kicker{
+  font-size:8px;
+  color:#f4c86f;
+  letter-spacing:.12em;
+  font-weight:900;
+}
+.cashier-orbit-center.center-alert{
+  border-color:#ffcf70!important;
+  box-shadow:0 0 0 4px rgba(255,207,112,.14),0 0 30px rgba(255,207,112,.28)!important;
+}
 </style>
 </head>
 <body>
@@ -140,7 +173,7 @@ document.querySelector('#cashierToolClose').onclick=()=>document.querySelector('
 document.querySelector('#cashierToolModal').onclick=e=>{if(e.target.id==='cashierToolModal')e.currentTarget.classList.remove('open')};
 function home(){
   const view=document.querySelector('#view');
-  const MAIN_NEW_KEY='cashier-orbit-main-v2';
+  const MAIN_NEW_KEY='cashier-orbit-main-v3';
   const seen=()=>{try{return localStorage.getItem(MAIN_NEW_KEY)==='seen'}catch(e){return false}};
   const markSeen=()=>{try{localStorage.setItem(MAIN_NEW_KEY,'seen')}catch(e){}};
 
@@ -198,6 +231,57 @@ function home(){
     ]
   };
 
+
+  function centerStateV3(){
+    const cartQty=cart.reduce((n,x)=>n+(Number(x.qty)||1),0);
+    const subtotal=cart.reduce((s,x)=>s+(Number(x.price)||0)*(Number(x.qty)||1),0);
+    const pending=activeOrders.filter(x=>(x.payment_status||'Pending')==='Pending').length;
+
+    if(screen==='success'&&lastOrder){
+      return {
+        kicker:'ORDER SENT',
+        action:'NEXT ORDER',
+        status:lastOrder.order_ref+' • '+money(lastOrder.total_amount),
+        alert:false,
+        run:()=>{screen='new';render()}
+      };
+    }
+    if(cartQty>0 && payment==='Pending'){
+      return {
+        kicker:'CURRENT ORDER',
+        action:'CHECKOUT',
+        status:cartQty+' item'+(cartQty===1?'':'s')+' • '+money(subtotal),
+        alert:true,
+        run:()=>{screen='checkout';render()}
+      };
+    }
+    if(cartQty>0){
+      return {
+        kicker:'CURRENT ORDER',
+        action:'VIEW CART',
+        status:cartQty+' item'+(cartQty===1?'':'s')+' • '+money(subtotal),
+        alert:false,
+        run:()=>{screen='new';render()}
+      };
+    }
+    if(pending>0){
+      return {
+        kicker:'ACTION NEEDED',
+        action:'COLLECT PAYMENT',
+        status:pending+' pending payment'+(pending===1?'':'s'),
+        alert:true,
+        run:toolPending
+      };
+    }
+    return {
+      kicker:'READY',
+      action:'NEW ORDER',
+      status:activeOrders.length+' active • '+cashier.branch,
+      alert:false,
+      run:()=>{screen='new';render()}
+    };
+  }
+
   function orbitMarkup(items,centerTitle,centerSub,isMain){
     const n=items.length;
     return `<section class="cashier-orbit-shell">
@@ -210,7 +294,11 @@ function home(){
       <p class="cashier-orbit-sub">${esc(centerSub)}</p>
       <div class="cashier-orbit" id="cashierOrbit">
         <div class="cashier-orbit-ring"></div>
-        <div class="cashier-orbit-center"><b>${esc(centerTitle)}</b><span>${esc(centerSub)}</span></div>
+        <button type="button" class="cashier-orbit-center" id="cashierOrbitCenter">
+          <span class="center-kicker" id="cashierCenterKicker">CASHIER</span>
+          <span class="center-action" id="cashierCenterAction">${esc(centerTitle)}</span>
+          <span class="center-status" id="cashierCenterStatus">${esc(centerSub)}</span>
+        </button>
         ${items.map((item,i)=>{
           const a=(Math.PI*2*i/n)-Math.PI/2;
           const rx=window.innerWidth<=430?190:(window.innerWidth<=720?235:285);
@@ -232,6 +320,16 @@ function home(){
       else items[i].run();
     });
     document.querySelector('#cashierOrbitBack')?.addEventListener('click',()=>showOrbit());
+
+    const center=document.querySelector('#cashierOrbitCenter');
+    if(center){
+      const cs=centerStateV3();
+      document.querySelector('#cashierCenterKicker').textContent=cs.kicker;
+      document.querySelector('#cashierCenterAction').textContent=cs.action;
+      document.querySelector('#cashierCenterStatus').textContent=cs.status;
+      center.classList.toggle('center-alert',!!cs.alert);
+      center.onclick=cs.run;
+    }
   }
 
   function showOrbit(group){
