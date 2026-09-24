@@ -303,6 +303,90 @@ button,input{font:inherit}
   .n6{margin-left:-121px!important;margin-top:-80px!important}
 }
 </style>
+
+<style id="orbitOpsUpgradeV4">
+/* ORBIT OPS UPGRADE V4 */
+.node{overflow:visible!important}
+.status-badge{
+  position:absolute;top:-6px;right:-4px;z-index:8;
+  min-width:28px;height:24px;padding:0 7px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:#e44f4f;color:#fff;border:2px solid #0b2f24;
+  font-style:normal;font-size:9px;font-weight:900;white-space:nowrap;
+  box-shadow:0 6px 14px rgba(0,0,0,.28)
+}
+.status-badge.ok{background:#00a862}
+.status-badge.warn{background:#c77c14}
+.status-badge.gold{background:#d4ad62;color:#143126}
+.quick-new-order{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,112px);
+  z-index:7;border:1px solid rgba(244,200,111,.7);
+  border-radius:999px;background:linear-gradient(135deg,#f4efe6,#d4ad62);
+  color:#07331f;font-weight:900;padding:9px 16px;
+  box-shadow:0 10px 24px rgba(0,0,0,.3)
+}
+.quick-new-order:hover{transform:translate(-50%,109px)}
+.command-center{
+  position:fixed;inset:0;z-index:80;display:none;
+  background:rgba(2,11,8,.82);backdrop-filter:blur(16px);
+  padding:18px;overflow:auto
+}
+.command-center.open{display:block}
+.command-shell{
+  width:min(1000px,100%);margin:20px auto;
+  background:linear-gradient(180deg,#f9fbf9,#eef5f1);
+  color:#173229;border-radius:28px;padding:24px;
+  box-shadow:0 32px 90px rgba(0,0,0,.4)
+}
+.command-head{display:flex;gap:14px;align-items:flex-start}
+.command-head>div{margin-right:auto}
+.command-head small{color:#00754a;font-weight:900;letter-spacing:.12em}
+.command-head h2{font-size:34px;margin:5px 0 4px}
+.command-head p{margin:0;color:#718079}
+.command-close{
+  width:44px;height:44px;border:0;border-radius:13px;background:#dde9e2;
+  color:#173229;font-size:24px;cursor:pointer
+}
+.command-kpis{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px
+}
+.command-kpis article{
+  background:#fff;border:1px solid #dfe8e3;border-radius:18px;padding:16px
+}
+.command-kpis span{display:block;color:#718079;font-size:12px}
+.command-kpis b{display:block;font-size:25px;margin:5px 0}
+.command-kpis small{color:#8b9892}
+.command-actions{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px
+}
+.command-actions button{
+  min-height:50px;border:0;border-radius:14px;background:#006241;color:#fff;font-weight:900;cursor:pointer
+}
+.command-activity{margin-top:20px;background:#fff;border:1px solid #dfe8e3;border-radius:18px;padding:16px}
+.command-activity h3{margin:0 0 8px}
+.command-activity>div{
+  display:grid;grid-template-columns:90px 1fr auto;gap:10px;
+  padding:11px 0;border-bottom:1px solid #edf1ef;align-items:center
+}
+.command-activity>div:last-child{border-bottom:0}
+.command-activity span{color:#65756e;font-size:13px}
+.command-activity em{font-style:normal;color:#00754a;font-size:12px;font-weight:800}
+@media(max-width:760px){
+  .status-badge{top:-7px;right:-6px;height:20px;min-width:24px;font-size:7px;padding:0 5px}
+  .quick-new-order{transform:translate(-50%,93px);font-size:9px;padding:7px 11px}
+  .quick-new-order:hover{transform:translate(-50%,90px)}
+  .command-center{padding:8px}
+  .command-shell{margin:8px auto;border-radius:22px;padding:16px}
+  .command-head h2{font-size:26px}
+  .command-kpis{grid-template-columns:1fr 1fr}
+  .command-kpis article{padding:13px}
+  .command-kpis b{font-size:20px}
+  .command-actions{grid-template-columns:1fr 1fr}
+  .command-activity>div{grid-template-columns:70px 1fr}
+  .command-activity em{grid-column:2}
+}
+</style>
 </head>
 <body>
 <header class="topbar">
@@ -324,17 +408,54 @@ button,input{font:inherit}
         <div><b>4</b><span>Low Stock</span></div>
       </div>
     </button>
+    <button id="quickNewOrder" class="quick-new-order" type="button">＋ New Order</button>
 
-    <button class="node n1" data-key="orders"><b>Orders</b><span>Queue & fulfillment</span></button>
-    <button class="node n2" data-key="menu"><b>Menu</b><span>Drinks, food & availability</span></button>
-    <button class="node n3" data-key="inventory"><b>Inventory</b><span>Stock & suppliers</span></button>
-    <button class="node n4" data-key="promotions"><b>Promotions</b><span>Offers & campaigns</span></button>
-    <button class="node n5" data-key="customers"><b>Customers</b><span>Loyalty & feedback</span></button>
-    <button class="node n6" data-key="business"><b>Business</b><span>Sales & reports</span></button>
+    <button class="node n1" data-key="orders"><i class="status-badge">12</i><b>Orders</b><span>Queue & fulfillment</span></button>
+    <button class="node n2" data-key="menu"><i class="status-badge ok">96%</i><b>Menu</b><span>Drinks, food & availability</span></button>
+    <button class="node n3" data-key="inventory"><i class="status-badge warn">4 Low</i><b>Inventory</b><span>Stock & suppliers</span></button>
+    <button class="node n4" data-key="promotions"><i class="status-badge gold">2 Active</i><b>Promotions</b><span>Offers & campaigns</span></button>
+    <button class="node n5" data-key="customers"><i class="status-badge ok">3 New</i><b>Customers</b><span>Loyalty & feedback</span></button>
+    <button class="node n6" data-key="business"><i class="status-badge gold">₱18.4K</i><b>Business</b><span>Sales & reports</span></button>
 
     <div class="hint">Tap any orbit node to open its workspace</div>
   </section>
 </main>
+
+<div class="command-center" id="commandCenter">
+  <section class="command-shell">
+    <div class="command-head">
+      <div>
+        <small>LIVE STORE COMMAND</small>
+        <h2>Today's Store</h2>
+        <p>Real-time shift overview and fastest actions.</p>
+      </div>
+      <button class="command-close" id="commandClose">×</button>
+    </div>
+
+    <div class="command-kpis">
+      <article><span>Sales Today</span><b>₱18,420</b><small>87 orders</small></article>
+      <article><span>Orders Waiting</span><b>12</b><small>3 urgent</small></article>
+      <article><span>Preparing</span><b>5</b><small>Avg. 8 min</small></article>
+      <article><span>Ready</span><b>3</b><small>For pickup</small></article>
+      <article><span>Low Stock</span><b>4</b><small>Needs attention</small></article>
+      <article><span>Staff Online</span><b>4</b><small>1 on break</small></article>
+    </div>
+
+    <div class="command-actions">
+      <button data-command="new-order">＋ New Order</button>
+      <button data-command="orders">Open Order Queue</button>
+      <button data-command="inventory">Review Low Stock</button>
+      <button data-command="staff">Staff On Duty</button>
+    </div>
+
+    <div class="command-activity">
+      <h3>Live Activity</h3>
+      <div><b>#A-1042</b><span>2 drinks • Preparing</span><em>2 min</em></div>
+      <div><b>#A-1041</b><span>1 food + 1 drink • Ready</span><em>5 min</em></div>
+      <div><b>#A-1040</b><span>3 drinks • New order</span><em>Just now</em></div>
+    </div>
+  </section>
+</div>
 
 <div class="panel" id="panel">
   <section class="sheet">
@@ -379,12 +500,26 @@ business:{title:"Business",desc:"Management performance view.",items:[
 };
 const panel=document.getElementById("panel"),title=document.getElementById("title"),desc=document.getElementById("desc"),grid=document.getElementById("grid");
 function openModule(k){
+ if(k==="today"){ openCommandCenterV4(); return; }
  const m=data[k]; title.textContent=m.title; desc.textContent=m.desc; grid.innerHTML="";
  m.items.forEach(([a,b])=>{const btn=document.createElement("button");btn.className="card";btn.innerHTML="<b>"+a+"</b><span>"+b+"</span>";grid.appendChild(btn)});
  panel.classList.add("open");
 }
+function openCommandCenterV4(){ document.getElementById("commandCenter")?.classList.add("open"); }
+function closeCommandCenterV4(){ document.getElementById("commandCenter")?.classList.remove("open"); }
 document.querySelectorAll("[data-key]").forEach(b=>b.onclick=()=>openModule(b.dataset.key));
 document.getElementById("close").onclick=()=>panel.classList.remove("open");
+document.getElementById("commandClose")?.addEventListener("click",closeCommandCenterV4);
+document.getElementById("commandCenter")?.addEventListener("click",e=>{if(e.target.id==="commandCenter")closeCommandCenterV4()});
+document.getElementById("quickNewOrder")?.addEventListener("click",e=>{e.stopPropagation();openModule("orders");setTimeout(()=>{title.textContent="New Order";desc.textContent="Start a cashier order immediately.";grid.innerHTML="";[["Drinks","Browse drink categories."],["Food","Browse food categories."],["Custom Order","Build a customized order."],["Scan / Search","Find an item quickly."]].forEach(([a,b])=>{const btn=document.createElement("button");btn.className="card";btn.innerHTML="<b>"+a+"</b><span>"+b+"</span>";grid.appendChild(btn)})},0)});
+document.querySelectorAll("[data-command]").forEach(btn=>btn.addEventListener("click",()=>{
+ const cmd=btn.dataset.command;
+ closeCommandCenterV4();
+ if(cmd==="new-order"){document.getElementById("quickNewOrder")?.click();}
+ else if(cmd==="inventory"){openModule("inventory");}
+ else if(cmd==="orders"){openModule("orders");}
+ else if(cmd==="staff"){openModule("today");}
+}));
 panel.onclick=e=>{if(e.target===panel)panel.classList.remove("open")};
 document.getElementById("enter").onclick=()=>{
  const pin=document.getElementById("pin").value;
