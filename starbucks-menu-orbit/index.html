@@ -2327,6 +2327,15 @@
       visibility:hidden!important;
       pointer-events:none!important;
     }
+  
+    /* SEARCH OWNERSHIP FIX V53 */
+    body.show-product-results #moSearchSuggest,
+    body.show-product-results .mo-search-suggest,
+    body.show-product-results .mo-filterbar{
+      display:none!important;
+      visibility:hidden!important;
+      pointer-events:none!important;
+    }
   </style>
 </head>
 <body>
@@ -2840,7 +2849,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-52"></script>
+  <script src="customer-next.js?v=20260924-53"></script>
 
 <script>
 (function(){
@@ -4577,10 +4586,7 @@
     const input=document.getElementById('searchInput');
     const legacy=document.getElementById('moSearchSuggest');
     if(legacy)legacy.remove();
-    if(input){
-      input.oninput=null;
-      input.onchange=null;
-    }
+    // Search input ownership is handled once by ownBrowseSearchInputV53().
   }
 
   let recoveryCatalogCacheV52=[];
@@ -4664,7 +4670,11 @@
     neutralizeLegacySearchV52();
 
     const app=window.MenuOrbitApp;
-    const allProducts=Array.isArray(app?.products)?app.products:[];
+    let allProducts=Array.isArray(app?.products)&&app.products.length
+      ? app.products
+      : (Array.isArray(window.__MENU_ORBIT_PRODUCTS_V51)?window.__MENU_ORBIT_PRODUCTS_V51:[]);
+    if(allProducts.length)recoveryCatalogCacheV52=[...allProducts];
+    else if(recoveryCatalogCacheV52.length)allProducts=[...recoveryCatalogCacheV52];
     const products=recoveryFilteredProductsV49(allProducts);
     const orbit=document.getElementById('orbit');
     const count=document.getElementById('browseCatalogCount');
@@ -4735,14 +4745,31 @@
     renderRecoveredBrowse();
   });
 
-  const recoverySearchInputV52=document.getElementById('searchInput');
-  if(recoverySearchInputV52){
-    recoverySearchInputV52.oninput=e=>{
-      recoveryBrowseSearchV49=e.target.value||'';
-      renderRecoveredBrowse();
+  function ownBrowseSearchInputV53(){
+    let input=document.getElementById('searchInput');
+    if(!input)return null;
+    if(input.dataset.browseOwnedV53==='true')return input;
+
+    const fresh=input.cloneNode(true);
+    fresh.dataset.browseOwnedV53='true';
+    fresh.value=input.value||'';
+    input.replaceWith(fresh);
+
+    fresh.addEventListener('input',e=>{
+      recoveryBrowseSearchV49=e.currentTarget.value||'';
       document.getElementById('moSearchSuggest')?.remove();
-    };
+      renderRecoveredBrowse();
+    });
+
+    fresh.addEventListener('search',e=>{
+      recoveryBrowseSearchV49=e.currentTarget.value||'';
+      renderRecoveredBrowse();
+    });
+
+    return fresh;
   }
+
+  ownBrowseSearchInputV53();
 
   document.getElementById('browseDemoModeV48')?.addEventListener('click',()=>{
     if(localStorage.getItem(DEMO_FLAG_V48)==='1')resetBrowseDemoV48();
@@ -4763,6 +4790,7 @@
   const boot=()=>{
     tries++;
     neutralizeLegacySearchV52();
+    ownBrowseSearchInputV53();
     const ok=renderRecoveredBrowse();
     const demoBtn=document.getElementById('browseDemoModeV48');
     if(demoBtn&&localStorage.getItem(DEMO_FLAG_V48)==='1'){
