@@ -1196,6 +1196,31 @@
     #mainMenuDirect button[aria-label="Dine-In Order Status"] .dine-status-new-text{
       display:block!important;margin-top:5px!important;color:#ffd86b!important;font:950 8px/1 system-ui!important;letter-spacing:.12em!important;
     }
+  
+    /* DINE STATUS FOREGROUND FIX */
+    #dineInStatusModal{
+      position:fixed!important;
+      inset:0!important;
+      width:100vw!important;
+      height:100dvh!important;
+      z-index:2147483646!important;
+      align-items:center!important;
+      justify-content:center!important;
+      overflow:auto!important;
+      padding:14px!important;
+      box-sizing:border-box!important;
+      background:rgba(0,18,12,.86)!important;
+      backdrop-filter:blur(10px)!important;
+      isolation:isolate!important;
+    }
+    #dineInStatusModal .modal-card{
+      position:relative!important;
+      z-index:2147483647!important;
+      width:min(620px,calc(100vw - 28px))!important;
+      max-height:calc(100dvh - 28px)!important;
+      overflow:auto!important;
+      margin:auto!important;
+    }
   </style>
 </head>
 <body>
@@ -1435,7 +1460,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-29"></script>
+  <script src="customer-next.js?v=20260924-30"></script>
 
 <script>
 (function(){
@@ -1667,11 +1692,16 @@
 
     function close(){
       modal.classList.remove('open');
+      modal.style.removeProperty('display');
       clearInterval(dineStatusTimer);
       dineStatusTimer=null;
+      resumeOrbitAfterCallStaff();
     }
 
+    suspendOrbitForCallStaff();
     draw();
+    modal.style.setProperty('display','flex','important');
+    modal.style.setProperty('z-index','2147483646','important');
     modal.classList.add('open');
     clearInterval(dineStatusTimer);
     dineStatusTimer=setInterval(()=>{if(modal.classList.contains('open'))draw()},1800);
