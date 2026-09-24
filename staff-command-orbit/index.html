@@ -392,66 +392,25 @@ button,input{font:inherit}
 
 
 
-<style id="highlightFeaturesV7">
-/* SELECTIVE NEW-FEATURE HIGHLIGHTS V7 */
-@keyframes staffGlowV7{
-  0%,100%{box-shadow:0 0 0 2px rgba(255,214,107,.95),0 0 12px rgba(255,214,107,.38)}
-  50%{box-shadow:0 0 0 4px rgba(255,214,107,.55),0 0 24px rgba(255,214,107,.78)}
-}
-.core-highlight-v7{
-  box-shadow:
-    0 0 0 3px rgba(255,214,107,.9),
-    0 0 20px rgba(255,214,107,.45),
-    0 0 72px rgba(0,168,98,.35)!important;
-}
-.quick-highlight-v7{
-  animation:staffGlowV7 1.4s ease-in-out infinite!important;
-  border-color:#ffd66b!important;
-}
-.badge-highlight-v7{
-  animation:staffGlowV7 1.4s ease-in-out infinite!important;
-  border-color:#ffd66b!important;
-}
-.new-tag-v7{
+
+<style id="singleNewHighlightV8">
+.quick-new-order{position:absolute!important}
+.quick-new-order::after{
+  content:"NEW";
   position:absolute;
-  top:-11px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:90;
+  top:-10px;
+  right:-8px;
   background:#ffd66b;
   color:#173229;
   border:2px solid #08281e;
   border-radius:999px;
   padding:3px 7px;
   font-size:7px;
+  line-height:1;
   font-weight:1000;
   letter-spacing:.08em;
-  line-height:1;
-  white-space:nowrap;
 }
-.core .new-tag-v7{top:-13px}
-.quick-new-order .new-tag-v7{top:-12px}
-.highlight-note-v7{
-  position:fixed;
-  left:50%;
-  top:80px;
-  transform:translateX(-50%);
-  z-index:90;
-  background:#ffd66b;
-  color:#173229;
-  border:2px solid #08281e;
-  border-radius:999px;
-  padding:8px 13px;
-  font-size:10px;
-  font-weight:1000;
-  box-shadow:0 10px 28px rgba(0,0,0,.28);
-  white-space:nowrap;
-}
-@media(max-width:760px){
-  .highlight-note-v7{top:70px;font-size:8px;padding:6px 9px}
-}
-</style>
-</head>
+</style>\n</head>
 <body>
 <header class="topbar">
   <div class="logo">S</div>
@@ -591,45 +550,13 @@ panel.onclick=e=>{if(e.target===panel)panel.classList.remove("open")};
 
 
 
-function addNewTagV7(el){
-  if(!el || el.querySelector('.new-tag-v7')) return;
-  const tag=document.createElement('span');
-  tag.className='new-tag-v7';
-  tag.textContent='NEW';
-  el.appendChild(tag);
-}
-function applyHighlightsV7(){
-  if(document.getElementById('highlightNoteV7')) return;
-
-  const note=document.createElement('div');
-  note.id='highlightNoteV7';
-  note.className='highlight-note-v7';
-  note.textContent='Only the new controls are highlighted';
-  document.body.appendChild(note);
-
-  const center=document.querySelector('.core');
-  const quick=document.getElementById('quickNewOrder');
-
-  center?.classList.add('core-highlight-v7');
-  quick?.classList.add('quick-highlight-v7');
-  addNewTagV7(center);
-  addNewTagV7(quick);
-
-  // Highlight badges only — not their circular module buttons.
-  document.querySelectorAll('.status-badge').forEach(b=>{
-    b.classList.add('badge-highlight-v7');
-  });
-
-  setTimeout(()=>document.getElementById('highlightNoteV7')?.remove(),5000);
-}
-
 document.getElementById("enter").onclick=()=>{
  const pin=document.getElementById("pin").value;
  if(pin!=="1234"){alert("Incorrect demo PIN");return}
  const name=(document.getElementById("name").value||"Staff").trim();
  document.getElementById("staffBadge").textContent=name+" • On Duty";
  document.getElementById("gate").style.display="none";
- setTimeout(applyHighlightsV7,300);
+
 };
 </script>
 </body>
