@@ -2184,6 +2184,26 @@
       display:grid!important;
       place-items:center!important;
     }
+  
+    /* BROWSE RECOVERY CSS V46 */
+    body.show-product-results #categories,
+    body.show-product-results .mo-commerce-tools{
+      display:none!important;
+      visibility:hidden!important;
+      height:0!important;
+      min-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      overflow:hidden!important;
+    }
+    body.show-product-results #browseNewFeatureBannerV44{
+      display:flex!important;
+      visibility:visible!important;
+    }
+    body.show-product-results #browseRecentlyViewed.browse-feature-new-v44{
+      display:block!important;
+      visibility:visible!important;
+    }
   </style>
 </head>
 <body>
@@ -2679,7 +2699,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-45"></script>
+  <script src="customer-next.js?v=20260924-46"></script>
 
 <script>
 (function(){
@@ -4250,6 +4270,106 @@
   const obs=new MutationObserver(scan);
   obs.observe(document.body,{childList:true,subtree:true});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',scan);else scan();
+})();
+</script>
+
+<script>
+/* BROWSE RECOVERY V46 */
+(function(){
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const money=n=>'₱'+Number(n||0).toLocaleString('en-PH',{maximumFractionDigits:0});
+  const isBrowse=()=>location.hash.includes('/Browse')||document.body.classList.contains('show-product-results');
+
+  function killLegacyBrowseTools(){
+    const cats=document.getElementById('categories');
+    if(cats){
+      cats.style.setProperty('display','none','important');
+      cats.querySelectorAll('.mo-commerce-tools,.mo-tool').forEach(x=>x.remove());
+    }
+    document.querySelectorAll('.mo-commerce-tools').forEach(x=>x.remove());
+  }
+
+  function forceBrowseNewVisuals(){
+    const head=document.getElementById('browseCatalogHead');
+    const banner=document.getElementById('browseNewFeatureBannerV44');
+    const recent=document.getElementById('browseRecentlyViewed');
+    const cart=document.getElementById('browseCartBtn');
+
+    if(head)head.classList.add('browse-updates-new-v44');
+    if(banner){
+      banner.hidden=false;
+      banner.style.setProperty('display','flex','important');
+    }
+    if(recent){
+      recent.classList.add('has-items','browse-feature-new-v44');
+      recent.style.setProperty('display','block','important');
+      const track=document.getElementById('browseRecentTrack');
+      if(track&&!track.children.length){
+        track.innerHTML='<div class="recent-empty-new"><b>NEW — Recently Viewed</b><span>Open any product and it will appear here automatically.</span></div>';
+      }
+    }
+    if(cart)cart.classList.add('browse-feature-new-v44');
+  }
+
+  function renderRecoveredBrowse(){
+    if(!isBrowse())return false;
+    killLegacyBrowseTools();
+
+    const app=window.MenuOrbitApp;
+    const products=Array.isArray(app?.products)?app.products:[];
+    const orbit=document.getElementById('orbit');
+    const count=document.getElementById('browseCatalogCount');
+    const title=document.getElementById('browseCatalogTitle');
+
+    document.body.classList.add('show-product-results');
+    if(title)title.textContent='Browse Menu';
+    if(count)count.textContent=products.length+' items';
+
+    forceBrowseNewVisuals();
+
+    if(!orbit||!products.length)return false;
+
+    const existingCards=orbit.querySelectorAll('.catalog-card');
+    if(existingCards.length===products.length)return true;
+
+    orbit.innerHTML=products.map(p=>`
+      <article class="product catalog-card" data-id="${esc(p.id)}">
+        <button type="button" class="catalog-photo-btn" data-recovery-view="${esc(p.id)}" aria-label="View ${esc(p.name)}">
+          <div class="catalog-photo">
+            <img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy">
+            <span class="catalog-availability">Available</span>
+          </div>
+        </button>
+        <div class="catalog-card-body">
+          <div class="catalog-meta">${esc(p.cat||'Menu')}</div>
+          <h3>${esc(p.name)}</h3>
+          <div class="catalog-price-row"><strong>${money(p.price)}</strong><span>Starting price</span></div>
+          <div class="catalog-actions">
+            <button type="button" class="catalog-view" data-recovery-view="${esc(p.id)}">View</button>
+            <button type="button" class="catalog-quick-add" data-recovery-view="${esc(p.id)}">Customize</button>
+          </div>
+        </div>
+      </article>`).join('');
+
+    orbit.querySelectorAll('[data-recovery-view]').forEach(b=>{
+      b.onclick=e=>{
+        e.preventDefault();e.stopPropagation();
+        const id=b.getAttribute('data-recovery-view');
+        if(window.MenuOrbitApp?.openProduct)window.MenuOrbitApp.openProduct(id);
+      };
+    });
+    return true;
+  }
+
+  let tries=0;
+  const boot=()=>{
+    tries++;
+    const ok=renderRecoveredBrowse();
+    if((!ok||tries<5)&&tries<30)setTimeout(boot,200);
+  };
+  window.addEventListener('hashchange',()=>setTimeout(boot,50));
+  window.addEventListener('load',()=>setTimeout(boot,50));
+  setTimeout(boot,80);
 })();
 </script>
 </body>
