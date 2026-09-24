@@ -1873,6 +1873,98 @@
       .browse-sort select{min-height:38px;font-size:11px}
       .catalog-favorite{width:38px;height:38px;top:8px;right:8px;font-size:21px}
     }
+  
+    /* RECENTLY VIEWED MOBILE CART V41 */
+    .browse-recently-viewed,
+    .browse-mobile-cart{display:none}
+
+    body.show-product-results #browseRecentlyViewed.has-items{
+      display:block!important;
+      width:min(1320px,calc(100% - 40px));
+      margin:2px auto 18px;
+      box-sizing:border-box;
+    }
+    .browse-recent-head{
+      display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:10px
+    }
+    .browse-recent-head span{
+      display:block;color:#f4c86f;font:900 8px/1 system-ui;letter-spacing:.14em;margin-bottom:4px
+    }
+    .browse-recent-head h2{
+      margin:0;color:#fff;font:700 20px/1.1 Georgia,serif
+    }
+    .browse-recent-head button{
+      border:0;background:transparent;color:#9fb5aa;font-size:10px;font-weight:850;cursor:pointer
+    }
+    .browse-recent-track{
+      display:flex;gap:10px;overflow-x:auto;padding:2px 1px 8px;
+      scrollbar-width:none;scroll-snap-type:x proximity
+    }
+    .browse-recent-track::-webkit-scrollbar{display:none}
+    .recent-product{
+      flex:0 0 210px;display:grid;grid-template-columns:62px minmax(0,1fr);
+      align-items:center;gap:10px;text-align:left;
+      min-height:76px;padding:7px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.045);color:#fff;cursor:pointer;
+      scroll-snap-align:start
+    }
+    .recent-product img{
+      width:62px;height:62px;object-fit:cover;border-radius:12px;background:#e9efe9
+    }
+    .recent-product span{min-width:0}
+    .recent-product b{
+      display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+      overflow:hidden;font-size:11px;line-height:1.25
+    }
+    .recent-product small{display:block;color:#f4d992;font-size:11px;font-weight:900;margin-top:5px}
+
+    @media(max-width:760px){
+      body.show-product-results #browseRecentlyViewed.has-items{
+        width:calc(100% - 24px)!important;margin-bottom:14px
+      }
+      .recent-product{flex-basis:184px;grid-template-columns:54px minmax(0,1fr);min-height:68px}
+      .recent-product img{width:54px;height:54px}
+      .browse-recent-head h2{font-size:18px}
+    }
+
+    @media(max-width:700px){
+      body.show-product-results #browseMobileCart{
+        display:flex!important;
+        position:fixed!important;
+        z-index:210!important;
+        left:max(10px,env(safe-area-inset-left))!important;
+        right:max(10px,env(safe-area-inset-right))!important;
+        bottom:max(10px,env(safe-area-inset-bottom))!important;
+        width:auto!important;
+        min-height:58px!important;
+        align-items:center!important;
+        gap:10px!important;
+        padding:8px 10px!important;
+        border-radius:18px!important;
+        border:1px solid rgba(244,200,111,.55)!important;
+        background:rgba(244,239,230,.97)!important;
+        color:#07331f!important;
+        box-shadow:0 16px 42px rgba(0,0,0,.38)!important;
+        backdrop-filter:blur(12px)!important;
+        cursor:pointer!important;
+      }
+      .browse-mobile-cart-icon{
+        display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;
+        border-radius:13px;background:#00754a;color:#fff;font-size:18px
+      }
+      .browse-mobile-cart-copy{display:block;min-width:0;text-align:left;flex:1}
+      .browse-mobile-cart-copy b{display:block;font-size:12px}
+      .browse-mobile-cart-copy small{display:block;margin-top:2px;color:#466657;font-size:11px;font-weight:850}
+      .browse-mobile-cart-cta{
+        flex:0 0 auto;border-radius:999px;background:#07331f;color:#fff;
+        padding:10px 12px;font-size:10px;font-weight:900
+      }
+      body.show-product-results #stage{padding-bottom:105px!important}
+      body.show-product-results #browseMobileCart:not(.has-items){
+        opacity:.82!important
+      }
+    }
   </style>
 </head>
 <body>
@@ -1936,11 +2028,23 @@
     </label>
   </section>
   <button class="results-back" id="resultsBack" type="button">‹ Back to Menu Orbit</button>
+  <section class="browse-recently-viewed" id="browseRecentlyViewed" aria-label="Recently viewed products">
+    <div class="browse-recent-head">
+      <div><span>JUST FOR YOU</span><h2>Recently Viewed</h2></div>
+      <button type="button" id="clearRecentlyViewed">Clear</button>
+    </div>
+    <div class="browse-recent-track" id="browseRecentTrack"></div>
+  </section>
   <main class="stage" id="stage" aria-label="Interactive product orbit">
     <div class="orbit-line"></div><div class="orbit" id="orbit"></div>
     <a class="core" id="pickupBtn" href="#pickupModal" aria-label="Find a store and pickup time" style="text-decoration:none"><div><b>STARBUCKS</b><span>Menu Orbit</span><small>UNOFFICIAL PROTOTYPE</small></div></a>
   </main>
   <div id="cartFlyLayer" aria-hidden="true"></div><div class="cart-toast" id="cartToast" role="status" aria-live="polite"></div>
+  <button type="button" class="browse-mobile-cart" id="browseMobileCart" aria-label="Open cart">
+    <span class="browse-mobile-cart-icon">🛒</span>
+    <span class="browse-mobile-cart-copy"><b id="browseMobileCartItems">0 items</b><small id="browseMobileCartTotal">₱0</small></span>
+    <span class="browse-mobile-cart-cta">View Cart</span>
+  </button>
   <div class="instructions" id="instructions">Use Tilt or Voice without the camera • Swipe remains available</div>
   <div class="control-dock"><button class="mode-cta" id="tiltCta">📱 Use Phone Tilt</button><button class="mode-cta" id="voiceCta">🎙 Voice Control</button></div>
     <aside class="drawer" id="detail" aria-hidden="true" aria-label="Product details"></aside>
@@ -2015,6 +2119,37 @@
       renderOrbit();
     }
     function renderCats(){ $('#categories').innerHTML=cats.map(c=>`<button class="chip ${c===state.cat?'active':''}" data-cat="${c}">${c}</button>`).join(''); document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{state.cat=b.dataset.cat;state.angle=0;renderCats();renderOrbit()}) }
+
+    function updateBrowseCartUI(){
+      const itemCount=state.cart.reduce((n,x)=>n+(Number(x.qty)||1),0);
+      const total=state.cart.reduce((n,x)=>n+(Number(x.price)||0)*(Number(x.qty)||1),0);
+      const topCount=document.getElementById('browseCartCount');
+      const mobileItems=document.getElementById('browseMobileCartItems');
+      const mobileTotal=document.getElementById('browseMobileCartTotal');
+      const mobileBar=document.getElementById('browseMobileCart');
+      if(topCount)topCount.textContent=String(itemCount);
+      if(mobileItems)mobileItems.textContent=itemCount+' item'+(itemCount===1?'':'s');
+      if(mobileTotal)mobileTotal.textContent=money(total);
+      if(mobileBar)mobileBar.classList.toggle('has-items',itemCount>0);
+    }
+
+    function renderRecentlyViewed(){
+      const section=document.getElementById('browseRecentlyViewed');
+      const track=document.getElementById('browseRecentTrack');
+      if(!section||!track)return;
+      let recent=[];
+      try{recent=JSON.parse(localStorage.getItem('mo_recently_viewed_v1')||'[]')}catch(e){}
+      recent=(Array.isArray(recent)?recent:[]).slice(0,8);
+      section.classList.toggle('has-items',recent.length>0);
+      if(!recent.length){track.innerHTML='';return}
+      track.innerHTML=recent.map(x=>`
+        <button type="button" class="recent-product" data-recent-product="${x.id}" aria-label="View ${x.name}">
+          <img src="${x.img}" alt="" loading="lazy" onerror="fallback(this,'${String(x.name||'Item').replaceAll("'",'')}')">
+          <span><b>${x.name}</b><small>${money(x.price)}</small></span>
+        </button>`).join('');
+      track.querySelectorAll('[data-recent-product]').forEach(b=>b.onclick=()=>openDetail(b.dataset.recentProduct));
+    }
+
     function renderOrbit(){
       const list=visible();
       const catalogMode=document.body.classList.contains('show-product-results');
@@ -2026,6 +2161,8 @@
         const cartCountEl=document.getElementById('browseCartCount');
         const favFilterBtn=document.querySelector('[data-browse-filter="favorites"]');
         if(favFilterBtn)favFilterBtn.textContent='♡ Favorites'+(state.favorites.length?' ('+state.favorites.length+')':'');
+        updateBrowseCartUI();
+        renderRecentlyViewed();
         if(titleEl)titleEl.textContent=title;
         if(countEl)countEl.textContent=list.length+' item'+(list.length===1?'':'s')+(state.search?' matching “'+state.search+'”':'');
         if(cartCountEl)cartCountEl.textContent=String(state.cart.reduce((n,x)=>n+(Number(x.qty)||1),0));
@@ -2075,15 +2212,15 @@
       positionOrbit();
     }
     function positionOrbit(){const list=[...document.querySelectorAll('.product')],w=stage.clientWidth,h=stage.clientHeight,rx=Math.min(w*.39,430)*state.zoom,ry=Math.min(h*.34,235)*state.zoom;list.forEach((el,i)=>{const a=state.angle+(i/list.length)*Math.PI*2,x=w/2+Math.cos(a)*rx,y=h*.48+Math.sin(a)*ry,depth=(Math.sin(a)+1)/2,scale=.72+depth*.38;el.style.left=x+'px';el.style.top=y+'px';el.style.transform=`translate(-50%,-50%) scale(${scale})`;el.classList.toggle('back',depth<.44);el.classList.toggle('front',depth>.68)})}
-    function openDetail(id){const p=products.find(x=>x.id===id);if(!p)return;state.selected=p;try{const key='mo_recently_viewed_v1',old=JSON.parse(localStorage.getItem(key)||'[]').filter(x=>x&&x.id!==p.id);old.unshift({id:p.id,name:p.name,img:p.img,price:p.price,cat:p.cat,viewedAt:new Date().toISOString()});localStorage.setItem(key,JSON.stringify(old.slice(0,20)))}catch(e){}const isFood=p.kind==='food';$('#detail').innerHTML=`<div class="drawer-head"><h2>${p.name}</h2><button class="close" id="detailClose" aria-label="Close">×</button></div><img class="detail-img" src="${p.img}" alt="${p.name}" onerror="fallback(this,'${p.name.replaceAll("'",'')}')"><div class="price-line"><strong id="livePrice">${money(p.price)}</strong><span class="badge">Listed now</span></div><p class="desc">${p.desc}</p><div class="facts"><div class="fact"><b>${p.cal??'See store'}</b><span>CALORIES*</span></div><div class="fact"><b>${p.temps[0]}</b><span>DEFAULT</span></div><div class="fact"><b>⚠</b><span>${p.allergen}</span></div></div><div class="section-title">${isFood?'Serving':'Size'}</div><div class="options" id="sizeOpts">${isFood?`<label><input type="radio" name="size" value="Regular" data-add="0" checked> Regular</label>`:[['Short',-15],['Tall',0],['Grande',20],['Venti',35]].map((x,i)=>`<label><input type="radio" name="size" value="${x[0]}" data-add="${x[1]}" ${i===1?'checked':''}> ${x[0]}</label>`).join('')}</div><div class="section-title">Style</div><div class="options">${p.temps.map((t,i)=>`<label><input type="radio" name="temp" value="${t}" ${i===0?'checked':''}> ${t}</label>`).join('')}</div>${isFood?'':`<div class="section-title">Milk</div><div class="options"><select id="milk"><option>Whole milk</option><option>Nonfat milk</option><option>Soy milk +₱30</option><option>Oat milk +₱30</option><option>Almond milk +₱30</option></select><select id="shots"><option value="0">Standard shots</option><option value="25">+1 shot +₱25</option><option value="50">+2 shots +₱50</option><option value="-10">Decaf −₱10</option></select></div><div class="section-title">Finishing touches</div><div class="options"><label><input type="checkbox" id="whip"> Whipped cream</label><label><input type="checkbox" id="drizzle"> Extra drizzle +₱20</label></div>`}<button class="add" id="addBtn">Add to Order • <span>${money(p.price)}</span></button><p class="notice">*Menu, nutrition, availability, and starting delivery prices use the current SM City Manila listing as this prototype's reference. Confirm official branch information before ordering.</p>`;$('#detail').classList.add('open');$('#detail').setAttribute('aria-hidden','false');$('#detailClose').onclick=closeDetail;document.querySelectorAll('#detail input,#detail select').forEach(el=>el.onchange=calcPrice);$('#addBtn').onclick=addCart;calcPrice()}
+    function openDetail(id){const p=products.find(x=>x.id===id);if(!p)return;state.selected=p;try{const key='mo_recently_viewed_v1',old=JSON.parse(localStorage.getItem(key)||'[]').filter(x=>x&&x.id!==p.id);old.unshift({id:p.id,name:p.name,img:p.img,price:p.price,cat:p.cat,viewedAt:new Date().toISOString()});localStorage.setItem(key,JSON.stringify(old.slice(0,20)));renderRecentlyViewed()}catch(e){}const isFood=p.kind==='food';$('#detail').innerHTML=`<div class="drawer-head"><h2>${p.name}</h2><button class="close" id="detailClose" aria-label="Close">×</button></div><img class="detail-img" src="${p.img}" alt="${p.name}" onerror="fallback(this,'${p.name.replaceAll("'",'')}')"><div class="price-line"><strong id="livePrice">${money(p.price)}</strong><span class="badge">Listed now</span></div><p class="desc">${p.desc}</p><div class="facts"><div class="fact"><b>${p.cal??'See store'}</b><span>CALORIES*</span></div><div class="fact"><b>${p.temps[0]}</b><span>DEFAULT</span></div><div class="fact"><b>⚠</b><span>${p.allergen}</span></div></div><div class="section-title">${isFood?'Serving':'Size'}</div><div class="options" id="sizeOpts">${isFood?`<label><input type="radio" name="size" value="Regular" data-add="0" checked> Regular</label>`:[['Short',-15],['Tall',0],['Grande',20],['Venti',35]].map((x,i)=>`<label><input type="radio" name="size" value="${x[0]}" data-add="${x[1]}" ${i===1?'checked':''}> ${x[0]}</label>`).join('')}</div><div class="section-title">Style</div><div class="options">${p.temps.map((t,i)=>`<label><input type="radio" name="temp" value="${t}" ${i===0?'checked':''}> ${t}</label>`).join('')}</div>${isFood?'':`<div class="section-title">Milk</div><div class="options"><select id="milk"><option>Whole milk</option><option>Nonfat milk</option><option>Soy milk +₱30</option><option>Oat milk +₱30</option><option>Almond milk +₱30</option></select><select id="shots"><option value="0">Standard shots</option><option value="25">+1 shot +₱25</option><option value="50">+2 shots +₱50</option><option value="-10">Decaf −₱10</option></select></div><div class="section-title">Finishing touches</div><div class="options"><label><input type="checkbox" id="whip"> Whipped cream</label><label><input type="checkbox" id="drizzle"> Extra drizzle +₱20</label></div>`}<button class="add" id="addBtn">Add to Order • <span>${money(p.price)}</span></button><p class="notice">*Menu, nutrition, availability, and starting delivery prices use the current SM City Manila listing as this prototype's reference. Confirm official branch information before ordering.</p>`;$('#detail').classList.add('open');$('#detail').setAttribute('aria-hidden','false');$('#detailClose').onclick=closeDetail;document.querySelectorAll('#detail input,#detail select').forEach(el=>el.onchange=calcPrice);$('#addBtn').onclick=addCart;calcPrice()}
     function calcPrice(){if(!state.selected)return;const isFood=state.selected.kind==='food';let total=state.selected.price;const size=document.querySelector('[name=size]:checked');total+=Number(size?.dataset.add||0);if(!isFood){const milk=$('#milk')?.value||'';if(milk.includes('+'))total+=30;total+=Number($('#shots')?.value||0);if($('#drizzle')?.checked)total+=20}$('#livePrice').textContent=money(total);$('#addBtn span').textContent=money(total);return total}
     function closeDetail(){$('#detail').classList.remove('open');$('#detail').setAttribute('aria-hidden','true')}
-    function updateCartBadge(){const count=$('#cartCount');count.textContent=state.cart.length;const cart=$('#cartBtn');cart.classList.remove('cart-pulse');void cart.offsetWidth;cart.classList.add('cart-pulse');setTimeout(()=>cart.classList.remove('cart-pulse'),460)}
+    function updateCartBadge(){updateBrowseCartUI();const count=$('#cartCount');count.textContent=state.cart.length;const cart=$('#cartBtn');cart.classList.remove('cart-pulse');void cart.offsetWidth;cart.classList.add('cart-pulse');setTimeout(()=>cart.classList.remove('cart-pulse'),460)}
     function announceCart(name){const toast=$('#cartToast');toast.textContent=`${name} added to cart.`;toast.classList.add('show');clearTimeout(announceCart.timer);announceCart.timer=setTimeout(()=>toast.classList.remove('show'),2200)}
     function flyToCart(item){const source=document.querySelector(`.product[data-id="${item.id}"] .photo`),target=$('#cartBtn');if(state.reduce||!source||!target){updateCartBadge();announceCart(item.name);return}const a=source.getBoundingClientRect(),b=target.getBoundingClientRect(),fly=document.createElement('div');fly.className='cart-fly-item';fly.innerHTML=`<img src="${item.img}" alt="">`;fly.style.left=(a.left+a.width/2)+'px';fly.style.top=(a.top+a.height/2)+'px';$('#cartFlyLayer').appendChild(fly);const animation=fly.animate([{left:fly.style.left,top:fly.style.top,transform:'translate(-50%,-50%) scale(1)',opacity:1},{left:(b.left+b.width/2)+'px',top:(b.top+b.height/2)+'px',transform:'translate(-50%,-50%) scale(.28)',opacity:.35}],{duration:560,easing:'cubic-bezier(.2,.85,.25,1)',fill:'forwards'});animation.onfinish=()=>{fly.remove();updateCartBadge();announceCart(item.name)}}
     function addCart(){const p=state.selected,item={key:Date.now(),id:p.id,name:p.name,img:p.img,size:document.querySelector('[name=size]:checked')?.value||'Regular',style:document.querySelector('[name=temp]:checked')?.value||'',milk:$('#milk')?.value||'',note:$('#note')?.value.trim()||'',price:calcPrice(),qty:1};state.cart.push(item);saveCart(true);closeDetail();flyToCart(item)}
     const baseOpenDetail=openDetail;openDetail=function(id){baseOpenDetail(id);const p=products.find(x=>x.id===id),saved=state.favorites.includes(id),button=$('#addBtn');button.insertAdjacentHTML('beforebegin',`<div class="section-title">Special request</div><div class="options"><textarea id="note" placeholder="Example: less ice, no straw, or allergy note"></textarea></div>`);$('#detail .price-line').insertAdjacentHTML('afterend',`<button class="favorite-toggle ${saved?'saved':''}" id="favoriteBtn">${saved?'♥ Saved':'♡ Save favorite'}</button>`);$('#favoriteBtn').onclick=()=>{state.favorites=saved?state.favorites.filter(x=>x!==id):[...state.favorites,id];localStorage.setItem('menuOrbitFavorites',JSON.stringify(state.favorites));renderOrbit();openDetail(id)};if(unavailable(p)){button.disabled=true;button.textContent='Unavailable at selected branch';button.style.opacity='.55';$('#detail .badge').textContent='Unavailable at selected branch'}};
-    function saveCart(deferBadge=false){localStorage.setItem('menuOrbitCart',JSON.stringify(state.cart));if(!deferBadge)$('#cartCount').textContent=state.cart.length}
+    function saveCart(deferBadge=false){localStorage.setItem('menuOrbitCart',JSON.stringify(state.cart));updateBrowseCartUI();if(!deferBadge)$('#cartCount').textContent=state.cart.length}
     function openPickup(){const saved=state.pickup;$('#pickupContent').innerHTML=`<div class="drawer-head"><div><h2 id="pickupTitle">Find a Store / Pickup</h2><small style="color:#abc0b6">Choose a branch and collection time</small></div><button class="close" id="pickupClose" aria-label="Close">×</button></div><div class="section-title">Search branch or city</div><input id="branchSearch" type="search" placeholder="Try Bacoor, Molino, or Daang Hari" style="width:100%;height:52px;border-radius:13px;border:1px solid var(--line);background:#f5f0e7;color:#09271d;padding:0 14px"><div class="section-title">Nearby stores</div><div class="options" id="storeOptions">${['Starbucks SM City Bacoor','Starbucks Molino Boulevard','Starbucks Vista Mall Daang Hari'].map((s,i)=>`<label><input type="radio" name="store" value="${s}" ${saved?.store===s||(!saved&&i===0)?'checked':''}> ${s}</label>`).join('')}</div><div class="section-title">Pickup time</div><div class="options"><label><input type="radio" name="pickupTime" value="As soon as possible" ${saved?.time==='As soon as possible'||!saved?'checked':''}> As soon as possible</label><label><input type="radio" name="pickupTime" value="Choose a time" ${saved?.time&&saved.time!=='As soon as possible'?'checked':''}> Choose a time</label></div><input id="pickupTime" type="time" value="${saved?.customTime||''}" aria-label="Choose pickup time" style="width:100%;height:52px;margin-top:9px;border-radius:13px;border:1px solid var(--line);background:#0d3628;color:#fff;padding:0 12px"><div class="section-title">Order type</div><div class="options"><label><input type="radio" name="orderType" value="Pick up in store" ${saved?.type==='Curbside pickup'?'':'checked'}> Pick up in store</label><label><input type="radio" name="orderType" value="Curbside pickup" ${saved?.type==='Curbside pickup'?'checked':''}> Curbside pickup</label><label><input type="radio" name="orderType" value="Dine In"> Dine In</label></div><button class="add" id="confirmPickup">Confirm Pickup Location</button><div class="qr-wrap" id="pickupConfirmed"></div><p class="notice">Demo locations and times only. Confirm official branch availability before ordering.</p>`;$('#pickupModal').classList.add('open');$('#pickupClose').onclick=()=>$('#pickupModal').classList.remove('open');$('#branchSearch').oninput=e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('#storeOptions label').forEach(x=>x.hidden=!x.textContent.toLowerCase().includes(q))};$('#confirmPickup').onclick=()=>{const custom=$('#pickupTime').value,choice=document.querySelector('[name=pickupTime]:checked').value;state.pickup={store:document.querySelector('[name=store]:checked').value,time:choice==='Choose a time'&&custom?new Date('1970-01-01T'+custom).toLocaleTimeString('en-PH',{hour:'numeric',minute:'2-digit'}):choice,customTime:custom,type:document.querySelector('[name=orderType]:checked').value};localStorage.setItem('menuOrbitPickup',JSON.stringify(state.pickup));renderOrbit();$('#pickupConfirmed').innerHTML=`<p class="badge" style="display:inline-block">✓ Your pickup is set</p><p><b>${state.pickup.store}</b><br><small>${state.pickup.time} • ${state.pickup.type}</small></p><button class="pill" id="continueMenu" style="margin:auto">Continue to Menu</button>`;$('#continueMenu').onclick=()=>$('#pickupModal').classList.remove('open')}}
     function openCart(){const total=state.cart.reduce((a,b)=>a+b.price*b.qty,0);$('#cartContent').innerHTML=`<div class="drawer-head"><h2 id="cartTitle">Your Order</h2><button class="close" id="cartClose">×</button></div>${state.cart.length?state.cart.map(x=>`<div class="cart-row"><img src="${x.img}" alt="" onerror="fallback(this,'${x.name.replaceAll("'",'')}')"><div><b>${x.name}</b><small>${x.size} • ${x.style}${x.milk?' • '+x.milk:''}</small></div><div style="text-align:right"><b>${money(x.price)}</b><button class="remove" data-remove="${x.key}">Remove</button></div></div>`).join(''):`<div class="empty">Your orbit cart is empty.</div>`}<div class="total"><span>Total</span><span>${money(total)}</span></div>${state.cart.length?`<div class="section-title">Order option</div><div class="checkout"><button class="active">Counter Pickup</button><button>Takeaway</button><button>Dine In</button><button>Pickup</button></div><button class="add" id="summaryBtn">Generate Order QR</button><div class="qr-wrap" id="qrWrap"></div>`:''}<p class="notice">This prototype creates an order summary only. It does not send an order or process payment.</p>`;$('#cartModal').classList.add('open');$('#cartClose').onclick=()=>$('#cartModal').classList.remove('open');document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{state.cart=state.cart.filter(x=>x.key!==Number(b.dataset.remove));saveCart();openCart()});document.querySelectorAll('.checkout button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.checkout button').forEach(x=>x.classList.remove('active'));b.classList.add('active')});if($('#summaryBtn'))$('#summaryBtn').onclick=()=>{const code='MO-'+Date.now().toString().slice(-6),text=encodeURIComponent(`${code} | ${state.cart.map(x=>x.name+' '+x.size).join(', ')} | Total ${money(total)}`);$('#qrWrap').innerHTML=`<p><b>Order ${code}</b></p><img alt="Order QR code" src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${text}"><p class="notice">Show this summary at the counter as a concept demonstration.</p>`}}
     const baseOpenCart=openCart;openCart=function(){baseOpenCart();if(!state.cart.length)return;const summary=$('#summaryBtn');summary.textContent='Submit Pickup Order';summary.onclick=()=>{const code='MO-'+Date.now().toString().slice(-6),total=state.cart.reduce((a,b)=>a+b.price*b.qty,0);state.lastOrder={code,items:state.cart,total,pickup:state.pickup||{store:'Choose location',time:'As soon as possible',type:'Counter pickup'}};localStorage.setItem('menuOrbitLastOrder',JSON.stringify(state.lastOrder));$('#cartContent').innerHTML=`<div class="drawer-head"><h2 id="cartTitle">Order ${code}</h2><button class="close" id="cartClose">×</button></div><div class="status-card"><p class="badge">✓ Order received</p><p><b>${state.lastOrder.pickup.store}</b><br><small>${state.lastOrder.pickup.time} • ${state.lastOrder.pickup.type}</small></p><div class="status-step active"><b>1</b>Order received</div><div class="status-step active"><b>2</b>Preparing your order</div><div class="status-step"><b>3</b>Ready for pickup</div><div class="status-step"><b>4</b>Collected</div><div class="qr-wrap"><img alt="Order QR code" src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(code+' | '+state.lastOrder.pickup.store+' | '+money(total))}"><p class="notice">Show this QR and order number at the counter. Demo order only—no payment is processed.</p></div></div>`;$('#cartClose').onclick=()=>$('#cartModal').classList.remove('open')};};
@@ -2100,7 +2237,11 @@
     function stopVoice(){state.voice=false;state.recognition?.stop();$('#voiceCta').classList.remove('active');$('#voiceCta').textContent='🎙 Voice Control';$('#instructions').textContent='Use Tilt or Voice without the camera • Swipe remains available'}
     function toggleVoice(){if(state.voice){stopVoice();return}const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){alert('Voice control is not supported here. Open the page in Chrome.');return}const recognition=new SpeechRecognition();recognition.lang='en-PH';recognition.continuous=true;recognition.interimResults=false;recognition.onresult=e=>{const command=e.results[e.results.length-1][0].transcript.trim();executeVoice(command)};recognition.onerror=e=>{if(e.error==='not-allowed')alert('Please allow microphone permission for voice control.')};recognition.onend=()=>{if(state.voice){try{recognition.start()}catch(e){}}};state.recognition=recognition;state.voice=true;recognition.start();$('#voiceCta').classList.add('active');$('#voiceCta').textContent='✓ Voice Listening';$('#instructions').textContent='Say: Next • Previous • Select • Zoom in • Reset • Cart'}
     let pinch=0;stage.addEventListener('pointerdown',e=>{state.drag=true;state.lastX=e.clientX;stage.setPointerCapture(e.pointerId)});stage.addEventListener('pointermove',e=>{if(state.drag){rotate((e.clientX-state.lastX)*.006);state.lastX=e.clientX}});stage.addEventListener('pointerup',()=>state.drag=false);stage.addEventListener('pointercancel',()=>state.drag=false);stage.addEventListener('wheel',e=>{e.preventDefault();state.zoom=Math.max(.72,Math.min(1.28,state.zoom-e.deltaY*.001));positionOrbit()},{passive:false});stage.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(pinch)state.zoom=Math.max(.72,Math.min(1.28,state.zoom+(d-pinch)*.003));pinch=d;positionOrbit()}},{passive:true});stage.addEventListener('touchend',()=>pinch=0);
-    $('#pickupBtn').onclick=openPickup;$('#cartBtn').onclick=openCart;$('#browseCartBtn')?.onclick=()=>openCart();
+    $('#pickupBtn').onclick=openPickup;$('#cartBtn').onclick=openCart;$('#browseCartBtn')?.onclick=()=>openCart();$('#browseMobileCart')?.onclick=()=>openCart();
+    $('#clearRecentlyViewed')?.addEventListener('click',()=>{
+      try{localStorage.removeItem('mo_recently_viewed_v1')}catch(e){}
+      renderRecentlyViewed();
+    });
     document.querySelectorAll('[data-browse-filter]').forEach(b=>b.onclick=()=>{
       state.browseFilter=b.dataset.browseFilter||'all';
       document.querySelectorAll('[data-browse-filter]').forEach(x=>x.classList.toggle('active',x===b));
@@ -2231,7 +2372,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-40"></script>
+  <script src="customer-next.js?v=20260924-41"></script>
 
 <script>
 (function(){
