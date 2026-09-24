@@ -539,6 +539,18 @@ business:{title:"Business",desc:"Management performance view.",items:[
 ["Sales Dashboard","Revenue and order trends."],["Payments","Cash, card and digital totals."],["Expenses","Operating expenses."],["Best Sellers","Top menu items."],["Product Performance","Performance by category."],["Reports","Daily, weekly and monthly."],["Staff Performance","Shift metrics."]]}
 };
 const panel=document.getElementById("panel"),title=document.getElementById("title"),desc=document.getElementById("desc"),grid=document.getElementById("grid");
+grid.onclick=function(e){
+  const card=e.target.closest(".card");
+  if(!card)return;
+  if(card.dataset.subName){
+    openSubmodule(card.dataset.subName,card.dataset.subDesc,card.dataset.parentKey);
+    return;
+  }
+  if(card.dataset.backParent){
+    openModule(card.dataset.backParent);
+    return;
+  }
+};
 function openModule(k){
  if(k==="today"){ openCommandCenterV4(); return; }
  const m=data[k]; title.textContent=m.title; desc.textContent=m.desc; grid.innerHTML="";
@@ -548,46 +560,7 @@ function openModule(k){
 function openCommandCenterV4(){ document.getElementById("commandCenter")?.classList.add("open"); }
 function closeCommandCenterV4(){ document.getElementById("commandCenter")?.classList.remove("open"); }
 document.querySelectorAll("[data-key]").forEach(b=>b.onclick=()=>openModule(b.dataset.key));
-// GRID TAP DELEGATION V10
-grid.addEventListener("click",e=>{
-  const card=e.target.closest("button.card");
-  if(!card)return;
 
-  if(card.dataset.subName){
-    e.preventDefault();
-    openSubmodule(card.dataset.subName,card.dataset.subDesc,card.dataset.parentKey);
-    return;
-  }
-
-  if(card.dataset.backParent){
-    e.preventDefault();
-    openModule(card.dataset.backParent);
-    return;
-  }
-
-  if(card.dataset.workAction){
-    e.preventDefault();
-    const action=card.querySelector("b");
-    const original=action.textContent;
-    action.textContent="✓ Opened";
-    setTimeout(()=>action.textContent=original,800);
-  }
-});
-function openSubmodule(name,desc,parentKey){
-  title.textContent=name;
-  desc.textContent=desc||"Staff workspace";
-  grid.innerHTML=
-    '<button type="button" class="card workspace-action" data-work-action="add"><b>＋ Add New</b><span>Create a new '+name+' item.</span></button>'+
-    '<button type="button" class="card workspace-action" data-work-action="manage"><b>Manage Existing</b><span>View and update current '+name+' items.</span></button>'+
-    '<button type="button" class="card workspace-action" data-work-action="reports"><b>View Activity</b><span>See recent '+name+' activity.</span></button>'+
-    '<button type="button" class="card workspace-action back-card" data-back-parent="'+(parentKey||'promotions')+'"><b>← Back</b><span>Return to the previous module.</span></button>';
-  panel.classList.add("open");
-}
-
-
-document.getElementById("close").onclick=()=>panel.classList.remove("open");document.getElementById("submoduleClose").onclick=()=>document.getElementById("submodulePanel").classList.remove("open");
-document.getElementById("commandClose")?.addEventListener("click",closeCommandCenterV4);
-document.getElementById("commandCenter")?.addEventListener("click",e=>{if(e.target.id==="commandCenter")closeCommandCenterV4()});
 document.getElementById("quickNewOrder")?.addEventListener("click",e=>{e.stopPropagation();openModule("orders");setTimeout(()=>{title.textContent="New Order";desc.textContent="Start a cashier order immediately.";grid.innerHTML="";[["Drinks","Browse drink categories."],["Food","Browse food categories."],["Custom Order","Build a customized order."],["Scan / Search","Find an item quickly."]].forEach(([a,b])=>{const btn=document.createElement("button");btn.className="card";btn.innerHTML="<b>"+a+"</b><span>"+b+"</span>";grid.appendChild(btn)})},0)});
 document.querySelectorAll("[data-command]").forEach(btn=>btn.addEventListener("click",()=>{
  const cmd=btn.dataset.command;
