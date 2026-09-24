@@ -1221,6 +1221,31 @@
       overflow:auto!important;
       margin:auto!important;
     }
+  
+    /* TABLE QR FOREGROUND FIX */
+    #tableQrOrderModal{
+      position:fixed!important;
+      inset:0!important;
+      width:100vw!important;
+      height:100dvh!important;
+      z-index:2147483646!important;
+      align-items:center!important;
+      justify-content:center!important;
+      overflow:auto!important;
+      padding:14px!important;
+      box-sizing:border-box!important;
+      background:rgba(0,18,12,.86)!important;
+      backdrop-filter:blur(10px)!important;
+      isolation:isolate!important;
+    }
+    #tableQrOrderModal .modal-card{
+      position:relative!important;
+      z-index:2147483647!important;
+      width:min(620px,calc(100vw - 28px))!important;
+      max-height:calc(100dvh - 28px)!important;
+      overflow:auto!important;
+      margin:auto!important;
+    }
   </style>
 </head>
 <body>
@@ -1460,7 +1485,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-30"></script>
+  <script src="customer-next.js?v=20260924-31"></script>
 
 <script>
 (function(){
@@ -1702,6 +1727,9 @@
     draw();
     modal.style.setProperty('display','flex','important');
     modal.style.setProperty('z-index','2147483646','important');
+    suspendOrbitForTableQr();
+    modal.style.setProperty('display','flex','important');
+    modal.style.setProperty('z-index','2147483646','important');
     modal.classList.add('open');
     clearInterval(dineStatusTimer);
     dineStatusTimer=setInterval(()=>{if(modal.classList.contains('open'))draw()},1800);
@@ -1924,6 +1952,52 @@
     };
   }
 
+  function suspendOrbitForTableQr(){
+    try{closeSmartQuickRing?.()}catch(e){}
+    document.getElementById('smartQuickRing')?.remove();
+    document.getElementById('orbitQuickAccessBtn')?.remove();
+    document.getElementById('orbitLongpressCoach')?.remove();
+    const targets=[
+      document.getElementById('mainMenuDirect'),
+      document.querySelector('header'),
+      document.querySelector('.stage'),
+      document.querySelector('.instructions'),
+      document.querySelector('.control-dock'),
+      document.getElementById('resultsBack')
+    ].filter(Boolean);
+    targets.forEach(el=>{
+      if(!el.dataset.tableQrPrevDisplay){
+        el.dataset.tableQrPrevDisplay=el.style.getPropertyValue('display')||'__none__';
+        el.dataset.tableQrPrevPriority=el.style.getPropertyPriority('display')||'';
+      }
+      el.style.setProperty('display','none','important');
+    });
+    document.body.classList.add('table-qr-open');
+    document.body.style.setProperty('overflow','hidden','important');
+  }
+  function resumeOrbitAfterTableQr(){
+    const targets=[
+      document.getElementById('mainMenuDirect'),
+      document.querySelector('header'),
+      document.querySelector('.stage'),
+      document.querySelector('.instructions'),
+      document.querySelector('.control-dock'),
+      document.getElementById('resultsBack')
+    ].filter(Boolean);
+    targets.forEach(el=>{
+      const prev=el.dataset.tableQrPrevDisplay;
+      const pri=el.dataset.tableQrPrevPriority||'';
+      if(prev!==undefined){
+        if(prev==='__none__')el.style.removeProperty('display');
+        else el.style.setProperty('display',prev,pri);
+        delete el.dataset.tableQrPrevDisplay;
+        delete el.dataset.tableQrPrevPriority;
+      }
+    });
+    document.body.classList.remove('table-qr-open');
+    document.body.style.removeProperty('overflow');
+  }
+
   function openTableQrOrdering(){
     markCustomerFeatureSeen('Table / QR Ordering');
     let modal=document.getElementById('tableQrOrderModal');
@@ -1971,7 +2045,7 @@
       if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
       const wrap=document.getElementById('tableQrCameraWrap');if(wrap)wrap.hidden=true;
     };
-    document.getElementById('tableQrClose').onclick=()=>{stopScan();modal.classList.remove('open')};
+    document.getElementById('tableQrClose').onclick=()=>{stopScan();modal.classList.remove('open');modal.style.removeProperty('display');resumeOrbitAfterTableQr()};
     document.getElementById('useDemoTable').onclick=()=>{document.getElementById('tableNumberInput').value='12'};
     document.getElementById('scanTableQr').onclick=async()=>{
       const wrap=document.getElementById('tableQrCameraWrap'),video=document.getElementById('tableQrVideo'),status=document.getElementById('tableQrScanStatus');
@@ -2010,7 +2084,7 @@
       try{localStorage.setItem('menuOrbitPickup',JSON.stringify({...current,store:current?.store||store,type:'Dine In',table:value}))}catch(e){}
       document.getElementById('tableQrSaved').innerHTML='✓ Dine In set for <b>Table '+value+'</b>';
       stopScan();
-      setTimeout(()=>modal.classList.remove('open'),650);
+      setTimeout(()=>{modal.classList.remove('open');modal.style.removeProperty('display');resumeOrbitAfterTableQr()},650);
     };
   }
 
