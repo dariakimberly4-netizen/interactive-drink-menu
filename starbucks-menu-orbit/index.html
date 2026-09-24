@@ -2831,7 +2831,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-49"></script>
+  <script src="customer-next.js?v=20260924-50"></script>
 
 <script>
 (function(){
@@ -4565,8 +4565,15 @@
 
   function recoveryFilteredProductsV49(products){
     let list=[...products];
-    const q=String(recoveryBrowseSearchV49||'').trim().toLowerCase();
-    if(q)list=list.filter(p=>String(p.name||'').toLowerCase().includes(q));
+    const q=String(recoveryBrowseSearchV49||'').trim().toLowerCase().replace(/[-_]+/g,' ').replace(/\s+/g,' ');
+    if(q)list=list.filter(p=>{
+      const hay=[
+        p.name||'',
+        p.cat||'',
+        p.id||''
+      ].join(' ').toLowerCase().replace(/[-_]+/g,' ').replace(/\s+/g,' ');
+      return hay.includes(q);
+    });
 
     const f=recoveryBrowseFilterV49;
     if(f==='drinks')list=list.filter(p=>p.kind!=='food');
@@ -4631,7 +4638,8 @@
     killLegacyBrowseTools();
 
     const app=window.MenuOrbitApp;
-    const products=Array.isArray(app?.products)?app.products:[];
+    const allProducts=Array.isArray(app?.products)?app.products:[];
+    const products=recoveryFilteredProductsV49(allProducts);
     const orbit=document.getElementById('orbit');
     const count=document.getElementById('browseCatalogCount');
     const title=document.getElementById('browseCatalogTitle');
@@ -4643,7 +4651,7 @@
 
     forceBrowseNewVisuals();
 
-    if(!orbit||!products.length)return false;
+    if(!orbit)return false;
 
     orbit.innerHTML=products.length?products.map(p=>`
       <article class="product catalog-card" data-id="${esc(p.id)}">
