@@ -480,7 +480,7 @@ button,input{font:inherit}
   </section>
 </div>
 
-<div class="panel" id="panel">
+<div class="panel" id="submodulePanel"><section class="sheet"><div class="sheet-head"><div><h2 id="submoduleTitle"></h2><p id="submoduleDesc"></p></div><button class="close" id="submoduleClose">×</button></div><div id="submoduleBody" style="margin-top:20px"></div></section></div><div class="panel" id="panel">
   <section class="sheet">
     <div class="sheet-head">
       <div><h2 id="title"></h2><p id="desc"></p></div>
@@ -525,15 +525,16 @@ const panel=document.getElementById("panel"),title=document.getElementById("titl
 function openModule(k){
  if(k==="today"){ openCommandCenterV4(); return; }
  const m=data[k]; title.textContent=m.title; desc.textContent=m.desc; grid.innerHTML="";
- m.items.forEach(([a,b])=>{const btn=document.createElement("button");btn.className="card";btn.innerHTML="<b>"+a+"</b><span>"+b+"</span>";grid.appendChild(btn)});
+ m.items.forEach(([a,b])=>{const btn=document.createElement("button");btn.className="card";btn.type="button";btn.innerHTML="<b>"+a+"</b><span>"+b+"</span>";btn.onclick=()=>openSubmodule(a,b);grid.appendChild(btn)});
  panel.classList.add("open");
 }
 function openCommandCenterV4(){ document.getElementById("commandCenter")?.classList.add("open"); }
 function closeCommandCenterV4(){ document.getElementById("commandCenter")?.classList.remove("open"); }
 document.querySelectorAll("[data-key]").forEach(b=>b.onclick=()=>openModule(b.dataset.key));
+function openSubmodule(name,desc){const sub=document.getElementById("submodulePanel");document.getElementById("submoduleTitle").textContent=name;document.getElementById("submoduleDesc").textContent=desc;document.getElementById("submoduleBody").innerHTML=`<div style="background:#fff;border:1px solid #dfe8e3;border-radius:18px;padding:18px"><h3 style="margin:0 0 8px">${name}</h3><p style="margin:0 0 16px;color:#718079">${desc}</p><button type="button" style="width:100%;min-height:52px;border:0;border-radius:14px;background:#006241;color:#fff;font-weight:900">Open ${name} Workspace</button></div>`;document.getElementById("panel").classList.remove("open");sub.classList.add("open");}
 
 
-document.getElementById("close").onclick=()=>panel.classList.remove("open");
+document.getElementById("close").onclick=()=>panel.classList.remove("open");document.getElementById("submoduleClose").onclick=()=>document.getElementById("submodulePanel").classList.remove("open");
 document.getElementById("commandClose")?.addEventListener("click",closeCommandCenterV4);
 document.getElementById("commandCenter")?.addEventListener("click",e=>{if(e.target.id==="commandCenter")closeCommandCenterV4()});
 document.getElementById("quickNewOrder")?.addEventListener("click",e=>{e.stopPropagation();openModule("orders");setTimeout(()=>{title.textContent="New Order";desc.textContent="Start a cashier order immediately.";grid.innerHTML="";[["Drinks","Browse drink categories."],["Food","Browse food categories."],["Custom Order","Build a customized order."],["Scan / Search","Find an item quickly."]].forEach(([a,b])=>{const btn=document.createElement("button");btn.className="card";btn.innerHTML="<b>"+a+"</b><span>"+b+"</span>";grid.appendChild(btn)})},0)});
