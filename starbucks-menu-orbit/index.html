@@ -2157,6 +2157,33 @@
       body.show-product-results #browseCartBtn.browse-feature-new-v44,
       body.show-product-results #browseMobileCart.browse-feature-new-v44{animation:none!important}
     }
+  
+    /* BROWSE SCREENSHOT FIX V45 */
+    body.show-product-results #categories{
+      display:none!important;
+    }
+
+    body.show-product-results #browseCatalogHead{
+      padding-top:28px!important;
+    }
+
+    body.show-product-results #browseNewFeatureBannerV44{
+      display:flex;
+    }
+
+    body.show-product-results #browseRecentlyViewed.browse-feature-new-v44{
+      display:block!important;
+    }
+
+    body.show-product-results #orbit{
+      min-height:220px!important;
+    }
+
+    body.show-product-results .catalog-empty{
+      min-height:180px!important;
+      display:grid!important;
+      place-items:center!important;
+    }
   </style>
 </head>
 <body>
@@ -2288,10 +2315,10 @@
     const $=s=>document.querySelector(s), orbit=$('#orbit'), stage=$('#stage');
     const money=n=>'₱'+Number(n).toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});
 
-    const BROWSE_NEW_SEEN_KEY_V44='menu-orbit-browse-new-seen-v44';
+    const BROWSE_NEW_SEEN_KEY_V44='menu-orbit-browse-new-seen-v45';
     const BROWSE_NEW_IDS_V44={
-      recent:'browse-recently-viewed-2026-09-24-v44',
-      cart:'browse-sticky-cart-2026-09-24-v44'
+      recent:'browse-recently-viewed-2026-09-24-v45',
+      cart:'browse-sticky-cart-2026-09-24-v45'
     };
     function browseNewSeenV44(){
       try{return JSON.parse(localStorage.getItem(BROWSE_NEW_SEEN_KEY_V44)||'{}')}catch(e){return{}}
@@ -2333,7 +2360,12 @@
     window.fallback=fallback;
     function unavailable(p){return (state.pickup?.store==='Starbucks Molino Boulevard'&&['raclette-lasagna','mango-dragonfruit-lemonade'].includes(p.id))||(state.pickup?.store==='Starbucks Vista Mall Daang Hari'&&['ham-cheese-croffle','cold-brew'].includes(p.id))}
     function visible(){
-      let list=products.filter(p=>state.search?p.name.toLowerCase().includes(state.search.toLowerCase()):state.cat==='Favorites'?state.favorites.includes(p.id):p.cat===state.cat);
+      let list=products.filter(p=>{
+        if(state.search)return p.name.toLowerCase().includes(state.search.toLowerCase());
+        if(state.cat==='Featured')return true;
+        if(state.cat==='Favorites')return state.favorites.includes(p.id);
+        return p.cat===state.cat;
+      });
 
       if(document.body.classList.contains('show-product-results')){
         const f=state.browseFilter||'all';
@@ -2385,7 +2417,7 @@
       section.classList.toggle('has-items',recent.length>0||recentNew);
       applyBrowseNewHighlightsV44();
       if(!recent.length){
-        track.innerHTML=recentNew?'<div class="recent-empty-new"><b>Recently Viewed is NEW</b><span>Open any product and it will appear here automatically.</span></div>':'';
+        track.innerHTML=recentNew?'<button type="button" class="recent-empty-new"><b>NEW — Recently Viewed</b><span>Open any product and it will appear here automatically.</span></button>':'';
         return;
       }
       track.innerHTML=recent.map(x=>`
@@ -2647,7 +2679,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-44"></script>
+  <script src="customer-next.js?v=20260924-45"></script>
 
 <script>
 (function(){
