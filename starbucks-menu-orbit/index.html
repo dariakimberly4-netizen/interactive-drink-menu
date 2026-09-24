@@ -2274,6 +2274,34 @@
       .browse-compare-bar-v47{width:calc(100% - 24px)!important;position:sticky;bottom:82px;z-index:190}
       body.show-product-results .catalog-actions{grid-template-columns:1fr!important}
     }
+  
+    /* BROWSE DEMO MODE V48 */
+    .browse-demo-mode-v48{
+      min-height:42px;padding:0 13px;border-radius:14px;
+      border:1px solid #ffd86b;
+      background:linear-gradient(135deg,#4a3b13,#1b3b2b);
+      color:#fff;font-weight:900;font-size:11px;
+      box-shadow:0 0 0 3px rgba(255,216,107,.14),0 0 22px rgba(255,216,107,.2);
+      cursor:pointer;
+    }
+    .browse-demo-active-v48 #browseDemoModeV48{
+      background:#f4efe6;color:#07331f;
+    }
+    body.show-product-results.browse-demo-active-v48 #browseCatalogHead::before{
+      content:'DEMO MODE';
+      position:fixed;top:78px;right:14px;z-index:230;
+      padding:6px 10px;border-radius:999px;
+      background:#ffd86b;color:#07331f;
+      font:950 9px/1 system-ui;letter-spacing:.1em;
+      box-shadow:0 8px 18px rgba(0,0,0,.28);
+      pointer-events:none;
+    }
+    @media(max-width:700px){
+      .browse-demo-mode-v48{width:100%}
+      body.show-product-results.browse-demo-active-v48 #browseCatalogHead::before{
+        top:70px;right:10px;font-size:8px
+      }
+    }
   </style>
 </head>
 <body>
@@ -2314,6 +2342,7 @@
         <p id="browseCatalogCount">0 items</p>
       </div>
       <div class="browse-head-actions">
+        <button type="button" class="browse-demo-mode-v48" id="browseDemoModeV48">▶ Demo Mode</button>
         <div class="browse-new-feature-banner-v44" id="browseNewFeatureBannerV44">
           <span>NEW</span>
           <b>Recently Viewed + Mobile Cart</b>
@@ -2785,7 +2814,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-47"></script>
+  <script src="customer-next.js?v=20260924-48"></script>
 
 <script>
 (function(){
@@ -4369,6 +4398,68 @@
   const NEW_SEEN_KEY_V47='mo_browse_feature_seen_v47';
   const NEW_IDS_V47={compare:'browse-compare-v47',save:'browse-save-later-v47'};
 
+  const DEMO_FLAG_V48='mo_browse_demo_mode_v48';
+  function startBrowseDemoV48(){
+    const app=window.MenuOrbitApp;
+    const products=Array.isArray(app?.products)?app.products:[];
+    if(products.length<6)return;
+
+    const sample=products.slice(0,6);
+
+    // Recently viewed
+    writeJSON('mo_recently_viewed_v1',sample.slice(0,4).map((p,i)=>({
+      id:p.id,name:p.name,img:p.img,price:p.price,cat:p.cat,
+      viewedAt:new Date(Date.now()-i*60000).toISOString()
+    })));
+
+    // Saved for later
+    writeJSON(SAVED_LATER_KEY_V47,sample.slice(1,4).map(p=>({
+      id:p.id,name:p.name,img:p.img,price:p.price,cat:p.cat,
+      savedAt:new Date().toISOString()
+    })));
+
+    // Compare
+    writeJSON(COMPARE_KEY_V47,sample.slice(0,3).map(p=>p.id));
+
+    // Cart
+    const state=app?.getState?.();
+    if(state){
+      state.cart=sample.slice(0,2).map((p,i)=>({
+        key:Date.now()+i,
+        id:p.id,name:p.name,img:p.img,
+        size:p.kind==='food'?'Regular':'Tall',
+        style:p.temps?.[0]||'',
+        milk:p.kind==='food'?'':'Whole milk',
+        note:'',price:p.price,qty:1
+      }));
+      try{localStorage.setItem('menuOrbitCart',JSON.stringify(state.cart))}catch(e){}
+    }
+
+    try{localStorage.setItem(DEMO_FLAG_V48,'1')}catch(e){}
+    document.body.classList.add('browse-demo-active-v48');
+    renderRecoveredBrowse();
+    updateCompareBarV47();
+    document.getElementById('browseDemoModeV48').textContent='↻ Reset Demo';
+  }
+
+  function resetBrowseDemoV48(){
+    try{
+      localStorage.removeItem('mo_recently_viewed_v1');
+      localStorage.removeItem(SAVED_LATER_KEY_V47);
+      localStorage.removeItem(COMPARE_KEY_V47);
+      localStorage.removeItem('menuOrbitCart');
+      localStorage.removeItem(DEMO_FLAG_V48);
+    }catch(e){}
+    const state=window.MenuOrbitApp?.getState?.();
+    if(state)state.cart=[];
+    document.body.classList.remove('browse-demo-active-v48');
+    renderRecoveredBrowse();
+    updateCompareBarV47();
+    const btn=document.getElementById('browseDemoModeV48');
+    if(btn)btn.textContent='▶ Demo Mode';
+  }
+
+
   const readJSON=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v??f}catch(e){return f}};
   const writeJSON=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 
@@ -4541,6 +4632,10 @@
     return true;
   }
 
+  document.getElementById('browseDemoModeV48')?.addEventListener('click',()=>{
+    if(localStorage.getItem(DEMO_FLAG_V48)==='1')resetBrowseDemoV48();
+    else startBrowseDemoV48();
+  });
   document.getElementById('browseCompareOpenV47')?.addEventListener('click',openCompareV47);
   document.getElementById('browseCompareClearV47')?.addEventListener('click',()=>{
     writeJSON(COMPARE_KEY_V47,[]);
@@ -4556,6 +4651,11 @@
   const boot=()=>{
     tries++;
     const ok=renderRecoveredBrowse();
+    const demoBtn=document.getElementById('browseDemoModeV48');
+    if(demoBtn&&localStorage.getItem(DEMO_FLAG_V48)==='1'){
+      demoBtn.textContent='↻ Reset Demo';
+      document.body.classList.add('browse-demo-active-v48');
+    }
     if((!ok||tries<5)&&tries<30)setTimeout(boot,200);
   };
   window.addEventListener('hashchange',()=>setTimeout(boot,50));
