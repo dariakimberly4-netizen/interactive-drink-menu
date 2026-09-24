@@ -1485,7 +1485,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-31"></script>
+  <script src="customer-next.js?v=20260924-32"></script>
 
 <script>
 (function(){
@@ -1725,9 +1725,6 @@
 
     suspendOrbitForCallStaff();
     draw();
-    modal.style.setProperty('display','flex','important');
-    modal.style.setProperty('z-index','2147483646','important');
-    suspendOrbitForTableQr();
     modal.style.setProperty('display','flex','important');
     modal.style.setProperty('z-index','2147483646','important');
     modal.classList.add('open');
@@ -2037,6 +2034,9 @@
       <div id="tableQrSaved" class="table-qr-saved">${saved?('✓ Saved table: <b>'+saved.table+'</b>'):'No table saved yet.'}</div>
       <p class="notice">Prototype feature. QR scanning uses your device camera only after you tap Scan Table QR.</p>
     `;
+    suspendOrbitForTableQr();
+    modal.style.setProperty('display','flex','important');
+    modal.style.setProperty('z-index','2147483646','important');
     modal.classList.add('open');
 
     let stream=null,scanTimer=null,detector=null;
@@ -2045,7 +2045,7 @@
       if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
       const wrap=document.getElementById('tableQrCameraWrap');if(wrap)wrap.hidden=true;
     };
-    document.getElementById('tableQrClose').onclick=()=>{stopScan();modal.classList.remove('open');modal.style.removeProperty('display');resumeOrbitAfterTableQr()};
+    document.getElementById('tableQrClose').onclick=()=>{stopScan();modal.classList.remove('open');modal.style.removeProperty('display');modal.style.removeProperty('z-index');resumeOrbitAfterTableQr()};
     document.getElementById('useDemoTable').onclick=()=>{document.getElementById('tableNumberInput').value='12'};
     document.getElementById('scanTableQr').onclick=async()=>{
       const wrap=document.getElementById('tableQrCameraWrap'),video=document.getElementById('tableQrVideo'),status=document.getElementById('tableQrScanStatus');
@@ -2084,7 +2084,7 @@
       try{localStorage.setItem('menuOrbitPickup',JSON.stringify({...current,store:current?.store||store,type:'Dine In',table:value}))}catch(e){}
       document.getElementById('tableQrSaved').innerHTML='✓ Dine In set for <b>Table '+value+'</b>';
       stopScan();
-      setTimeout(()=>{modal.classList.remove('open');modal.style.removeProperty('display');resumeOrbitAfterTableQr()},650);
+      setTimeout(()=>{modal.classList.remove('open');modal.style.removeProperty('display');modal.style.removeProperty('z-index');resumeOrbitAfterTableQr()},650);
     };
   }
 
