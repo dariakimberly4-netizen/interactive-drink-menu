@@ -23,8 +23,73 @@ main{max-width:1220px;margin:auto;padding:28px 20px 60px}.heading{text-align:cen
 .panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.panel h3{font-size:30px;margin:0 0 6px}.panel p{margin:0;color:var(--muted)}.close{border:0;background:#eef3f0;border-radius:12px;width:42px;height:42px;font-size:22px;cursor:pointer}
 .subgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}.sub{min-height:108px;border:1px solid #e1e8e4;background:#fafcfb;border-radius:18px;padding:16px;text-align:left;cursor:pointer;transition:.2s}.sub:hover{background:#eef7f2;border-color:#bed8ca;transform:translateY(-2px)}.sub b{display:block;font-size:16px;margin-bottom:5px}.sub span{font-size:12px;color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#16302a;color:#fff;padding:12px 17px;border-radius:999px;display:none;z-index:99;font-weight:700;box-shadow:var(--shadow)}.toast.show{display:block}
-@media(max-width:760px){.topbar{padding:0 14px}.staff span:not(.badge){display:none}main{padding:20px 12px 40px}.orbit-shell{min-height:0;display:block;margin-top:24px}.ring{display:none}.center{width:100%;height:auto;border-radius:26px;text-align:left}.kpis{grid-template-columns:repeat(4,1fr)}.orbit-btn{position:static;transform:none!important;width:100%;min-height:78px;margin-top:10px;border-radius:18px;display:block;text-align:left}.quick{grid-template-columns:1fr 1fr;margin-top:18px}.subgrid{grid-template-columns:1fr 1fr}}
-@media(max-width:460px){.kpis{grid-template-columns:1fr 1fr}.subgrid{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .topbar{padding:0 14px}
+  .staff span:not(.badge){display:none}
+  main{padding:18px 10px 34px}
+  .heading h1{font-size:28px}
+  .heading p{font-size:13px}
+  .orbit-shell{
+    min-height:560px;
+    display:grid;
+    place-items:center;
+    margin-top:4px;
+    overflow:visible;
+  }
+  .ring{
+    display:block;
+    width:360px;
+    max-width:92vw;
+    box-shadow:inset 0 0 0 24px rgba(255,255,255,.25);
+  }
+  .center{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    text-align:center;
+    padding:18px;
+  }
+  .center h2{font-size:20px;margin:5px 0 10px}
+  .center small{font-size:9px}
+  .kpis{grid-template-columns:1fr 1fr;gap:5px}
+  .kpi{padding:5px;border-radius:10px}
+  .kpi strong{font-size:13px}
+  .kpi span{font-size:8px}
+  .orbit-btn{
+    position:absolute;
+    width:104px;
+    min-height:66px;
+    border-radius:18px;
+    padding:8px;
+    text-align:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .orbit-btn b{font-size:12px}
+  .orbit-btn span{font-size:9px;line-height:1.15}
+  .o1{transform:translate(0,-205px)}
+  .o2{transform:translate(165px,-102px)}
+  .o3{transform:translate(165px,102px)}
+  .o4{transform:translate(0,205px)}
+  .o5{transform:translate(-165px,102px)}
+  .o6{transform:translate(-165px,-102px)}
+  .quick{grid-template-columns:1fr 1fr;margin-top:6px}
+  .subgrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:430px){
+  .orbit-shell{min-height:520px}
+  .ring{width:330px}
+  .center{width:164px;height:164px;padding:15px}
+  .orbit-btn{width:96px;min-height:62px}
+  .o1{transform:translate(0,-190px)}
+  .o2{transform:translate(145px,-94px)}
+  .o3{transform:translate(145px,94px)}
+  .o4{transform:translate(0,190px)}
+  .o5{transform:translate(-145px,94px)}
+  .o6{transform:translate(-145px,-94px)}
+  .subgrid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -44,7 +109,7 @@ main{max-width:1220px;margin:auto;padding:28px 20px 60px}.heading{text-align:cen
 </div>
 <header class="topbar"><div class="brand"><div class="logo">C</div><div>Café Staff Portal</div></div><div class="staff"><span>Cashier</span><span class="badge">Donna • On Duty</span></div></header>
 <main>
-<section class="heading"><h1>Store Command Orbit</h1><p>Everything the team needs for today’s shift — one tap away.</p></section>
+<section class="heading"><h1>Staff Command Orbit</h1><p>Independent staff operations — every main function around one orbit.</p></section>
 <section class="orbit-shell">
 <div class="ring"></div>
 <button class="center" data-module="today"><small>LIVE STORE</small><h2>Today’s Store</h2><div class="kpis"><div class="kpi"><strong>₱18.4K</strong><span>Sales</span></div><div class="kpi"><strong>12</strong><span>New</span></div><div class="kpi"><strong>5</strong><span>Preparing</span></div><div class="kpi"><strong>4</strong><span>Low Stock</span></div></div></button>
