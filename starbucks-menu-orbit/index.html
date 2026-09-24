@@ -2693,6 +2693,27 @@
       display:none!important;
       pointer-events:none!important;
     }
+  
+    /* AUTHORITATIVE CARD ACTIONS V60 */
+    body.show-product-results .catalog-actions{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    }
+    body.show-product-results .catalog-actions button{
+      pointer-events:auto!important;
+      cursor:pointer!important;
+    }
+    body.show-product-results .catalog-save-v47,
+    body.show-product-results .catalog-compare-v47{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.055);
+      color:#fff;
+    }
+    body.show-product-results .catalog-save-v47.active,
+    body.show-product-results .catalog-compare-v47.active{
+      background:#f4efe6!important;
+      color:#07331f!important;
+      border-color:#f4c86f!important;
+    }
   </style>
 </head>
 <body>
@@ -3025,12 +3046,36 @@
               <div class="catalog-actions">
                 <button type="button" class="catalog-view" data-view-product="${p.id}">View</button>
                 <button type="button" class="catalog-quick-add" data-quick-add="${p.id}">+ Quick Add</button>
+                <button type="button" class="catalog-save-v47" data-save-later-v47="${p.id}">♡ Save for Later</button>
+                <button type="button" class="catalog-compare-v47" data-compare-v47="${p.id}">⚖ Compare</button>
               </div>
             </div>
           </article>`).join(''):`<div class="catalog-empty"><b>No products found.</b><span>Try another category or search term.</span></div>`;
 
         orbit.querySelectorAll('[data-favorite-product]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleCatalogFavorite(b.dataset.favoriteProduct)});
-        orbit.querySelectorAll('[data-view-product]').forEach(b=>b.onclick=e=>{e.stopPropagation();openDetail(b.dataset.viewProduct)});
+        orbit.querySelectorAll('[data-view-product]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();openDetail(b.dataset.viewProduct)});
+        orbit.querySelectorAll('[data-save-later-v47]').forEach(b=>b.onclick=e=>{
+          e.preventDefault();e.stopPropagation();
+          const id=b.dataset.saveLaterV47,p=products.find(x=>x.id===id);if(!p)return;
+          let list=[];try{list=JSON.parse(localStorage.getItem('mo_saved_for_later_v1')||'[]')}catch(e){}
+          const exists=list.some(x=>String(x.id)===String(id));
+          list=exists?list.filter(x=>String(x.id)!==String(id)):[{id:p.id,name:p.name,img:p.img,price:p.price,cat:p.cat,savedAt:new Date().toISOString()},...list];
+          localStorage.setItem('mo_saved_for_later_v1',JSON.stringify(list.slice(0,50)));
+          b.textContent=exists?'♡ Save for Later':'✓ Saved';
+          b.classList.toggle('active',!exists);
+          window.dispatchEvent(new CustomEvent('menu-orbit-saved-updated'));
+        });
+        orbit.querySelectorAll('[data-compare-v47]').forEach(b=>b.onclick=e=>{
+          e.preventDefault();e.stopPropagation();
+          const id=b.dataset.compareV47;
+          let ids=[];try{ids=JSON.parse(localStorage.getItem('mo_browse_compare_v47')||'[]')}catch(e){}
+          const has=ids.map(String).includes(String(id));
+          ids=has?ids.filter(x=>String(x)!==String(id)):(ids.length<3?[...ids,id]:ids);
+          localStorage.setItem('mo_browse_compare_v47',JSON.stringify(ids));
+          b.textContent=ids.map(String).includes(String(id))?'✓ Selected':'⚖ Compare';
+          b.classList.toggle('active',ids.map(String).includes(String(id)));
+          window.dispatchEvent(new CustomEvent('menu-orbit-compare-updated'));
+        });
         orbit.querySelectorAll('[data-quick-add]').forEach(b=>b.onclick=e=>{
           e.stopPropagation();
           const p=products.find(x=>x.id===b.dataset.quickAdd);if(!p)return;
@@ -3233,7 +3278,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-59"></script>
+  <script src="customer-next.js?v=20260924-60"></script>
 
 <script>
 (function(){
@@ -5266,10 +5311,10 @@
   document.addEventListener('click',e=>{
     if(!isBrowse())return;
 
-    const quick=e.target.closest?.('[data-quick-add-v56]');
+    const quick=e.target.closest?.('[data-quick-add-v56],[data-quick-add]');
     if(quick){
       e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-      quickAddV56(quick.getAttribute('data-quick-add-v56'));
+      quickAddV56(quick.getAttribute('data-quick-add-v56')||quick.getAttribute('data-quick-add'));
       return;
     }
 
@@ -5287,10 +5332,10 @@
       return;
     }
 
-    const view=e.target.closest?.('[data-recovery-view]');
+    const view=e.target.closest?.('[data-recovery-view],[data-view-product]');
     if(view){
       e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-      const id=view.getAttribute('data-recovery-view');
+      const id=view.getAttribute('data-recovery-view')||view.getAttribute('data-view-product');
       window.MenuOrbitApp?.openProduct?.(id);
       return;
     }
@@ -5394,6 +5439,8 @@
     else startBrowseDemoV48();
   });
 
+  window.addEventListener('menu-orbit-saved-updated',()=>{refreshSavedBadgeV56();renderSavedPanelV56()});
+  window.addEventListener('menu-orbit-compare-updated',()=>updateCompareBarV47());
   document.getElementById('browseSavedPanelBtnV56')?.addEventListener('click',openSavedPanelV56);
   document.getElementById('browseSavedCloseV56')?.addEventListener('click',()=>document.getElementById('browseSavedModalV56')?.classList.remove('open'));
   document.getElementById('browseSavedModalV56')?.addEventListener('click',e=>{if(e.target.id==='browseSavedModalV56')e.currentTarget.classList.remove('open')});
