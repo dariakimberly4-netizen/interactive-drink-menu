@@ -56,21 +56,22 @@ button,input{font:inherit}
 .mini div{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.13);border-radius:11px;padding:7px}
 .mini b{display:block;font-size:15px}.mini span{font-size:9px;opacity:.8}
 .node{
-  position:absolute;left:50%;top:50%;width:152px;min-height:92px;
+  position:absolute;left:50%;top:50%;width:128px;height:128px;
   transform:translate(-50%,-50%);
-  border:1px solid rgba(255,255,255,.18);border-radius:26px;
-  background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.06));
-  backdrop-filter:blur(16px);color:#fff;box-shadow:0 16px 38px rgba(0,0,0,.25);
-  z-index:6;cursor:pointer;padding:12px;text-align:center;transition:.2s
+  border:1px solid rgba(255,255,255,.22);border-radius:50%;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),rgba(255,255,255,.07) 58%,rgba(0,117,74,.18));
+  backdrop-filter:blur(16px);color:#fff;box-shadow:0 16px 38px rgba(0,0,0,.25),0 0 0 6px rgba(0,168,98,.05);
+  z-index:6;cursor:pointer;padding:14px;text-align:center;transition:.2s;
+  display:flex;flex-direction:column;align-items:center;justify-content:center
 }
 .node:hover{transform:translate(-50%,-50%) scale(1.06);border-color:#f1cf87}
-.node b{display:block;font-size:15px}.node span{display:block;color:#c9d8d1;font-size:10px;line-height:1.25;margin-top:4px}
+.node b{display:block;font-size:15px;line-height:1.05}.node span{display:block;color:#c9d8d1;font-size:9px;line-height:1.18;margin-top:5px;max-width:92px}
 .n1{margin-top:-300px}
-.n2{margin-left:260px;margin-top:-150px}
-.n3{margin-left:260px;margin-top:150px}
+.n2{margin-left:250px;margin-top:-145px}
+.n3{margin-left:250px;margin-top:145px}
 .n4{margin-top:300px}
-.n5{margin-left:-260px;margin-top:150px}
-.n6{margin-left:-260px;margin-top:-150px}
+.n5{margin-left:-250px;margin-top:145px}
+.n6{margin-left:-250px;margin-top:-145px}
 .hint{
   position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
   font-size:11px;color:#c7d5ce;background:rgba(3,18,13,.72);
@@ -112,8 +113,8 @@ button,input{font:inherit}
   .core{width:156px;height:156px;padding:13px}
   .core h1{font-size:17px;margin:4px 0 7px}.core small{font-size:8px}
   .mini{gap:4px}.mini div{padding:4px;border-radius:8px}.mini b{font-size:11px}.mini span{font-size:7px}
-  .node{width:96px;min-height:62px;border-radius:18px;padding:8px}
-  .node b{font-size:11px}.node span{font-size:8px}
+  .node{width:88px;height:88px;min-height:0;border-radius:50%;padding:8px}
+  .node b{font-size:10.5px}.node span{font-size:7.5px;max-width:68px}
   .n1{margin-top:-192px}
   .n2{margin-left:145px;margin-top:-96px}
   .n3{margin-left:145px;margin-top:96px}
@@ -126,7 +127,7 @@ button,input{font:inherit}
 @media(max-width:390px){
   .orbit-ring{width:300px}
   .core{width:142px;height:142px}
-  .node{width:88px;min-height:58px}
+  .node{width:80px;height:80px;min-height:0}
   .n1{margin-top:-176px}
   .n2{margin-left:132px;margin-top:-88px}
   .n3{margin-left:132px;margin-top:88px}
