@@ -410,7 +410,24 @@ button,input{font:inherit}
   font-weight:1000;
   letter-spacing:.08em;
 }
-</style>\n</head>
+</style>\n<style id="tappableCardsV10">
+/* TAPPABLE CARDS V10 */
+.grid .card{
+  position:relative!important;
+  z-index:3!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:rgba(0,117,74,.18)!important;
+  cursor:pointer!important;
+}
+.grid .card:active{
+  transform:scale(.97)!important;
+  background:#edf7f1!important;
+  border-color:#8fc8ac!important;
+}
+.back-card{background:#f0f3f1!important}
+</style>
+</head>
 <body>
 <header class="topbar">
   <div class="logo">S</div>
@@ -525,13 +542,47 @@ const panel=document.getElementById("panel"),title=document.getElementById("titl
 function openModule(k){
  if(k==="today"){ openCommandCenterV4(); return; }
  const m=data[k]; title.textContent=m.title; desc.textContent=m.desc; grid.innerHTML="";
- m.items.forEach(([a,b])=>{const btn=document.createElement("button");btn.className="card";btn.type="button";btn.innerHTML="<b>"+a+"</b><span>"+b+"</span>";btn.onclick=()=>openSubmodule(a,b);grid.appendChild(btn)});
+ m.items.forEach(([a,b])=>{const btn=document.createElement("button");btn.className="card";btn.type="button";btn.dataset.subName=a;btn.dataset.subDesc=b;btn.dataset.parentKey=k;btn.innerHTML="<b>"+a+"</b><span>"+b+"</span>";grid.appendChild(btn)});
  panel.classList.add("open");
 }
 function openCommandCenterV4(){ document.getElementById("commandCenter")?.classList.add("open"); }
 function closeCommandCenterV4(){ document.getElementById("commandCenter")?.classList.remove("open"); }
 document.querySelectorAll("[data-key]").forEach(b=>b.onclick=()=>openModule(b.dataset.key));
-function openSubmodule(name,desc){const sub=document.getElementById("submodulePanel");document.getElementById("submoduleTitle").textContent=name;document.getElementById("submoduleDesc").textContent=desc;document.getElementById("submoduleBody").innerHTML=`<div style="background:#fff;border:1px solid #dfe8e3;border-radius:18px;padding:18px"><h3 style="margin:0 0 8px">${name}</h3><p style="margin:0 0 16px;color:#718079">${desc}</p><button type="button" style="width:100%;min-height:52px;border:0;border-radius:14px;background:#006241;color:#fff;font-weight:900">Open ${name} Workspace</button></div>`;document.getElementById("panel").classList.remove("open");sub.classList.add("open");}
+// GRID TAP DELEGATION V10
+grid.addEventListener("click",e=>{
+  const card=e.target.closest("button.card");
+  if(!card)return;
+
+  if(card.dataset.subName){
+    e.preventDefault();
+    openSubmodule(card.dataset.subName,card.dataset.subDesc,card.dataset.parentKey);
+    return;
+  }
+
+  if(card.dataset.backParent){
+    e.preventDefault();
+    openModule(card.dataset.backParent);
+    return;
+  }
+
+  if(card.dataset.workAction){
+    e.preventDefault();
+    const action=card.querySelector("b");
+    const original=action.textContent;
+    action.textContent="✓ Opened";
+    setTimeout(()=>action.textContent=original,800);
+  }
+});
+function openSubmodule(name,desc,parentKey){
+  title.textContent=name;
+  desc.textContent=desc||"Staff workspace";
+  grid.innerHTML=
+    '<button type="button" class="card workspace-action" data-work-action="add"><b>＋ Add New</b><span>Create a new '+name+' item.</span></button>'+
+    '<button type="button" class="card workspace-action" data-work-action="manage"><b>Manage Existing</b><span>View and update current '+name+' items.</span></button>'+
+    '<button type="button" class="card workspace-action" data-work-action="reports"><b>View Activity</b><span>See recent '+name+' activity.</span></button>'+
+    '<button type="button" class="card workspace-action back-card" data-back-parent="'+(parentKey||'promotions')+'"><b>← Back</b><span>Return to the previous module.</span></button>';
+  panel.classList.add("open");
+}
 
 
 document.getElementById("close").onclick=()=>panel.classList.remove("open");document.getElementById("submoduleClose").onclick=()=>document.getElementById("submodulePanel").classList.remove("open");
