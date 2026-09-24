@@ -1965,6 +1965,59 @@
         opacity:.82!important
       }
     }
+  
+    /* BROWSE NEW FEATURE HIGHLIGHTS V42 */
+    body.show-product-results #browseRecentlyViewed.browse-feature-new{
+      position:relative!important;
+      border:2px solid #ffd86b!important;
+      border-radius:20px!important;
+      padding:14px!important;
+      box-shadow:
+        0 0 0 4px rgba(255,216,107,.22),
+        0 0 34px rgba(255,216,107,.36)!important;
+      background:rgba(255,216,107,.035)!important;
+      animation:browseFeatureNewPulse 1.5s ease-in-out infinite!important;
+    }
+    body.show-product-results #browseRecentlyViewed.browse-feature-new::after{
+      content:'NEW';
+      position:absolute;
+      top:-10px;right:12px;z-index:8;
+      padding:5px 9px;border-radius:999px;
+      background:#ffd86b;color:#07331f;
+      font:950 9px/1 system-ui;letter-spacing:.09em;
+      box-shadow:0 7px 18px rgba(0,0,0,.32);
+      pointer-events:none;
+    }
+
+    @media(max-width:700px){
+      body.show-product-results #browseMobileCart.browse-feature-new{
+        border:2px solid #ffd86b!important;
+        box-shadow:
+          0 0 0 4px rgba(255,216,107,.30),
+          0 0 32px rgba(255,216,107,.62),
+          0 16px 42px rgba(0,0,0,.38)!important;
+        animation:browseFeatureNewPulse 1.35s ease-in-out infinite!important;
+      }
+      body.show-product-results #browseMobileCart.browse-feature-new::after{
+        content:'NEW';
+        position:absolute;
+        top:-11px;right:12px;z-index:4;
+        padding:5px 9px;border-radius:999px;
+        background:#ffd86b;color:#07331f;
+        font:950 9px/1 system-ui;letter-spacing:.09em;
+        box-shadow:0 7px 18px rgba(0,0,0,.32);
+        pointer-events:none;
+      }
+    }
+
+    @keyframes browseFeatureNewPulse{
+      0%,100%{filter:none}
+      50%{filter:drop-shadow(0 0 12px rgba(255,216,107,.42))}
+    }
+    @media(prefers-reduced-motion:reduce){
+      body.show-product-results #browseRecentlyViewed.browse-feature-new,
+      body.show-product-results #browseMobileCart.browse-feature-new{animation:none!important}
+    }
   </style>
 </head>
 <body>
@@ -2131,6 +2184,7 @@
       if(mobileItems)mobileItems.textContent=itemCount+' item'+(itemCount===1?'':'s');
       if(mobileTotal)mobileTotal.textContent=money(total);
       if(mobileBar)mobileBar.classList.toggle('has-items',itemCount>0);
+      applyBrowseNewHighlights();
     }
 
     function renderRecentlyViewed(){
@@ -2141,13 +2195,20 @@
       try{recent=JSON.parse(localStorage.getItem('mo_recently_viewed_v1')||'[]')}catch(e){}
       recent=(Array.isArray(recent)?recent:[]).slice(0,8);
       section.classList.toggle('has-items',recent.length>0);
+      applyBrowseNewHighlights();
       if(!recent.length){track.innerHTML='';return}
       track.innerHTML=recent.map(x=>`
         <button type="button" class="recent-product" data-recent-product="${x.id}" aria-label="View ${x.name}">
           <img src="${x.img}" alt="" loading="lazy" onerror="fallback(this,'${String(x.name||'Item').replaceAll("'",'')}')">
           <span><b>${x.name}</b><small>${money(x.price)}</small></span>
         </button>`).join('');
-      track.querySelectorAll('[data-recent-product]').forEach(b=>b.onclick=()=>openDetail(b.dataset.recentProduct));
+      track.querySelectorAll('[data-recent-product]').forEach(b=>b.onclick=()=>{
+        if(customerFeatureUnseen('Browse Recently Viewed')){
+          markCustomerFeatureSeen('Browse Recently Viewed');
+          applyBrowseNewHighlights();
+        }
+        openDetail(b.dataset.recentProduct);
+      });
     }
 
     function renderOrbit(){
@@ -2237,10 +2298,18 @@
     function stopVoice(){state.voice=false;state.recognition?.stop();$('#voiceCta').classList.remove('active');$('#voiceCta').textContent='🎙 Voice Control';$('#instructions').textContent='Use Tilt or Voice without the camera • Swipe remains available'}
     function toggleVoice(){if(state.voice){stopVoice();return}const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){alert('Voice control is not supported here. Open the page in Chrome.');return}const recognition=new SpeechRecognition();recognition.lang='en-PH';recognition.continuous=true;recognition.interimResults=false;recognition.onresult=e=>{const command=e.results[e.results.length-1][0].transcript.trim();executeVoice(command)};recognition.onerror=e=>{if(e.error==='not-allowed')alert('Please allow microphone permission for voice control.')};recognition.onend=()=>{if(state.voice){try{recognition.start()}catch(e){}}};state.recognition=recognition;state.voice=true;recognition.start();$('#voiceCta').classList.add('active');$('#voiceCta').textContent='✓ Voice Listening';$('#instructions').textContent='Say: Next • Previous • Select • Zoom in • Reset • Cart'}
     let pinch=0;stage.addEventListener('pointerdown',e=>{state.drag=true;state.lastX=e.clientX;stage.setPointerCapture(e.pointerId)});stage.addEventListener('pointermove',e=>{if(state.drag){rotate((e.clientX-state.lastX)*.006);state.lastX=e.clientX}});stage.addEventListener('pointerup',()=>state.drag=false);stage.addEventListener('pointercancel',()=>state.drag=false);stage.addEventListener('wheel',e=>{e.preventDefault();state.zoom=Math.max(.72,Math.min(1.28,state.zoom-e.deltaY*.001));positionOrbit()},{passive:false});stage.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(pinch)state.zoom=Math.max(.72,Math.min(1.28,state.zoom+(d-pinch)*.003));pinch=d;positionOrbit()}},{passive:true});stage.addEventListener('touchend',()=>pinch=0);
-    $('#pickupBtn').onclick=openPickup;$('#cartBtn').onclick=openCart;$('#browseCartBtn')?.onclick=()=>openCart();$('#browseMobileCart')?.onclick=()=>openCart();
+    $('#pickupBtn').onclick=openPickup;$('#cartBtn').onclick=openCart;$('#browseCartBtn')?.onclick=()=>openCart();$('#browseMobileCart')?.onclick=()=>{
+      if(customerFeatureUnseen('Sticky Mobile Cart')){
+        markCustomerFeatureSeen('Sticky Mobile Cart');
+        applyBrowseNewHighlights();
+      }
+      openCart();
+    };
     $('#clearRecentlyViewed')?.addEventListener('click',()=>{
+      if(customerFeatureUnseen('Browse Recently Viewed'))markCustomerFeatureSeen('Browse Recently Viewed');
       try{localStorage.removeItem('mo_recently_viewed_v1')}catch(e){}
       renderRecentlyViewed();
+      applyBrowseNewHighlights();
     });
     document.querySelectorAll('[data-browse-filter]').forEach(b=>b.onclick=()=>{
       state.browseFilter=b.dataset.browseFilter||'all';
@@ -2372,7 +2441,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-41"></script>
+  <script src="customer-next.js?v=20260924-42"></script>
 
 <script>
 (function(){
@@ -3533,7 +3602,9 @@
     'Table / QR Ordering':'customer-table-qr-ordering-2026-09-24-v13',
     'Call Staff':'customer-call-staff-2026-09-24-v4',
     'Add More to My Table':'customer-add-more-table-2026-09-24-v1',
-    'Dine-In Order Status':'customer-dine-in-order-status-2026-09-24-v1'
+    'Dine-In Order Status':'customer-dine-in-order-status-2026-09-24-v1',
+    'Browse Recently Viewed':'browse-recently-viewed-strip-2026-09-24-v1',
+    'Sticky Mobile Cart':'browse-sticky-mobile-cart-2026-09-24-v1'
   };
   const CUSTOMER_LATEST_BATCH=[
     'Smart Wellness Filters',
@@ -3541,7 +3612,9 @@
     'Table / QR Ordering',
     'Call Staff',
     'Add More to My Table',
-    'Dine-In Order Status'
+    'Dine-In Order Status',
+    'Browse Recently Viewed',
+    'Sticky Mobile Cart'
   ];
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
@@ -3556,6 +3629,23 @@
     const id=CUSTOMER_NEW_FEATURES[label];if(!id)return;
     const seen=customerSeen();seen[id]=true;
     try{localStorage.setItem(CUSTOMER_SEEN_KEY,JSON.stringify(seen))}catch(e){}
+  }
+
+  function applyBrowseNewHighlights(){
+    const recent=document.getElementById('browseRecentlyViewed');
+    const mobileCart=document.getElementById('browseMobileCart');
+
+    const recentNew=customerFeatureUnseen('Browse Recently Viewed');
+    if(recent){
+      recent.classList.toggle('browse-feature-new',recentNew&&recent.classList.contains('has-items'));
+      recent.setAttribute('data-new-feature',recentNew?'true':'false');
+    }
+
+    const cartNew=customerFeatureUnseen('Sticky Mobile Cart');
+    if(mobileCart){
+      mobileCart.classList.toggle('browse-feature-new',cartNew);
+      mobileCart.setAttribute('data-new-feature',cartNew?'true':'false');
+    }
   }
   function anyCustomerUnseen(labels){
     return labels.some(customerFeatureUnseen);
