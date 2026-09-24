@@ -2613,6 +2613,38 @@
       }
       body.browse-presentation-v55 .catalog-card{max-width:none!important}
     }
+  
+    /* BROWSE BUTTON CLICK FIX V58 */
+    body.show-product-results .catalog-card{
+      isolation:isolate!important;
+    }
+    body.show-product-results .catalog-card-body,
+    body.show-product-results .catalog-actions{
+      position:relative!important;
+      z-index:20!important;
+      pointer-events:auto!important;
+    }
+    body.show-product-results .catalog-actions button,
+    body.show-product-results .catalog-view,
+    body.show-product-results .catalog-quick-add,
+    body.show-product-results [data-recovery-view],
+    body.show-product-results [data-quick-add-v56]{
+      position:relative!important;
+      z-index:30!important;
+      pointer-events:auto!important;
+      cursor:pointer!important;
+      touch-action:manipulation!important;
+      user-select:none!important;
+    }
+    body.show-product-results .catalog-actions button:active{
+      transform:translateY(1px)!important;
+    }
+    body.browse-presentation-v55 .catalog-actions{
+      z-index:50!important;
+    }
+    body.browse-presentation-v55 .catalog-actions button{
+      z-index:60!important;
+    }
   </style>
 </head>
 <body>
@@ -3153,7 +3185,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-57"></script>
+  <script src="customer-next.js?v=20260924-58"></script>
 
 <script>
 (function(){
@@ -5181,6 +5213,29 @@
   }
 
   ownBrowseSearchInputV53();
+
+  /* BROWSE ACTION CAPTURE V58 */
+  document.addEventListener('click',e=>{
+    const quick=e.target.closest?.('[data-quick-add-v56]');
+    if(quick&&isBrowse()){
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      quickAddV56(quick.getAttribute('data-quick-add-v56'));
+      return;
+    }
+
+    const view=e.target.closest?.('[data-recovery-view]');
+    if(view&&isBrowse()){
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      const id=view.getAttribute('data-recovery-view');
+      const app=window.MenuOrbitApp;
+      if(app?.openProduct)app.openProduct(id);
+      return;
+    }
+  },true);
 
 
   const PRESENTATION_KEY_V55='mo_browse_presentation_v55';
