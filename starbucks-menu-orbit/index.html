@@ -1166,6 +1166,36 @@
       .add-more-table-banner{top:72px}
       body.add-more-table-mode #stage{padding-top:100px!important}
     }
+  
+    /* DINE IN ORDER STATUS */
+    .dine-status-hero{display:grid;gap:4px;text-align:center;padding:17px;margin:4px 0 14px;border-radius:18px;border:1px solid rgba(244,200,111,.34);background:radial-gradient(circle at 50% 0%,rgba(0,168,98,.2),rgba(7,42,30,.5))}
+    .dine-status-hero span{font:900 9px/1 system-ui;letter-spacing:.14em;color:#a8c1b5}
+    .dine-status-hero strong{font:700 30px/1.05 Georgia,serif;color:#f4d992}
+    .dine-status-hero small{color:#c3d5cc}
+    .dine-status-timeline{display:grid;gap:8px;margin:12px 0}
+    .dine-status-step{display:flex;align-items:center;gap:11px;padding:11px;border-radius:15px;border:1px solid rgba(255,255,255,.09);color:#78958a;background:rgba(255,255,255,.025)}
+    .dine-status-step i{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);font-style:normal;font-weight:900}
+    .dine-status-step b,.dine-status-step span{display:block}
+    .dine-status-step b{font-size:13px}.dine-status-step span{margin-top:2px;font-size:10px}
+    .dine-status-step.on{color:#dcebe3;border-color:rgba(0,168,98,.28);background:rgba(0,168,98,.07)}
+    .dine-status-step.on i{background:#00754a;color:#fff}
+    .dine-status-step.current{border-color:#ffd86b;box-shadow:0 0 0 2px rgba(255,216,107,.18)}
+    .dine-status-step.current i{background:#ffd86b;color:#07331f}
+    .dine-status-order{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+    .dine-status-order>div{padding:10px 11px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}
+    .dine-status-order span{display:block;color:#8ea99d;font:900 8px/1 system-ui;letter-spacing:.1em;margin-bottom:4px}
+    .dine-status-order strong{font-size:13px}
+    .dine-status-actions{display:grid;gap:8px}.dine-status-actions .add{margin-top:0}.dine-status-actions .pill{min-height:46px}
+    .dine-status-updated{text-align:center;color:#8fa99d;font-size:10px;margin-top:10px}
+    .dine-status-empty{text-align:center;padding:24px 16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);margin:8px 0 14px}
+    .dine-status-empty b{display:block;color:#f4d992;font-size:18px;margin-bottom:7px}.dine-status-empty span{display:block;color:#b9cec3;font-size:12px;line-height:1.45}
+    #mainMenuDirect button[aria-label="Dine-In Order Status"].customer-new-node{
+      border-color:#ffd86b!important;
+      box-shadow:0 0 0 4px rgba(255,216,107,.95),0 0 34px rgba(255,216,107,.6)!important;
+    }
+    #mainMenuDirect button[aria-label="Dine-In Order Status"] .dine-status-new-text{
+      display:block!important;margin-top:5px!important;color:#ffd86b!important;font:950 8px/1 system-ui!important;letter-spacing:.12em!important;
+    }
   </style>
 </head>
 <body>
@@ -1405,7 +1435,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-28"></script>
+  <script src="customer-next.js?v=20260924-29"></script>
 
 <script>
 (function(){
@@ -1427,7 +1457,7 @@
     order:[
       ['Current Order',[['Cart',()=>clickEl('#cartBtn')],['Saved for Later',()=>clickEl('#moSavedLater')],['Saved Basket',()=>window.MenuOrbitCustomer?.openSavedBasket?.()],['Price Change Notice',()=>window.MenuOrbitCustomer?.openPriceChangeNotice?.()],['Quick Order',()=>window.MenuOrbitCustomer?.openQuickOrder?.()],['Modify / Cancel Order',()=>window.MenuOrbitCustomer?.openModifyCancel?.()]]],
       ['Plan Order',[['Dine In',()=>openDineIn()],['Table / QR Ordering',()=>openTableQrOrdering()],['Schedule Order',()=>clickEl('#moSchedule')],['Pickup Reminder',()=>window.MenuOrbitCustomer?.openPickupReminder?.()],['Pickup ETA',()=>clickEl('#moDynamicEta')]]],
-      ['Dine In Service',[['Call Staff',()=>openCallStaff()],['Add More to My Table',()=>openAddMoreToTable()]]],
+      ['Dine In Service',[['Dine-In Order Status',()=>openDineInOrderStatus()],['Call Staff',()=>openCallStaff()],['Add More to My Table',()=>openAddMoreToTable()]]],
       ['Share & Gift',[['Gift Order',()=>clickEl('#moGiftOrder')],['Group Order',()=>clickEl('#moGroupOrder')],['Share Cart',()=>clickEl('#moShareCart')]]],
       ['Order History',[['Receipts',()=>clickEl('#moReceiptsBtn')],['Receipt Search',()=>window.MenuOrbitCustomer?.openReceiptSearch?.()],['Recently Ordered',()=>window.MenuOrbitCustomer?.openRecentlyOrdered?.()],['Previous Orders',()=>clickEl('#moReceiptsBtn')],['Order Tracking',()=>window.MenuOrbitCustomer?.openOrderTracking?.()],['Reorder',()=>window.MenuOrbitCustomer?.openReorder?.()]]],
       ['Help',[['Order Chat',()=>clickEl('#moOrderChat')],['Order Problem / Support',()=>clickEl('#moProblem')],['Support History',()=>window.MenuOrbitCustomer?.openSupportHistory?.()],['Refund / Issue Status',()=>window.MenuOrbitCustomer?.openRefundIssueStatus?.()],['Post-Pickup Feedback',()=>window.MenuOrbitCustomer?.openPostPickupFeedback?.()]]]
@@ -1535,6 +1565,118 @@
     document.body.style.removeProperty('overflow');
   }
 
+  let dineStatusTimer=null;
+  function openDineInOrderStatus(){
+    markCustomerFeatureSeen('Dine-In Order Status');
+    let modal=document.getElementById('dineInStatusModal');
+    if(!modal){
+      modal=document.createElement('div');
+      modal.className='modal';
+      modal.id='dineInStatusModal';
+      modal.setAttribute('role','dialog');
+      modal.setAttribute('aria-modal','true');
+      modal.innerHTML='<div class="modal-card" id="dineInStatusContent"></div>';
+      document.body.appendChild(modal);
+    }
+    const content=document.getElementById('dineInStatusContent');
+
+    const draw=()=>{
+      const table=readLocal('mo_dine_table_v1',null);
+      const pickup=readLocal('menuOrbitPickup',null);
+      const tableNo=table?.table||pickup?.table||'';
+      const store=table?.store||pickup?.store||'Selected store';
+      const history=readLocal('menuOrbitOrders',[]);
+      const queue=readLocal('mo_demo_orders_v1',[]);
+      const dineOrders=(Array.isArray(history)?history:[]).filter(o=>{
+        const type=String(o?.pickup?.type||'').toLowerCase();
+        return type.includes('dine')||(!o?.pickup?.type&&tableNo);
+      });
+      const order=dineOrders[0]||(Array.isArray(history)&&history[0])||null;
+      const q=order?(Array.isArray(queue)?queue:[]).find(x=>x?.code===order.code):null;
+      const raw=String(q?.status||readLocal('mo_order_tracking_v1',{})?.[order?.code]||order?.status||'ORDER_RECEIVED').toUpperCase();
+      let step=1,label='Received';
+      if(/ACCEPTED|ORDER_RECEIVED|RECEIVED/.test(raw)){step=1;label='Received'}
+      if(/PREPAR/.test(raw)){step=2;label='Preparing'}
+      if(/READY/.test(raw)){step=3;label='Ready'}
+      if(/COLLECT|SERVED|COMPLETED/.test(raw)){step=4;label='Served'}
+      const items=order?.items||q?.items||[];
+      const total=Number(order?.total??q?.total??0);
+      const lastUpdate=q?.updatedAt||order?.createdAt||'';
+
+      if(!order){
+        content.innerHTML=`
+          <div class="drawer-head">
+            <div><h2>Dine-In Order Status</h2><small style="color:#abc0b6">Table ${tableNo||'not set'} • ${store}</small></div>
+            <button class="close" id="dineStatusClose" aria-label="Close">×</button>
+          </div>
+          <div class="dine-status-empty">
+            <b>No active Dine In order yet.</b>
+            <span>${tableNo?'Your table is ready. Add items and place your order to start tracking.':'Set your table first, then place a Dine In order.'}</span>
+          </div>
+          <div class="dine-status-actions">
+            <button class="add" id="dineStatusStart">${tableNo?'Add Items to Table':'Set Table'}</button>
+            <button class="pill" id="dineStatusCart">Open Cart</button>
+          </div>
+          <p class="notice">Prototype status uses this browser's local demo order data.</p>
+        `;
+        document.getElementById('dineStatusClose').onclick=close;
+        document.getElementById('dineStatusStart').onclick=()=>{close();tableNo?openAddMoreToTable():openTableQrOrdering()};
+        document.getElementById('dineStatusCart').onclick=()=>{close();window.MenuOrbitApp?.openCart?.()};
+        return;
+      }
+
+      content.innerHTML=`
+        <div class="drawer-head">
+          <div><h2>Dine-In Order Status</h2><small style="color:#abc0b6">${order.code||q?.code||'Current order'} • Table ${tableNo||order?.pickup?.table||'—'}</small></div>
+          <button class="close" id="dineStatusClose" aria-label="Close">×</button>
+        </div>
+
+        <div class="dine-status-hero">
+          <span>CURRENT STATUS</span>
+          <strong>${label}</strong>
+          <small>${store}</small>
+        </div>
+
+        <div class="dine-status-timeline" aria-label="Dine In order progress">
+          <div class="dine-status-step ${step>=1?'on':''} ${step===1?'current':''}"><i>1</i><div><b>Received</b><span>Your order was received.</span></div></div>
+          <div class="dine-status-step ${step>=2?'on':''} ${step===2?'current':''}"><i>2</i><div><b>Preparing</b><span>Your drinks and food are being prepared.</span></div></div>
+          <div class="dine-status-step ${step>=3?'on':''} ${step===3?'current':''}"><i>3</i><div><b>Ready</b><span>Your order is ready for your table.</span></div></div>
+          <div class="dine-status-step ${step>=4?'on':''} ${step===4?'current':''}"><i>4</i><div><b>Served</b><span>Your Dine In order has been served.</span></div></div>
+        </div>
+
+        <div class="dine-status-order">
+          <div><span>ORDER</span><strong>${order.code||q?.code||'—'}</strong></div>
+          <div><span>TABLE</span><strong>${tableNo||order?.pickup?.table||'—'}</strong></div>
+          <div><span>ITEMS</span><strong>${items.reduce((n,x)=>n+(Number(x?.qty)||1),0)}</strong></div>
+          <div><span>TOTAL</span><strong>₱${total.toLocaleString('en-PH')}</strong></div>
+        </div>
+
+        <div class="dine-status-actions">
+          <button class="add" id="dineStatusAddMore">+ Add More to My Table</button>
+          <button class="pill" id="dineStatusRefresh">↻ Refresh Status</button>
+          <button class="pill" id="dineStatusCall">Call Staff</button>
+        </div>
+        <div class="dine-status-updated">Last update: ${lastUpdate||'just now'}</div>
+        <p class="notice">Prototype status reflects local demo cashier/barista updates on this browser.</p>
+      `;
+      document.getElementById('dineStatusClose').onclick=close;
+      document.getElementById('dineStatusRefresh').onclick=draw;
+      document.getElementById('dineStatusAddMore').onclick=()=>{close();openAddMoreToTable()};
+      document.getElementById('dineStatusCall').onclick=()=>{close();openCallStaff()};
+    };
+
+    function close(){
+      modal.classList.remove('open');
+      clearInterval(dineStatusTimer);
+      dineStatusTimer=null;
+    }
+
+    draw();
+    modal.classList.add('open');
+    clearInterval(dineStatusTimer);
+    dineStatusTimer=setInterval(()=>{if(modal.classList.contains('open'))draw()},1800);
+  }
+
   function enterAddMoreTableMode(tableNo,store){
     try{
       localStorage.setItem('mo_add_more_table_mode_v1',JSON.stringify({
@@ -1622,7 +1764,10 @@
       const savedTable=readLocal('mo_dine_table_v1',null);
       const t=savedTable?.table||current?.table||tableNo||'';
       try{
-        localStorage.setItem('menuOrbitPickup',JSON.stringify({...current,store:current?.store||store,type:'Dine In',table:t}));
+        const nextPickup={...current,store:current?.store||store,type:'Dine In',table:t};
+        localStorage.setItem('menuOrbitPickup',JSON.stringify(nextPickup));
+        const appState=window.MenuOrbitApp?.getState?.();
+        if(appState)appState.pickup=nextPickup;
       }catch(e){}
     };
 
@@ -2208,14 +2353,16 @@
     'Dine In':'customer-dine-in-2026-09-24-v12',
     'Table / QR Ordering':'customer-table-qr-ordering-2026-09-24-v13',
     'Call Staff':'customer-call-staff-2026-09-24-v4',
-    'Add More to My Table':'customer-add-more-table-2026-09-24-v1'
+    'Add More to My Table':'customer-add-more-table-2026-09-24-v1',
+    'Dine-In Order Status':'customer-dine-in-order-status-2026-09-24-v1'
   };
   const CUSTOMER_LATEST_BATCH=[
     'Smart Wellness Filters',
     'Dine In',
     'Table / QR Ordering',
     'Call Staff',
-    'Add More to My Table'
+    'Add More to My Table',
+    'Dine-In Order Status'
   ];
   const CUSTOMER_SEEN_KEY='menu-orbit-customer-new-seen-v1';
   function customerSeen(){
@@ -2236,14 +2383,14 @@
   }
   function mainHasNew(key){
     if(key==='menu'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
-    if(key==='order'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')||customerFeatureUnseen('Call Staff')||customerFeatureUnseen('Add More to My Table')))return true;
+    if(key==='order'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')||customerFeatureUnseen('Call Staff')||customerFeatureUnseen('Add More to My Table')||customerFeatureUnseen('Dine-In Order Status')))return true;
     if(key==='stores'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
     return false;
   }
   function groupHasNew(main,group){
     if(main==='menu'&&group==='Preferences'&&customerFeatureUnseen('Smart Wellness Filters'))return true;
     if(main==='order'&&group==='Plan Order'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
-    if(main==='order'&&group==='Dine In Service'&&(customerFeatureUnseen('Call Staff')||customerFeatureUnseen('Add More to My Table')))return true;
+    if(main==='order'&&group==='Dine In Service'&&(customerFeatureUnseen('Call Staff')||customerFeatureUnseen('Add More to My Table')||customerFeatureUnseen('Dine-In Order Status')))return true;
     if(main==='stores'&&group==='Find Store'&&(customerFeatureUnseen('Dine In')||customerFeatureUnseen('Table / QR Ordering')))return true;
     return false;
   }
@@ -2283,10 +2430,19 @@
         b.appendChild(t);
       }
     }
+    if(raw==='Dine-In Order Status'&&customerFeatureUnseen('Dine-In Order Status')){
+      b.classList.add('customer-new-node');decorateNewButton(b);
+      if(!b.querySelector('.dine-status-new-text')){
+        const t=document.createElement('span');
+        t.className='dine-status-new-text';
+        t.textContent='NEW FEATURE';
+        b.appendChild(t);
+      }
+    }
     b.addEventListener('click',e=>{
       e.preventDefault();
       e.stopPropagation();
-      if(customerFeatureUnseen(raw)){markCustomerFeatureSeen(raw);b.classList.remove('customer-new-node');b.querySelector('.customer-new-badge')?.remove();b.querySelector('.call-staff-new-text')?.remove();b.querySelector('.add-table-new-text')?.remove()}
+      if(customerFeatureUnseen(raw)){markCustomerFeatureSeen(raw);b.classList.remove('customer-new-node');b.querySelector('.customer-new-badge')?.remove();b.querySelector('.call-staff-new-text')?.remove();b.querySelector('.add-table-new-text')?.remove();b.querySelector('.dine-status-new-text')?.remove()}
       fn?.();
     });
     return b;
