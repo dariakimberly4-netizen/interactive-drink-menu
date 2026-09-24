@@ -2695,13 +2695,13 @@
     function stopVoice(){state.voice=false;state.recognition?.stop();$('#voiceCta').classList.remove('active');$('#voiceCta').textContent='🎙 Voice Control';$('#instructions').textContent='Use Tilt or Voice without the camera • Swipe remains available'}
     function toggleVoice(){if(state.voice){stopVoice();return}const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){alert('Voice control is not supported here. Open the page in Chrome.');return}const recognition=new SpeechRecognition();recognition.lang='en-PH';recognition.continuous=true;recognition.interimResults=false;recognition.onresult=e=>{const command=e.results[e.results.length-1][0].transcript.trim();executeVoice(command)};recognition.onerror=e=>{if(e.error==='not-allowed')alert('Please allow microphone permission for voice control.')};recognition.onend=()=>{if(state.voice){try{recognition.start()}catch(e){}}};state.recognition=recognition;state.voice=true;recognition.start();$('#voiceCta').classList.add('active');$('#voiceCta').textContent='✓ Voice Listening';$('#instructions').textContent='Say: Next • Previous • Select • Zoom in • Reset • Cart'}
     let pinch=0;stage.addEventListener('pointerdown',e=>{state.drag=true;state.lastX=e.clientX;stage.setPointerCapture(e.pointerId)});stage.addEventListener('pointermove',e=>{if(state.drag){rotate((e.clientX-state.lastX)*.006);state.lastX=e.clientX}});stage.addEventListener('pointerup',()=>state.drag=false);stage.addEventListener('pointercancel',()=>state.drag=false);stage.addEventListener('wheel',e=>{e.preventDefault();state.zoom=Math.max(.72,Math.min(1.28,state.zoom-e.deltaY*.001));positionOrbit()},{passive:false});stage.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(pinch)state.zoom=Math.max(.72,Math.min(1.28,state.zoom+(d-pinch)*.003));pinch=d;positionOrbit()}},{passive:true});stage.addEventListener('touchend',()=>pinch=0);
-    $('#pickupBtn').onclick=openPickup;$('#cartBtn').onclick=openCart;$('#browseCartBtn')?.onclick=()=>{
+    $('#pickupBtn').onclick=openPickup;$('#cartBtn').onclick=openCart;const browseCartBtnEl=$('#browseCartBtn');if(browseCartBtnEl)browseCartBtnEl.onclick=()=>{
       if(browseNewIsUnseenV44('cart')){
         browseNewMarkSeenV44('cart');
         applyBrowseNewHighlightsV44();
       }
       openCart();
-    };$('#browseMobileCart')?.onclick=()=>{
+    };const browseMobileCartEl=$('#browseMobileCart');if(browseMobileCartEl)browseMobileCartEl.onclick=()=>{
       if(browseNewIsUnseenV44('cart')){
         browseNewMarkSeenV44('cart');
         applyBrowseNewHighlightsV44();
@@ -2849,7 +2849,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-53"></script>
+  <script src="customer-next.js?v=20260924-54"></script>
 
 <script>
 (function(){
