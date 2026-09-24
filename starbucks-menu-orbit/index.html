@@ -5476,5 +5476,27 @@
   setTimeout(boot,80);
 })();
 </script>
+
+<!-- STAFF ORBIT ENTRY V1 -->
+<style>
+#staffOrbitEntryV1{
+  position:fixed;right:18px;bottom:18px;z-index:220;
+  min-height:52px;padding:0 18px;border-radius:999px;
+  border:1px solid rgba(244,200,111,.65);
+  background:linear-gradient(135deg,#f4efe6,#d4ad62);
+  color:#07331f;font-weight:900;box-shadow:0 14px 36px rgba(0,0,0,.35);
+}
+#staffOrbitEntryV1:hover{transform:translateY(-2px)}
+@media(max-width:700px){
+  #staffOrbitEntryV1{right:12px;bottom:126px;min-height:46px;padding:0 14px;font-size:12px}
+}
+</style>
+<button id="staffOrbitEntryV1" type="button" aria-label="Open Staff Orbit">☕ Staff Orbit</button>
+<script>
+document.getElementById('staffOrbitEntryV1')?.addEventListener('click',()=>{
+  location.href='staff-orbit.html';
+});
+</script>
+
 </body>
 </html>
