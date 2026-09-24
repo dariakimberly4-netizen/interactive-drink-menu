@@ -2071,6 +2071,92 @@
         top:4px;right:0;font-size:8px;padding:5px 8px
       }
     }
+  
+    /* DIRECT BROWSE NEW HIGHLIGHT V44 */
+    .browse-head-actions{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end
+    }
+    .browse-new-feature-banner-v44{
+      display:flex;align-items:center;gap:8px;
+      min-height:42px;padding:0 12px;border-radius:14px;
+      border:2px solid #ffd86b;
+      background:#3c3318;color:#fff;
+      box-shadow:0 0 0 4px rgba(255,216,107,.24),0 0 30px rgba(255,216,107,.5);
+      animation:browseDirectNewPulseV44 1.15s ease-in-out infinite;
+      cursor:pointer;
+    }
+    .browse-new-feature-banner-v44[hidden]{display:none!important}
+    .browse-new-feature-banner-v44 span{
+      display:inline-grid;place-items:center;
+      padding:5px 7px;border-radius:999px;
+      background:#ffd86b;color:#07331f;
+      font:950 9px/1 system-ui;letter-spacing:.09em
+    }
+    .browse-new-feature-banner-v44 b{font-size:11px;line-height:1.15}
+
+    body.show-product-results #browseRecentlyViewed.browse-feature-new-v44{
+      display:block!important;
+      position:relative!important;
+      border:3px solid #ffd86b!important;
+      border-radius:22px!important;
+      padding:14px!important;
+      background:rgba(255,216,107,.08)!important;
+      box-shadow:0 0 0 5px rgba(255,216,107,.2),0 0 38px rgba(255,216,107,.52)!important;
+      animation:browseDirectNewPulseV44 1.15s ease-in-out infinite!important;
+    }
+    body.show-product-results #browseRecentlyViewed.browse-feature-new-v44::after{
+      content:'NEW FEATURE';
+      position:absolute;top:-12px;right:12px;z-index:20;
+      padding:6px 10px;border-radius:999px;
+      background:#ffd86b;color:#07331f;
+      font:950 9px/1 system-ui;letter-spacing:.1em;
+      box-shadow:0 8px 20px rgba(0,0,0,.34)
+    }
+
+    body.show-product-results #browseCartBtn.browse-feature-new-v44{
+      position:relative!important;
+      outline:3px solid #ffd86b!important;
+      outline-offset:3px!important;
+      box-shadow:0 0 30px rgba(255,216,107,.62)!important;
+      animation:browseDirectNewPulseV44 1.15s ease-in-out infinite!important;
+    }
+    body.show-product-results #browseCartBtn.browse-feature-new-v44::after{
+      content:'NEW';
+      position:absolute;top:-14px;right:-10px;z-index:20;
+      padding:6px 9px;border-radius:999px;
+      background:#ffd86b;color:#07331f;
+      font:950 9px/1 system-ui;letter-spacing:.09em
+    }
+
+    @media(max-width:700px){
+      body.show-product-results #browseMobileCart.browse-feature-new-v44{
+        display:flex!important;
+        outline:3px solid #ffd86b!important;
+        outline-offset:3px!important;
+        box-shadow:0 0 36px rgba(255,216,107,.74),0 16px 42px rgba(0,0,0,.38)!important;
+        animation:browseDirectNewPulseV44 1.05s ease-in-out infinite!important;
+      }
+      body.show-product-results #browseMobileCart.browse-feature-new-v44::after{
+        content:'NEW FEATURE';
+        position:absolute;top:-14px;right:12px;z-index:30;
+        padding:6px 9px;border-radius:999px;
+        background:#ffd86b;color:#07331f;
+        font:950 9px/1 system-ui;letter-spacing:.09em
+      }
+      .browse-head-actions{align-items:flex-end}
+      .browse-new-feature-banner-v44{order:2;width:100%;box-sizing:border-box;justify-content:center}
+    }
+
+    @keyframes browseDirectNewPulseV44{
+      0%,100%{filter:none}
+      50%{filter:drop-shadow(0 0 14px rgba(255,216,107,.6))}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .browse-new-feature-banner-v44,
+      body.show-product-results #browseRecentlyViewed.browse-feature-new-v44,
+      body.show-product-results #browseCartBtn.browse-feature-new-v44,
+      body.show-product-results #browseMobileCart.browse-feature-new-v44{animation:none!important}
+    }
   </style>
 </head>
 <body>
@@ -2110,7 +2196,13 @@
         <h1 id="browseCatalogTitle">Browse Menu</h1>
         <p id="browseCatalogCount">0 items</p>
       </div>
-      <button type="button" class="browse-cart-btn" id="browseCartBtn">🛒 Cart <span id="browseCartCount">0</span></button>
+      <div class="browse-head-actions">
+        <div class="browse-new-feature-banner-v44" id="browseNewFeatureBannerV44">
+          <span>NEW</span>
+          <b>Recently Viewed + Mobile Cart</b>
+        </div>
+        <button type="button" class="browse-cart-btn" id="browseCartBtn">🛒 Cart <span id="browseCartCount">0</span></button>
+      </div>
     </section>
     <nav class="toolbar" id="categories" aria-label="Menu categories"></nav>
   <div class="search-panel" id="searchPanel"><input id="searchInput" type="search" placeholder="Search drinks and food…" aria-label="Search products" /></div>
@@ -2195,6 +2287,48 @@
     const state={angle:0,zoom:1,cat:'Featured',search:'',browseFilter:'all',browseSort:'featured',selected:null,cart:JSON.parse(localStorage.getItem('menuOrbitCart')||'[]'),pickup:JSON.parse(localStorage.getItem('menuOrbitPickup')||'null'),favorites:JSON.parse(localStorage.getItem('menuOrbitFavorites')||'[]'),lastOrder:JSON.parse(localStorage.getItem('menuOrbitLastOrder')||'null'),drag:false,lastX:0,reduce:false,gesture:false,tilt:false,tiltBase:null,voice:false,recognition:null};
     const $=s=>document.querySelector(s), orbit=$('#orbit'), stage=$('#stage');
     const money=n=>'₱'+Number(n).toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});
+
+    const BROWSE_NEW_SEEN_KEY_V44='menu-orbit-browse-new-seen-v44';
+    const BROWSE_NEW_IDS_V44={
+      recent:'browse-recently-viewed-2026-09-24-v44',
+      cart:'browse-sticky-cart-2026-09-24-v44'
+    };
+    function browseNewSeenV44(){
+      try{return JSON.parse(localStorage.getItem(BROWSE_NEW_SEEN_KEY_V44)||'{}')}catch(e){return{}}
+    }
+    function browseNewIsUnseenV44(key){
+      const id=BROWSE_NEW_IDS_V44[key];
+      return !!id&&browseNewSeenV44()[id]!==true;
+    }
+    function browseNewMarkSeenV44(key){
+      const id=BROWSE_NEW_IDS_V44[key];if(!id)return;
+      const seen=browseNewSeenV44();seen[id]=true;
+      try{localStorage.setItem(BROWSE_NEW_SEEN_KEY_V44,JSON.stringify(seen))}catch(e){}
+    }
+    function applyBrowseNewHighlightsV44(){
+      const recent=document.getElementById('browseRecentlyViewed');
+      const mobileCart=document.getElementById('browseMobileCart');
+      const topCart=document.getElementById('browseCartBtn');
+      const head=document.getElementById('browseCatalogHead');
+      const banner=document.getElementById('browseNewFeatureBannerV44');
+      const recentNew=browseNewIsUnseenV44('recent');
+      const cartNew=browseNewIsUnseenV44('cart');
+
+      if(recent){
+        recent.classList.toggle('browse-feature-new-v44',recentNew);
+        recent.dataset.newFeatureV44=recentNew?'true':'false';
+      }
+      if(mobileCart){
+        mobileCart.classList.toggle('browse-feature-new-v44',cartNew);
+        mobileCart.dataset.newFeatureV44=cartNew?'true':'false';
+      }
+      if(topCart){
+        topCart.classList.toggle('browse-feature-new-v44',cartNew);
+        topCart.dataset.newFeatureV44=cartNew?'true':'false';
+      }
+      if(head)head.classList.toggle('browse-updates-new-v44',recentNew||cartNew);
+      if(banner)banner.hidden=!(recentNew||cartNew);
+    }
     function fallback(img,name){img.onerror=null;img.src='data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500"><rect width="100%" height="100%" fill="#e9efe9"/><circle cx="250" cy="210" r="110" fill="#00754a"/><text x="250" y="232" text-anchor="middle" fill="white" font-family="Arial" font-size="70" font-weight="bold">${name[0]}</text><text x="250" y="370" text-anchor="middle" fill="#063b28" font-family="Arial" font-size="26">${name.replaceAll('&','and')}</text></svg>`)}
     window.fallback=fallback;
     function unavailable(p){return (state.pickup?.store==='Starbucks Molino Boulevard'&&['raclette-lasagna','mango-dragonfruit-lemonade'].includes(p.id))||(state.pickup?.store==='Starbucks Vista Mall Daang Hari'&&['ham-cheese-croffle','cold-brew'].includes(p.id))}
@@ -2237,7 +2371,7 @@
       if(mobileItems)mobileItems.textContent=itemCount+' item'+(itemCount===1?'':'s');
       if(mobileTotal)mobileTotal.textContent=money(total);
       if(mobileBar)mobileBar.classList.toggle('has-items',itemCount>0);
-      applyBrowseNewHighlights();
+      applyBrowseNewHighlightsV44();
     }
 
     function renderRecentlyViewed(){
@@ -2247,9 +2381,9 @@
       let recent=[];
       try{recent=JSON.parse(localStorage.getItem('mo_recently_viewed_v1')||'[]')}catch(e){}
       recent=(Array.isArray(recent)?recent:[]).slice(0,8);
-      const recentNew=customerFeatureUnseen('Browse Recently Viewed');
+      const recentNew=browseNewIsUnseenV44('recent');
       section.classList.toggle('has-items',recent.length>0||recentNew);
-      applyBrowseNewHighlights();
+      applyBrowseNewHighlightsV44();
       if(!recent.length){
         track.innerHTML=recentNew?'<div class="recent-empty-new"><b>Recently Viewed is NEW</b><span>Open any product and it will appear here automatically.</span></div>':'';
         return;
@@ -2260,15 +2394,15 @@
           <span><b>${x.name}</b><small>${money(x.price)}</small></span>
         </button>`).join('');
       track.querySelectorAll('[data-recent-product]').forEach(b=>b.onclick=()=>{
-        if(customerFeatureUnseen('Browse Recently Viewed')){
-          markCustomerFeatureSeen('Browse Recently Viewed');
-          applyBrowseNewHighlights();
+        if(browseNewIsUnseenV44('recent')){
+          browseNewMarkSeenV44('recent');
+          applyBrowseNewHighlightsV44();
         }
         openDetail(b.dataset.recentProduct);
       });
       document.querySelector('.recent-empty-new')?.addEventListener('click',()=>{
-        markCustomerFeatureSeen('Browse Recently Viewed');
-        applyBrowseNewHighlights();
+        browseNewMarkSeenV44('recent');
+        applyBrowseNewHighlightsV44();
       });
     }
 
@@ -2360,23 +2494,28 @@
     function toggleVoice(){if(state.voice){stopVoice();return}const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){alert('Voice control is not supported here. Open the page in Chrome.');return}const recognition=new SpeechRecognition();recognition.lang='en-PH';recognition.continuous=true;recognition.interimResults=false;recognition.onresult=e=>{const command=e.results[e.results.length-1][0].transcript.trim();executeVoice(command)};recognition.onerror=e=>{if(e.error==='not-allowed')alert('Please allow microphone permission for voice control.')};recognition.onend=()=>{if(state.voice){try{recognition.start()}catch(e){}}};state.recognition=recognition;state.voice=true;recognition.start();$('#voiceCta').classList.add('active');$('#voiceCta').textContent='✓ Voice Listening';$('#instructions').textContent='Say: Next • Previous • Select • Zoom in • Reset • Cart'}
     let pinch=0;stage.addEventListener('pointerdown',e=>{state.drag=true;state.lastX=e.clientX;stage.setPointerCapture(e.pointerId)});stage.addEventListener('pointermove',e=>{if(state.drag){rotate((e.clientX-state.lastX)*.006);state.lastX=e.clientX}});stage.addEventListener('pointerup',()=>state.drag=false);stage.addEventListener('pointercancel',()=>state.drag=false);stage.addEventListener('wheel',e=>{e.preventDefault();state.zoom=Math.max(.72,Math.min(1.28,state.zoom-e.deltaY*.001));positionOrbit()},{passive:false});stage.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(pinch)state.zoom=Math.max(.72,Math.min(1.28,state.zoom+(d-pinch)*.003));pinch=d;positionOrbit()}},{passive:true});stage.addEventListener('touchend',()=>pinch=0);
     $('#pickupBtn').onclick=openPickup;$('#cartBtn').onclick=openCart;$('#browseCartBtn')?.onclick=()=>{
-      if(customerFeatureUnseen('Sticky Mobile Cart')){
-        markCustomerFeatureSeen('Sticky Mobile Cart');
-        applyBrowseNewHighlights();
+      if(browseNewIsUnseenV44('cart')){
+        browseNewMarkSeenV44('cart');
+        applyBrowseNewHighlightsV44();
       }
       openCart();
     };$('#browseMobileCart')?.onclick=()=>{
-      if(customerFeatureUnseen('Sticky Mobile Cart')){
-        markCustomerFeatureSeen('Sticky Mobile Cart');
-        applyBrowseNewHighlights();
+      if(browseNewIsUnseenV44('cart')){
+        browseNewMarkSeenV44('cart');
+        applyBrowseNewHighlightsV44();
       }
       openCart();
     };
+    $('#browseNewFeatureBannerV44')?.addEventListener('click',()=>{
+      browseNewMarkSeenV44('recent');
+      browseNewMarkSeenV44('cart');
+      applyBrowseNewHighlightsV44();
+    });
     $('#clearRecentlyViewed')?.addEventListener('click',()=>{
-      if(customerFeatureUnseen('Browse Recently Viewed'))markCustomerFeatureSeen('Browse Recently Viewed');
+      if(browseNewIsUnseenV44('recent'))browseNewMarkSeenV44('recent');
       try{localStorage.removeItem('mo_recently_viewed_v1')}catch(e){}
       renderRecentlyViewed();
-      applyBrowseNewHighlights();
+      applyBrowseNewHighlightsV44();
     });
     document.querySelectorAll('[data-browse-filter]').forEach(b=>b.onclick=()=>{
       state.browseFilter=b.dataset.browseFilter||'all';
@@ -2508,7 +2647,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-43"></script>
+  <script src="customer-next.js?v=20260924-44"></script>
 
 <script>
 (function(){
