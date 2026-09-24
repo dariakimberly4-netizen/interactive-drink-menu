@@ -3278,7 +3278,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-60"></script>
+  <script src="customer-next.js?v=20260924-61"></script>
 
 <script>
 (function(){
@@ -4593,7 +4593,10 @@
       const title=mainItems.find(x=>x[0]===name)?.[2]||name.toUpperCase();
       center(title,'Choose a path');document.getElementById('orbitSmartSuggestion')?.remove();document.getElementById('orbitResumeCard')?.remove();document.getElementById('orbitLongpressCoach')?.remove();
       (maps[name]||[]).forEach(([label,items])=>{
-        const b=button(label,()=>renderItems(label,items));
+        const action=(name==='menu'&&label==='Browse')
+          ?()=>{location.href='browse-clean.html'}
+          :()=>renderItems(label,items);
+        const b=button(label,action);
         if(groupHasNew(name,label)){b.classList.add('customer-new-node');decorateNewButton(b)}
         sub.appendChild(b);
       });
