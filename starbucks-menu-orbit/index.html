@@ -2645,6 +2645,54 @@
     body.browse-presentation-v55 .catalog-actions button{
       z-index:60!important;
     }
+  
+    /* ALL FOUR CARD ACTIONS FIX V59 */
+    body.show-product-results:not(.product-detail-open) #stage{
+      position:relative!important;
+      z-index:170!important;
+    }
+    body.show-product-results:not(.product-detail-open) #orbit{
+      position:relative!important;
+      z-index:171!important;
+      pointer-events:auto!important;
+    }
+    body.show-product-results:not(.product-detail-open) .catalog-card{
+      position:relative!important;
+      z-index:172!important;
+      pointer-events:auto!important;
+    }
+    body.show-product-results:not(.product-detail-open) .catalog-card-body{
+      position:relative!important;
+      z-index:173!important;
+      pointer-events:auto!important;
+    }
+    body.show-product-results:not(.product-detail-open) .catalog-actions{
+      position:relative!important;
+      z-index:174!important;
+      pointer-events:auto!important;
+    }
+    body.show-product-results:not(.product-detail-open) .catalog-actions button{
+      position:relative!important;
+      z-index:175!important;
+      pointer-events:auto!important;
+      cursor:pointer!important;
+    }
+
+    /* Decorative/empty Browse sections must never cover the cards. */
+    body.show-product-results #browseRecentlyViewed{
+      position:relative!important;
+      z-index:120!important;
+    }
+    body.show-product-results #browseRecentlyViewed::before,
+    body.show-product-results #browseRecentlyViewed::after{
+      pointer-events:none!important;
+    }
+
+    /* Keep hidden walkthrough layer truly out of the hit-test tree. */
+    #browseWalkthroughOverlayV55[hidden]{
+      display:none!important;
+      pointer-events:none!important;
+    }
   </style>
 </head>
 <body>
@@ -3185,7 +3233,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-58"></script>
+  <script src="customer-next.js?v=20260924-59"></script>
 
 <script>
 (function(){
@@ -5214,25 +5262,36 @@
 
   ownBrowseSearchInputV53();
 
-  /* BROWSE ACTION CAPTURE V58 */
+  /* BROWSE ACTION CAPTURE V59 */
   document.addEventListener('click',e=>{
+    if(!isBrowse())return;
+
     const quick=e.target.closest?.('[data-quick-add-v56]');
-    if(quick&&isBrowse()){
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
+    if(quick){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
       quickAddV56(quick.getAttribute('data-quick-add-v56'));
       return;
     }
 
+    const save=e.target.closest?.('[data-save-later-v47]');
+    if(save){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      toggleSavedLaterV47(save.getAttribute('data-save-later-v47'));
+      return;
+    }
+
+    const compare=e.target.closest?.('[data-compare-v47]');
+    if(compare){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      toggleCompareV47(compare.getAttribute('data-compare-v47'));
+      return;
+    }
+
     const view=e.target.closest?.('[data-recovery-view]');
-    if(view&&isBrowse()){
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
+    if(view){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
       const id=view.getAttribute('data-recovery-view');
-      const app=window.MenuOrbitApp;
-      if(app?.openProduct)app.openProduct(id);
+      window.MenuOrbitApp?.openProduct?.(id);
       return;
     }
   },true);
