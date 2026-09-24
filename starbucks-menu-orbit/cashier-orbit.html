@@ -139,6 +139,17 @@
 .cash-change-result{margin-top:10px;padding:14px;border-radius:14px;background:rgba(89,207,145,.1);border:1px solid rgba(89,207,145,.3)}
 .cash-change-result b{font-size:24px;color:#9fe5bc}
 @media(max-width:620px){.split-pay-grid{grid-template-columns:1fr}}
+
+/* CASHIER BUSINESS V5 */
+.business-chart{display:grid;gap:8px;margin-top:12px}
+.business-bar{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center}
+.business-bar-track{height:12px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}
+.business-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#00a862,#f4c86f)}
+.business-table{width:100%;border-collapse:collapse;margin-top:10px}
+.business-table th,.business-table td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}
+.business-table th{color:#f4c86f;font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+.business-note{padding:12px;border-radius:13px;background:rgba(244,200,111,.08);border:1px solid rgba(244,200,111,.22);margin-top:10px}
+@media(max-width:620px){.business-bar{grid-template-columns:90px 1fr auto}.business-table{font-size:11px}}
 </style>
 </head>
 <body>
@@ -229,9 +240,94 @@ function checkReadyAlertsV4(){
   box.classList.add('show');
   document.querySelector('#readyAlertClose').onclick=()=>{writeLocal(READY_SEEN_KEY,[...seen,next.order_ref]);box.classList.remove('show')};
 }
+
+function businessSalesDataV5(){
+  const tx=demoTransactions();
+  const sales=tx.reduce((s,x)=>s+Number(x.total||x.total_amount||0),0);
+  const count=tx.length;
+  const avg=count?sales/count:0;
+  return {tx,sales,count,avg};
+}
+function toolBusinessSales(){
+  const d=businessSalesDataV5();
+  openCashierTool('Sales Dashboard',`
+    <div class="kpi-grid">
+      <div class="kpi"><b>${money(d.sales)}</b><span>Today Sales</span></div>
+      <div class="kpi"><b>${d.count}</b><span>Transactions</span></div>
+      <div class="kpi"><b>${money(d.avg)}</b><span>Average Order</span></div>
+    </div>
+    <div class="business-chart">
+      <div class="business-bar"><span>Morning</span><div class="business-bar-track"><div class="business-bar-fill" style="width:62%"></div></div><b>${money(d.sales*.32)}</b></div>
+      <div class="business-bar"><span>Afternoon</span><div class="business-bar-track"><div class="business-bar-fill" style="width:88%"></div></div><b>${money(d.sales*.45)}</b></div>
+      <div class="business-bar"><span>Evening</span><div class="business-bar-track"><div class="business-bar-fill" style="width:45%"></div></div><b>${money(d.sales*.23)}</b></div>
+    </div>`);
+}
+function toolProductPerformance(){
+  const rows=[
+    ['Caffè Latte',18,money(3510)],
+    ['Cold Brew',14,money(2870)],
+    ['Caramel Macchiato',11,money(2640)],
+    ['Matcha Latte',9,money(1890)],
+    ['Ham & Cheese Croffle',7,money(1190)]
+  ];
+  openCashierTool('Product Performance',`<table class="business-table"><thead><tr><th>Product</th><th>Qty</th><th>Sales</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table><div class="business-note"><b>Top seller:</b> Caffè Latte</div>`);
+}
+function toolPeakHours(){
+  const hours=[['8–10 AM',72],['10 AM–12 PM',48],['12–2 PM',88],['2–4 PM',67],['4–6 PM',91],['6–8 PM',54]];
+  openCashierTool('Peak Hours',`<div class="business-chart">${hours.map(([h,v])=>`<div class="business-bar"><span>${h}</span><div class="business-bar-track"><div class="business-bar-fill" style="width:${v}%"></div></div><b>${v}%</b></div>`).join('')}</div><div class="business-note">Busiest demo period: <b>4–6 PM</b></div>`);
+}
+function toolPaymentMix(){
+  const tx=demoTransactions();
+  const mix={Cash:0,Card:0,'E-Wallet':0,Split:0,Pending:0};
+  tx.forEach(x=>{const p=x.pay||x.payment_status||'Cash';mix[p]=(mix[p]||0)+Number(x.total||x.total_amount||0)});
+  const total=Object.values(mix).reduce((a,b)=>a+b,0)||1;
+  openCashierTool('Payment Mix',`<div class="business-chart">${Object.entries(mix).map(([k,v])=>`<div class="business-bar"><span>${k}</span><div class="business-bar-track"><div class="business-bar-fill" style="width:${Math.round(v/total*100)}%"></div></div><b>${money(v)}</b></div>`).join('')}</div>`);
+}
+function toolCampaigns(){
+  openCashierTool('Discounts & Campaigns',`
+    <div class="tool-grid">
+      <div class="tool-card"><b>Morning Pair</b><small>₱20 off orders ₱400+.</small><button class="btn" data-campaign="Morning Pair">VIEW</button></div>
+      <div class="tool-card"><b>Afternoon Coffee + Food</b><small>Demo campaign concept.</small><button class="btn" data-campaign="Afternoon Bundle">ACTIVATE DEMO</button></div>
+      <div class="tool-card"><b>Member Double Points</b><small>Rewards campaign concept.</small><button class="btn" data-campaign="Double Points">ACTIVATE DEMO</button></div>
+      <div class="tool-card"><b>Voucher Performance</b><small>12 redeemed • ${money(240)} discount value.</small><button class="btn" data-campaign="Voucher Performance">VIEW</button></div>
+    </div>`);
+  document.querySelectorAll('[data-campaign]').forEach(b=>b.onclick=()=>{logCashierOp('Campaign',b.dataset.campaign);alert(b.dataset.campaign+' opened in demo mode.')});
+}
+function toolCustomerInsights(){
+  openCashierTool('Customer Insights',`
+    <div class="kpi-grid">
+      <div class="kpi"><b>38%</b><span>Repeat Customers</span></div>
+      <div class="kpi"><b>320</b><span>Avg Member Points</span></div>
+      <div class="kpi"><b>2.1</b><span>Items / Order</span></div>
+    </div>
+    <table class="business-table"><thead><tr><th>Preference</th><th>Share</th></tr></thead><tbody>
+      <tr><td>Iced Drinks</td><td>46%</td></tr>
+      <tr><td>Hot Coffee</td><td>31%</td></tr>
+      <tr><td>Food Add-on</td><td>23%</td></tr>
+    </tbody></table>
+    <div class="business-note">Demo insights only. Real customer analytics should use consented and authorized data sources.</div>`);
+}
+function toolDailySummary(){
+  const d=businessSalesDataV5();
+  const sold=soldOutIdsV4().length;
+  const pending=activeOrders.filter(x=>(x.payment_status||'Pending')==='Pending').length;
+  openCashierTool('Daily Summary',`
+    <div class="kpi-grid">
+      <div class="kpi"><b>${money(d.sales)}</b><span>Gross Sales</span></div>
+      <div class="kpi"><b>${d.count}</b><span>Transactions</span></div>
+      <div class="kpi"><b>${pending}</b><span>Pending Payments</span></div>
+    </div>
+    <table class="business-table"><tbody>
+      <tr><td>Average Order</td><td><b>${money(d.avg)}</b></td></tr>
+      <tr><td>Active Orders</td><td><b>${activeOrders.length}</b></td></tr>
+      <tr><td>Sold-Out Products</td><td><b>${sold}</b></td></tr>
+      <tr><td>Promo Applied to Current Cart</td><td><b>${promo?'Yes':'No'}</b></td></tr>
+    </tbody></table>
+    <div class="business-note">Use End Shift for cashier closing and reconciliation.</div>`);
+}
 function home(){
   const view=document.querySelector('#view');
-  const MAIN_NEW_KEY='cashier-orbit-main-v4';
+  const MAIN_NEW_KEY='cashier-orbit-main-v5';
   const seen=()=>{try{return localStorage.getItem(MAIN_NEW_KEY)==='seen'}catch(e){return false}};
   const markSeen=()=>{try{localStorage.setItem(MAIN_NEW_KEY,'seen')}catch(e){}};
 
@@ -241,6 +337,7 @@ function home(){
     {id:'promos',icon:'🏷',label:'PROMOS',sub:'Discount tools'},
     {id:'service',icon:'🤝',label:'SERVICE',sub:'Customer care'},
     {id:'shift',icon:'⏱',label:'SHIFT',sub:'Cashier status'},
+    {id:'business',icon:'📈',label:'BUSINESS',sub:'Sales & insights'},
     {id:'system',icon:'⚙',label:'SYSTEM',sub:'Staff tools'}
   ];
   const menus={
@@ -283,6 +380,15 @@ function home(){
       {icon:'💰',label:'Cash Drawer',sub:'Open / cash in / cash out',run:toolDrawer},
       {icon:'🏁',label:'End Shift',sub:'Closing summary',run:toolEndShift},
       {icon:'📊',label:'Cashier Reports',sub:'Sales & payment mix',run:toolReports}
+    ],
+    business:[
+      {icon:'📊',label:'Sales Dashboard',sub:'Sales • orders • average',run:toolBusinessSales},
+      {icon:'☕',label:'Product Performance',sub:'Best sellers & revenue',run:toolProductPerformance},
+      {icon:'◷',label:'Peak Hours',sub:'Busiest service periods',run:toolPeakHours},
+      {icon:'💳',label:'Payment Mix',sub:'Cash • card • e-wallet',run:toolPaymentMix},
+      {icon:'🏷',label:'Discounts & Campaigns',sub:'Promo performance',run:toolCampaigns},
+      {icon:'👥',label:'Customer Insights',sub:'Behavior & preferences',run:toolCustomerInsights},
+      {icon:'🗓',label:'Daily Summary',sub:'End-of-day overview',run:toolDailySummary}
     ],
     system:[
       {icon:'⌂',label:'Staff Portal',sub:'Back to staff home',run:()=>location.href='staff-portal.html'},
