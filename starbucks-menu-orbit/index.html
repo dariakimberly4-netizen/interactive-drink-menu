@@ -2204,6 +2204,76 @@
       display:block!important;
       visibility:visible!important;
     }
+  
+    /* COMPARE SAVE LATER V47 */
+    body.show-product-results .catalog-actions{
+      grid-template-columns:1fr 1fr!important;
+    }
+    .catalog-save-v47,.catalog-compare-v47{
+      min-height:40px!important;
+      border-radius:12px!important;
+      border:1px solid rgba(255,255,255,.14)!important;
+      background:rgba(255,255,255,.05)!important;
+      color:#fff!important;
+      font-weight:850!important;
+    }
+    .catalog-save-v47.active,.catalog-compare-v47.active{
+      background:#f4efe6!important;color:#07331f!important;border-color:#f4c86f!important;
+    }
+    .feature-new-v47{
+      position:relative!important;
+      border-color:#ffd86b!important;
+      box-shadow:0 0 0 2px rgba(255,216,107,.25),0 0 20px rgba(255,216,107,.28)!important;
+    }
+    .feature-new-v47::after{
+      content:'NEW';
+      position:absolute;top:-8px;right:-6px;
+      padding:4px 6px;border-radius:999px;
+      background:#ffd86b;color:#07331f;
+      font:950 7px/1 system-ui;letter-spacing:.08em;
+    }
+
+    .browse-compare-bar-v47{
+      width:min(1320px,calc(100% - 40px));
+      margin:0 auto 14px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:10px 12px;border-radius:16px;
+      border:1px solid rgba(244,200,111,.35);
+      background:rgba(13,54,40,.94);color:#fff;
+      box-sizing:border-box;
+      box-shadow:0 12px 28px rgba(0,0,0,.18);
+    }
+    .browse-compare-bar-v47[hidden]{display:none!important}
+    .browse-compare-bar-v47>div:first-child{display:flex;flex-direction:column}
+    .browse-compare-bar-v47 span{font-size:10px;color:#9fb5aa;margin-top:2px}
+    .browse-compare-bar-v47>div:last-child{display:flex;gap:8px}
+    .browse-compare-bar-v47 button{
+      min-height:38px;padding:0 13px;border-radius:11px;font-weight:900;
+      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff
+    }
+    #browseCompareOpenV47{background:#f4efe6;color:#07331f}
+    #browseCompareOpenV47:disabled{opacity:.45}
+
+    .compare-grid-v47{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px
+    }
+    .compare-grid-v47 article{
+      border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:12px;background:rgba(255,255,255,.04)
+    }
+    .compare-grid-v47 img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:13px}
+    .compare-grid-v47 h3{font-size:14px;line-height:1.2;margin:10px 0}
+    .compare-grid-v47 dl{margin:0}
+    .compare-grid-v47 dl div{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+    .compare-grid-v47 dt{color:#9fb5aa;font-size:10px}
+    .compare-grid-v47 dd{margin:0;text-align:right;font-size:10px;font-weight:800}
+    .compare-grid-v47 article>button{
+      width:100%;min-height:40px;margin-top:12px;border:0;border-radius:11px;background:#00a862;color:#fff;font-weight:900
+    }
+
+    @media(max-width:760px){
+      .browse-compare-bar-v47{width:calc(100% - 24px)!important;position:sticky;bottom:82px;z-index:190}
+      body.show-product-results .catalog-actions{grid-template-columns:1fr!important}
+    }
   </style>
 </head>
 <body>
@@ -2272,6 +2342,13 @@
       </select>
     </label>
   </section>
+  <div class="browse-compare-bar-v47" id="browseCompareBarV47" hidden>
+    <div><b id="browseCompareCountV47">0 selected</b><span>Select up to 3 products</span></div>
+    <div>
+      <button type="button" id="browseCompareClearV47">Clear</button>
+      <button type="button" id="browseCompareOpenV47" disabled>Compare</button>
+    </div>
+  </div>
   <button class="results-back" id="resultsBack" type="button">‹ Back to Menu Orbit</button>
   <section class="browse-recently-viewed" id="browseRecentlyViewed" aria-label="Recently viewed products">
     <div class="browse-recent-head">
@@ -2298,6 +2375,15 @@
   <div class="modal" id="accountModal" role="dialog" aria-modal="true" aria-labelledby="accountTitle"><div class="modal-card" id="accountContent"></div></div>
   <div class="modal" id="adminModal" role="dialog" aria-modal="true" aria-labelledby="adminTitle"><div class="modal-card" id="adminContent"></div></div>
   <div class="modal" id="hubModal" role="dialog" aria-modal="true" aria-labelledby="hubTitle"><div class="modal-card" id="hubContent"></div></div>
+  <div class="modal" id="browseCompareModalV47" role="dialog" aria-modal="true" aria-labelledby="browseCompareTitleV47">
+    <div class="modal-card">
+      <div class="drawer-head">
+        <div><h2 id="browseCompareTitleV47">Compare Products</h2><small style="color:#abc0b6">Side-by-side product details</small></div>
+        <button class="close" id="browseCompareCloseV47" aria-label="Close">×</button>
+      </div>
+      <div id="browseCompareContentV47"></div>
+    </div>
+  </div>
   <div class="gesture-box" id="gestureBox"><video id="camera" autoplay muted playsinline></video><div class="gesture-status"><span class="privacy-dot"></span><span id="gestureStatus">Camera starting…</span></div></div>
   <div class="hand-cursor" id="handCursor"></div>
   <button class="rewards-float" id="rewardsFloat" aria-label="Open Star Rewards">★</button>
@@ -2699,7 +2785,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-46"></script>
+  <script src="customer-next.js?v=20260924-47"></script>
 
 <script>
 (function(){
@@ -4278,6 +4364,90 @@
 (function(){
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const money=n=>'₱'+Number(n||0).toLocaleString('en-PH',{maximumFractionDigits:0});
+  const SAVED_LATER_KEY_V47='mo_saved_for_later_v1';
+  const COMPARE_KEY_V47='mo_browse_compare_v47';
+  const NEW_SEEN_KEY_V47='mo_browse_feature_seen_v47';
+  const NEW_IDS_V47={compare:'browse-compare-v47',save:'browse-save-later-v47'};
+
+  const readJSON=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v??f}catch(e){return f}};
+  const writeJSON=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+
+  function featureSeenV47(key){
+    const seen=readJSON(NEW_SEEN_KEY_V47,{});
+    return seen[NEW_IDS_V47[key]]===true;
+  }
+  function markFeatureSeenV47(key){
+    const seen=readJSON(NEW_SEEN_KEY_V47,{});
+    seen[NEW_IDS_V47[key]]=true;
+    writeJSON(NEW_SEEN_KEY_V47,seen);
+  }
+
+  function savedLaterV47(){return readJSON(SAVED_LATER_KEY_V47,[])}
+  function toggleSavedLaterV47(id){
+    const app=window.MenuOrbitApp;
+    const p=(app?.products||[]).find(x=>String(x.id)===String(id));
+    if(!p)return;
+    let list=savedLaterV47();
+    const exists=list.some(x=>String(x.id)===String(id));
+    list=exists?list.filter(x=>String(x.id)!==String(id)):[
+      {id:p.id,name:p.name,img:p.img,price:p.price,cat:p.cat,savedAt:new Date().toISOString()},
+      ...list
+    ];
+    writeJSON(SAVED_LATER_KEY_V47,list.slice(0,50));
+    markFeatureSeenV47('save');
+    renderRecoveredBrowse();
+  }
+
+  function compareIdsV47(){return readJSON(COMPARE_KEY_V47,[])}
+  function toggleCompareV47(id){
+    let ids=compareIdsV47();
+    const sid=String(id);
+    if(ids.map(String).includes(sid))ids=ids.filter(x=>String(x)!==sid);
+    else if(ids.length<3)ids=[...ids,id];
+    writeJSON(COMPARE_KEY_V47,ids);
+    markFeatureSeenV47('compare');
+    updateCompareBarV47();
+    renderRecoveredBrowse();
+  }
+
+  function updateCompareBarV47(){
+    const ids=compareIdsV47();
+    const bar=document.getElementById('browseCompareBarV47');
+    const count=document.getElementById('browseCompareCountV47');
+    const open=document.getElementById('browseCompareOpenV47');
+    if(!bar)return;
+    bar.hidden=ids.length===0;
+    if(count)count.textContent=ids.length+' selected';
+    if(open)open.disabled=ids.length<2;
+  }
+
+  function openCompareV47(){
+    const app=window.MenuOrbitApp;
+    const ids=compareIdsV47().map(String);
+    const list=(app?.products||[]).filter(p=>ids.includes(String(p.id)));
+    if(list.length<2)return;
+    const modal=document.getElementById('browseCompareModalV47');
+    const out=document.getElementById('browseCompareContentV47');
+    out.innerHTML='<div class="compare-grid-v47">'+list.map(p=>`
+      <article>
+        <img src="${esc(p.img)}" alt="${esc(p.name)}">
+        <h3>${esc(p.name)}</h3>
+        <dl>
+          <div><dt>Price</dt><dd>${money(p.price)}</dd></div>
+          <div><dt>Calories</dt><dd>${esc(p.cal??'See store')}</dd></div>
+          <div><dt>Category</dt><dd>${esc(p.cat||'Menu')}</dd></div>
+          <div><dt>Temperature</dt><dd>${esc((p.temps||[]).join(' / ')||'—')}</dd></div>
+          <div><dt>Allergens</dt><dd>${esc(p.allergen||'See product details')}</dd></div>
+        </dl>
+        <button type="button" data-compare-open-product="${esc(p.id)}">View Product</button>
+      </article>`).join('')+'</div>';
+    out.querySelectorAll('[data-compare-open-product]').forEach(b=>b.onclick=()=>{
+      modal.classList.remove('open');
+      window.MenuOrbitApp?.openProduct?.(b.dataset.compareOpenProduct);
+    });
+    modal.classList.add('open');
+  }
+
   const isBrowse=()=>location.hash.includes('/Browse')||document.body.classList.contains('show-product-results');
 
   function killLegacyBrowseTools(){
@@ -4347,9 +4517,19 @@
           <div class="catalog-actions">
             <button type="button" class="catalog-view" data-recovery-view="${esc(p.id)}">View</button>
             <button type="button" class="catalog-quick-add" data-recovery-view="${esc(p.id)}">Customize</button>
+            <button type="button" class="catalog-save-v47 ${savedLaterV47().some(x=>String(x.id)===String(p.id))?'active':''} ${featureSeenV47('save')?'':'feature-new-v47'}" data-save-later-v47="${esc(p.id)}">${savedLaterV47().some(x=>String(x.id)===String(p.id))?'✓ Saved':'♡ Save for Later'}</button>
+            <button type="button" class="catalog-compare-v47 ${compareIdsV47().map(String).includes(String(p.id))?'active':''} ${featureSeenV47('compare')?'':'feature-new-v47'}" data-compare-v47="${esc(p.id)}">${compareIdsV47().map(String).includes(String(p.id))?'✓ Selected':'⚖ Compare'}</button>
           </div>
         </div>
       </article>`).join('');
+
+    orbit.querySelectorAll('[data-save-later-v47]').forEach(b=>b.onclick=e=>{
+      e.preventDefault();e.stopPropagation();toggleSavedLaterV47(b.dataset.saveLaterV47);
+    });
+    orbit.querySelectorAll('[data-compare-v47]').forEach(b=>b.onclick=e=>{
+      e.preventDefault();e.stopPropagation();toggleCompareV47(b.dataset.compareV47);
+    });
+    updateCompareBarV47();
 
     orbit.querySelectorAll('[data-recovery-view]').forEach(b=>{
       b.onclick=e=>{
@@ -4360,6 +4540,17 @@
     });
     return true;
   }
+
+  document.getElementById('browseCompareOpenV47')?.addEventListener('click',openCompareV47);
+  document.getElementById('browseCompareClearV47')?.addEventListener('click',()=>{
+    writeJSON(COMPARE_KEY_V47,[]);
+    updateCompareBarV47();
+    renderRecoveredBrowse();
+  });
+  document.getElementById('browseCompareCloseV47')?.addEventListener('click',()=>document.getElementById('browseCompareModalV47')?.classList.remove('open'));
+  document.getElementById('browseCompareModalV47')?.addEventListener('click',e=>{
+    if(e.target.id==='browseCompareModalV47')e.currentTarget.classList.remove('open');
+  });
 
   let tries=0;
   const boot=()=>{
