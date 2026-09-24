@@ -2461,6 +2461,7 @@
       food(74,'chicken-pesto-flatbread','Roasted Chicken Pesto, Shiitake Mushroom & Emmental Cheese on Flatbread','Sandwiches',235,386),food(75,'salmon-dill-brioche','Salmon Dill with Egg on Brioche Bread','Sandwiches',265,399),food(76,'beef-shawarma','Beef Shawarma','Sandwiches',255,660),food(77,'chicken-kofta','Chicken Kofta','Sandwiches',255,580),food(78,'mortadella-pistachio','Mortadella & Pistachio Pesto Sandwich','Sandwiches',265,405),food(79,'grilled-cheese','Grilled Cheese Sandwich','Sandwiches',235,532),food(80,'turkey-ham-muffin','Turkey Ham, Egg White & Cheese on Whole English Muffin','Sandwiches',205),food(81,'chorizo-pandesal','Spanish Chorizo, Egg & Cheese on Pandesal','Sandwiches',205),food(82,'spam-potato-bread','Spam Classic, Egg & Cheese on Potato Bread','Sandwiches',205),food(83,'ham-croissant-bun','Roasted Ham, Egg & Cheese on Croissant Bun','Sandwiches',215),
       food(84,'plant-based-lasagna','Plant-based Classic Lasagna','Healthy',235),food(85,'triple-chocolate-mousse','Triple Chocolate Mousse Cake Made with Belgian Chocolate (Slice)','Cakes',345),food(86,'new-york-cheesecake','New York Cheesecake Slice','Cakes',265)
     ];
+    window.__MENU_ORBIT_PRODUCTS_V51=products;
     const cats=['Featured','Favorites','Refreshers','Brewed Coffee','Espresso','Chocolate','Frappuccino','Matcha','Tea','Bakery','Pasta','Sandwiches','Healthy','Cakes'];
     const savedPrices=JSON.parse(localStorage.getItem('menuOrbitPrices')||'{}'); products.forEach(p=>{if(savedPrices[p.id])p.price=Number(savedPrices[p.id])});
     const state={angle:0,zoom:1,cat:'Featured',search:'',browseFilter:'all',browseSort:'featured',selected:null,cart:JSON.parse(localStorage.getItem('menuOrbitCart')||'[]'),pickup:JSON.parse(localStorage.getItem('menuOrbitPickup')||'null'),favorites:JSON.parse(localStorage.getItem('menuOrbitFavorites')||'[]'),lastOrder:JSON.parse(localStorage.getItem('menuOrbitLastOrder')||'null'),drag:false,lastX:0,reduce:false,gesture:false,tilt:false,tiltBase:null,voice:false,recognition:null};
@@ -2831,7 +2832,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-50"></script>
+  <script src="customer-next.js?v=20260924-51"></script>
 
 <script>
 (function(){
@@ -4418,7 +4419,9 @@
   const DEMO_FLAG_V48='mo_browse_demo_mode_v48';
   function startBrowseDemoV48(){
     const app=window.MenuOrbitApp;
-    const allProducts=Array.isArray(app?.products)?app.products:[];
+    const allProducts=Array.isArray(app?.products)&&app.products.length
+      ? app.products
+      : (Array.isArray(window.__MENU_ORBIT_PRODUCTS_V51)?window.__MENU_ORBIT_PRODUCTS_V51:[]);
     const products=recoveryFilteredProductsV49(allProducts);
     if(products.length<6)return;
 
@@ -4645,6 +4648,8 @@
     const title=document.getElementById('browseCatalogTitle');
 
     document.body.classList.add('show-product-results');
+    document.body.dataset.catalogSource=Array.isArray(app?.products)&&app.products.length?'app':(allProducts.length?'fallback':'missing');
+    document.body.dataset.catalogCount=String(allProducts.length);
     if(title)title.textContent=recoveryBrowseSearchV49?'Search Results':'Browse Menu';
     if(count)count.textContent=products.length+' item'+(products.length===1?'':'s');
     syncRecoveryFilterUIV49();
@@ -4709,7 +4714,8 @@
 
   document.getElementById('searchInput')?.addEventListener('input',e=>{
     recoveryBrowseSearchV49=e.target.value||'';
-    renderRecoveredBrowse();
+    const ok=renderRecoveredBrowse();
+    if(!ok)setTimeout(renderRecoveredBrowse,120);
   });
 
   document.getElementById('browseDemoModeV48')?.addEventListener('click',()=>{
