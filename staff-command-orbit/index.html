@@ -181,6 +181,128 @@ button,input{font:inherit}
   }
 }
 </style>
+
+<style id="staffOrbitProportionFixV3">
+/* PROPORTION FIX V3 — preserve circular design */
+@media(max-width:760px){
+  .stage{
+    align-items:start!important;
+    padding-top:18px!important;
+  }
+  .orbit-wrap{
+    width:100vw!important;
+    height:calc(100vh - 82px)!important;
+    min-height:560px!important;
+    transform:translateY(-4px);
+  }
+  .orbit-ring{
+    width:312px!important;
+  }
+  .core{
+    width:148px!important;
+    height:148px!important;
+    padding:12px!important;
+  }
+  .core small{
+    font-size:7.5px!important;
+    letter-spacing:.12em!important;
+    margin-bottom:1px!important;
+  }
+  .core h1{
+    font-size:16px!important;
+    line-height:1.02!important;
+    margin:3px 0 7px!important;
+  }
+  .mini{
+    grid-template-columns:1fr 1fr!important;
+    gap:4px!important;
+  }
+  .mini div{
+    min-height:40px!important;
+    padding:4px 3px!important;
+    border-radius:9px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+  .mini b{
+    font-size:11px!important;
+    line-height:1!important;
+  }
+  .mini span{
+    font-size:6.8px!important;
+    line-height:1.05!important;
+    margin-top:3px!important;
+    white-space:nowrap!important;
+  }
+
+  .node{
+    width:80px!important;
+    height:80px!important;
+    min-width:80px!important;
+    min-height:80px!important;
+    max-width:80px!important;
+    max-height:80px!important;
+    padding:7px!important;
+  }
+  .node b{
+    font-size:10px!important;
+    line-height:1!important;
+  }
+  .node span{
+    font-size:6.8px!important;
+    line-height:1.08!important;
+    max-width:58px!important;
+    margin-top:4px!important;
+  }
+
+  .n1{margin-top:-172px!important}
+  .n2{margin-left:132px!important;margin-top:-86px!important}
+  .n3{margin-left:132px!important;margin-top:86px!important}
+  .n4{margin-top:172px!important}
+  .n5{margin-left:-132px!important;margin-top:86px!important}
+  .n6{margin-left:-132px!important;margin-top:-86px!important}
+
+  .hint{
+    bottom:14px!important;
+    font-size:8.5px!important;
+  }
+}
+
+@media(max-width:390px){
+  .orbit-wrap{
+    min-height:530px!important;
+  }
+  .orbit-ring{
+    width:286px!important;
+  }
+  .core{
+    width:138px!important;
+    height:138px!important;
+    padding:11px!important;
+  }
+  .core h1{font-size:15px!important}
+  .mini div{min-height:37px!important}
+  .node{
+    width:74px!important;
+    height:74px!important;
+    min-width:74px!important;
+    min-height:74px!important;
+    max-width:74px!important;
+    max-height:74px!important;
+  }
+  .node b{font-size:9.3px!important}
+  .node span{font-size:6.2px!important;max-width:54px!important}
+
+  .n1{margin-top:-160px!important}
+  .n2{margin-left:121px!important;margin-top:-80px!important}
+  .n3{margin-left:121px!important;margin-top:80px!important}
+  .n4{margin-top:160px!important}
+  .n5{margin-left:-121px!important;margin-top:80px!important}
+  .n6{margin-left:-121px!important;margin-top:-80px!important}
+}
+</style>
 </head>
 <body>
 <header class="topbar">
