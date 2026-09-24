@@ -1246,6 +1246,16 @@
       overflow:auto!important;
       margin:auto!important;
     }
+  
+    /* FINAL MAIN ORBIT CLEANUP V33 */
+    #orbitLongpressCoach{display:none!important}
+    [data-hidden-legacy-bottom="true"]{display:none!important}
+    body:not(.show-product-results) nav[aria-label="Customer navigation"],
+    body:not(.show-product-results) .bottom-nav,
+    body:not(.show-product-results) .mobile-bottom-nav,
+    body:not(.show-product-results) .customer-bottom-nav{
+      display:none!important;
+    }
   </style>
 </head>
 <body>
@@ -1485,10 +1495,31 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-32"></script>
+  <script src="customer-next.js?v=20260924-33"></script>
 
 <script>
 (function(){
+  function hideLegacyCustomerBottomBarV33(){
+    const vh=window.innerHeight||document.documentElement.clientHeight||800;
+    [...document.querySelectorAll('body *')].forEach(el=>{
+      if(el.id==='mainMenuDirect'||el.closest('#mainMenuDirect'))return;
+      const cs=getComputedStyle(el);
+      if(cs.position!=='fixed'&&cs.position!=='sticky')return;
+      const r=el.getBoundingClientRect();
+      if(r.width<window.innerWidth*.55||r.height<38||r.height>160)return;
+      if(r.bottom<vh-24)return;
+      const txt=(el.innerText||'').replace(/\s+/g,' ').toLowerCase();
+      if(txt.includes('menu')&&txt.includes('pickup')&&txt.includes('cart')&&txt.includes('account')){
+        el.setAttribute('data-hidden-legacy-bottom','true');
+        el.style.setProperty('display','none','important');
+      }
+    });
+    document.getElementById('orbitLongpressCoach')?.remove();
+  }
+  window.addEventListener('load',()=>setTimeout(hideLegacyCustomerBottomBarV33,120));
+  setTimeout(hideLegacyCustomerBottomBarV33,350);
+  setTimeout(hideLegacyCustomerBottomBarV33,1200);
+
   const mainItems=[
     ['menu','☕','MENU'],
     ['order','🛒','MY ORDER'],
