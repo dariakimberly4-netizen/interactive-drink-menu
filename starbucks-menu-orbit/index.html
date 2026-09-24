@@ -2319,6 +2319,14 @@
       cursor:pointer!important;
       touch-action:manipulation!important;
     }
+  
+    /* SEARCH CONFLICT FIX V52 */
+    body.show-product-results #moSearchSuggest,
+    body.show-product-results .mo-search-suggest{
+      display:none!important;
+      visibility:hidden!important;
+      pointer-events:none!important;
+    }
   </style>
 </head>
 <body>
@@ -2832,7 +2840,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-51"></script>
+  <script src="customer-next.js?v=20260924-52"></script>
 
 <script>
 (function(){
@@ -4419,9 +4427,11 @@
   const DEMO_FLAG_V48='mo_browse_demo_mode_v48';
   function startBrowseDemoV48(){
     const app=window.MenuOrbitApp;
-    const allProducts=Array.isArray(app?.products)&&app.products.length
+    let allProducts=Array.isArray(app?.products)&&app.products.length
       ? app.products
       : (Array.isArray(window.__MENU_ORBIT_PRODUCTS_V51)?window.__MENU_ORBIT_PRODUCTS_V51:[]);
+    if(allProducts.length)recoveryCatalogCacheV52=[...allProducts];
+    else if(recoveryCatalogCacheV52.length)allProducts=[...recoveryCatalogCacheV52];
     const products=recoveryFilteredProductsV49(allProducts);
     if(products.length<6)return;
 
@@ -4562,6 +4572,18 @@
 
   const isBrowse=()=>location.hash.includes('/Browse')||document.body.classList.contains('show-product-results');
 
+  function neutralizeLegacySearchV52(){
+    if(!isBrowse())return;
+    const input=document.getElementById('searchInput');
+    const legacy=document.getElementById('moSearchSuggest');
+    if(legacy)legacy.remove();
+    if(input){
+      input.oninput=null;
+      input.onchange=null;
+    }
+  }
+
+  let recoveryCatalogCacheV52=[];
   let recoveryBrowseFilterV49='all';
   let recoveryBrowseSortV49='featured';
   let recoveryBrowseSearchV49='';
@@ -4639,6 +4661,7 @@
   function renderRecoveredBrowse(){
     if(!isBrowse())return false;
     killLegacyBrowseTools();
+    neutralizeLegacySearchV52();
 
     const app=window.MenuOrbitApp;
     const allProducts=Array.isArray(app?.products)?app.products:[];
@@ -4712,11 +4735,14 @@
     renderRecoveredBrowse();
   });
 
-  document.getElementById('searchInput')?.addEventListener('input',e=>{
-    recoveryBrowseSearchV49=e.target.value||'';
-    const ok=renderRecoveredBrowse();
-    if(!ok)setTimeout(renderRecoveredBrowse,120);
-  });
+  const recoverySearchInputV52=document.getElementById('searchInput');
+  if(recoverySearchInputV52){
+    recoverySearchInputV52.oninput=e=>{
+      recoveryBrowseSearchV49=e.target.value||'';
+      renderRecoveredBrowse();
+      document.getElementById('moSearchSuggest')?.remove();
+    };
+  }
 
   document.getElementById('browseDemoModeV48')?.addEventListener('click',()=>{
     if(localStorage.getItem(DEMO_FLAG_V48)==='1')resetBrowseDemoV48();
@@ -4736,6 +4762,7 @@
   let tries=0;
   const boot=()=>{
     tries++;
+    neutralizeLegacySearchV52();
     const ok=renderRecoveredBrowse();
     const demoBtn=document.getElementById('browseDemoModeV48');
     if(demoBtn&&localStorage.getItem(DEMO_FLAG_V48)==='1'){
