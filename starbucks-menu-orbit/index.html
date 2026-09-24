@@ -1451,6 +1451,150 @@
         height:480px!important;
       }
     }
+  
+    /* RESPONSIVE MODAL SYSTEM V36 */
+    .modal{
+      box-sizing:border-box!important;
+      padding:
+        max(14px,env(safe-area-inset-top))
+        max(14px,env(safe-area-inset-right))
+        max(14px,env(safe-area-inset-bottom))
+        max(14px,env(safe-area-inset-left))!important;
+      overflow:auto!important;
+      overscroll-behavior:contain!important;
+    }
+
+    .modal.open>.modal-card,
+    .modal:target>.modal-card{
+      box-sizing:border-box!important;
+      width:min(680px,calc(100vw - 32px))!important;
+      max-height:min(88dvh,860px)!important;
+      overflow:auto!important;
+      overscroll-behavior:contain!important;
+      -webkit-overflow-scrolling:touch!important;
+      padding:clamp(16px,2.2vw,24px)!important;
+      border-radius:clamp(20px,2.2vw,28px)!important;
+      margin:auto!important;
+    }
+
+    .modal .drawer-head{
+      position:sticky!important;
+      top:0!important;
+      z-index:5!important;
+      margin:-4px -2px 10px!important;
+      padding:4px 2px 10px!important;
+      background:linear-gradient(180deg,#08251b 78%,rgba(8,37,27,0))!important;
+    }
+
+    .modal .drawer-head h2{
+      font-size:clamp(20px,2.2vw,30px)!important;
+      line-height:1.05!important;
+    }
+
+    .modal .close{
+      flex:0 0 auto!important;
+      min-width:44px!important;
+      min-height:44px!important;
+      touch-action:manipulation!important;
+    }
+
+    .modal button,
+    .modal input,
+    .modal select,
+    .modal textarea{
+      max-width:100%!important;
+      box-sizing:border-box!important;
+    }
+
+    @media (max-width:700px){
+      .modal{
+        align-items:flex-end!important;
+        padding:
+          max(8px,env(safe-area-inset-top))
+          max(8px,env(safe-area-inset-right))
+          max(8px,env(safe-area-inset-bottom))
+          max(8px,env(safe-area-inset-left))!important;
+      }
+      .modal.open>.modal-card,
+      .modal:target>.modal-card{
+        width:100%!important;
+        max-height:calc(100dvh - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)))!important;
+        border-radius:24px 24px 18px 18px!important;
+        padding:16px!important;
+      }
+      .modal .checkout,
+      .modal .payment-grid,
+      .modal .reward-grid{
+        grid-template-columns:1fr!important;
+      }
+      .modal .options{
+        grid-template-columns:1fr!important;
+      }
+      .modal .cart-row{
+        grid-template-columns:52px minmax(0,1fr) auto!important;
+        gap:9px!important;
+      }
+      .modal .cart-row img{
+        width:52px!important;
+        height:52px!important;
+      }
+    }
+
+    @media (max-width:700px) and (orientation:landscape){
+      .modal{
+        align-items:center!important;
+      }
+      .modal.open>.modal-card,
+      .modal:target>.modal-card{
+        width:min(720px,calc(100vw - 20px))!important;
+        max-height:calc(100dvh - 16px)!important;
+        border-radius:18px!important;
+        padding:14px 16px!important;
+      }
+      .modal .drawer-head{
+        padding-bottom:6px!important;
+        margin-bottom:6px!important;
+      }
+    }
+
+    @media (min-width:701px) and (max-width:1100px){
+      .modal.open>.modal-card,
+      .modal:target>.modal-card{
+        width:min(660px,calc(100vw - 44px))!important;
+        max-height:86dvh!important;
+      }
+    }
+
+    /* Foreground feature modals use the same responsive sizing */
+    #callStaffModal .modal-card,
+    #dineInStatusModal .modal-card,
+    #tableQrOrderModal .modal-card,
+    #addMoreTableModal .modal-card{
+      width:min(680px,calc(100vw - 32px))!important;
+      max-height:min(88dvh,860px)!important;
+      padding:clamp(16px,2.2vw,24px)!important;
+    }
+
+    @media (max-width:700px){
+      #callStaffModal .modal-card,
+      #dineInStatusModal .modal-card,
+      #tableQrOrderModal .modal-card,
+      #addMoreTableModal .modal-card{
+        width:100%!important;
+        max-height:calc(100dvh - 16px)!important;
+        border-radius:24px 24px 18px 18px!important;
+      }
+    }
+
+    /* Submenu collision fallback */
+    #mainMenuDirect #mainSubmenuDirect>button.orbit-auto-compact{
+      padding:6px!important;
+      line-height:1.02!important;
+      overflow:visible!important;
+    }
+    #mainMenuDirect #navOrbitDirect[data-collision-adjusted="true"] .nav-orbit-ring{
+      opacity:.82!important;
+    }
   </style>
 </head>
 <body>
@@ -1690,7 +1834,7 @@
   <script src="ecosystem-sync.js"></script>
   <script src="commerce-upgrades.js?v=20260924-13"></script>
 <script src="completion-layer.js?v=20260924-11"></script>
-  <script src="customer-next.js?v=20260924-35"></script>
+  <script src="customer-next.js?v=20260924-36"></script>
 
 <script>
 (function(){
@@ -2618,45 +2762,84 @@
 
     if(mobile){
       if(landscape){
-        node=count>=8?58:count>=7?62:70;
-        font=count>=8?8:count>=7?8.5:9.5;
+        node=count>=8?56:count>=7?60:68;
+        font=count>=8?7.8:count>=7?8.2:9.2;
         rx=Math.min(w*.40,190);
-        ry=Math.min(h*.39,105);
+        ry=Math.min(h*.38,104);
       }else{
-        node=count>=8?62:count>=7?68:78;
-        font=count>=8?8.5:count>=7?9:10;
-        rx=Math.min(w*(count>=8?.40:count>=7?.39:.365),150);
+        node=count>=8?60:count>=7?66:78;
+        font=count>=8?8.2:count>=7?8.8:10;
+        rx=Math.min(w*(count>=8?.405:count>=7?.39:.365),150);
         ry=Math.min(h*(count>=8?.40:count>=7?.39:.355),175);
       }
     }else if(tablet){
-      node=count>=8?76:count>=7?84:98;
-      font=count>=8?10:count>=7?11:13;
-      rx=Math.min(w*(count>=8?.405:count>=7?.39:.37),245);
+      node=count>=8?74:count>=7?82:96;
+      font=count>=8?9.8:count>=7?10.8:12.8;
+      rx=Math.min(w*(count>=8?.41:count>=7?.395:.37),245);
       ry=Math.min(h*(count>=8?.405:count>=7?.39:.365),180);
     }else{
-      node=count>=8?92:count>=7?104:118;
-      font=count>=8?12:count>=7?13.5:15.5;
-      rx=Math.min(w*(count>=8?.405:count>=7?.39:.355),315);
+      node=count>=8?90:count>=7?102:118;
+      font=count>=8?11.8:count>=7?13.2:15.5;
+      rx=Math.min(w*(count>=8?.41:count>=7?.395:.355),315);
       ry=Math.min(h*(count>=8?.405:count>=7?.39:.36),230);
     }
 
-    buttons.forEach((b,i)=>{
-      let a=-Math.PI/2+(i/count)*Math.PI*2;
+    // Collision protection: progressively tighten nodes until neighboring circles clear.
+    const angles=buttons.map((_,i)=>{
       if(mobile&&level==='main'&&count===6){
         const mainAngles=[-90,-30,30,90,150,210];
-        a=mainAngles[i]*Math.PI/180;
+        return mainAngles[i]*Math.PI/180;
       }
-      const x=cx+Math.cos(a)*rx;
-      const y=cy+Math.sin(a)*ry;
-      b.style.setProperty('left',x+'px','important');
-      b.style.setProperty('top',y+'px','important');
+      return -Math.PI/2+(i/count)*Math.PI*2;
+    });
+
+    const positions=()=>angles.map(a=>({
+      x:cx+Math.cos(a)*rx,
+      y:cy+Math.sin(a)*ry
+    }));
+
+    const hasCollision=(pts,size)=>{
+      const pad=mobile?8:10;
+      const minDist=size+pad;
+      for(let i=0;i<pts.length;i++){
+        for(let j=i+1;j<pts.length;j++){
+          const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+          if(Math.hypot(dx,dy)<minDist)return true;
+        }
+      }
+      return false;
+    };
+
+    let tries=0;
+    while(hasCollision(positions(),node)&&tries<10){
+      node=Math.max(mobile?50:tablet?66:78,node-4);
+      font=Math.max(mobile?7.2:tablet?9:10.5,font-.5);
+      rx=Math.min(rx*1.035,w*.455);
+      ry=Math.min(ry*1.035,h*.455);
+      tries++;
+    }
+
+    // Edge protection so labels/badges stay inside the viewport.
+    const margin=node/2+(mobile?8:14);
+    rx=Math.min(rx,Math.max(40,cx-margin));
+    ry=Math.min(ry,Math.max(40,cy-margin));
+
+    const pts=positions();
+    buttons.forEach((b,i)=>{
+      const p=pts[i];
+      b.style.setProperty('left',p.x+'px','important');
+      b.style.setProperty('top',p.y+'px','important');
       b.style.setProperty('width',node+'px','important');
       b.style.setProperty('height',node+'px','important');
       b.style.setProperty('min-height',node+'px','important');
       b.style.setProperty('font-size',font+'px','important');
+      b.style.setProperty('--orbit-node-size',node+'px');
+      b.classList.toggle('orbit-auto-compact',tries>0);
       b.setAttribute('aria-posinset',String(i+1));
       b.setAttribute('aria-setsize',String(count));
     });
+
+    wrap.dataset.collisionAdjusted=tries>0?'true':'false';
   }
   function closeOrbitOverlays(){
     ['cartModal','pickupModal','accountModal','adminModal','hubModal'].forEach(id=>document.getElementById(id)?.classList.remove('open'));
@@ -2995,7 +3178,14 @@
     const detail=document.getElementById('detail');
     if(detail)new MutationObserver(syncDetailState).observe(detail,{attributes:true,attributeFilter:['class','aria-hidden']});
     syncDetailState();
-    window.addEventListener('resize',()=>requestAnimationFrame(layoutOrbit));
+    let responsiveOrbitRefreshV36=null;
+    const refreshResponsiveOrbitV36=()=>{
+      clearTimeout(responsiveOrbitRefreshV36);
+      responsiveOrbitRefreshV36=setTimeout(()=>requestAnimationFrame(layoutOrbit),80);
+    };
+    window.addEventListener('resize',refreshResponsiveOrbitV36);
+    window.addEventListener('orientationchange',()=>setTimeout(refreshResponsiveOrbitV36,180));
+    document.fonts?.ready?.then?.(()=>requestAnimationFrame(layoutOrbit));
     const refreshSmartCenter=()=>{
       if(level!=='main')return;
       renderSmartCenter();
