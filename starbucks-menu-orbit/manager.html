@@ -26,11 +26,11 @@
 <section class="login" id="login"><div class="loginbox"><div class="seal">◆</div><h1>Shift Supervisor / Manager</h1><div class="muted">Independent operations portal</div><div class="field"><label>MANAGER EMAIL</label><input id="email" value="manager.demo@menuorbit.test"></div><div class="field"><label>PASSWORD</label><input id="pass" type="password" value="ManagerOrbit2026!"></div><button class="primary" id="signIn">SIGN IN</button><button class="primary demo" id="oneTap">ONE-TAP DEMO LOGIN</button></div></section>
 <section class="portal" id="portal"><header class="top"><div><b>SHIFT SUPERVISOR / MANAGER</b><br><small>Demo Bacoor Branch • Shift Control</small></div><button id="logout">Sign Out</button></header><section id="home"><div class="orbit manager-orbit-v2"><button class="center" id="center">SHIFT CONTROL<small>3 WAIT • 2 PREP • 1 READY • 2 ALERTS</small></button><div id="nodes"></div></div></section><section class="module" id="module"><button class="back" id="back">← Back to Manager Orbit</button><div class="panel" id="panel"></div></section></section>
 <script>
-const features=[['floor','◉','LIVE FLOOR'],['staff','👤','STAFF & SHIFT'],['escalate','!','ORDER ESCALATIONS'],['approve','✓','REFUND / VOID'],['stock','▣','STOCK ALERTS'],['equipment','⚙','EQUIPMENT ISSUES'],['handover','⇄','SHIFT HANDOVER'],['report','▥','MANAGER REPORT']];
+const features=[['alerts','🔔','ALERT CENTER'],['staff','👤','STAFF & SHIFT'],['escalate','!','ORDER ESCALATIONS'],['approve','✓','REFUND / VOID'],['stock','▣','STOCK ALERTS'],['equipment','⚙','EQUIPMENT ISSUES'],['handover','⇄','SHIFT HANDOVER'],['report','▥','MANAGER REPORT']];
 const pts=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
 const rows=(a)=>a.map(x=>'<div class="row"><b>'+x[0]+'</b><span class="badge '+(x[2]?'alert':'')+'">'+x[1]+'</span><br><small>'+x[3]+'</small></div>').join('');
 function enter(){login.style.display='none';portal.style.display='block';render()}
-function render(){nodes.innerHTML=features.map((x,i)=>'<button class="node '+(x[0]==='staff'&&!localStorage.getItem('manager_staff_parent_v3')?'new':'')+'" data-f="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('');document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{if(b.dataset.f==='staff')localStorage.setItem('manager_staff_parent_v3','1');b.classList.remove('new');openFeature(b.dataset.f)})}
+function render(){nodes.innerHTML=features.map((x,i)=>'<button class="node '+(x[0]==='alerts'&&!localStorage.getItem('manager_alert_parent_v4')?'new':'')+'" data-f="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('');document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{if(b.dataset.f==='alerts')localStorage.setItem('manager_alert_parent_v4','1');b.classList.remove('new');openFeature(b.dataset.f)})}
 
 const shiftToolsV3=[['clock','●','CLOCKED-IN'],['assign','◎','ASSIGN STATION'],['move','⇄','MOVE STATION'],['break','Ⅱ','BREAK STATUS'],['attendance','!','LATE / ABSENT'],['replace','↻','REPLACE STAFF'],['schedule','▦','SHIFT SCHEDULE'],['close','✓','CLOSE SHIFT']];
 const shiftPtsV3=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
@@ -53,8 +53,30 @@ function openShiftToolV3(id){
  panel.innerHTML='<button class="back" id="backShiftV3">← Back to Staff & Shift Orbit</button><h2>'+t+'</h2>'+b;
  document.querySelector('#backShiftV3').onclick=openStaffShiftOrbitV3;
 }
+
+const alertToolsV4=[['live','◉','LIVE FLOOR'],['orders','!','ORDER ALERTS'],['staff','👤','STAFF ALERTS'],['stock','▣','STOCK ALERTS'],['equipment','⚙','EQUIPMENT'],['payment','₱','PAYMENT ALERTS'],['incident','◆','INCIDENTS'],['ack','✓','ACKNOWLEDGED']];
+const alertPtsV4=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
+function openAlertOrbitV4(){
+ home.style.display='none';module.style.display='block';
+ panel.innerHTML='<div class="shiftTitleV3"><h2>Manager Alert Center</h2><p>Live operational notifications</p></div><section class="shiftOrbitV3"><button class="shiftCenterV3" id="alertCenterV4">ALERT CENTER<small>4 ACTIVE • 1 URGENT</small></button>'+alertToolsV4.map((x,i)=>'<button class="shiftNodeV3 '+(localStorage.getItem('manager_alert_v4_'+x[0])?'':'newShiftV3')+'" data-alert="'+x[0]+'" style="left:'+alertPtsV4[i][0]+'%;top:'+alertPtsV4[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
+ document.querySelectorAll('[data-alert]').forEach(b=>b.onclick=()=>{localStorage.setItem('manager_alert_v4_'+b.dataset.alert,'1');b.classList.remove('newShiftV3');openAlertToolV4(b.dataset.alert)});
+ document.querySelector('#alertCenterV4').onclick=()=>openAlertToolV4('live');
+}
+function openAlertToolV4(id){
+ let t='',b='';
+ if(id==='live'){t='Live Floor';b=rows([['New Orders','3','', 'Waiting for barista claim'],['Preparing','2','', 'Active at espresso bar'],['Ready','1','', 'Waiting for pickup'],['Delayed','1',1,'Needs attention']])}
+ if(id==='orders'){t='Order Alerts';b=rows([['MO-1047','DELAY',1,'Preparation exceeded target'],['MO-1048','ESCALATED',1,'Customer assistance requested']])}
+ if(id==='staff'){t='Staff Alerts';b='<p>No unresolved staff attendance alerts.</p>'}
+ if(id==='stock'){t='Stock Alerts';b=rows([['Whole Milk','LOW',1,'4 cartons remaining'],['Oat Milk','OUT',1,'Inventory staff notified']])}
+ if(id==='equipment'){t='Equipment Alerts';b=rows([['Espresso Station 1','CHECK',1,'Barista reported an issue']])}
+ if(id==='payment'){t='Payment Alerts';b=rows([['POS 1','REVIEW',1,'One cashier approval request']])}
+ if(id==='incident'){t='Incident Log';b='<p>Record customer, staff, safety, service, or equipment incidents for manager follow-up.</p><button class="primary action">CREATE INCIDENT</button>'}
+ if(id==='ack'){t='Acknowledged Alerts';b='<p>Resolved and acknowledged manager notifications will appear here for the shift audit trail.</p>'}
+ panel.innerHTML='<button class="back" id="backAlertV4">← Back to Alert Center Orbit</button><h2>'+t+'</h2>'+b;
+ document.querySelector('#backAlertV4').onclick=openAlertOrbitV4;
+}
 function openFeature(id){home.style.display='none';module.style.display='block';let t='',b='';
-if(id==='floor'){t='Live Floor';b=rows([['New Orders','3','', 'Waiting for barista claim'],['Preparing','2','', 'Active at espresso bar'],['Ready','1','', 'Waiting for pickup'],['Delayed','1',1,'Needs attention']])}
+if(id==='alerts'){openAlertOrbitV4();return}
 if(id==='staff'){openStaffShiftOrbitV3();return}
 if(id==='escalate'){t='Order Escalations';b=rows([['MO-1048','CUSTOMER ISSUE',1,'Awaiting manager decision'],['MO-1047','DELAY',1,'Preparation exceeded target']])+'<button class="primary action">REVIEW NEXT ESCALATION</button>'}
 if(id==='approve'){t='Refund / Void Approval';b='<p>Manager-only approval queue for cashier refund, void, and protected payment actions.</p><button class="primary action">OPEN APPROVAL QUEUE</button>'}
