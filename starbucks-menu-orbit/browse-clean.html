@@ -107,9 +107,12 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 <button type="button" class="healthyV71btn" data-h71="lighter">☕ BUILD A LIGHTER DRINK</button>
 <button type="button" class="healthyV71btn" data-h71="size">◉ NUTRITION BY SIZE</button>
 <button type="button" class="healthyV71btn" data-h71="cartnutrition">🛒 CART NUTRITION SUMMARY</button>
-<button type="button" class="healthyV71btn new" data-h71="ingredients" onclick="openHealthyDirectV76('ingredients',this)">≡ INGREDIENT VIEWER</button>
-<button type="button" class="healthyV71btn new" data-h71="caffeine" onclick="openHealthyDirectV76('caffeine',this)">⚡ CAFFEINE GUIDE</button>
-<button type="button" class="healthyV71btn new" data-h71="healthyfavorites" onclick="openHealthyDirectV76('healthyfavorites',this)">♥ HEALTHY FAVORITES</button>
+<button type="button" class="healthyV71btn" data-h71="ingredients" onclick="openHealthyDirectV76('ingredients',this)">≡ INGREDIENT VIEWER</button>
+<button type="button" class="healthyV71btn" data-h71="caffeine" onclick="openHealthyDirectV76('caffeine',this)">⚡ CAFFEINE GUIDE</button>
+<button type="button" class="healthyV71btn" data-h71="healthyfavorites" onclick="openHealthyDirectV76('healthyfavorites',this)">♥ HEALTHY FAVORITES</button>
+<button type="button" class="healthyV71btn new" data-h71="swap">⇄ HEALTHY SWAP</button>
+<button type="button" class="healthyV71btn new" data-h71="quickcart">＋ ONE-TAP ADD TO CART</button>
+<button type="button" class="healthyV71btn new" data-h71="customsummary">✓ CUSTOMIZATION SUMMARY</button>
 <button type="button" class="healthyV71btn" data-h71="nutrition">▥ NUTRITION</button>
 <button type="button" class="healthyV71btn" data-h71="calories">◎ CALORIES</button>
 <button type="button" class="healthyV71btn" data-h71="allergens">! ALLERGENS</button>
@@ -400,7 +403,7 @@ render();
  document.getElementById('healthyCloseV71').addEventListener('click',closePanel);
  document.addEventListener('click',function(e){
    const main=e.target.closest('[data-customer-v63="healthy"]');
-   if(main){e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('healthy_parent_seen_v75','1');main.classList.remove('new-customer-v63');openPanel();return}
+   if(main){e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('healthy_parent_seen_v78','1');main.classList.remove('new-customer-v63');openPanel();return}
  },true);
  document.querySelectorAll('[data-h71]').forEach(function(btn){
    const id=btn.getAttribute('data-h71');
@@ -422,7 +425,7 @@ render();
 function closeHealthyDirectV76(){document.getElementById('healthyDirectV76').classList.remove('open');document.getElementById('healthyPanelV71').classList.add('open');document.body.style.overflow='hidden'}
 function openHealthyDirectV76(id,el){
  if(el)el.classList.remove('new');
- try{localStorage.setItem('healthy_child_seen_v76_'+id,'1')}catch(e){}
+ try{localStorage.setItem('healthy_child_seen_v78_'+id,'1')}catch(e){}
  const panel=document.getElementById('healthyPanelV71'); if(panel)panel.classList.remove('open');
  const box=document.getElementById('healthyDirectV76'),title=document.getElementById('hd76title'),body=document.getElementById('hd76body');
  box.classList.add('open');document.body.style.overflow='hidden';
@@ -467,6 +470,25 @@ function openHealthyDirectV76(id,el){
  }
  if(id==='compare'){
    title.textContent='Nutrition Compare';const a=products.filter(p=>Number.isFinite(Number(p.cal))).slice(0,8);body.innerHTML=a.map(p=>'<div class="hd76card"><b>'+p.name+'</b><p>'+p.cal+' calories</p></div>').join('');
+ }
+ if(id==='swap'){
+   title.textContent='Healthy Swap';
+   const a=products.filter(p=>Number.isFinite(Number(p.cal)));
+   body.innerHTML='<label>SELECT ITEM</label><select id="hd76select">'+a.map(p=>'<option value="'+p.id+'">'+p.name+' — '+p.cal+' cal</option>').join('')+'</select><div id="hd76result"></div>';
+   const s=document.getElementById('hd76select'),o=document.getElementById('hd76result');
+   const draw=()=>{const p=product(s.value),alts=a.filter(x=>x.id!==p.id&&Number(x.cal)<Number(p.cal)).sort((x,y)=>Number(x.cal)-Number(y.cal)).slice(0,5);o.innerHTML='<div class="hd76card"><b>'+p.name+'</b><p>'+p.cal+' calories</p></div>'+(alts.length?alts.map(x=>'<div class="hd76card"><b>Swap: '+x.name+'</b><p>'+x.cal+' calories • '+(Number(p.cal)-Number(x.cal))+' fewer listed calories</p></div>').join(''):'<div class="hd76card">No lower-calorie alternative is available in the current verified calorie data.</div>')};s.onchange=draw;draw();
+ }
+ if(id==='quickcart'){
+   title.textContent='One-Tap Add to Cart';
+   let favs=read('healthy_favorites_v76',[]);let a=favs.map(x=>product(x)).filter(Boolean);if(!a.length)a=products.filter(p=>Number.isFinite(Number(p.cal))).slice(0,8);
+   body.innerHTML=a.map(p=>'<div class="hd76card"><b>'+p.name+'</b><p>'+(Number.isFinite(Number(p.cal))?p.cal+' calories':'Nutrition N/A')+'</p><button type="button" class="action" data-add78="'+p.id+'">＋ ADD TO CART</button></div>').join('');
+   document.querySelectorAll('[data-add78]').forEach(b=>b.onclick=()=>{const id=b.dataset.add78;let cart=read(cartKey,[]),x=cart.find(i=>i.id===id);if(x)x.qty=(Number(x.qty)||1)+1;else cart.push({id,qty:1});write(cartKey,cart);b.textContent='✓ ADDED TO CART';setTimeout(()=>b.textContent='＋ ADD TO CART',1200)});
+ }
+ if(id==='customsummary'){
+   title.textContent='Customization Summary';
+   const ds=products.filter(p=>p.kind==='drink');
+   body.innerHTML='<label>DRINK</label><select id="sumDrink78">'+ds.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select><label>SIZE</label><select id="sumSize78"><option>Tall</option><option>Grande</option><option>Venti</option></select><label>MILK / BASE</label><select id="sumMilk78"><option>Standard recipe</option><option>Change milk / base</option></select><label>EXTRAS</label><select id="sumExtra78"><option>Standard recipe</option><option>Fewer extras</option><option>No whipped cream where applicable</option></select><div class="hd76card" id="sumOut78"></div>';
+   const draw=()=>{const p=product(document.getElementById('sumDrink78').value);document.getElementById('sumOut78').innerHTML='<b>'+p.name+'</b><p>'+document.getElementById('sumSize78').value+' • '+document.getElementById('sumMilk78').value+' • '+document.getElementById('sumExtra78').value+'</p><p>Listed base calories: <strong>'+(Number.isFinite(Number(p.cal))?p.cal:'Not available')+'</strong></p><small>Exact nutrition after customization is not estimated without verified data.</small>'};['sumDrink78','sumSize78','sumMilk78','sumExtra78'].forEach(x=>document.getElementById(x).onchange=draw);draw();
  }
  if(id==='healthyfavorites'){
    title.textContent='Healthy Favorites';
