@@ -88,7 +88,9 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 #healthyDirectV76{display:none;position:fixed;inset:0;z-index:2147483646;background:#06271d;color:#fff;overflow:auto;padding:18px}
 #healthyDirectV76.open{display:block}.hd76{max-width:760px;margin:auto}.hd76top{display:flex;justify-content:space-between;align-items:center;gap:12px}.hd76back{min-height:52px;padding:0 18px;border:2px solid #d8b66a;border-radius:14px;background:#0b3a2b;color:#fff;font-weight:900}.hd76 select,.hd76 button.action{width:100%;min-height:54px;margin-top:12px;border-radius:12px;padding:0 12px;font-size:16px}.hd76card{margin-top:16px;padding:18px;border:2px solid #d8b66a;border-radius:16px;background:#0b3a2b}
 
-.healthy-latest-v79{outline:6px solid #fff200!important;box-shadow:0 0 0 10px rgba(255,242,0,.28),0 0 34px rgba(255,242,0,.7)!important;border-color:#fff200!important;background:#125b43!important}
+.healthy-old-v79{outline:6px solid #fff200!important;box-shadow:0 0 0 10px rgba(255,242,0,.28),0 0 34px rgba(255,242,0,.7)!important;border-color:#fff200!important;background:#125b43!important}
+
+.healthy-latest-v80{outline:6px solid #fff200!important;box-shadow:0 0 0 10px rgba(255,242,0,.28),0 0 34px rgba(255,242,0,.7)!important;border-color:#fff200!important;background:#125b43!important}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
@@ -112,9 +114,15 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 <button type="button" class="healthyV71btn" data-h71="ingredients" onclick="openHealthyDirectV76('ingredients',this)">≡ INGREDIENT VIEWER</button>
 <button type="button" class="healthyV71btn" data-h71="caffeine" onclick="openHealthyDirectV76('caffeine',this)">⚡ CAFFEINE GUIDE</button>
 <button type="button" class="healthyV71btn" data-h71="healthyfavorites" onclick="openHealthyDirectV76('healthyfavorites',this)">♥ HEALTHY FAVORITES</button>
-<button type="button" class="healthyV71btn healthy-latest-v79" data-h71="swap">⇄ HEALTHY SWAP</button>
-<button type="button" class="healthyV71btn healthy-latest-v79" data-h71="quickcart">＋ ONE-TAP ADD TO CART</button>
-<button type="button" class="healthyV71btn healthy-latest-v79" data-h71="customsummary">✓ CUSTOMIZATION SUMMARY</button>
+<button type="button" class="healthyV71btn healthy-old-v79" data-h71="swap">⇄ HEALTHY SWAP</button>
+<button type="button" class="healthyV71btn healthy-old-v79" data-h71="quickcart">＋ ONE-TAP ADD TO CART</button>
+<button type="button" class="healthyV71btn healthy-old-v79" data-h71="customsummary">✓ CUSTOMIZATION SUMMARY</button>
+<button type="button" class="healthyV71btn healthy-latest-v80" data-h71="recenthealthy">↻ RECENT HEALTHY ORDERS</button>
+<button type="button" class="healthyV71btn healthy-latest-v80" data-h71="nutritionsearch">⌕ NUTRITION SEARCH</button>
+<button type="button" class="healthyV71btn healthy-latest-v80" data-h71="datastatus">● NUTRITION DATA STATUS</button>
+<button type="button" class="healthyV71btn healthy-latest-v80" data-h71="healthyreceipt">▤ HEALTHY ORDER RECEIPT</button>
+<button type="button" class="healthyV71btn healthy-latest-v80" data-h71="resethealthy">↺ RESET HEALTHY PREFERENCES</button>
+<button type="button" class="healthyV71btn healthy-latest-v80" data-h71="cartcheck">✓ HEALTHY CART CHECK</button>
 <button type="button" class="healthyV71btn" data-h71="nutrition">▥ NUTRITION</button>
 <button type="button" class="healthyV71btn" data-h71="calories">◎ CALORIES</button>
 <button type="button" class="healthyV71btn" data-h71="allergens">! ALLERGENS</button>
@@ -492,6 +500,36 @@ function openHealthyDirectV76(id,el){
    body.innerHTML='<label>DRINK</label><select id="sumDrink78">'+ds.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select><label>SIZE</label><select id="sumSize78"><option>Tall</option><option>Grande</option><option>Venti</option></select><label>MILK / BASE</label><select id="sumMilk78"><option>Standard recipe</option><option>Change milk / base</option></select><label>EXTRAS</label><select id="sumExtra78"><option>Standard recipe</option><option>Fewer extras</option><option>No whipped cream where applicable</option></select><div class="hd76card" id="sumOut78"></div>';
    const draw=()=>{const p=product(document.getElementById('sumDrink78').value);document.getElementById('sumOut78').innerHTML='<b>'+p.name+'</b><p>'+document.getElementById('sumSize78').value+' • '+document.getElementById('sumMilk78').value+' • '+document.getElementById('sumExtra78').value+'</p><p>Listed base calories: <strong>'+(Number.isFinite(Number(p.cal))?p.cal:'Not available')+'</strong></p><small>Exact nutrition after customization is not estimated without verified data.</small>'};['sumDrink78','sumSize78','sumMilk78','sumExtra78'].forEach(x=>document.getElementById(x).onchange=draw);draw();
  }
+ if(id==='recenthealthy'){
+   title.textContent='Recent Healthy Orders';
+   const o=read('menuorbit_customer_latest_order_v65',null);
+   body.innerHTML=o?'<div class="hd76card"><b>Latest Order</b><p>Order '+(o.id||'')+'</p><p>'+(o.items||[]).map(x=>{const p=product(x.id);return p?(x.qty||1)+'× '+p.name:''}).filter(Boolean).join('<br>')+'</p></div>':'<div class="hd76card">No recent customer order is stored on this device.</div>';
+ }
+ if(id==='nutritionsearch'){
+   title.textContent='Nutrition Search';
+   body.innerHTML='<label>SEARCH MENU</label><input id="ns80" placeholder="Type a drink or food..." style="width:100%;min-height:54px;margin-top:12px;border-radius:12px;padding:0 12px;font-size:16px"><div id="nsout80"></div>';
+   const s=document.getElementById('ns80'),o=document.getElementById('nsout80');s.oninput=()=>{const q=s.value.toLowerCase().trim();const a=products.filter(p=>!q||p.name.toLowerCase().includes(q)).slice(0,12);o.innerHTML=a.map(p=>'<div class="hd76card"><b>'+p.name+'</b><p>Calories: '+(Number.isFinite(Number(p.cal))?p.cal:'Not available')+'</p></div>').join('')};s.oninput();
+ }
+ if(id==='datastatus'){
+   title.textContent='Nutrition Data Status';
+   const known=products.filter(p=>Number.isFinite(Number(p.cal))).length;
+   body.innerHTML='<div class="hd76card"><b>AVAILABLE</b><p>'+known+' menu items currently have listed calorie data.</p></div><div class="hd76card"><b>NOT AVAILABLE</b><p>Protein, sugar, sodium, caffeine and detailed ingredients are not displayed unless verified.</p></div><div class="hd76card"><b>CHANGES WITH CUSTOMIZATION</b><p>Size, milk/base, syrup and toppings can change nutrition.</p></div>';
+ }
+ if(id==='healthyreceipt'){
+   title.textContent='Healthy Order Receipt';
+   const o=read('menuorbit_customer_latest_order_v65',null);
+   body.innerHTML=o?'<div class="hd76card"><b>ORDER '+(o.id||'')+'</b><p>'+(o.items||[]).map(x=>{const p=product(x.id);return p?(x.qty||1)+'× '+p.name+' — '+(Number.isFinite(Number(p.cal))?p.cal+' cal each':'nutrition N/A'):''}).filter(Boolean).join('<br>')+'</p><small>Nutrition shown only where available in the current dataset.</small></div>':'<div class="hd76card">Place an order first to generate a Healthy Order Receipt.</div>';
+ }
+ if(id==='resethealthy'){
+   title.textContent='Reset Healthy Preferences';
+   body.innerHTML='<div class="hd76card"><b>Clear Healthy Favorites?</b><p>This resets Healthy Favorites stored on this device. It does not remove your cart.</p><button type="button" class="action" id="reset80">RESET HEALTHY PREFERENCES</button><div id="resetmsg80"></div></div>';
+   document.getElementById('reset80').onclick=()=>{write('healthy_favorites_v76',[]);write('healthy_favorites_v72',[]);document.getElementById('resetmsg80').innerHTML='<p>✓ Healthy preferences reset.</p>'};
+ }
+ if(id==='cartcheck'){
+   title.textContent='Healthy Cart Check';
+   const cart=read(cartKey,[]);let total=0,known=0,unknown=0;cart.forEach(x=>{const p=product(x.id),q=Number(x.qty)||1;if(p&&Number.isFinite(Number(p.cal))){total+=Number(p.cal)*q;known+=q}else unknown+=q});
+   body.innerHTML=cart.length?'<div class="hd76card"><b>Cart nutrition check</b><h2>'+total+' known calories</h2><p>'+known+' item(s) with calorie data • '+unknown+' without verified calorie data</p><small>Customizations may change nutrition.</small></div>':'<div class="hd76card">Your cart is empty.</div>';
+ }
  if(id==='healthyfavorites'){
    title.textContent='Healthy Favorites';
    body.innerHTML='<label>SELECT MENU ITEM</label><select id="hd76select">'+products.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select><button type="button" class="action" id="hd76save">♥ SAVE FAVORITE</button><div id="hd76result"></div>';
@@ -514,11 +552,18 @@ document.addEventListener('click',function(e){
    const b=document.querySelector('[data-h71="'+id+'"]');
    if(!b)return;
    const key='healthy_latest_seen_v79_'+id;
-   if(localStorage.getItem(key))b.classList.remove('healthy-latest-v79');
-   b.addEventListener('click',function(){localStorage.setItem(key,'1');b.classList.remove('healthy-latest-v79')},true);
+   if(localStorage.getItem(key))b.classList.remove('healthy-old-v79');
+   b.addEventListener('click',function(){localStorage.setItem(key,'1');b.classList.remove('healthy-old-v79')},true);
  });
  const main=document.querySelector('[data-customer-v63="healthy"]');
  if(main&&!localStorage.getItem('healthy_latest_parent_v79'))main.classList.add('new-customer-v63');
  if(main)main.addEventListener('click',function(){localStorage.setItem('healthy_latest_parent_v79','1');main.classList.remove('new-customer-v63')},true);
+})();
+</script>
+<script>
+(function(){
+ const ids=['recenthealthy','nutritionsearch','datastatus','healthyreceipt','resethealthy','cartcheck'];
+ ids.forEach(function(id){const b=document.querySelector('[data-h71="'+id+'"]');if(!b)return;const k='healthy_latest_seen_v80_'+id;if(localStorage.getItem(k))b.classList.remove('healthy-latest-v80');b.addEventListener('click',function(){localStorage.setItem(k,'1');b.classList.remove('healthy-latest-v80')},true)});
+ const m=document.querySelector('[data-customer-v63="healthy"]');if(m&&!localStorage.getItem('healthy_latest_parent_v80'))m.classList.add('new-customer-v63');if(m)m.addEventListener('click',()=>{localStorage.setItem('healthy_latest_parent_v80','1');m.classList.remove('new-customer-v63')},true);
 })();
 </script></body></html>
