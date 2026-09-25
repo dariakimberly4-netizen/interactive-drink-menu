@@ -87,6 +87,8 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 
 #healthyDirectV76{display:none;position:fixed;inset:0;z-index:2147483646;background:#06271d;color:#fff;overflow:auto;padding:18px}
 #healthyDirectV76.open{display:block}.hd76{max-width:760px;margin:auto}.hd76top{display:flex;justify-content:space-between;align-items:center;gap:12px}.hd76back{min-height:52px;padding:0 18px;border:2px solid #d8b66a;border-radius:14px;background:#0b3a2b;color:#fff;font-weight:900}.hd76 select,.hd76 button.action{width:100%;min-height:54px;margin-top:12px;border-radius:12px;padding:0 12px;font-size:16px}.hd76card{margin-top:16px;padding:18px;border:2px solid #d8b66a;border-radius:16px;background:#0b3a2b}
+
+.healthy-latest-v79{outline:6px solid #fff200!important;box-shadow:0 0 0 10px rgba(255,242,0,.28),0 0 34px rgba(255,242,0,.7)!important;border-color:#fff200!important;background:#125b43!important}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
@@ -110,9 +112,9 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 <button type="button" class="healthyV71btn" data-h71="ingredients" onclick="openHealthyDirectV76('ingredients',this)">≡ INGREDIENT VIEWER</button>
 <button type="button" class="healthyV71btn" data-h71="caffeine" onclick="openHealthyDirectV76('caffeine',this)">⚡ CAFFEINE GUIDE</button>
 <button type="button" class="healthyV71btn" data-h71="healthyfavorites" onclick="openHealthyDirectV76('healthyfavorites',this)">♥ HEALTHY FAVORITES</button>
-<button type="button" class="healthyV71btn new" data-h71="swap">⇄ HEALTHY SWAP</button>
-<button type="button" class="healthyV71btn new" data-h71="quickcart">＋ ONE-TAP ADD TO CART</button>
-<button type="button" class="healthyV71btn new" data-h71="customsummary">✓ CUSTOMIZATION SUMMARY</button>
+<button type="button" class="healthyV71btn healthy-latest-v79" data-h71="swap">⇄ HEALTHY SWAP</button>
+<button type="button" class="healthyV71btn healthy-latest-v79" data-h71="quickcart">＋ ONE-TAP ADD TO CART</button>
+<button type="button" class="healthyV71btn healthy-latest-v79" data-h71="customsummary">✓ CUSTOMIZATION SUMMARY</button>
 <button type="button" class="healthyV71btn" data-h71="nutrition">▥ NUTRITION</button>
 <button type="button" class="healthyV71btn" data-h71="calories">◎ CALORIES</button>
 <button type="button" class="healthyV71btn" data-h71="allergens">! ALLERGENS</button>
@@ -505,4 +507,18 @@ document.addEventListener('click',function(e){
  e.preventDefault();e.stopImmediatePropagation();
  openHealthyDirectV76(b.getAttribute('data-h71'),b);
 },true);
+</script>
+<script>
+(function(){
+ ['swap','quickcart','customsummary'].forEach(function(id){
+   const b=document.querySelector('[data-h71="'+id+'"]');
+   if(!b)return;
+   const key='healthy_latest_seen_v79_'+id;
+   if(localStorage.getItem(key))b.classList.remove('healthy-latest-v79');
+   b.addEventListener('click',function(){localStorage.setItem(key,'1');b.classList.remove('healthy-latest-v79')},true);
+ });
+ const main=document.querySelector('[data-customer-v63="healthy"]');
+ if(main&&!localStorage.getItem('healthy_latest_parent_v79'))main.classList.add('new-customer-v63');
+ if(main)main.addEventListener('click',function(){localStorage.setItem('healthy_latest_parent_v79','1');main.classList.remove('new-customer-v63')},true);
+})();
 </script></body></html>
