@@ -493,6 +493,11 @@
  padding:6px 9px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:1001!important;
 }
 @keyframes v31ServicePulse{50%{filter:brightness(1.5);box-shadow:0 0 0 10px #fff,0 0 0 17px #fff200,0 0 78px 30px rgba(255,242,0,1)}}
+
+/* SYSTEM CONTROL V32 — latest-only discovery */
+.cashier-orbit-node[data-orbit-id="service"]{border:1px solid rgba(255,255,255,.16)!important;background:linear-gradient(145deg,#154535,#08261c)!important;box-shadow:0 14px 30px rgba(0,0,0,.28)!important;animation:none!important}
+.cashier-orbit-node[data-orbit-id="service"]::after{display:none!important;content:none!important}
+.cashier-orbit-node.latest-v25-hub::after{content:'★ 6 NEW ★'!important}
 </style>
 </head>
 <body>
@@ -585,6 +590,36 @@ function toolRecoveryVoucher(){
  document.querySelector('#rvIssueV30').onclick=()=>{const order=document.querySelector('#rvOrderV30').value.trim(),name=document.querySelector('#rvNameV30').value.trim(),reason=document.querySelector('#rvReasonV30').value.trim(),value=Math.max(0,Number(document.querySelector('#rvValueV30').value)||0);if(!order||!reason)return alert('Enter order number and reason.');const code='CARE-'+Date.now().toString().slice(-6),cases=readLocal(SERVICE_CASE_KEY,[]);cases.unshift({id:'SC-'+Date.now().toString().slice(-6),type:'Customer Recovery Voucher',order,customer:name,reason,action:'Issued '+code+' • '+money(value),status:'Resolved',staff:cashier.name,at:new Date().toLocaleString('en-PH')});writeLocal(SERVICE_CASE_KEY,cases);logCashierOp('Recovery Voucher',order+' • '+code+' • '+money(value));alert('VOUCHER ISSUED • '+code+' • '+money(value));document.querySelector('#cashierToolModal').classList.remove('open')};
 }
 function toolEscalateManager(){serviceCaseV30('Escalate to Branch Manager','Escalated to Branch Manager')}
+
+const SYSTEM_SYNC_KEY='cashier_system_sync_v32';
+function toolSessionLock(){
+ openCashierTool('Session Lock',`<div class="form"><div class="tool-card"><b>🔒 Register Lock</b><small>Lock this cashier screen without ending the shift.</small></div><button class="btn danger" id="lockNowV32">LOCK REGISTER</button></div>`);
+ document.querySelector('#lockNowV32').onclick=()=>{logCashierOp('Session Locked',cashier.name);openCashierTool('🔒 REGISTER LOCKED',`<div class="form"><p class="notice">Cashier: ${esc(cashier.name)}</p><label>Staff PIN<input id="unlockPinV32" type="password" inputmode="numeric" placeholder="Demo PIN 2468"></label><button class="btn primary" id="unlockV32">UNLOCK</button></div>`);document.querySelector('#unlockV32').onclick=()=>{if(document.querySelector('#unlockPinV32').value!=='2468')return alert('Invalid demo PIN.');logCashierOp('Session Unlocked',cashier.name);document.querySelector('#cashierToolModal').classList.remove('open');render()}};
+}
+function toolSwitchCashier(){
+ openCashierTool('Switch Cashier',`<div class="form"><label>Incoming Cashier<input id="switchNameV32" placeholder="Staff name"></label><label>Staff PIN<input id="switchPinV32" type="password" inputmode="numeric" placeholder="Demo PIN 2468"></label><button class="btn primary" id="switchGoV32">SWITCH CASHIER</button></div>`);
+ document.querySelector('#switchGoV32').onclick=()=>{const n=document.querySelector('#switchNameV32').value.trim(),p=document.querySelector('#switchPinV32').value;if(!n||p!=='2468')return alert('Enter cashier name and valid demo PIN.');const old=cashier.name;cashier.name=n;logCashierOp('Cashier Switched',old+' → '+n);alert('Register assigned to '+n);document.querySelector('#cashierToolModal').classList.remove('open');render()};
+}
+function toolDeviceStatus(){
+ const online=navigator.onLine;
+ openCashierTool('Device & Printer Status',`<div class="kpi-grid"><div class="kpi"><b>${online?'ONLINE':'OFFLINE'}</b><span>Network</span></div><div class="kpi"><b>READY</b><span>POS Device</span></div><div class="kpi"><b>CHECK</b><span>Receipt Printer</span></div></div><div class="tool-grid"><button class="btn primary" id="testPrintV32">TEST PRINT</button><button class="btn" id="refreshDeviceV32">REFRESH STATUS</button></div><p class="notice">Printer detection is a browser demo; production hardware requires the configured POS/print service.</p>`);
+ document.querySelector('#testPrintV32').onclick=()=>{logCashierOp('Printer Test',cashier.name);window.print()};document.querySelector('#refreshDeviceV32').onclick=toolDeviceStatus;
+}
+function toolBackendHealth(){
+ const online=navigator.onLine,queued=readLocal('cashier_offline_payments_v27',[]).length;
+ openCashierTool('Connectivity / Backend Health',`<div class="kpi-grid"><div class="kpi"><b>${online?'CONNECTED':'OFFLINE'}</b><span>Internet</span></div><div class="kpi"><b>${db?'CONFIGURED':'DEMO'}</b><span>Backend</span></div><div class="kpi"><b>${queued}</b><span>Queued Payments</span></div></div><button class="btn primary" id="healthRefreshV32">RUN HEALTH CHECK</button>`);
+ document.querySelector('#healthRefreshV32').onclick=()=>{logCashierOp('System Health Check',(navigator.onLine?'Online':'Offline')+' • queued '+queued);toolBackendHealth()};
+}
+function toolSyncCenter(){
+ const payments=readLocal('cashier_offline_payments_v27',[]),sys=readLocal(SYSTEM_SYNC_KEY,[]);
+ openCashierTool('Sync Center',`<div class="kpi-grid"><div class="kpi"><b>${payments.length}</b><span>Payment Queue</span></div><div class="kpi"><b>${sys.length}</b><span>System Queue</span></div><div class="kpi"><b>${navigator.onLine?'READY':'WAITING'}</b><span>Sync Status</span></div></div><button class="btn primary" id="syncAllV32" ${navigator.onLine?'':'disabled'}>SYNC ALL NOW</button>`);
+ document.querySelector('#syncAllV32')?.addEventListener('click',()=>{if(!navigator.onLine)return;const remain=[];payments.forEach(p=>{const o=activeOrders.find(x=>x.order_ref===p.ref);if(o){o.payment_status='Paid';o.payment_method=p.method||o.payment_method}else remain.push(p)});writeLocal('cashier_offline_payments_v27',remain);writeLocal(SYSTEM_SYNC_KEY,[]);logCashierOp('Manual Sync','Payments '+(payments.length-remain.length)+' • System '+sys.length);alert('Sync completed. Unmatched payments remain queued.');toolSyncCenter()});
+}
+function toolEmergencyOffline(){
+ const state=readLocal('cashier_emergency_offline_v32',{enabled:false});
+ openCashierTool('Emergency Offline Mode',`<div class="tool-card"><b>${state.enabled?'OFFLINE MODE ACTIVE':'NORMAL MODE'}</b><small>${state.enabled?'Transactions should be queued for later synchronization.':'Use only when connectivity prevents normal operation.'}</small></div><div class="tool-grid"><button class="btn danger" id="offlineOnV32">ENABLE OFFLINE MODE</button><button class="btn primary" id="offlineOffV32">RETURN TO NORMAL</button></div>`);
+ document.querySelector('#offlineOnV32').onclick=()=>{writeLocal('cashier_emergency_offline_v32',{enabled:true,at:new Date().toISOString(),staff:cashier.name});logCashierOp('Emergency Offline Mode','Enabled');alert('Emergency Offline Mode enabled.');toolEmergencyOffline()};document.querySelector('#offlineOffV32').onclick=()=>{writeLocal('cashier_emergency_offline_v32',{enabled:false,at:new Date().toISOString(),staff:cashier.name});logCashierOp('Emergency Offline Mode','Disabled');alert('Normal mode restored.');toolEmergencyOffline()};
+}
 function toolCustomer(){openCashierTool('Customer Lookup',`<div class="form"><label>Mobile / Member ID<input id="customerLookup" placeholder="09XX... or member ID"></label><button class="btn primary" id="lookupCustomerBtn">LOOK UP</button><div id="customerResult"></div></div>`);document.querySelector('#lookupCustomerBtn').onclick=()=>{const q=document.querySelector('#customerLookup').value.trim();document.querySelector('#customerResult').innerHTML=q?`<div class="tool-card"><b>Demo Member</b><small>${esc(q)} • 320 points • Gold</small></div>`:'<p class="notice">Enter a mobile number or member ID.</p>'}}
 
 /* CASHIER OPERATIONS UPGRADE V13 */
@@ -862,8 +897,8 @@ function toolDailySummary(){
     <div class="business-note">Use End Shift for cashier closing and reconciliation.</div>`);
 }
 /* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
-const NEW_FEATURES_V26=['Customer Complaint','Problem Resolution','Remake Request','Missing / Wrong Item','Recovery Voucher','Escalate Manager'];
-const NEW_SEEN_KEY_V26='cashier_seen_service_features_v31';
+const NEW_FEATURES_V26=['Session Lock','Switch Cashier','Device & Printer Status','Backend Health','Sync Center','Emergency Offline Mode'];
+const NEW_SEEN_KEY_V26='cashier_seen_system_features_v32';
 function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
 function markNewSeenV26(label){
  if(!NEW_FEATURES_V26.includes(label))return;
@@ -963,6 +998,13 @@ function home(){
       {icon:'🗓',label:'Daily Summary',sub:'End-of-day overview',run:toolDailySummary}
     ],
     system:[
+      {icon:'🔒',label:'Session Lock',sub:'Secure the register',run:toolSessionLock},
+      {icon:'👤',label:'Switch Cashier',sub:'Change active staff',run:toolSwitchCashier},
+      {icon:'🖨',label:'Device & Printer Status',sub:'POS hardware check',run:toolDeviceStatus},
+      {icon:'●',label:'Backend Health',sub:'Connectivity check',run:toolBackendHealth},
+      {icon:'↕',label:'Sync Center',sub:'Pending sync queue',run:toolSyncCenter},
+      {icon:'⚠',label:'Emergency Offline Mode',sub:'Continue during outage',run:toolEmergencyOffline},
+
       {icon:'⌂',label:'Staff Portal',sub:'Back to staff home',run:()=>location.href='staff-portal.html'},
       {icon:'☕',label:'Customer Menu',sub:'Open Menu Orbit',run:()=>location.href='index.html'},
       {icon:'◌',label:'Reduce Motion',sub:'Accessibility',run:()=>document.querySelector('#motionBtn').click()},
@@ -1044,7 +1086,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='service'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='system'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
