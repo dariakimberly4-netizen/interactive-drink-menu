@@ -588,6 +588,13 @@
  .cashier-orbit-node{width:90px!important;height:90px!important;min-width:90px!important;min-height:90px!important;font-size:10px!important}
  .cashier-orbit-center{width:124px!important;height:124px!important;min-width:124px!important;min-height:124px!important}
 }
+
+.basic-center-live-v85{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important}
+.basic-center-live-v85 small{font-size:9px!important;letter-spacing:.13em;color:#f4d992!important;font-weight:950!important}
+.basic-center-live-v85 b{font-size:25px!important;line-height:1!important}
+.basic-center-live-v85 span{font-size:10px!important;font-weight:900!important}
+.basic-center-live-v85 em{font-style:normal!important;font-size:8px!important;color:#b9cec4!important;font-weight:850!important}
+.basic-center-live-v85.center-new-v85{border:4px solid #fff200!important;box-shadow:0 0 0 8px rgba(255,242,0,.18),0 0 32px rgba(255,242,0,.55)!important}
 </style>
 </head>
 <body>
@@ -1030,9 +1037,15 @@ function home(){
   {id:'endshift',icon:'🏁',label:'END SHIFT',sub:'Closing summary',run:toolEndShift}
  ];
  const pts=[[50,10],[77,22],[88,50],[77,78],[50,90],[23,78],[12,50],[23,22]];
- view.innerHTML='<section class="cashier-orbit-shell"><h2 class="cashier-orbit-title">Basic Cashier</h2><p class="cashier-orbit-sub">Tap a module to begin</p><div class="cashier-orbit"><div class="cashier-orbit-ring"></div><button type="button" class="cashier-orbit-center" id="basicCenterV82"><b>CASHIER</b><span>CURRENT SALE</span><span>'+cart.length+' item'+(cart.length===1?'':'s')+'</span></button>'+items.map((x,i)=>'<button type="button" class="cashier-orbit-node" data-basic-v82="'+x.id+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%;transform:translate(-50%,-50%)"><span class="ico">'+x.icon+'</span><span>'+x.label+'</span><small>'+x.sub+'</small></button>').join('')+'</div></section>';
+ view.innerHTML='<section class="cashier-orbit-shell"><h2 class="cashier-orbit-title">Basic Cashier</h2><p class="cashier-orbit-sub">Tap a module to begin</p><div class="cashier-orbit"><div class="cashier-orbit-ring"></div><button type="button" class="cashier-orbit-center basic-center-live-v85" id="basicCenterV82"><small>LIVE SALE</small><b>'+money(cart.reduce((s,x)=>s+(Number(x.price)||0)*(Number(x.qty)||1),0))+'</b><span>'+cart.length+' ITEM'+(cart.length===1?'':'S')+'</span><em>'+(cart.length?'TAP FOR QUICK VIEW':'START NEW SALE')+'</em></button>'+items.map((x,i)=>'<button type="button" class="cashier-orbit-node" data-basic-v82="'+x.id+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%;transform:translate(-50%,-50%)"><span class="ico">'+x.icon+'</span><span>'+x.label+'</span><small>'+x.sub+'</small></button>').join('')+'</div></section>';
  document.querySelectorAll('[data-basic-v82]').forEach((b,i)=>{const key='basic_cashier_seen_v82_'+items[i].id;if(localStorage.getItem(key))b.classList.remove('basic-new-v82');b.onclick=()=>{localStorage.setItem(key,'1');b.classList.remove('basic-new-v82');items[i].run()}});
- document.querySelector('#basicCenterV82').onclick=()=>{screen='new';render()};
+ const centerV85=document.querySelector('#basicCenterV82');if(!localStorage.getItem('basic_center_seen_v85'))centerV85.classList.add('center-new-v85');
+document.querySelector('#basicCenterV82').onclick=()=>{localStorage.setItem('basic_center_seen_v85','1');document.querySelector('#basicCenterV82').classList.remove('center-new-v85');
+ if(!cart.length){screen='new';render();return}
+ const subtotal=cart.reduce((s,x)=>s+(Number(x.price)||0)*(Number(x.qty)||1),0);
+ openCashierTool('Current Sale Quick View','<div class="review-row"><b>Items</b><b>'+cart.length+'</b></div><div class="review-row"><b>Subtotal</b><b>'+money(subtotal)+'</b></div><div class="review-row"><b>Discount</b><b>'+(promo?esc(promo.title):'None')+'</b></div><div class="review-row"><b>Payment</b><b>'+esc(payment)+'</b></div><button class="btn primary" id="continueSaleV85" style="width:100%;margin-top:14px">CONTINUE SALE</button>');
+ setTimeout(()=>{const b=document.querySelector('#continueSaleV85');if(b)b.onclick=()=>{document.querySelector('#cashierToolModal').classList.remove('open');screen='new';render()}},0);
+};
 }
 function homeAdvancedV82(){
   const view=document.querySelector('#view');
