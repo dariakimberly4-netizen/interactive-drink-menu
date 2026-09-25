@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menu Orbit — Inventory Staff</title>
+<style>
+:root{--g:#063b2b;--g2:#0b5a40;--gold:#d4ad62;--cream:#f7f1e6;--ink:#10251d}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:radial-gradient(circle at 50% 20%,#126347,#03261c 65%);color:white;min-height:100vh}
+button{font:inherit}.login{min-height:100vh;display:grid;place-items:center;padding:22px}.card{width:min(430px,94vw);background:#fff;color:var(--ink);border-radius:26px;padding:28px;box-shadow:0 24px 70px #0008;border:1px solid #e5d3a9}.brand{text-align:center}.brand .mark{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;margin:auto;background:var(--g);border:5px solid var(--gold);font-size:34px}.brand h1{margin:13px 0 4px}.muted{color:#65736d}.field{margin:15px 0}.field label{display:block;font-weight:800;font-size:12px;margin-bottom:6px}.field input{width:100%;padding:14px;border:1px solid #ccd4cf;border-radius:12px;font-size:16px}.primary{width:100%;border:0;border-radius:13px;padding:14px;background:var(--g);color:#fff;font-weight:900}.demo{margin-top:12px;background:#fff3a6;border:2px solid #e5bd00;color:#3d3300}.portal{display:none}.top{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #ffffff25}.top b{color:#f4d796}.logout{background:transparent;color:#fff;border:1px solid #ffffff55;border-radius:10px;padding:9px 12px}
+.title{text-align:center;margin:24px 0 0}.title h2{font-size:clamp(27px,5vw,42px);margin:0}.title p{color:#c7d6cf;margin:6px}
+.orbit{position:relative;width:min(680px,94vw);height:min(680px,94vw);min-height:370px;margin:15px auto 45px}.orbit:before{content:"";position:absolute;left:14%;top:14%;width:72%;height:72%;border:1px solid #d4ad6280;border-radius:50%;pointer-events:none}
+.center,.node{position:absolute;border-radius:50%;color:#fff;font-weight:950;text-align:center;touch-action:manipulation}.center{left:50%;top:50%;transform:translate(-50%,-50%);width:170px;height:170px;background:radial-gradient(circle,#147352,#042b20);border:5px solid var(--gold);z-index:3}.center small{display:block;color:#f3d99e;margin-top:7px}.node{transform:translate(-50%,-50%);width:112px;height:112px;background:#0a3527;border:2px solid var(--gold);font-size:9px;z-index:4}.node span{display:block;font-size:22px;margin-bottom:4px}.node.new{outline:7px solid #fff200;box-shadow:0 0 0 13px #fff20055,0 0 58px #fff200dd}.node.new:after{content:"★ NEW ★";position:absolute;top:-25px;left:50%;transform:translateX(-50%);background:#fff200;color:#073421;border:3px solid white;border-radius:999px;padding:5px 7px;font-size:8px;white-space:nowrap;pointer-events:none}
+.module{display:none;width:min(760px,94vw);margin:20px auto 50px}.back{background:#f7f1e6;color:#17352a;border:0;border-radius:11px;padding:11px 14px;font-weight:850}.panel{margin-top:15px;background:#fff;color:var(--ink);border-radius:20px;padding:20px}.row{padding:13px 0;border-bottom:1px solid #e5e9e7}.tag{float:right;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:900;background:#f4e8c9}.warn{background:#ffe9a8}.out{background:#ffd1ce}
+@media(max-width:650px){.orbit{width:94vw;height:94vw;max-height:440px}.center{width:120px;height:120px;font-size:12px}.node{width:82px;height:82px;font-size:7.5px}.node span{font-size:16px}.top{font-size:12px}}
+</style></head><body>
+<section class="login" id="login"><div class="card"><div class="brand"><div class="mark">▣</div><h1>Inventory / Stock Staff</h1><div class="muted">Independent staff portal</div></div>
+<div class="field"><label>STAFF EMAIL</label><input id="email" value="inventory.demo@menuorbit.test"></div><div class="field"><label>PASSWORD</label><input id="pass" type="password" value="StockOrbit2026!"></div>
+<button class="primary" id="signIn">SIGN IN</button><button class="primary demo" id="oneTap">ONE-TAP DEMO LOGIN</button></div></section>
+<section class="portal" id="portal"><header class="top"><div><b>INVENTORY / STOCK STAFF</b><br><small>Demo Bacoor Branch</small></div><button class="logout" id="logout">Sign Out</button></header>
+<div id="home"><div class="title"><h2>Stock Control Orbit</h2><p>Inventory operations</p></div><section class="orbit"><button class="center" id="center">STOCK<small id="counts">2 LOW • 1 OUT</small></button><div id="nodes"></div></section></div>
+<section class="module" id="module"><button class="back" id="back">← Back to Stock Orbit</button><div class="panel" id="panel"></div></section></section>
+<script>
+const tools=[['live','▣','LIVE STOCK'],['low','!','LOW STOCK'],['sold','×','SOLD OUT'],['unavailable','Ⅱ','MARK UNAVAILABLE'],['restock','↥','RESTOCK REQUEST'],['sub','⇄','SUBSTITUTIONS'],['waste','⌛','EXPIRY / WASTE'],['count','✓','STOCK COUNT']];
+const pts=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
+const stock=[['Espresso Beans','12 bags','OK'],['Whole Milk','4 cartons','LOW'],['Oat Milk','0 cartons','OUT'],['Vanilla Syrup','2 bottles','LOW'],['Cups 16oz','86 pcs','OK']];
+function enter(){login.style.display='none';portal.style.display='block';render()}
+function render(){nodes.innerHTML=tools.map((x,i)=>'<button class="node '+(localStorage.getItem('inv_v1_'+x[0])?'':'new')+'" data-tool="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('');document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{localStorage.setItem('inv_v1_'+b.dataset.tool,'1');b.classList.remove('new');openTool(b.dataset.tool)})}
+function rows(filter){let a=stock;if(filter==='LOW')a=stock.filter(x=>x[2]==='LOW');if(filter==='OUT')a=stock.filter(x=>x[2]==='OUT');return a.map(x=>'<div class="row"><b>'+x[0]+'</b><span class="tag '+(x[2]==='LOW'?'warn':x[2]==='OUT'?'out':'')+'">'+x[2]+'</span><br><small>'+x[1]+'</small></div>').join('')||'<p>No items here.</p>'}
+function openTool(id){home.style.display='none';module.style.display='block';let t='',b='';
+if(id==='live'){t='Live Ingredient Levels';b=rows()}
+if(id==='low'){t='Low-Stock Alerts';b=rows('LOW')}
+if(id==='sold'){t='Sold-Out Items';b=rows('OUT')}
+if(id==='unavailable'){t='Mark Unavailable';b=rows()+'<p>Select an item in production to change menu availability.</p>'}
+if(id==='restock'){t='Restock Requests';b=rows('LOW')+'<button class="primary">CREATE RESTOCK REQUEST</button>'}
+if(id==='sub'){t='Substitute Ingredient';b='<p>Review approved substitutions before sending changes to the barista station.</p>'+rows('OUT')}
+if(id==='waste'){t='Expiry / Waste';b='<p>Log expired, damaged, spilled, or wasted ingredients for shift reconciliation.</p>'}
+if(id==='count'){t='Stock Count';b=rows()+'<button class="primary">START STOCK COUNT</button>'}
+panel.innerHTML='<h2>'+t+'</h2>'+b}
+signIn.onclick=()=>{if(email.value&&pass.value)enter()};oneTap.onclick=enter;logout.onclick=()=>location.reload();back.onclick=()=>{module.style.display='none';home.style.display='block'};center.onclick=()=>openTool('live');
+</script></body></html>
