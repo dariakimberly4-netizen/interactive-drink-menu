@@ -323,6 +323,22 @@
  position:absolute;top:-10px;right:-5px;padding:5px 8px;border-radius:999px;
  font:1000 8px/1 system-ui;letter-spacing:.08em;z-index:30;
 }
+
+/* UNMISSABLE SHIFT HIGHLIGHT V21 */
+.cashier-orbit-node.shift-new-highlight{
+ border:6px solid #ffea00!important;
+ background:#8a6500!important;
+ box-shadow:0 0 0 8px #fff3a3,0 0 55px 18px rgba(255,234,0,.75)!important;
+ z-index:80!important;
+ animation:shiftNewFlash 1s ease-in-out infinite!important;
+}
+.cashier-orbit-node.shift-new-highlight::before{
+ content:'★ NEW ★'!important;position:absolute!important;top:-24px!important;left:50%!important;
+ transform:translateX(-50%)!important;background:#ffea00!important;color:#092d20!important;
+ border:3px solid white!important;border-radius:999px!important;padding:7px 11px!important;
+ font:1000 10px/1 system-ui!important;white-space:nowrap!important;z-index:100!important;
+}
+@keyframes shiftNewFlash{50%{transform:translate(-50%,-50%) scale(1.10)!important;filter:brightness(1.25)}}
 </style>
 </head>
 <body>
@@ -737,7 +753,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&!seen()?'new-orbit':''} ${isMain&&item.id==='promos'?'feature-hub':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&!seen()?'new-orbit':''} ${isMain&&item.id==='promos'?'feature-hub':''} ${!isMain&&['Cash Reconciliation','Payment Protection','Receipt & Labels','Audit Trail'].includes(item.label)?'shift-new-highlight':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
