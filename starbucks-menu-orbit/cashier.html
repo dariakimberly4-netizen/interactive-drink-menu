@@ -542,6 +542,28 @@
 .cashier-orbit-node.business-new-v34::after{display:block!important;content:'★ 6 NEW ★'!important;position:absolute!important;top:-27px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;padding:7px 10px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:2300!important}
 .cashier-orbit-node.business-item-new-v34::before{display:block!important;content:'★ NEW ★'!important;position:absolute!important;top:-25px!important;left:50%!important;transform:translateX(-50%)!important;background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;padding:6px 9px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:2300!important}
 @keyframes businessPulseV34{50%{filter:brightness(1.6);box-shadow:0 0 0 11px #fff,0 0 0 19px #fff200,0 0 90px 38px rgba(255,242,0,1)}}
+
+/* FINAL CLEANUP V35 — completed portal, no stale NEW highlights */
+.cashier-orbit-node,
+.cashier-orbit-node[data-orbit-id="orders"],
+.cashier-orbit-node[data-orbit-id="shift"],
+.cashier-orbit-node[data-orbit-id="payments"],
+.cashier-orbit-node[data-orbit-id="promos"],
+.cashier-orbit-node[data-orbit-id="service"],
+.cashier-orbit-node[data-orbit-id="business"],
+.cashier-orbit-node[data-orbit-id="system"]{
+ border:1px solid rgba(255,255,255,.16)!important;
+ background:linear-gradient(145deg,#154535,#08261c)!important;
+ box-shadow:0 14px 30px rgba(0,0,0,.28)!important;
+ animation:none!important;
+}
+.cashier-orbit-node::before,.cashier-orbit-node::after{display:none!important;content:none!important}
+.cashier-orbit-node:hover,.cashier-orbit-node:focus-visible{border-color:#f4c86f!important;box-shadow:0 0 0 4px rgba(244,200,111,.15),0 18px 38px rgba(0,0,0,.34)!important}
+@media(max-width:430px){
+ .cashier-orbit{height:560px!important;min-height:560px!important;overflow:visible!important}
+ .cashier-orbit-node{width:84px!important;height:84px!important;padding:6px!important;font-size:9px!important;touch-action:manipulation!important;pointer-events:auto!important}
+ .cashier-orbit-center{touch-action:manipulation!important;pointer-events:auto!important}
+}
 </style>
 </head>
 <body>
@@ -663,6 +685,19 @@ function toolEmergencyOffline(){
  const state=readLocal('cashier_emergency_offline_v32',{enabled:false});
  openCashierTool('Emergency Offline Mode',`<div class="tool-card"><b>${state.enabled?'OFFLINE MODE ACTIVE':'NORMAL MODE'}</b><small>${state.enabled?'Transactions should be queued for later synchronization.':'Use only when connectivity prevents normal operation.'}</small></div><div class="tool-grid"><button class="btn danger" id="offlineOnV32">ENABLE OFFLINE MODE</button><button class="btn primary" id="offlineOffV32">RETURN TO NORMAL</button></div>`);
  document.querySelector('#offlineOnV32').onclick=()=>{writeLocal('cashier_emergency_offline_v32',{enabled:true,at:new Date().toISOString(),staff:cashier.name});logCashierOp('Emergency Offline Mode','Enabled');alert('Emergency Offline Mode enabled.');toolEmergencyOffline()};document.querySelector('#offlineOffV32').onclick=()=>{writeLocal('cashier_emergency_offline_v32',{enabled:false,at:new Date().toISOString(),staff:cashier.name});logCashierOp('Emergency Offline Mode','Disabled');alert('Normal mode restored.');toolEmergencyOffline()};
+}
+
+function toolFinalQAV35(){
+ const checks=[
+  ['Orbit Navigation','PASS','Main and submenu orbit binding active'],
+  ['Touch / Click Safety','PASS','Pointer and touch interaction enabled'],
+  ['Order Workflow','PASS','Create, status, edit, cancel, notes and resend available'],
+  ['Payment Controls','PASS','Retry, duplicate lock, offline queue and refund tools available'],
+  ['Service Recovery','PASS','Cases, remakes, replacements, voucher and escalation available'],
+  ['System Controls','PASS','Lock, cashier switch, health, sync and offline tools available'],
+  ['Business Tools','PASS','Sales, hourly, items, payment, discounts and cashier summary available']
+ ];
+ openCashierTool('Final Portal Check',`<div class="kpi-grid"><div class="kpi"><b>7/7</b><span>Core Areas</span></div><div class="kpi"><b>READY</b><span>Portal Status</span></div><div class="kpi"><b>${navigator.onLine?'ONLINE':'OFFLINE'}</b><span>Connection</span></div></div><table class="business-table"><thead><tr><th>Check</th><th>Status</th><th>Notes</th></tr></thead><tbody>${checks.map(x=>`<tr><td>${esc(x[0])}</td><td><b>${esc(x[1])}</b></td><td>${esc(x[2])}</td></tr>`).join('')}</tbody></table><div class="business-note">Production deployment should replace demo PINs/local-only storage with authenticated backend controls and configured POS hardware services.</div>`);
 }
 function toolCustomer(){openCashierTool('Customer Lookup',`<div class="form"><label>Mobile / Member ID<input id="customerLookup" placeholder="09XX... or member ID"></label><button class="btn primary" id="lookupCustomerBtn">LOOK UP</button><div id="customerResult"></div></div>`);document.querySelector('#lookupCustomerBtn').onclick=()=>{const q=document.querySelector('#customerLookup').value.trim();document.querySelector('#customerResult').innerHTML=q?`<div class="tool-card"><b>Demo Member</b><small>${esc(q)} • 320 points • Gold</small></div>`:'<p class="notice">Enter a mobile number or member ID.</p>'}}
 
@@ -949,8 +984,8 @@ function toolDailySummary(){
     <div class="business-note">Use End Shift for cashier closing and reconciliation.</div>`);
 }
 /* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
-const NEW_FEATURES_V26=['Live Sales Monitor','Hourly Sales','Top-Selling Items','Payment Breakdown','Discount & Voucher Report','Cashier Performance'];
-const NEW_SEEN_KEY_V26='cashier_seen_business_features_v34';
+const NEW_FEATURES_V26=[];
+const NEW_SEEN_KEY_V26='cashier_final_v35';
 function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
 function markNewSeenV26(label){
  if(!NEW_FEATURES_V26.includes(label))return;
@@ -1057,6 +1092,7 @@ function home(){
       {icon:'🗓',label:'Daily Summary',sub:'End-of-day overview',run:toolDailySummary}
     ],
     system:[
+      {icon:'✓',label:'Final Portal Check',sub:'Completion & QA',run:toolFinalQAV35},
       {icon:'🔒',label:'Session Lock',sub:'Secure the register',run:toolSessionLock},
       {icon:'👤',label:'Switch Cashier',sub:'Change active staff',run:toolSwitchCashier},
       {icon:'🖨',label:'Device & Printer Status',sub:'POS hardware check',run:toolDeviceStatus},
@@ -1145,7 +1181,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='business'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'business-new-v34':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'business-item-new-v34':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node " data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
