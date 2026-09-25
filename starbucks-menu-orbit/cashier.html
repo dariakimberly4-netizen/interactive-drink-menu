@@ -458,6 +458,13 @@
  .cashier-orbit-ring{width:250px!important;height:250px!important}
 }
 .cashier-orbit-node,.cashier-orbit-center{pointer-events:auto!important}
+
+/* ORDER CONTROL V29 — latest-only discovery */
+.cashier-orbit-node[data-orbit-id="payments"]{border:1px solid rgba(255,255,255,.16)!important;background:linear-gradient(145deg,#154535,#08261c)!important;box-shadow:0 14px 30px rgba(0,0,0,.28)!important;animation:none!important}
+.cashier-orbit-node[data-orbit-id="payments"]::after{display:none!important;content:none!important}
+.cashier-orbit-node.latest-v25-hub,.cashier-orbit-node.latest-v25-item{border:7px solid #fff200!important;background:#8b6800!important;box-shadow:0 0 0 7px #fff,0 0 0 13px #fff200,0 0 55px 22px rgba(255,242,0,.75)!important;animation:v25Blink .85s ease-in-out infinite!important;z-index:999!important}
+.status-flow-v29{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:430px){.status-flow-v29{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -503,6 +510,32 @@ function toolEndShift(){const tx=demoTransactions(),sales=tx.reduce((s,x)=>s+Num
 function toolApprovals(){const a=readLocal(APPROVAL_KEY,[]);openCashierTool('Manager Approval',`<div class="tool-grid"><div class="tool-card"><b>Request Void</b><small>Manager approval required.</small><button class="btn" data-request-approval="Void Order">REQUEST</button></div><div class="tool-card"><b>Request Refund</b><small>Full or partial refund approval.</small><button class="btn" data-request-approval="Refund">REQUEST</button></div><div class="tool-card"><b>Price Override</b><small>Approval before manual price change.</small><button class="btn" data-request-approval="Price Override">REQUEST</button></div><div class="tool-card"><b>Large Discount</b><small>Approval for exceptional discount.</small><button class="btn" data-request-approval="Large Discount">REQUEST</button></div></div><h3>Recent Requests</h3><div id="approvalList">${a.length?a.map(x=>`<div class="approval-row"><div><b>${esc(x.type)}</b><small>${esc(x.status)} • ${esc(x.at)}</small></div><span class="status">${esc(x.status)}</span></div>`).join(''):'<div class="empty">No requests yet.</div>'}</div>`);document.querySelectorAll('[data-request-approval]').forEach(b=>b.onclick=()=>{const list=readLocal(APPROVAL_KEY,[]);list.unshift({type:b.dataset.requestApproval,status:'Pending',at:new Date().toLocaleString('en-PH')});writeLocal(APPROVAL_KEY,list);logCashierOp('Approval Request',b.dataset.requestApproval);toolApprovals()})}
 function toolVoidRefund(){const tx=demoTransactions();openCashierTool('Void / Refund',`<div class="form"><label>Transaction<select id="voidTxn">${tx.map(x=>`<option value="${esc(x.ref||x.order_ref)}">${esc(x.ref||x.order_ref)} — ${money(x.total||x.total_amount)}</option>`).join('')}</select></label><label>Action<select id="voidAction"><option>Void Order</option><option>Full Refund</option><option>Partial Refund</option></select></label><label>Reason<textarea id="voidReason" placeholder="Required"></textarea></label><button class="btn danger" id="voidRequest">REQUEST MANAGER APPROVAL</button></div>`);document.querySelector('#voidRequest').onclick=()=>{const reason=document.querySelector('#voidReason').value.trim();if(!reason)return alert('Please enter a reason.');const list=readLocal(APPROVAL_KEY,[]);list.unshift({type:document.querySelector('#voidAction').value+' • '+document.querySelector('#voidTxn').value,status:'Pending',at:new Date().toLocaleString('en-PH')});writeLocal(APPROVAL_KEY,list);logCashierOp('Void/Refund Request',reason);alert('Sent for manager approval.');document.querySelector('#cashierToolModal').classList.remove('open')}}
 function toolPending(){const list=activeOrders.filter(x=>(x.payment_status||'Pending')==='Pending'||x.status==='new');openCashierTool('Pending Payments',`${list.length?list.map(x=>`<div class="receipt-row"><div><b>${esc(x.order_ref)}</b><small>${money(x.total_amount)} • ${esc(x.status)}</small></div><button type="button" class="btn pending-pay-btn" data-markpaid="${esc(x.order_ref)}">MARK PAID</button></div>`).join(''):'<div class="empty">No pending payments.</div>'}`);document.querySelectorAll('#cashierToolModal [data-markpaid]').forEach(b=>b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();const ref=this.getAttribute('data-markpaid');const order=activeOrders.find(x=>x.order_ref===ref);if(order){order.payment_status='Paid';if(order.status==='new')order.status='preparing'}logCashierOp('Payment Confirmed',ref);this.textContent='PAID ✓';this.disabled=true;setTimeout(()=>toolPending(),350)}))}
+
+const ORDER_NOTES_KEY='cashier_order_notes_v29';
+const ORDER_PRIORITY_KEY='cashier_order_priority_v29';
+function chooseActiveOrderV29(title,buttonLabel,onPick){
+ const rows=activeOrders.filter(o=>['new','preparing','ready'].includes(String(o.status||'').toLowerCase()));
+ openCashierTool(title,rows.length?`<div class="orders">${rows.map((o,i)=>`<div class="order-row"><div><b>${esc(o.order_ref||o.id||'Order')}</b><small>${esc(String(o.status||'new').toUpperCase())} • ${money(o.total_amount||0)}</small></div><button class="btn primary" data-v29pick="${i}">${buttonLabel}</button></div>`).join('')}</div>`:'<div class="empty">No active orders.</div>');
+ document.querySelectorAll('[data-v29pick]').forEach(b=>b.onclick=()=>onPick(rows[+b.dataset.v29pick]));
+}
+function toolOrderStatusFlow(){
+ chooseActiveOrderV29('Order Status Flow','MANAGE',o=>{const current=String(o.status||'new').toLowerCase();openCashierTool('Update '+esc(o.order_ref),`<div class="status-flow-v29"><button class="btn ${current==='new'?'primary':''}" data-v29status="new">NEW</button><button class="btn ${current==='preparing'?'primary':''}" data-v29status="preparing">PREPARING</button><button class="btn ${current==='ready'?'primary':''}" data-v29status="ready">READY</button><button class="btn ${current==='completed'?'primary':''}" data-v29status="completed">COMPLETED</button></div>`);document.querySelectorAll('[data-v29status]').forEach(b=>b.onclick=()=>{o.status=b.dataset.v29status;logCashierOp('Order Status',o.order_ref+' → '+o.status);alert(o.order_ref+' is now '+o.status.toUpperCase());document.querySelector('#cashierToolModal').classList.remove('open');render()})});
+}
+function toolPriorityRush(){
+ chooseActiveOrderV29('Priority / Rush Order','SELECT',o=>{const map=readLocal(ORDER_PRIORITY_KEY,{}),ref=o.order_ref||o.id;openCashierTool('Priority • '+esc(ref),`<div class="tool-grid"><button class="btn primary" data-priority="RUSH">⚡ RUSH</button><button class="btn" data-priority="PRIORITY">★ PRIORITY</button><button class="btn" data-priority="NORMAL">NORMAL</button></div>`);document.querySelectorAll('[data-priority]').forEach(b=>b.onclick=()=>{map[ref]=b.dataset.priority;writeLocal(ORDER_PRIORITY_KEY,map);logCashierOp('Order Priority',ref+' • '+b.dataset.priority);alert(ref+' marked '+b.dataset.priority);document.querySelector('#cashierToolModal').classList.remove('open');render()})});
+}
+function toolEditBeforePrep(){
+ chooseActiveOrderV29('Edit Before Preparation','EDIT',o=>{if(String(o.status).toLowerCase()!=='new')return alert('Editing is locked after preparation begins.');openCashierTool('Edit '+esc(o.order_ref),`<div class="form"><label>Customer / Cup Name<input id="editCupV29" value="${esc(o.customer_name||'')}"></label><label>Order Note<textarea id="editNoteV29" placeholder="Correction or instruction">${esc(readLocal(ORDER_NOTES_KEY,{})[o.order_ref]||'')}</textarea></label><button class="btn primary" id="saveEditV29">SAVE CHANGES</button></div>`);document.querySelector('#saveEditV29').onclick=()=>{o.customer_name=document.querySelector('#editCupV29').value.trim();const notes=readLocal(ORDER_NOTES_KEY,{});notes[o.order_ref]=document.querySelector('#editNoteV29').value.trim();writeLocal(ORDER_NOTES_KEY,notes);logCashierOp('Order Edited',o.order_ref);alert('Changes saved before preparation.');document.querySelector('#cashierToolModal').classList.remove('open');render()}});
+}
+function toolCancelOrderReason(){
+ chooseActiveOrderV29('Cancel Order','CANCEL',o=>{if(String(o.status).toLowerCase()==='completed')return alert('Completed orders cannot be cancelled here.');openCashierTool('Cancel '+esc(o.order_ref),`<div class="form"><label>Cancellation Reason<select id="cancelReasonV29"><option>Customer Request</option><option>Duplicate Order</option><option>Item Unavailable</option><option>Incorrect Order</option><option>Other</option></select></label><label>Details<textarea id="cancelDetailV29" placeholder="Required for audit trail"></textarea></label><button class="btn danger" id="cancelGoV29">CONFIRM CANCELLATION</button></div>`);document.querySelector('#cancelGoV29').onclick=()=>{const reason=document.querySelector('#cancelReasonV29').value,detail=document.querySelector('#cancelDetailV29').value.trim();if(!detail)return alert('Enter cancellation details.');o.status='cancelled';o.cancel_reason=reason+' • '+detail;logCashierOp('Order Cancelled',o.order_ref+' • '+o.cancel_reason);alert(o.order_ref+' cancelled.');document.querySelector('#cashierToolModal').classList.remove('open');render()}});
+}
+function toolResendBarista(){
+ chooseActiveOrderV29('Reprint / Resend to Barista','RESEND',o=>{o._baristaResentAt=new Date().toISOString();logCashierOp('Order Resent to Barista',o.order_ref);alert(o.order_ref+' resent to Barista queue.');document.querySelector('#cashierToolModal').classList.remove('open')});
+}
+function toolOrderNotes(){
+ chooseActiveOrderV29('Order Notes / Special Instructions','ADD NOTE',o=>{const notes=readLocal(ORDER_NOTES_KEY,{});openCashierTool('Order Note • '+esc(o.order_ref),`<div class="form"><label>Special Instructions<textarea id="orderNoteV29" placeholder="No ice, allergy note, customer request...">${esc(notes[o.order_ref]||'')}</textarea></label><button class="btn primary" id="saveNoteV29">SAVE NOTE</button></div>`);document.querySelector('#saveNoteV29').onclick=()=>{notes[o.order_ref]=document.querySelector('#orderNoteV29').value.trim();writeLocal(ORDER_NOTES_KEY,notes);logCashierOp('Order Note',o.order_ref+' • '+notes[o.order_ref]);alert('Order note saved.');document.querySelector('#cashierToolModal').classList.remove('open')}});
+}
 function toolHold(){const holds=readLocal(HOLD_KEY,[]);openCashierTool('Hold / Resume Order',`<div class="tool-grid"><button class="btn primary" id="holdCurrent" ${cart.length?'':'disabled'}>HOLD CURRENT CART</button></div><div id="holdRows">${holds.length?holds.map((h,i)=>`<div class="hold-row"><div><b>${esc(h.name)}</b><small>${h.items.length} items • ${esc(h.at)}</small></div><button class="btn" data-resume="${i}">RESUME</button></div>`).join(''):'<div class="empty">No held orders.</div>'}</div>`);document.querySelector('#holdCurrent')?.addEventListener('click',()=>{const a=readLocal(HOLD_KEY,[]);a.unshift({name:'Held '+new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'}),items:structuredClone(cart),promo,at:new Date().toLocaleString('en-PH')});writeLocal(HOLD_KEY,a);cart=[];promo=null;logCashierOp('Order Held',a[0].name);toolHold()});document.querySelectorAll('[data-resume]').forEach(b=>b.onclick=()=>{const a=readLocal(HOLD_KEY,[]),h=a.splice(+b.dataset.resume,1)[0];writeLocal(HOLD_KEY,a);cart=h.items||[];promo=h.promo||null;document.querySelector('#cashierToolModal').classList.remove('open');screen='new';render()})}
 function toolInventory(){const stock=[['Caffè Latte','Available'],['Cold Brew','Low'],['Matcha Latte','Available'],['Ham & Cheese Croffle','Low'],['Chocolate Cake','Sold Out']];openCashierTool('Inventory Alerts',stock.map(([n,s])=>`<div class="receipt-row"><b>${esc(n)}</b><span class="${s==='Available'?'inventory-ok':s==='Low'?'inventory-low':'inventory-out'}">${esc(s)}</span></div>`).join(''))}
 function toolCustomer(){openCashierTool('Customer Lookup',`<div class="form"><label>Mobile / Member ID<input id="customerLookup" placeholder="09XX... or member ID"></label><button class="btn primary" id="lookupCustomerBtn">LOOK UP</button><div id="customerResult"></div></div>`);document.querySelector('#lookupCustomerBtn').onclick=()=>{const q=document.querySelector('#customerLookup').value.trim();document.querySelector('#customerResult').innerHTML=q?`<div class="tool-card"><b>Demo Member</b><small>${esc(q)} • 320 points • Gold</small></div>`:'<p class="notice">Enter a mobile number or member ID.</p>'}}
@@ -782,7 +815,7 @@ function toolDailySummary(){
     <div class="business-note">Use End Shift for cashier closing and reconciliation.</div>`);
 }
 /* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
-const NEW_FEATURES_V26=['Payment Retry','Duplicate Payment Lock','Failed Payment Queue','Manager PIN Override','Offline Payment Sync','Refund Original Method'];
+const NEW_FEATURES_V26=['Order Status Flow','Priority / Rush Order','Edit Before Preparation','Cancel Order with Reason','Reprint / Resend Barista','Order Notes'];
 const NEW_SEEN_KEY_V26='cashier_seen_new_features_v26';
 function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
 function markNewSeenV26(label){
@@ -810,6 +843,12 @@ function home(){
       {icon:'＋',label:'New Order',sub:'Start a sale',run:()=>{screen='new';render()}},
       {icon:'◴',label:'Active Orders',sub:activeOrders.length+' open',run:()=>{screen='orders';render()}},
       {icon:'🛒',label:'Current Cart',sub:cart.length+' item'+(cart.length===1?'':'s'),run:()=>{screen='new';render()}},
+      {icon:'⇢',label:'Order Status Flow',sub:'New → Completed',run:toolOrderStatusFlow},
+      {icon:'⚡',label:'Priority / Rush Order',sub:'Escalate preparation',run:toolPriorityRush},
+      {icon:'✎',label:'Edit Before Preparation',sub:'Correct before barista',run:toolEditBeforePrep},
+      {icon:'✕',label:'Cancel Order with Reason',sub:'Audit cancellation',run:toolCancelOrderReason},
+      {icon:'☕',label:'Reprint / Resend Barista',sub:'Send ticket again',run:toolResendBarista},
+      {icon:'📝',label:'Order Notes',sub:'Special instructions',run:toolOrderNotes},
       {icon:'🅿',label:'Park Order',sub:'Save current cart',run:toolParkOrder},
       {icon:'↩',label:'Order Recall',sub:'Restore parked order',run:toolOrderRecall},
       {icon:'⏸',label:'Hold / Resume',sub:'Pause a sale',run:toolHold},
@@ -951,7 +990,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='payments'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='orders'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
