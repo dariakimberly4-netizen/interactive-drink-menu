@@ -534,6 +534,14 @@
  padding:6px 9px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:2100!important;
 }
 @keyframes systemPulseV33{50%{filter:brightness(1.6);box-shadow:0 0 0 11px #fff!important,0 0 0 19px #fff200!important,0 0 90px 38px rgba(255,242,0,1)!important}}
+
+/* BUSINESS RELEASE V34 — latest-only highlight */
+.cashier-orbit-node[data-orbit-id="system"]{border:1px solid rgba(255,255,255,.16)!important;background:linear-gradient(145deg,#154535,#08261c)!important;box-shadow:0 14px 30px rgba(0,0,0,.28)!important;animation:none!important}
+.cashier-orbit-node[data-orbit-id="system"]::after{display:none!important;content:none!important}
+.cashier-orbit-node.business-new-v34,.cashier-orbit-node.business-item-new-v34{border:8px solid #fff200!important;background:#9b7500!important;box-shadow:0 0 0 7px #fff!important,0 0 0 14px #fff200!important,0 0 70px 30px rgba(255,242,0,.98)!important;animation:businessPulseV34 .72s ease-in-out infinite!important;z-index:2200!important}
+.cashier-orbit-node.business-new-v34::after{display:block!important;content:'★ 6 NEW ★'!important;position:absolute!important;top:-27px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;padding:7px 10px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:2300!important}
+.cashier-orbit-node.business-item-new-v34::before{display:block!important;content:'★ NEW ★'!important;position:absolute!important;top:-25px!important;left:50%!important;transform:translateX(-50%)!important;background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;padding:6px 9px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:2300!important}
+@keyframes businessPulseV34{50%{filter:brightness(1.6);box-shadow:0 0 0 11px #fff,0 0 0 19px #fff200,0 0 90px 38px rgba(255,242,0,1)}}
 </style>
 </head>
 <body>
@@ -914,6 +922,14 @@ function toolCustomerInsights(){
     </tbody></table>
     <div class="business-note">Demo insights only. Real customer analytics should use consented and authorized data sources.</div>`);
 }
+
+function bizRowsV34(){return demoTransactions().map(x=>({ref:x.ref||x.order_ref||'',total:Number(x.total||x.total_amount||0),pay:x.pay||x.payment_method||x.payment_status||'Unknown',at:x.created_at||x.at||'',cashier:x.cashier||x.staff||cashier.name,discount:Number(x.discount||x.discount_amount||0),voucher:Number(x.voucher||x.voucher_amount||0),items:x.items||[]}));}
+function toolLiveSalesV34(){const r=bizRowsV34(),sales=r.reduce((s,x)=>s+x.total,0),avg=r.length?sales/r.length:0;openCashierTool('Live Sales Monitor',`<div class="kpi-grid"><div class="kpi"><b>${money(sales)}</b><span>Sales</span></div><div class="kpi"><b>${r.length}</b><span>Transactions</span></div><div class="kpi"><b>${money(avg)}</b><span>Average Order</span></div></div><div class="business-note">Updates from transactions currently available to this cashier portal.</div>`)}
+function toolHourlySalesV34(){const r=bizRowsV34(),h={};r.forEach(x=>{let d=x.at?new Date(x.at):null,k=d&&!isNaN(d)?d.toLocaleTimeString('en-PH',{hour:'2-digit'}):'Current';h[k]=(h[k]||0)+x.total});const rows=Object.entries(h);openCashierTool('Hourly Sales',rows.length?`<table class="business-table"><thead><tr><th>Hour</th><th>Sales</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x[0])}</td><td><b>${money(x[1])}</b></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No sales data yet.</div>')}
+function toolTopItemsV34(){const counts={};cart.forEach(x=>counts[x.name]=(counts[x.name]||0)+Number(x.qty||1));bizRowsV34().forEach(t=>(Array.isArray(t.items)?t.items:[]).forEach(x=>counts[x.name||x.product_name||'Item']=(counts[x.name||x.product_name||'Item']||0)+Number(x.qty||x.quantity||1)));const rows=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);openCashierTool('Top-Selling Items',rows.length?`<table class="business-table"><thead><tr><th>Item</th><th>Qty</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x[0])}</td><td><b>${x[1]}</b></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Item-level transaction data is not available yet.</div>')}
+function toolPaymentBreakdownV34(){const p={};bizRowsV34().forEach(x=>p[x.pay]=(p[x.pay]||0)+x.total);const rows=Object.entries(p).sort((a,b)=>b[1]-a[1]);openCashierTool('Payment Method Breakdown',rows.length?`<table class="business-table"><thead><tr><th>Method</th><th>Amount</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x[0])}</td><td><b>${money(x[1])}</b></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No payment data yet.</div>')}
+function toolDiscountReportV34(){const r=bizRowsV34(),discount=r.reduce((s,x)=>s+x.discount,0),voucher=r.reduce((s,x)=>s+x.voucher,0);openCashierTool('Discount & Voucher Report',`<div class="kpi-grid"><div class="kpi"><b>${money(discount)}</b><span>Discounts</span></div><div class="kpi"><b>${money(voucher)}</b><span>Vouchers</span></div><div class="kpi"><b>${money(discount+voucher)}</b><span>Total Deductions</span></div></div><div class="business-note">Based on discount/voucher fields present in available transaction records.</div>`)}
+function toolCashierPerformanceV34(){const r=bizRowsV34(),sales=r.reduce((s,x)=>s+x.total,0);openCashierTool('Cashier Performance',`<div class="kpi-grid"><div class="kpi"><b>${esc(cashier.name)}</b><span>Active Cashier</span></div><div class="kpi"><b>${r.length}</b><span>Transactions</span></div><div class="kpi"><b>${money(sales)}</b><span>Handled Sales</span></div></div><div class="business-note">Operational summary only; not an employee ranking or score.</div>`)}
 function toolDailySummary(){
   const d=businessSalesDataV5();
   const sold=soldOutIdsV4().length;
@@ -933,8 +949,8 @@ function toolDailySummary(){
     <div class="business-note">Use End Shift for cashier closing and reconciliation.</div>`);
 }
 /* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
-const NEW_FEATURES_V26=['Session Lock','Switch Cashier','Device & Printer Status','Backend Health','Sync Center','Emergency Offline Mode'];
-const NEW_SEEN_KEY_V26='cashier_seen_system_features_v33';
+const NEW_FEATURES_V26=['Live Sales Monitor','Hourly Sales','Top-Selling Items','Payment Breakdown','Discount & Voucher Report','Cashier Performance'];
+const NEW_SEEN_KEY_V26='cashier_seen_business_features_v34';
 function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
 function markNewSeenV26(label){
  if(!NEW_FEATURES_V26.includes(label))return;
@@ -1025,6 +1041,13 @@ function home(){
       {icon:'📊',label:'Cashier Reports',sub:'Sales & payment mix',run:toolReports}
     ],
     business:[
+      {icon:'●',label:'Live Sales Monitor',sub:'Sales right now',run:toolLiveSalesV34},
+      {icon:'◷',label:'Hourly Sales',sub:'Sales by hour',run:toolHourlySalesV34},
+      {icon:'★',label:'Top-Selling Items',sub:'Best-moving items',run:toolTopItemsV34},
+      {icon:'💳',label:'Payment Breakdown',sub:'Cash / digital mix',run:toolPaymentBreakdownV34},
+      {icon:'🏷',label:'Discount & Voucher Report',sub:'Deductions summary',run:toolDiscountReportV34},
+      {icon:'👤',label:'Cashier Performance',sub:'Shift activity',run:toolCashierPerformanceV34},
+
       {icon:'📊',label:'Sales Dashboard',sub:'Sales • orders • average',run:toolBusinessSales},
       {icon:'☕',label:'Product Performance',sub:'Best sellers & revenue',run:toolProductPerformance},
       {icon:'◷',label:'Peak Hours',sub:'Busiest service periods',run:toolPeakHours},
@@ -1122,7 +1145,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='system'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'system-new-v33':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'system-item-new-v33':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='business'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'business-new-v34':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'business-item-new-v34':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
