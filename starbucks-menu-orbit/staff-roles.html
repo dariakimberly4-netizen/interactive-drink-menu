@@ -1,0 +1,20 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Menu Orbit — Staff Role Login</title>
+<style>
+:root{--g:#063b2b;--gold:#d4ad62}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 18%,#176348,#03251b 68%);color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow-x:hidden}button{font:inherit}
+header{text-align:center;padding:30px 16px 0}header h1{margin:0;font-size:clamp(29px,6vw,48px)}header p{color:#c8d8d0;margin:7px}
+.orbit{position:relative;width:min(680px,94vw);height:min(680px,94vw);min-height:390px;margin:10px auto 35px}.orbit:before{content:"";position:absolute;left:14%;top:14%;width:72%;height:72%;border:1px solid #d4ad6280;border-radius:50%;pointer-events:none}
+.center,.role{position:absolute;border-radius:50%;color:#fff;text-align:center;font-weight:950;touch-action:manipulation}.center{left:50%;top:50%;transform:translate(-50%,-50%);width:180px;height:180px;border:5px solid var(--gold);background:radial-gradient(circle,#147352,#042b20);z-index:3}.center small{display:block;color:#f2d493;margin-top:8px;font-size:9px}.role{transform:translate(-50%,-50%);width:128px;height:128px;background:#0a3527;border:3px solid var(--gold);z-index:4}.role span{display:block;font-size:28px;margin-bottom:5px}.role.new{outline:7px solid #fff200;box-shadow:0 0 0 13px #fff20055,0 0 60px #fff200dd}.role.new:after{content:"★ NEW ★";position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:#fff200;color:#073421;border:3px solid #fff;border-radius:999px;padding:5px 8px;font-size:8px;white-space:nowrap;pointer-events:none}
+.note{text-align:center;color:#b9ccc3;font-size:12px;padding:0 20px 30px}
+@media(max-width:650px){header{padding-top:22px}.orbit{width:94vw;height:94vw;max-height:450px}.center{width:126px;height:126px;font-size:12px}.role{width:94px;height:94px;font-size:9px}.role span{font-size:21px}}
+</style></head><body><header><h1>Staff Role Orbit</h1><p>Select your staff role to continue</p></header>
+<section class="orbit"><button class="center" id="center">STAFF PORTAL<small>4 INDEPENDENT ROLES</small></button>
+<button class="role new" data-role="cashier" style="left:50%;top:8%"><span>▤</span>CASHIER</button>
+<button class="role new" data-role="barista" style="left:88%;top:50%"><span>☕</span>BARISTA</button>
+<button class="role new" data-role="inventory" style="left:50%;top:92%"><span>▣</span>INVENTORY / STOCK</button>
+<button class="role new" data-role="manager" style="left:12%;top:50%"><span>◆</span>SHIFT MANAGER</button>
+</section><div class="note">Each role has its own login and independent Orbit workspace.</div>
+<script>
+const links={cashier:'cashier.html',barista:'staff.html',inventory:'inventory-staff.html',manager:'manager.html'};
+document.querySelectorAll('[data-role]').forEach(b=>{const id=b.dataset.role;if(localStorage.getItem('staff_role_orbit_v1_'+id))b.classList.remove('new');b.onclick=()=>{localStorage.setItem('staff_role_orbit_v1_'+id,'1');b.classList.remove('new');location.href=links[id]}})
+center.onclick=()=>document.querySelector('[data-role="barista"]').click();
+</script></body></html>
