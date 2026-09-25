@@ -192,6 +192,35 @@
 .ops-upgrade input,.ops-upgrade select{width:100%;box-sizing:border-box;margin-top:6px}
 .ops-total{font-size:26px;font-weight:950;margin:10px 0}.ops-good{color:#ffd84d;font-weight:900}
 @media(max-width:600px){.ops-upgrade{grid-template-columns:1fr!important}}
+
+/* NEW CASHIER FEATURES HIGHLIGHT V14 */
+#cashierToolModal .senior-feature,
+#cashierToolModal .pwd-feature,
+#cashierToolModal .tool-card:has([data-disc="Voucher"]),
+#cashierToolModal .tool-card:has(#quickSearchOrder),
+#cashierToolModal .tool-card:has(#quickShiftSummary){
+  position:relative!important;
+  border:4px solid #ffd84d!important;
+  background:linear-gradient(145deg,#765900,#0d4731)!important;
+  box-shadow:0 0 0 6px rgba(255,216,77,.20),0 0 38px rgba(255,216,77,.55)!important;
+}
+#cashierToolModal .senior-feature::before,
+#cashierToolModal .pwd-feature::before,
+#cashierToolModal .tool-card:has([data-disc="Voucher"])::before,
+#cashierToolModal .tool-card:has(#quickSearchOrder)::before,
+#cashierToolModal .tool-card:has(#quickShiftSummary)::before{
+  content:'NEW';
+  position:absolute;top:-12px;right:-7px;z-index:30;
+  padding:6px 9px;border-radius:999px;
+  background:#ffd84d;color:#073421;
+  font:950 9px/1 system-ui;letter-spacing:.08em;
+}
+#cashierToolModal .senior-feature,
+#cashierToolModal .pwd-feature,
+#cashierToolModal .tool-card:has([data-disc="Voucher"]){
+ animation:featureGlowV14 1.6s ease-in-out infinite;
+}
+@keyframes featureGlowV14{50%{box-shadow:0 0 0 9px rgba(255,216,77,.12),0 0 52px rgba(255,216,77,.72)}}
 </style>
 </head>
 <body>
