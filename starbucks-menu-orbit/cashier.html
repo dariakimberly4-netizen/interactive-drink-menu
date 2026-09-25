@@ -267,6 +267,20 @@
  border-radius:999px!important;padding:7px 10px!important;font:1000 8px/1 system-ui!important;z-index:50!important;
 }
 @keyframes featureHubPulse{50%{box-shadow:0 0 0 12px rgba(255,223,0,.12),0 0 65px rgba(255,223,0,1)}}
+
+/* PROMOS DIRECT ACTIONS V17 */
+.cashier-orbit-node[data-orbit-id="Senior Citizen"],
+.cashier-orbit-node[data-orbit-id="PWD"],
+.cashier-orbit-node[data-orbit-id="Voucher"]{
+ border:4px solid #ffdf00!important;background:linear-gradient(145deg,#755800,#0d4933)!important;
+ box-shadow:0 0 0 5px rgba(255,223,0,.18),0 0 35px rgba(255,223,0,.55)!important;z-index:20!important;
+}
+.cashier-orbit-node[data-orbit-id="Senior Citizen"]::after,
+.cashier-orbit-node[data-orbit-id="PWD"]::after,
+.cashier-orbit-node[data-orbit-id="Voucher"]::after{
+ content:'NEW';position:absolute;top:-10px;right:-5px;background:#ffdf00;color:#073421;
+ padding:5px 7px;border-radius:999px;font:1000 8px/1 system-ui;
+}
 </style>
 </head>
 <body>
@@ -509,7 +523,10 @@ function home(){
       {icon:'★',label:'Morning Pair',sub:'₱20 off ₱400+',run:()=>alert(promos[0].title+' — '+promos[0].desc)},
       {icon:'＋',label:'Apply Promo',sub:promo?'Applied':'To current cart',run:()=>{const subtotal=cart.reduce((s,x)=>s+x.price*x.qty,0);if(!cart.length)return alert('Start an order first.');if(subtotal<promos[0].min)return alert('Cart must reach '+money(promos[0].min)+'.');promo=promos[0];alert('Promo applied.');showOrbit('promos')}},
       {icon:'×',label:'Remove Promo',sub:promo?'Remove current':'No promo applied',run:()=>{promo=null;showOrbit('promos')}},
-      {icon:'🎟',label:'Discounts & Vouchers',sub:'Senior / PWD / voucher',run:toolDiscounts},
+      {icon:'👴',label:'Senior Citizen',sub:'Verify & apply',run:()=>{toolDiscountVerify();setTimeout(()=>{const s=document.querySelector('#dvType');if(s)s.value='Senior Citizen'},0)}},
+      {icon:'♿',label:'PWD',sub:'Verify & apply',run:()=>{toolDiscountVerify();setTimeout(()=>{const s=document.querySelector('#dvType');if(s)s.value='PWD'},0)}},
+      {icon:'🎟',label:'Voucher',sub:'Validate & redeem',run:toolVoucherVerify},
+      {icon:'🏷',label:'All Discounts',sub:'Promo / Senior / PWD',run:toolDiscounts},
       {icon:'👤',label:'Customer Lookup',sub:'Member & rewards',run:toolCustomer}
     ],
     service:[
