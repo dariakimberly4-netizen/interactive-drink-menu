@@ -78,6 +78,12 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 
 .lighter-v68{display:grid;gap:12px;margin-top:14px}.lighter-v68 label{font-size:11px;font-weight:900}.lighter-v68 select{width:100%;min-height:46px;background:#fff;color:#17352a;border:1px solid #ccd5d0;border-radius:11px;padding:0 12px;font-size:16px}.lighter-result-v68{padding:14px;border:1px solid rgba(244,200,111,.4);border-radius:14px;background:rgba(255,255,255,.04)}.size-grid-v68{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.size-card-v68{padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:14px;text-align:center}.size-card-v68 b{display:block;font-size:18px}.verified-v68{font-size:10px;color:#9eb5aa;margin-top:7px}.cart-nutrition-v68{padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:14px;margin-top:10px}.cart-nutrition-v68 strong{font-size:22px;color:#f4d992}
 @media(max-width:500px){.size-grid-v68{grid-template-columns:1fr}}
+
+#healthyPanelV71{display:none;position:fixed;inset:0;z-index:2147483000;background:#06271d;color:#fff;overflow:auto;padding:18px}
+#healthyPanelV71.open{display:block}
+.healthyV71head{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:760px;margin:auto}.healthyV71head button,.healthyV71btn{min-height:58px;border:2px solid #d8b66a;background:#0b3a2b;color:#fff;border-radius:14px;font-weight:900;cursor:pointer}
+.healthyV71grid{max-width:760px;margin:28px auto;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.healthyV71btn{padding:14px;font-size:15px}.healthyV71btn.new{outline:5px solid #fff200;box-shadow:0 0 30px rgba(255,242,0,.45)}
+@media(max-width:560px){.healthyV71grid{grid-template-columns:1fr}}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
@@ -92,6 +98,18 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 <div class="modal" id="detailModal"><div class="modal-card"><div class="modal-head"><div><h2 id="detailTitle">Product</h2><small id="detailMeta"></small></div><button data-close="detailModal">×</button></div><div id="detailBody"></div></div></div>
 <div class="modal" id="cartModal"><div class="modal-card"><div class="modal-head"><div><h2>Your Cart</h2><small>Demo cart saved in this browser</small></div><button data-close="cartModal">×</button></div><div id="cartList"></div></div></div>
 </div><div class="modal" id="checkoutModal"><div class="modal-card"><div class="modal-head"><div><h2>Checkout</h2><small>Review and place your order</small></div><button data-close="checkoutModal">×</button></div><div id="checkoutBody"></div></div></div>
+<section id="healthyPanelV71">
+<div class="healthyV71head"><div><small>HEALTHY CHOICES</small><h2 style="margin:4px 0">Choose a feature</h2></div><button type="button" id="healthyCloseV71" style="padding:0 18px">BACK</button></div>
+<div class="healthyV71grid">
+<button type="button" class="healthyV71btn new" data-h71="lighter">☕ BUILD A LIGHTER DRINK</button>
+<button type="button" class="healthyV71btn new" data-h71="size">◉ NUTRITION BY SIZE</button>
+<button type="button" class="healthyV71btn new" data-h71="cartnutrition">🛒 CART NUTRITION SUMMARY</button>
+<button type="button" class="healthyV71btn" data-h71="nutrition">▥ NUTRITION</button>
+<button type="button" class="healthyV71btn" data-h71="calories">◎ CALORIES</button>
+<button type="button" class="healthyV71btn" data-h71="allergens">! ALLERGENS</button>
+<button type="button" class="healthyV71btn" data-h71="diet">⌕ DIET FILTERS</button>
+<button type="button" class="healthyV71btn" data-h71="compare">⚖ COMPARE</button>
+</div></section>
 <div class="modal" id="healthyOrbitV70"><div class="modal-card" style="max-width:720px"><div class="modal-head"><div><h2>Healthy Choices</h2><small>Tap a feature</small></div><button type="button" onclick="document.getElementById('healthyOrbitV70').classList.remove('open')">×</button></div>
 <div class="healthy-orbit-v66" style="height:min(620px,82vw)">
 <button type="button" class="healthy-center-v66" onclick="openHealthyToolV66('lighter')">HEALTHY<small>CHOICES</small></button>
@@ -331,4 +349,28 @@ syncSearchClearV62();
 applyNewV62();
 $('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
 render();
+</script>
+<script>
+(function(){
+ const panel=document.getElementById('healthyPanelV71');
+ function openPanel(){panel.classList.add('open');document.body.style.overflow='hidden'}
+ function closePanel(){panel.classList.remove('open');document.body.style.overflow=''}
+ document.getElementById('healthyCloseV71').addEventListener('click',closePanel);
+ document.addEventListener('click',function(e){
+   const main=e.target.closest('[data-customer-v63="healthy"]');
+   if(main){e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('healthy_parent_seen_v71','1');main.classList.remove('new-customer-v63');openPanel();return}
+ },true);
+ document.querySelectorAll('[data-h71]').forEach(function(btn){
+   const id=btn.getAttribute('data-h71');
+   if(localStorage.getItem('healthy_child_seen_v71_'+id))btn.classList.remove('new');
+   btn.addEventListener('click',function(e){
+     e.preventDefault();e.stopPropagation();
+     localStorage.setItem('healthy_child_seen_v71_'+id,'1');btn.classList.remove('new');
+     closePanel();
+     if(typeof openHealthyToolV66==='function') openHealthyToolV66(id);
+   });
+ });
+ const main=document.querySelector('[data-customer-v63="healthy"]');
+ if(main&&!localStorage.getItem('healthy_parent_seen_v71'))main.classList.add('new-customer-v63');
+})();
 </script></body></html>
