@@ -465,6 +465,11 @@
 .cashier-orbit-node.latest-v25-hub,.cashier-orbit-node.latest-v25-item{border:7px solid #fff200!important;background:#8b6800!important;box-shadow:0 0 0 7px #fff,0 0 0 13px #fff200,0 0 55px 22px rgba(255,242,0,.75)!important;animation:v25Blink .85s ease-in-out infinite!important;z-index:999!important}
 .status-flow-v29{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(max-width:430px){.status-flow-v29{grid-template-columns:1fr}}
+
+/* SERVICE CONTROL V30 — latest-only discovery */
+.cashier-orbit-node[data-orbit-id="orders"]{border:1px solid rgba(255,255,255,.16)!important;background:linear-gradient(145deg,#154535,#08261c)!important;box-shadow:0 14px 30px rgba(0,0,0,.28)!important;animation:none!important}
+.cashier-orbit-node[data-orbit-id="orders"]::after{display:none!important;content:none!important}
+.cashier-orbit-node.latest-v25-hub,.cashier-orbit-node.latest-v25-item{border:7px solid #fff200!important;background:#8b6800!important;box-shadow:0 0 0 7px #fff,0 0 0 13px #fff200,0 0 55px 22px rgba(255,242,0,.75)!important;animation:v25Blink .85s ease-in-out infinite!important;z-index:999!important}
 </style>
 </head>
 <body>
@@ -538,6 +543,25 @@ function toolOrderNotes(){
 }
 function toolHold(){const holds=readLocal(HOLD_KEY,[]);openCashierTool('Hold / Resume Order',`<div class="tool-grid"><button class="btn primary" id="holdCurrent" ${cart.length?'':'disabled'}>HOLD CURRENT CART</button></div><div id="holdRows">${holds.length?holds.map((h,i)=>`<div class="hold-row"><div><b>${esc(h.name)}</b><small>${h.items.length} items • ${esc(h.at)}</small></div><button class="btn" data-resume="${i}">RESUME</button></div>`).join(''):'<div class="empty">No held orders.</div>'}</div>`);document.querySelector('#holdCurrent')?.addEventListener('click',()=>{const a=readLocal(HOLD_KEY,[]);a.unshift({name:'Held '+new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'}),items:structuredClone(cart),promo,at:new Date().toLocaleString('en-PH')});writeLocal(HOLD_KEY,a);cart=[];promo=null;logCashierOp('Order Held',a[0].name);toolHold()});document.querySelectorAll('[data-resume]').forEach(b=>b.onclick=()=>{const a=readLocal(HOLD_KEY,[]),h=a.splice(+b.dataset.resume,1)[0];writeLocal(HOLD_KEY,a);cart=h.items||[];promo=h.promo||null;document.querySelector('#cashierToolModal').classList.remove('open');screen='new';render()})}
 function toolInventory(){const stock=[['Caffè Latte','Available'],['Cold Brew','Low'],['Matcha Latte','Available'],['Ham & Cheese Croffle','Low'],['Chocolate Cake','Sold Out']];openCashierTool('Inventory Alerts',stock.map(([n,s])=>`<div class="receipt-row"><b>${esc(n)}</b><span class="${s==='Available'?'inventory-ok':s==='Low'?'inventory-low':'inventory-out'}">${esc(s)}</span></div>`).join(''))}
+
+const SERVICE_CASE_KEY='cashier_service_cases_v30';
+function serviceCaseV30(type,defaultAction){
+ openCashierTool(type,`<div class="form"><label>Order Number<input id="svcOrderV30" placeholder="MO-1201"></label><label>Customer / Contact<input id="svcCustomerV30" placeholder="Customer name or contact"></label><label>Reason<textarea id="svcReasonV30" placeholder="Describe the concern"></textarea></label><label>Action Taken<select id="svcActionV30"><option>${esc(defaultAction)}</option><option>Explained / Assisted</option><option>Remake Requested</option><option>Item Replaced</option><option>Recovery Voucher</option><option>Escalated to Branch Manager</option></select></label><button class="btn primary" id="svcSaveV30">SAVE SERVICE CASE</button></div>`);
+ document.querySelector('#svcSaveV30').onclick=()=>{const ref=document.querySelector('#svcOrderV30').value.trim(),customer=document.querySelector('#svcCustomerV30').value.trim(),reason=document.querySelector('#svcReasonV30').value.trim(),action=document.querySelector('#svcActionV30').value;if(!ref||!reason)return alert('Enter the order number and reason.');const cases=readLocal(SERVICE_CASE_KEY,[]);const item={id:'SC-'+Date.now().toString().slice(-6),type,order:ref,customer,reason,action,status:'Open',staff:cashier.name,at:new Date().toLocaleString('en-PH')};cases.unshift(item);writeLocal(SERVICE_CASE_KEY,cases);logCashierOp('Service Case',item.id+' • '+type+' • '+ref);alert('SERVICE CASE '+item.id+' SAVED');document.querySelector('#cashierToolModal').classList.remove('open');render()};
+}
+function toolCustomerConcern(){serviceCaseV30('Customer Complaint / Concern','Explained / Assisted')}
+function toolProblemResolution(){
+ const cases=readLocal(SERVICE_CASE_KEY,[]);
+ openCashierTool('Order Problem Resolution',cases.length?`<div class="orders">${cases.map((x,i)=>`<div class="order-row"><div><b>${esc(x.id)} • ${esc(x.order)}</b><small>${esc(x.type)} • ${esc(x.status)} • ${esc(x.action)}</small></div><button class="btn primary" data-resolve-v30="${i}">${x.status==='Resolved'?'RESOLVED':'MARK RESOLVED'}</button></div>`).join('')}</div>`:'<div class="empty">No service cases yet.</div>');
+ document.querySelectorAll('[data-resolve-v30]').forEach(b=>b.onclick=()=>{const a=readLocal(SERVICE_CASE_KEY,[]),x=a[+b.dataset.resolveV30];if(!x)return;x.status='Resolved';x.resolvedBy=cashier.name;x.resolvedAt=new Date().toLocaleString('en-PH');writeLocal(SERVICE_CASE_KEY,a);logCashierOp('Service Case Resolved',x.id+' • '+x.order);toolProblemResolution()});
+}
+function toolRemakeRequest(){serviceCaseV30('Remake Request','Remake Requested')}
+function toolMissingWrongItem(){serviceCaseV30('Missing / Wrong Item','Item Replaced')}
+function toolRecoveryVoucher(){
+ openCashierTool('Customer Recovery Voucher',`<div class="form"><label>Order Number<input id="rvOrderV30" placeholder="MO-1201"></label><label>Customer Name<input id="rvNameV30" placeholder="Customer"></label><label>Reason<textarea id="rvReasonV30" placeholder="Reason for recovery"></textarea></label><label>Voucher Value<input id="rvValueV30" type="number" min="0" value="100"></label><button class="btn primary" id="rvIssueV30">ISSUE RECOVERY VOUCHER</button></div>`);
+ document.querySelector('#rvIssueV30').onclick=()=>{const order=document.querySelector('#rvOrderV30').value.trim(),name=document.querySelector('#rvNameV30').value.trim(),reason=document.querySelector('#rvReasonV30').value.trim(),value=Math.max(0,Number(document.querySelector('#rvValueV30').value)||0);if(!order||!reason)return alert('Enter order number and reason.');const code='CARE-'+Date.now().toString().slice(-6),cases=readLocal(SERVICE_CASE_KEY,[]);cases.unshift({id:'SC-'+Date.now().toString().slice(-6),type:'Customer Recovery Voucher',order,customer:name,reason,action:'Issued '+code+' • '+money(value),status:'Resolved',staff:cashier.name,at:new Date().toLocaleString('en-PH')});writeLocal(SERVICE_CASE_KEY,cases);logCashierOp('Recovery Voucher',order+' • '+code+' • '+money(value));alert('VOUCHER ISSUED • '+code+' • '+money(value));document.querySelector('#cashierToolModal').classList.remove('open')};
+}
+function toolEscalateManager(){serviceCaseV30('Escalate to Branch Manager','Escalated to Branch Manager')}
 function toolCustomer(){openCashierTool('Customer Lookup',`<div class="form"><label>Mobile / Member ID<input id="customerLookup" placeholder="09XX... or member ID"></label><button class="btn primary" id="lookupCustomerBtn">LOOK UP</button><div id="customerResult"></div></div>`);document.querySelector('#lookupCustomerBtn').onclick=()=>{const q=document.querySelector('#customerLookup').value.trim();document.querySelector('#customerResult').innerHTML=q?`<div class="tool-card"><b>Demo Member</b><small>${esc(q)} • 320 points • Gold</small></div>`:'<p class="notice">Enter a mobile number or member ID.</p>'}}
 
 /* CASHIER OPERATIONS UPGRADE V13 */
@@ -815,7 +839,7 @@ function toolDailySummary(){
     <div class="business-note">Use End Shift for cashier closing and reconciliation.</div>`);
 }
 /* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
-const NEW_FEATURES_V26=['Order Status Flow','Priority / Rush Order','Edit Before Preparation','Cancel Order with Reason','Reprint / Resend Barista','Order Notes'];
+const NEW_FEATURES_V26=['Customer Complaint','Problem Resolution','Remake Request','Missing / Wrong Item','Recovery Voucher','Escalate Manager'];
 const NEW_SEEN_KEY_V26='cashier_seen_new_features_v26';
 function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
 function markNewSeenV26(label){
@@ -879,6 +903,13 @@ function home(){
       {icon:'👤',label:'Customer Lookup',sub:'Member & rewards',run:toolCustomer}
     ],
     service:[
+      {icon:'💬',label:'Customer Complaint',sub:'Concern / feedback',run:toolCustomerConcern},
+      {icon:'🛠',label:'Problem Resolution',sub:'Track to resolved',run:toolProblemResolution},
+      {icon:'↻',label:'Remake Request',sub:'Request preparation again',run:toolRemakeRequest},
+      {icon:'⚠',label:'Missing / Wrong Item',sub:'Replace / resolve',run:toolMissingWrongItem},
+      {icon:'🎟',label:'Recovery Voucher',sub:'Customer care voucher',run:toolRecoveryVoucher},
+      {icon:'👔',label:'Escalate Manager',sub:'Branch manager review',run:toolEscalateManager},
+
       {icon:'⚠',label:'Report Problem',sub:'Send issue to manager',run:()=>document.querySelector('#problemModal').classList.add('open')},
       {icon:'☕',label:'Barista',sub:'Open barista portal',run:()=>location.href='staff.html'},
       {icon:'↻',label:'Refresh Orders',sub:'Update status',run:async()=>{await loadActive();showOrbit('service')}},
@@ -990,7 +1021,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='orders'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='service'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
