@@ -84,6 +84,9 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 .healthyV71head{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:760px;margin:auto}.healthyV71head button,.healthyV71btn{min-height:58px;border:2px solid #d8b66a;background:#0b3a2b;color:#fff;border-radius:14px;font-weight:900;cursor:pointer}
 .healthyV71grid{max-width:760px;margin:28px auto;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.healthyV71btn{padding:14px;font-size:15px}.healthyV71btn.new{outline:5px solid #fff200;box-shadow:0 0 30px rgba(255,242,0,.45)}
 @media(max-width:560px){.healthyV71grid{grid-template-columns:1fr}}
+
+#healthyDirectV76{display:none;position:fixed;inset:0;z-index:2147483646;background:#06271d;color:#fff;overflow:auto;padding:18px}
+#healthyDirectV76.open{display:block}.hd76{max-width:760px;margin:auto}.hd76top{display:flex;justify-content:space-between;align-items:center;gap:12px}.hd76back{min-height:52px;padding:0 18px;border:2px solid #d8b66a;border-radius:14px;background:#0b3a2b;color:#fff;font-weight:900}.hd76 select,.hd76 button.action{width:100%;min-height:54px;margin-top:12px;border-radius:12px;padding:0 12px;font-size:16px}.hd76card{margin-top:16px;padding:18px;border:2px solid #d8b66a;border-radius:16px;background:#0b3a2b}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
@@ -104,9 +107,9 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 <button type="button" class="healthyV71btn" data-h71="lighter">☕ BUILD A LIGHTER DRINK</button>
 <button type="button" class="healthyV71btn" data-h71="size">◉ NUTRITION BY SIZE</button>
 <button type="button" class="healthyV71btn" data-h71="cartnutrition">🛒 CART NUTRITION SUMMARY</button>
-<button type="button" class="healthyV71btn new" data-h71="ingredients" onclick="healthyDirectV74('ingredients',this)">≡ INGREDIENT VIEWER</button>
-<button type="button" class="healthyV71btn new" data-h71="caffeine" onclick="healthyDirectV74('caffeine',this)">⚡ CAFFEINE GUIDE</button>
-<button type="button" class="healthyV71btn new" data-h71="healthyfavorites" onclick="healthyDirectV74('healthyfavorites',this)">♥ HEALTHY FAVORITES</button>
+<button type="button" class="healthyV71btn new" data-h71="ingredients" onclick="openHealthyDirectV76('ingredients',this)">≡ INGREDIENT VIEWER</button>
+<button type="button" class="healthyV71btn new" data-h71="caffeine" onclick="openHealthyDirectV76('caffeine',this)">⚡ CAFFEINE GUIDE</button>
+<button type="button" class="healthyV71btn new" data-h71="healthyfavorites" onclick="openHealthyDirectV76('healthyfavorites',this)">♥ HEALTHY FAVORITES</button>
 <button type="button" class="healthyV71btn" data-h71="nutrition">▥ NUTRITION</button>
 <button type="button" class="healthyV71btn" data-h71="calories">◎ CALORIES</button>
 <button type="button" class="healthyV71btn" data-h71="allergens">! ALLERGENS</button>
@@ -413,4 +416,34 @@ render();
  const main=document.querySelector('[data-customer-v63="healthy"]');
  if(main&&!localStorage.getItem('healthy_parent_seen_v71'))main.classList.add('new-customer-v63');
 })();
+</script>
+<section id="healthyDirectV76"><div class="hd76"><div class="hd76top"><div><small>HEALTHY CHOICES</small><h2 id="hd76title">Feature</h2></div><button type="button" class="hd76back" onclick="closeHealthyDirectV76()">BACK</button></div><div id="hd76body"></div></div></section>
+<script>
+function closeHealthyDirectV76(){document.getElementById('healthyDirectV76').classList.remove('open');document.getElementById('healthyPanelV71').classList.add('open');document.body.style.overflow='hidden'}
+function openHealthyDirectV76(id,el){
+ if(el)el.classList.remove('new');
+ try{localStorage.setItem('healthy_child_seen_v76_'+id,'1')}catch(e){}
+ const panel=document.getElementById('healthyPanelV71'); if(panel)panel.classList.remove('open');
+ const box=document.getElementById('healthyDirectV76'),title=document.getElementById('hd76title'),body=document.getElementById('hd76body');
+ box.classList.add('open');document.body.style.overflow='hidden';
+ if(id==='ingredients'){
+   title.textContent='Ingredient Viewer';
+   body.innerHTML='<label>SELECT MENU ITEM</label><select id="hd76select">'+products.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select><div class="hd76card" id="hd76result"></div>';
+   const s=document.getElementById('hd76select'),o=document.getElementById('hd76result');
+   const draw=()=>{const p=product(s.value);o.innerHTML='<b>'+p.name+'</b><p>'+(p.ingredients||'Verified ingredient list is not available in this demo dataset.')+'</p><small>Verify ingredients and allergens against the official product source before production use.</small>'};s.onchange=draw;draw();
+ }
+ if(id==='caffeine'){
+   title.textContent='Caffeine Guide';
+   const ds=products.filter(p=>p.kind==='drink');
+   body.innerHTML='<label>SELECT DRINK</label><select id="hd76select">'+ds.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select><div class="hd76card" id="hd76result"></div>';
+   const s=document.getElementById('hd76select'),o=document.getElementById('hd76result');
+   const draw=()=>{const p=product(s.value);o.innerHTML='<b>'+p.name+'</b><p>Caffeine amount: <strong>Not verified</strong></p><small>No caffeine values are estimated.</small>'};s.onchange=draw;draw();
+ }
+ if(id==='healthyfavorites'){
+   title.textContent='Healthy Favorites';
+   body.innerHTML='<label>SELECT MENU ITEM</label><select id="hd76select">'+products.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select><button type="button" class="action" id="hd76save">♥ SAVE FAVORITE</button><div id="hd76result"></div>';
+   const render=()=>{const favs=read('healthy_favorites_v76',[]);document.getElementById('hd76result').innerHTML=favs.length?'<div class="hd76card"><b>Saved Favorites</b>'+favs.map(x=>{const p=product(x);return p?'<p>♥ '+p.name+(Number.isFinite(Number(p.cal))?' — '+p.cal+' cal':'')+'</p>':''}).join('')+'</div>':'<div class="hd76card">No favorites saved yet.</div>'};render();
+   document.getElementById('hd76save').onclick=()=>{const id=document.getElementById('hd76select').value;let a=read('healthy_favorites_v76',[]);if(!a.includes(id))a.push(id);write('healthy_favorites_v76',a);render()};
+ }
+}
 </script></body></html>
