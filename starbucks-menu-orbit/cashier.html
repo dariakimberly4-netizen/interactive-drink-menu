@@ -281,6 +281,12 @@
  content:'NEW';position:absolute;top:-10px;right:-5px;background:#ffdf00;color:#073421;
  padding:5px 7px;border-radius:999px;font:1000 8px/1 system-ui;
 }
+
+/* CASHIER FLOW COMPLETION V18 */
+.voucher-total{display:grid;gap:7px;margin-top:12px;padding:14px;border:2px solid #ffdf00;border-radius:14px;background:rgba(255,223,0,.08)}
+.voucher-total span{display:flex;justify-content:space-between;color:#d9e7df}.voucher-total strong{font-size:20px;color:#ffdf00}
+#vvScan{border:2px dashed #ffdf00!important;color:#ffe77a!important}
+.cashier-orbit-node[data-orbit-id="Voucher"]{animation:featureHubPulse 1.25s ease-in-out infinite!important}
 </style>
 </head>
 <body>
@@ -299,7 +305,7 @@ const cfg=window.MENU_ORBIT_CONFIG||{},app=document.querySelector('#app'),signOu
 const db=cfg.supabaseUrl&&cfg.supabasePublishableKey?createClient(cfg.supabaseUrl,cfg.supabasePublishableKey):null;
 const DEMO_EMAIL='cashier.demo@menuorbit.test',DEMO_PASSWORD='CashierOrbit2026!';
 let demo=false,screen='home',cart=[],selectedProduct=null,orderType='Takeout',payment='Pending',promo=null,lastOrder=null,activeOrders=[];
-let customerName='',discountType='None';
+let customerName='',discountType='None',voucherApplied=null,discountAudit=null;
 let cashier={name:'Demo Cashier',branch:'Demo Bacoor Branch',role:'CASHIER'};
 const products=[{id:'p1',name:'Caffè Latte',cat:'Coffee',price:195},{id:'p2',name:'Caramel Macchiato',cat:'Coffee',price:240},{id:'p3',name:'Cappuccino',cat:'Coffee',price:190},{id:'p4',name:'Cold Brew',cat:'Cold Drinks',price:205},{id:'p5',name:'Matcha Latte',cat:'Tea',price:210},{id:'p6',name:'Ham & Cheese Croffle',cat:'Food',price:170},{id:'p7',name:'Chocolate Cake',cat:'Food',price:185},{id:'p8',name:'Bottled Water',cat:'Other',price:80}];
 const promos=[{id:'pr1',title:'Morning Pair',desc:'₱20 off when cart total is ₱400 or more.',min:400,discount:20}];
@@ -342,11 +348,33 @@ function toolDiscountVerify(){
  <button class="btn primary" id="dvVerify">VERIFY & APPLY</button></div>`);
  const preview=()=>{const a=Math.max(0,Number(document.querySelector('#dvEligible').value)||0),d=a*.20;document.querySelector('#dvPreview').innerHTML='Eligible '+money(a)+'<br><span class="ops-good">Preview discount '+money(d)+'</span><br>Preview net '+money(Math.max(0,a-d))};
  preview();document.querySelector('#dvEligible').oninput=preview;
- document.querySelector('#dvVerify').onclick=()=>{const n=document.querySelector('#dvName').value.trim(),id=document.querySelector('#dvId').value.trim(),t=document.querySelector('#dvType').value;if(!n||!id)return alert('Enter customer name and ID number.');discountType=t;logCashierOp(t+' Verified',n+' • '+id);alert(t+' verification recorded.');};
+ document.querySelector('#dvVerify').onclick=()=>{const n=document.querySelector('#dvName').value.trim(),id=document.querySelector('#dvId').value.trim(),t=document.querySelector('#dvType').value;if(!n||!id)return alert('Enter customer name and ID number.');discountType=t;discountAudit={type:t,ref:id,name:n,verifiedBy:cashier.name,at:new Date().toLocaleString('en-PH')};logCashierOp(t+' Verified',n+' • '+id);alert(t+' verification recorded.');};
 }
 function toolVoucherVerify(){
- openCashierTool('Voucher Validation',`<div class="form ops-upgrade"><label>Voucher Code<input id="vvCode" placeholder="Enter or scan code"></label><label>Voucher Value<input id="vvValue" type="number" min="0" value="100"></label><div id="vvStatus" class="tool-card">Status: waiting for code</div><button class="btn primary" id="vvCheck">VALIDATE VOUCHER</button></div>`);
- document.querySelector('#vvCheck').onclick=()=>{const code=document.querySelector('#vvCode').value.trim();if(!code)return alert('Enter voucher code.');const used=readLocal('cashier_used_vouchers_v13',[]);const box=document.querySelector('#vvStatus');if(used.includes(code)){box.innerHTML='<b>ALREADY USED</b><small>This voucher cannot be redeemed again.</small>';return;}box.innerHTML='<b class="ops-good">VALID ✓</b><small>Demo voucher is ready to redeem.</small>';box.insertAdjacentHTML('beforeend','<button class="btn primary" id="vvRedeem" style="width:100%;margin-top:10px">REDEEM</button>');document.querySelector('#vvRedeem').onclick=()=>{used.push(code);writeLocal('cashier_used_vouchers_v13',used);discountType='Voucher';logCashierOp('Voucher Redeemed',code);box.innerHTML='<b class="ops-good">REDEEMED ✓</b><small>'+esc(code)+'</small>'}};
+ const subtotal=cart.reduce((s,x)=>s+Number(x.price||0)*Number(x.qty||1),0);
+ openCashierTool('Voucher Validation',`<div class="form ops-upgrade">
+ <label>Voucher Code<input id="vvCode" placeholder="Enter / scan voucher code"></label>
+ <label>Voucher Value<input id="vvValue" type="number" min="0" value="100"></label>
+ <div id="vvStatus" class="tool-card">Status: waiting for code</div>
+ <button class="btn primary" id="vvCheck">VALIDATE VOUCHER</button>
+ <button class="btn" id="vvScan">▣ SCAN / QR DEMO</button></div>`);
+ document.querySelector('#vvScan').onclick=()=>{document.querySelector('#vvCode').value='DEMO-VOUCHER-100';document.querySelector('#vvStatus').innerHTML='<b class="ops-good">CODE CAPTURED ✓</b><small>Tap Validate Voucher.</small>'};
+ document.querySelector('#vvCheck').onclick=()=>{
+  const code=document.querySelector('#vvCode').value.trim(),value=Math.max(0,Number(document.querySelector('#vvValue').value)||0);
+  if(!code)return alert('Enter or scan a voucher code.');
+  const used=readLocal('cashier_used_vouchers_v13',[]),box=document.querySelector('#vvStatus');
+  if(used.includes(code)){box.innerHTML='<b>ALREADY USED</b><small>This voucher cannot be redeemed again.</small>';return;}
+  box.innerHTML='<b class="ops-good">VALID ✓</b><small>Voucher value: '+money(value)+'</small><button class="btn primary" id="vvRedeem" style="width:100%;margin-top:10px">REDEEM & APPLY</button>';
+  document.querySelector('#vvRedeem').onclick=()=>{
+   used.push(code);writeLocal('cashier_used_vouchers_v13',used);voucherApplied={code,value};discountType='Voucher';
+   discountAudit={type:'Voucher',ref:code,verifiedBy:cashier.name,at:new Date().toLocaleString('en-PH')};
+   logCashierOp('Voucher Redeemed',code+' • '+money(value));
+   const due=Math.max(0,subtotal-(promo?promo.discount:0)-(voucherApplied?voucherApplied.value:0)-value);
+   box.innerHTML='<b class="ops-good">VOUCHER APPLIED ✓</b><small>'+esc(code)+'</small><div class="voucher-total"><span>Original '+money(subtotal)+'</span><span>Voucher −'+money(value)+'</span><strong>AMOUNT DUE '+money(due)+'</strong></div><button class="btn primary" id="vvContinue" style="width:100%;margin-top:12px">CONTINUE TO PAYMENT</button><button class="btn danger" id="vvRemove" style="width:100%;margin-top:8px">REMOVE VOUCHER</button>';
+   document.querySelector('#vvContinue').onclick=()=>{document.querySelector('#cashierToolModal').classList.remove('open');screen='checkout';render()};
+   document.querySelector('#vvRemove').onclick=()=>{voucherApplied=null;discountType='None';discountAudit=null;logCashierOp('Voucher Removed',code);toolVoucherVerify()};
+  };
+ };
 }
 function toolSearchOrder(){
  openCashierTool('Search Order',`<div class="form"><label>Order No. / Customer<input id="soQuery" placeholder="MO-1201 or customer name"></label><button class="btn primary" id="soFind">SEARCH</button><div id="soResults"></div></div>`);
@@ -378,7 +406,7 @@ function toolChangeCalculator(totalOverride){
   document.querySelector('#changeTotal').oninput=calc;document.querySelector('#cashReceived').oninput=calc;
 }
 function toolSplitPayment(){
-  const total=cart.reduce((s,x)=>s+x.price*x.qty,0)-(promo?promo.discount:0);
+  const total=cart.reduce((s,x)=>s+x.price*x.qty,0)-(promo?promo.discount:0)-(voucherApplied?voucherApplied.value:0);
   openCashierTool('Split Payment',`<div class="kpi-grid"><div class="kpi"><b>${money(total)}</b><span>Order Total</span></div><div class="kpi"><b id="splitPaid">${money(0)}</b><span>Allocated</span></div><div class="kpi"><b id="splitBalance">${money(total)}</b><span>Balance</span></div></div><div class="split-pay-grid"><label>Cash<input id="splitCash" type="number" min="0" value="0"></label><label>Card / E-Wallet<input id="splitCard" type="number" min="0" value="${total}"></label></div><button class="btn primary" id="applySplit" style="width:100%;margin-top:10px">APPLY SPLIT PAYMENT</button>`);
   const calc=()=>{const a=Number(document.querySelector('#splitCash').value)||0,b=Number(document.querySelector('#splitCard').value)||0;document.querySelector('#splitPaid').textContent=money(a+b);document.querySelector('#splitBalance').textContent=money(Math.max(0,total-a-b))};
   document.querySelector('#splitCash').oninput=calc;document.querySelector('#splitCard').oninput=calc;
