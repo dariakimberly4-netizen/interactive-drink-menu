@@ -103,10 +103,13 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 .customer-node-v63.new-customer-v63:after{display:none!important;content:none!important}
 #reserveFloatV81{outline:none!important;box-shadow:0 10px 28px #0008!important;border:2px solid #e8c878!important}
 #qrOrderV82{outline:6px solid #fff200!important;outline-offset:3px!important;border:4px solid #fff200!important;box-shadow:0 0 0 10px rgba(255,242,0,.28),0 0 34px rgba(255,242,0,.8)!important}
+</style><style>
+[data-customer-v63="healthy"]{outline:none!important;box-shadow:none!important}
+[data-customer-v63="healthy"]::after{display:none!important;content:none!important}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
-<div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="tracking">CUSTOMER<small>ORDER TRACKING</small></button><button class="customer-node-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="healthy" style="left:12%;top:72%"><span>♥</span>HEALTHY<br>CHOICES</button><button class="customer-node-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
+<div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="tracking">CUSTOMER<small>ORDER TRACKING</small></button><button class="customer-node-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63" data-customer-v63="healthy" style="left:12%;top:72%"><span>♥</span>HEALTHY<br>CHOICES</button><button class="customer-node-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
 <section class="hero"><div><span class="eyebrow">MENU</span><h1 id="title">Browse Menu</h1><div class="count" id="count"></div></div><div class="actions"><button class="topbtn" id="savedBtn">♡ Saved <span id="savedCount">0</span></button><button class="topbtn primary" id="cartBtn">🛒 Cart <span id="cartCount">0</span></button></div></section>
 <div class="search-wrap"><input class="search" id="search" type="search" placeholder="Search drinks and food…"><button id="clearSearchBtn" type="button" aria-label="Clear search">×</button></div>
 <div class="controls"><div class="filters"><button class="active" data-filter="all">All</button><button data-filter="drinks">Drinks</button><button data-filter="food">Food</button><button data-filter="hot">Hot</button><button data-filter="iced">Iced</button><button data-filter="favorites">♡ Favorites</button></div><select id="sort"><option value="featured">Featured</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option><option value="name">Name: A–Z</option></select></div>
@@ -348,7 +351,7 @@ function openCustomerV63(id){
 document.querySelectorAll('[data-customer-v63]').forEach(b=>{const id=b.dataset.customerV63;if(id!=='healthy'&&localStorage.getItem('customer_orbit_seen_v63_'+id))b.classList.remove('new-customer-v63');b.addEventListener('click',()=>openCustomerV63(id))});
 const healthyMainV67=document.querySelector('[data-customer-v63="healthy"]');
 if(healthyMainV67){
- healthyMainV67.classList.toggle('new-customer-v63',!localStorage.getItem('healthy_parent_seen_v68'));
+ healthyMainV67.classList.remove('new-customer-v63');
  healthyMainV67.addEventListener('click',()=>{localStorage.setItem('healthy_parent_seen_v67','1');healthyMainV67.classList.remove('new-customer-v63')});
 }
 document.querySelector('#customerBackV63')?.addEventListener('click',()=>{document.body.classList.remove('customer-workspace-open-v64');scrollTo(0,0)});
@@ -439,7 +442,7 @@ render();
    });
  });
  const main=document.querySelector('[data-customer-v63="healthy"]');
- if(main&&!localStorage.getItem('healthy_parent_seen_v71'))main.classList.add('new-customer-v63');
+ if(main)main.classList.remove('new-customer-v63');
 })();
 </script>
 <section id="healthyDirectV76"><div class="hd76"><div class="hd76top"><div><small>HEALTHY CHOICES</small><h2 id="hd76title">Feature</h2></div><button type="button" class="hd76back" onclick="closeHealthyDirectV76()">BACK</button></div><div id="hd76body"></div></div></section>
@@ -568,7 +571,7 @@ document.addEventListener('click',function(e){
    b.addEventListener('click',function(){localStorage.setItem(key,'1');b.classList.remove('healthy-old-v79')},true);
  });
  const main=document.querySelector('[data-customer-v63="healthy"]');
- if(main&&!localStorage.getItem('healthy_latest_parent_v79'))main.classList.add('new-customer-v63');
+ if(main)main.classList.remove('new-customer-v63');
  if(main)main.addEventListener('click',function(){localStorage.setItem('healthy_latest_parent_v79','1');main.classList.remove('new-customer-v63')},true);
 })();
 </script>
@@ -576,7 +579,7 @@ document.addEventListener('click',function(e){
 (function(){
  const ids=['recenthealthy','nutritionsearch','datastatus','healthyreceipt','resethealthy','cartcheck'];
  ids.forEach(function(id){const b=document.querySelector('[data-h71="'+id+'"]');if(!b)return;const k='healthy_latest_seen_v80_'+id;if(localStorage.getItem(k))b.classList.remove('healthy-latest-v80');b.addEventListener('click',function(){localStorage.setItem(k,'1');b.classList.remove('healthy-latest-v80')},true)});
- const m=document.querySelector('[data-customer-v63="healthy"]');if(m&&!localStorage.getItem('healthy_latest_parent_v80'))m.classList.add('new-customer-v63');if(m)m.addEventListener('click',()=>{localStorage.setItem('healthy_latest_parent_v80','1');m.classList.remove('new-customer-v63')},true);
+ const m=document.querySelector('[data-customer-v63="healthy"]');if(m)m.classList.remove('new-customer-v63');if(m)m.addEventListener('click',()=>{localStorage.setItem('healthy_latest_parent_v80','1');m.classList.remove('new-customer-v63')},true);
 })();
 </script>
 <script>
