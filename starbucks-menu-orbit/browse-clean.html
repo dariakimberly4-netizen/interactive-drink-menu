@@ -579,7 +579,7 @@ document.addEventListener('click',function(e){
  });
 })();
 </script><style>
-#reserveFloatV81{position:fixed;right:16px;bottom:18px;z-index:9998;min-height:48px;border:2px solid #e8c878;border-radius:999px;background:#073b2b;color:#fff;padding:0 18px;font-weight:950;box-shadow:0 10px 28px #0008;touch-action:manipulation}
+#reserveFloatV81{position:fixed;right:16px;bottom:18px;z-index:9998;min-height:48px;border:4px solid #fff200;border-radius:999px;background:#073b2b;color:#fff;padding:0 18px;font-weight:950;box-shadow:0 0 0 6px #fff20044,0 0 30px #fff20099;touch-action:manipulation}
 #reservePanelV81{display:none;position:fixed;inset:0;z-index:9999;background:#061f17;color:#fff;overflow:auto;padding:18px;font-family:Arial,sans-serif}#reservePanelV81.open{display:block}
 .rv81{max-width:700px;margin:auto}.rv81top{display:flex;justify-content:space-between;align-items:center;gap:12px}.rv81 h2{font:700 40px Georgia,serif;margin:20px 0 8px}.rv81 p{color:#aac0b5}.rv81form{display:grid;gap:10px;background:#0b3024;border:1px solid #ffffff1b;border-radius:18px;padding:16px;margin-top:16px}.rv81 input,.rv81 select{min-height:48px;border:0;border-radius:10px;padding:0 12px;font-size:16px}.rv81 button{min-height:44px;border:0;border-radius:10px;background:#00a862;color:#fff;font-weight:950;padding:0 14px}.rv81 .back{background:#ffffff10;border:1px solid #ffffff22}.rv81list{display:grid;gap:10px;margin-top:15px}.rv81card{background:#0b3024;border:1px solid #ffffff1b;border-radius:14px;padding:14px}.rv81card small{display:block;color:#aac0b5;margin-top:5px}
 </style>
@@ -590,5 +590,9 @@ document.addEventListener('click',function(e){
 function read(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}}function render(){const a=read();list.innerHTML=a.length?a.map(x=>'<div class="rv81card"><b>'+x.name+'</b><small>'+x.date+' • '+x.time+' • '+x.party+' guest(s) • '+x.id+'</small></div>').join(''):'<div class="rv81card">No reservations yet.</div>'}
 document.getElementById('reserveFloatV81').onclick=()=>{panel.classList.add('open');render()};document.getElementById('rv81close').onclick=()=>panel.classList.remove('open');
 document.getElementById('rv81save').onclick=()=>{const name=document.getElementById('rv81name').value.trim(),time=document.getElementById('rv81time').value;if(!name||!date.value||!time){alert('Please complete guest, date and time.');return}const a=read();a.unshift({id:'RSV-'+String(Date.now()).slice(-5),name,date:date.value,time,party:document.getElementById('rv81party').value});localStorage.setItem(KEY,JSON.stringify(a));document.getElementById('rv81name').value='';document.getElementById('rv81time').value='';render()}
+})();
+</script><script>
+(function(){
+document.querySelectorAll('.new,.new-customer-v63,.healthy-latest-v79,.healthy-old-v79,.healthy-latest-v80').forEach(function(el){el.classList.remove('new','new-customer-v63','healthy-latest-v79','healthy-old-v79','healthy-latest-v80')});
 })();
 </script></body></html>
