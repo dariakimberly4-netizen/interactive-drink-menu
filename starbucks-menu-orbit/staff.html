@@ -36,6 +36,19 @@
  .ops-center{width:120px!important;height:120px!important}
  .ops-orbit:before{width:74%!important;height:74%!important;left:13%!important;top:13%!important}
 }
+</style><style>
+/* V38 NEW ORDERS SUBMENU ORBIT */
+.suborbit-title{text-align:center;margin:8px 0 0}.suborbit-title h2{margin:0;font-size:clamp(25px,5vw,38px)}.suborbit-title p{margin:5px 0;color:var(--muted)}
+.new-orders-orbit-v38{position:relative;width:min(600px,92vw);height:min(600px,92vw);min-height:360px;margin:20px auto 36px}
+.new-orders-orbit-v38:before{content:"";position:absolute;left:14%;top:14%;width:72%;height:72%;border:1px solid rgba(212,173,98,.45);border-radius:50%}
+.new-center-v38{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:160px;height:160px;border-radius:50%;border:4px solid var(--gold);background:radial-gradient(circle,#0a7650,#063322);color:#fff;font-weight:1000;z-index:3}
+.new-center-v38 small{display:block;color:#f2d493;margin-top:7px}
+.new-node-v38{position:absolute;transform:translate(-50%,-50%);width:112px;height:112px;border-radius:50%;border:2px solid rgba(212,173,98,.72);background:#0b3023;color:#fff;font-weight:900;font-size:10px;z-index:4}
+.new-node-v38 span{display:block;font-size:21px;margin-bottom:5px}
+.new-node-v38.new-v38{outline:6px solid #fff200;box-shadow:0 0 0 12px rgba(255,242,0,.28),0 0 50px rgba(255,242,0,.75)}
+.new-node-v38.new-v38:after{content:"★ NEW ★";position:absolute;top:-23px;left:50%;transform:translateX(-50%);background:#fff200;color:#073421;border-radius:999px;padding:5px 7px;font-size:8px;white-space:nowrap}
+.v38row{padding:14px;margin:9px 0;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.05)}
+@media(max-width:650px){.new-orders-orbit-v38{width:94vw;height:94vw;max-height:430px}.new-center-v38{width:120px;height:120px;font-size:12px}.new-node-v38{width:88px;height:88px;font-size:8px}.new-node-v38 span{font-size:17px}}
 </style></head>
 <body>
 <div class="wrap">
@@ -97,7 +110,37 @@ function doneCount(o){return (o.order_items||[]).filter(i=>i.prep_status==='done
 function allDone(o){return (o.order_items||[]).length>0&&doneCount(o)===(o.order_items||[]).length}
 function render(){const alerts=inventory.filter(x=>x.availability!=='available').length;app.innerHTML=`${demo?'<div class="demo"><b>DEMO MODE:</b> no real customer records, live inventory, real orders, or payments are changed.</div>':''}<section class="ops-orbit" id="opsOrbit"><button class="ops-center" id="opsCenter">BARISTA<small>${counts('new')} WAIT • ${counts('preparing')} PREP • ${counts('ready')} READY</small></button>${[
 ['new','🧾','NEW ORDERS'],['preparing','☕','PREPARING'],['ready','✓','HANDOFF'],['inventory','▣','STOCK'],['kitchen','▤','BAR DISPLAY'],['handover','⇄','HANDOVER'],['summary','▥','SHIFT SUMMARY'],['audit','⌕','AUDIT LOG']
-].map((x,i)=>`<button class="ops-node${localStorage.getItem('staff_orbit_v36_'+x[0])?'':' new-v36'}" data-orbit="${x[0]}" style="--ox:${[50,76,87,76,50,24,13,24][i]}%;--oy:${[8,20,50,80,92,80,50,20][i]}%"><span>${x[1]}</span>${x[2]}</button>`).join('')}</section><section id="moduleShell" style="display:none"><button class="btn cream orbit-back" id="backOrbit">← Back to Orbit</button><section id="area"></section></section>`;document.querySelectorAll('[data-orbit]').forEach(b=>b.onclick=()=>{const id=b.dataset.orbit;localStorage.setItem('staff_orbit_v36_'+id,'1');b.classList.remove('new-v36');if(['new','preparing','ready','inventory'].includes(id)){view=id;subview='orders'}else{subview=id}document.querySelector('#opsOrbit').style.display='none';document.querySelector('#moduleShell').style.display='block';renderArea()});document.querySelector('#opsCenter').onclick=()=>{document.querySelector('[data-orbit="new"]').click()};document.querySelector('#backOrbit').onclick=()=>{document.querySelector('#moduleShell').style.display='none';document.querySelector('#opsOrbit').style.display='grid'}}
+].map((x,i)=>`<button class="ops-node${localStorage.getItem('staff_orbit_v36_'+x[0])?'':' new-v36'}" data-orbit="${x[0]}" style="--ox:${[50,76,87,76,50,24,13,24][i]}%;--oy:${[8,20,50,80,92,80,50,20][i]}%"><span>${x[1]}</span>${x[2]}</button>`).join('')}</section><section id="moduleShell" style="display:none"><button class="btn cream orbit-back" id="backOrbit">← Back to Orbit</button><section id="area"></section></section>`;document.querySelectorAll('[data-orbit]').forEach(b=>b.onclick=()=>{const id=b.dataset.orbit;if(id==='new'){openNewOrdersOrbitV38();return}localStorage.setItem('staff_orbit_v36_'+id,'1');b.classList.remove('new-v36');if(['preparing','ready','inventory'].includes(id)){view=id;subview='orders'}else{subview=id}document.querySelector('#opsOrbit').style.display='none';document.querySelector('#moduleShell').style.display='block';renderArea()});document.querySelector('#opsCenter').onclick=()=>{document.querySelector('[data-orbit="new"]').click()};document.querySelector('#backOrbit').onclick=()=>{document.querySelector('#moduleShell').style.display='none';document.querySelector('#opsOrbit').style.display='grid'}}
+
+const NEW_ORDER_TOOLS_V38=[
+ ['incoming','🧾','INCOMING QUEUE'],['priority','⚡','PRIORITY / RUSH'],['changes','✎','ORDER CHANGES'],
+ ['cancelled','✕','CANCELLED'],['claim','👤','CLAIM ORDER'],['start','☕','START PREP']
+];
+function openNewOrdersOrbitV38(){
+ const main=document.querySelector('#opsOrbit'),shell=document.querySelector('#moduleShell'),area=document.querySelector('#area');
+ if(main)main.style.display='none';if(shell)shell.style.display='block';
+ const pts=[[50,8],[84,27],[84,73],[50,92],[16,73],[16,27]];
+ area.innerHTML='<div class="suborbit-title"><h2>New Orders</h2><p>Incoming order control</p></div><section class="new-orders-orbit-v38"><button class="new-center-v38" id="newCenterV38">NEW ORDERS<small>'+counts('new')+' WAITING</small></button>'+NEW_ORDER_TOOLS_V38.map((x,i)=>'<button class="new-node-v38 '+(localStorage.getItem('new_orders_v38_'+x[0])?'':'new-v38')+'" data-newtool="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
+ document.querySelector('#backOrbit').onclick=()=>{shell.style.display='none';main.style.display='block'};
+ document.querySelectorAll('[data-newtool]').forEach(b=>b.onclick=()=>{localStorage.setItem('new_orders_v38_'+b.dataset.newtool,'1');b.classList.remove('new-v38');openNewOrderToolV38(b.dataset.newtool)});
+ document.querySelector('#newCenterV38').onclick=()=>openNewOrderToolV38('incoming');
+}
+function openNewOrderToolV38(id){
+ const area=document.querySelector('#area'),newOrders=orders.filter(o=>['new','confirmed'].includes(o.status)),cancelled=orders.filter(o=>o.status==='cancelled');
+ const rush=newOrders.filter(o=>['urgent','delayed','accessibility'].includes(o.priority)||delayed(o));
+ const changed=newOrders.filter(o=>o.updated_at&&o.created_at&&new Date(o.updated_at)>new Date(o.created_at));
+ const rows=a=>a.length?a.map(o=>'<div class="v38row"><b>'+esc(o.order_ref)+'</b> • '+esc(o.customer_name||'Customer')+'<br><small>'+esc(o.priority||'normal')+' • '+age(o.created_at)+' min waiting</small></div>').join(''):'<div class="empty">No orders here.</div>';
+ let title='',body='';
+ if(id==='incoming'){title='Incoming Queue';body=rows(newOrders)}
+ if(id==='priority'){title='Priority / Rush';body=rows(rush)}
+ if(id==='changes'){title='Order Changes';body=changed.length?rows(changed):'<div class="empty">No changed incoming orders.</div>'}
+ if(id==='cancelled'){title='Cancelled Orders';body=rows(cancelled)}
+ if(id==='claim'){title='Claim Order';body=rows(newOrders)+'<p class="notice">Open the order and claim it before preparation to avoid duplicate work.</p>'}
+ if(id==='start'){title='Start Preparation';body=rows(newOrders)+'<button class="btn primary" id="startFirstV38" style="width:100%;margin-top:12px">START FIRST WAITING ORDER</button>'}
+ area.innerHTML='<button class="btn cream orbit-back" id="backNewV38">← Back to New Orders Orbit</button><h2>'+title+'</h2>'+body;
+ document.querySelector('#backNewV38').onclick=openNewOrdersOrbitV38;
+ const start=document.querySelector('#startFirstV38');if(start)start.onclick=()=>{const o=newOrders[0];if(!o)return alert('No waiting order.');changeOrderStatus(o.id,'preparing')};
+}
 function renderArea(){const area=document.querySelector('#area');if(subview==='kitchen')return renderKitchen(area);if(subview==='handover')return renderHandover(area);if(subview==='summary')return renderSummary(area);if(subview==='audit')return renderAudit(area);if(view==='inventory')return renderInventory(area);renderOrders(area)}
 function renderOrders(area){let list=orders.filter(o=>view==='new'?['new','confirmed'].includes(o.status):o.status===view);if(search)list=list.filter(o=>(o.order_ref+' '+(o.customer_name||'')).toLowerCase().includes(search.toLowerCase()));area.innerHTML=`<div class="toolbar"><input class="search" id="search" placeholder="Search order number or customer" value="${esc(search)}"><button class="btn" id="clear">Clear</button></div>${list.length?list.map(orderCard).join(''):'<div class="empty">No orders in this section.</div>'}`;document.querySelector('#search').oninput=e=>{search=e.target.value;renderOrders(area)};document.querySelector('#clear').onclick=()=>{search='';renderOrders(area)};wireOrders()}
 function priorityBadge(o){const p=o.priority|| (delayed(o)?'delayed':'normal');if(p==='accessibility')return '<span class="badge access">♿ Accessibility Assistance</span>';if(p==='urgent')return '<span class="badge priority">⚡ Urgent</span>';if(p==='delayed'||delayed(o))return '<span class="badge delay">Delayed</span>';return '<span class="badge priority">Normal</span>'}
