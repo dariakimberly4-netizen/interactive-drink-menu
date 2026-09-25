@@ -250,6 +250,23 @@
  font-size:11px!important;
  letter-spacing:.08em!important;
 }
+
+/* CORRECT MAIN ORBIT PROMOS HIGHLIGHT V16 */
+.cashier-orbit-node.feature-hub{
+ border:5px solid #ffdf00!important;
+ background:linear-gradient(145deg,#806000,#0b4b33)!important;
+ box-shadow:0 0 0 7px rgba(255,223,0,.25),0 0 48px rgba(255,223,0,.8)!important;
+ z-index:25!important;
+ animation:featureHubPulse 1.25s ease-in-out infinite!important;
+}
+.cashier-orbit-node.feature-hub::after{
+ content:'PWD • SENIOR • VOUCHER • NEW'!important;
+ position:absolute!important;top:-20px!important;left:50%!important;right:auto!important;
+ transform:translateX(-50%)!important;white-space:nowrap!important;
+ background:#ffdf00!important;color:#073421!important;border:2px solid #fff3a3!important;
+ border-radius:999px!important;padding:7px 10px!important;font:1000 8px/1 system-ui!important;z-index:50!important;
+}
+@keyframes featureHubPulse{50%{box-shadow:0 0 0 12px rgba(255,223,0,.12),0 0 65px rgba(255,223,0,1)}}
 </style>
 </head>
 <body>
@@ -601,7 +618,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&!seen()?'new-orbit':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&!seen()?'new-orbit':''} ${isMain&&item.id==='promos'?'feature-hub':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
