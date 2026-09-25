@@ -579,7 +579,7 @@ document.addEventListener('click',function(e){
  });
 })();
 </script><style>
-#reserveFloatV81{position:fixed;right:16px;bottom:18px;z-index:9998;min-height:48px;border:4px solid #fff200;border-radius:999px;background:#073b2b;color:#fff;padding:0 18px;font-weight:950;box-shadow:0 0 0 6px #fff20044,0 0 30px #fff20099;touch-action:manipulation}
+#reserveFloatV81{position:fixed;right:16px;bottom:18px;z-index:9998;min-height:48px;border:2px solid #e8c878;border-radius:999px;background:#073b2b;color:#fff;padding:0 18px;font-weight:950;box-shadow:0 10px 28px #0008;touch-action:manipulation}
 #reservePanelV81{display:none;position:fixed;inset:0;z-index:9999;background:#061f17;color:#fff;overflow:auto;padding:18px;font-family:Arial,sans-serif}#reservePanelV81.open{display:block}
 .rv81{max-width:700px;margin:auto}.rv81top{display:flex;justify-content:space-between;align-items:center;gap:12px}.rv81 h2{font:700 40px Georgia,serif;margin:20px 0 8px}.rv81 p{color:#aac0b5}.rv81form{display:grid;gap:10px;background:#0b3024;border:1px solid #ffffff1b;border-radius:18px;padding:16px;margin-top:16px}.rv81 input,.rv81 select{min-height:48px;border:0;border-radius:10px;padding:0 12px;font-size:16px}.rv81 button{min-height:44px;border:0;border-radius:10px;background:#00a862;color:#fff;font-weight:950;padding:0 14px}.rv81 .back{background:#ffffff10;border:1px solid #ffffff22}.rv81list{display:grid;gap:10px;margin-top:15px}.rv81card{background:#0b3024;border:1px solid #ffffff1b;border-radius:14px;padding:14px}.rv81card small{display:block;color:#aac0b5;margin-top:5px}
 </style>
@@ -596,7 +596,7 @@ document.getElementById('rv81save').onclick=()=>{const name=document.getElementB
 document.querySelectorAll('.new,.new-customer-v63,.healthy-latest-v79,.healthy-old-v79,.healthy-latest-v80').forEach(function(el){el.classList.remove('new','new-customer-v63','healthy-latest-v79','healthy-old-v79','healthy-latest-v80')});
 })();
 </script><style>
-#qrOrderV82{position:fixed;left:16px;bottom:18px;z-index:9998;min-height:48px;border:2px solid #e8c878;border-radius:999px;background:#073b2b;color:#fff;padding:0 18px;font-weight:950;box-shadow:0 10px 28px #0008}
+#qrOrderV82{position:fixed;left:16px;bottom:18px;z-index:9998;min-height:48px;border:4px solid #fff200;border-radius:999px;background:#073b2b;color:#fff;padding:0 18px;font-weight:950;box-shadow:0 0 0 6px #fff20044,0 0 30px #fff20099;touch-action:manipulation}
 #qrPanelV82{display:none;position:fixed;inset:0;z-index:10001;background:#061f17;color:#fff;overflow:auto;padding:18px;font-family:Arial,sans-serif}#qrPanelV82.open{display:block}.q82{max-width:760px;margin:auto}.q82top{display:flex;justify-content:space-between;gap:12px;align-items:center}.q82 h2{font:700 38px Georgia,serif;margin:16px 0 5px}.q82 p{color:#aac0b5}.q82grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}.q82card{background:#0b3024;border:1px solid #ffffff1b;border-radius:15px;padding:14px}.q82 button{min-height:44px;border:0;border-radius:10px;background:#00a862;color:white;font-weight:950;padding:0 13px}.q82 .ghost{background:#ffffff10;border:1px solid #ffffff22}.q82 input,.q82 select{width:100%;min-height:46px;border:0;border-radius:9px;padding:0 11px;margin-top:8px;font-size:16px}.q82status{display:flex;gap:6px;overflow:auto;margin:15px 0}.q82status b{white-space:nowrap;border:1px solid #ffffff20;border-radius:999px;padding:8px 10px;font-size:10px}.q82status .on{background:#e8c878;color:#09291e}.q82cart{display:grid;gap:9px}.q82line{display:flex;justify-content:space-between;gap:10px}.q82wide{width:100%;margin-top:10px}@media(max-width:560px){.q82grid{grid-template-columns:1fr}#qrOrderV82{bottom:76px}}
 </style>
 <button id="qrOrderV82" type="button">▦ QR TABLE ORDER</button>
@@ -616,4 +616,4 @@ function send(){const a=read(),order={id:'QR-'+String(Date.now()).slice(-6),tabl
 function bill(id){const a=read(),o=a.find(x=>x.id===id);if(o){o.bill=true;o.status='BILL REQUESTED';write(a)}status(5);body.innerHTML='<div class="q82card"><h3>Bill requested ✓</h3><p>Table '+table+' request has been recorded for staff.</p><button class="q82wide" id="q82done">DONE</button></div>';document.getElementById('q82done').onclick=()=>p.classList.remove('open')}
 document.getElementById('qrOrderV82').onclick=()=>{p.classList.add('open');cart=[];start()};document.getElementById('q82close').onclick=()=>p.classList.remove('open');
 })();
-</script></body></html>
+</script><script>(function(){document.querySelectorAll('.new,.new-customer-v63,.healthy-latest-v79,.healthy-old-v79,.healthy-latest-v80').forEach(function(el){el.classList.remove('new','new-customer-v63','healthy-latest-v79','healthy-old-v79','healthy-latest-v80')});})();</script></body></html>
