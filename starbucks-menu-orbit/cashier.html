@@ -498,6 +498,42 @@
 .cashier-orbit-node[data-orbit-id="service"]{border:1px solid rgba(255,255,255,.16)!important;background:linear-gradient(145deg,#154535,#08261c)!important;box-shadow:0 14px 30px rgba(0,0,0,.28)!important;animation:none!important}
 .cashier-orbit-node[data-orbit-id="service"]::after{display:none!important;content:none!important}
 .cashier-orbit-node.latest-v25-hub::after{content:'★ 6 NEW ★'!important}
+
+/* SYSTEM RELEASE V33 — explicit latest highlight, overrides legacy rules */
+.cashier-orbit-node[data-orbit-id="orders"],
+.cashier-orbit-node[data-orbit-id="shift"],
+.cashier-orbit-node[data-orbit-id="payments"],
+.cashier-orbit-node[data-orbit-id="service"]{
+ border:1px solid rgba(255,255,255,.16)!important;
+ background:linear-gradient(145deg,#154535,#08261c)!important;
+ box-shadow:0 14px 30px rgba(0,0,0,.28)!important;
+ animation:none!important;
+}
+.cashier-orbit-node[data-orbit-id="orders"]::after,
+.cashier-orbit-node[data-orbit-id="shift"]::after,
+.cashier-orbit-node[data-orbit-id="payments"]::after,
+.cashier-orbit-node[data-orbit-id="service"]::after{display:none!important;content:none!important}
+.cashier-orbit-node.system-new-v33,
+.cashier-orbit-node.system-item-new-v33{
+ border:8px solid #fff200!important;
+ background:#9b7500!important;
+ box-shadow:0 0 0 7px #fff!important,0 0 0 14px #fff200!important,0 0 70px 30px rgba(255,242,0,.98)!important;
+ animation:systemPulseV33 .72s ease-in-out infinite!important;
+ z-index:2000!important;
+}
+.cashier-orbit-node.system-new-v33::after{
+ display:block!important;content:'★ 6 NEW ★'!important;
+ position:absolute!important;top:-27px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;
+ background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;
+ padding:7px 10px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:2100!important;
+}
+.cashier-orbit-node.system-item-new-v33::before{
+ display:block!important;content:'★ NEW ★'!important;
+ position:absolute!important;top:-25px!important;left:50%!important;transform:translateX(-50%)!important;
+ background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;
+ padding:6px 9px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:2100!important;
+}
+@keyframes systemPulseV33{50%{filter:brightness(1.6);box-shadow:0 0 0 11px #fff!important,0 0 0 19px #fff200!important,0 0 90px 38px rgba(255,242,0,1)!important}}
 </style>
 </head>
 <body>
@@ -898,7 +934,7 @@ function toolDailySummary(){
 }
 /* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
 const NEW_FEATURES_V26=['Session Lock','Switch Cashier','Device & Printer Status','Backend Health','Sync Center','Emergency Offline Mode'];
-const NEW_SEEN_KEY_V26='cashier_seen_system_features_v32';
+const NEW_SEEN_KEY_V26='cashier_seen_system_features_v33';
 function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
 function markNewSeenV26(label){
  if(!NEW_FEATURES_V26.includes(label))return;
@@ -1086,7 +1122,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='system'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='system'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'system-new-v33':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'system-item-new-v33':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
