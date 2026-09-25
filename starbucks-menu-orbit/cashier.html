@@ -564,6 +564,9 @@
  .cashier-orbit-node{width:84px!important;height:84px!important;padding:6px!important;font-size:9px!important;touch-action:manipulation!important;pointer-events:auto!important}
  .cashier-orbit-center{touch-action:manipulation!important;pointer-events:auto!important}
 }
+
+.cashier-orbit-node.basic-new-v82{border:3px solid #fff200!important;background:linear-gradient(145deg,#1b654b,#0a3829)!important;box-shadow:0 0 0 7px rgba(255,242,0,.22),0 0 34px rgba(255,242,0,.65)!important}
+.cashier-orbit-node.basic-new-v82::after{display:block!important;content:'NEW'!important;position:absolute;top:-7px;right:0;background:#fff200;color:#062d20;border-radius:999px;padding:5px 7px;font:950 8px/1 system-ui}
 </style>
 </head>
 <body>
@@ -992,7 +995,25 @@ function markNewSeenV26(label){
  const s=seenNewV26(); if(!s.includes(label)){s.push(label);localStorage.setItem(NEW_SEEN_KEY_V26,JSON.stringify(s))}
 }
 
+
 function home(){
+ const view=document.querySelector('#view');
+ const items=[
+  {id:'sale',icon:'＋',label:'NEW SALE',sub:'Start order',run:()=>{screen='new';render()}},
+  {id:'active',icon:'◴',label:'ACTIVE ORDERS',sub:'Open orders',run:()=>{screen='orders';render()}},
+  {id:'payment',icon:'💳',label:'PAYMENT',sub:'Collect payment',run:()=>{if(!cart.length)return alert('Start an order first.');screen='checkout';render()}},
+  {id:'discounts',icon:'🏷',label:'DISCOUNTS',sub:'Promo / Senior / PWD',run:toolDiscounts},
+  {id:'receipt',icon:'🧾',label:'RECEIPT',sub:'Search / reprint',run:toolReceipts},
+  {id:'search',icon:'⌕',label:'ORDER SEARCH',sub:'Find transaction',run:toolRecent},
+  {id:'drawer',icon:'💰',label:'CASH DRAWER',sub:'Cash in / out',run:toolDrawer},
+  {id:'endshift',icon:'🏁',label:'END SHIFT',sub:'Closing summary',run:toolEndShift}
+ ];
+ const pts=[[50,7],[79,18],[93,50],[79,82],[50,93],[21,82],[7,50],[21,18]];
+ view.innerHTML='<section class="cashier-orbit-shell"><h2 class="cashier-orbit-title">Basic Cashier</h2><p class="cashier-orbit-sub">Tap a module to begin</p><div class="cashier-orbit"><div class="cashier-orbit-ring"></div><button type="button" class="cashier-orbit-center" id="basicCenterV82"><b>CASHIER</b><span>CURRENT SALE</span><span>'+cart.length+' item'+(cart.length===1?'':'s')+'</span></button>'+items.map((x,i)=>'<button type="button" class="cashier-orbit-node basic-new-v82" data-basic-v82="'+x.id+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%;transform:translate(-50%,-50%)"><span class="ico">'+x.icon+'</span><span>'+x.label+'</span><small>'+x.sub+'</small></button>').join('')+'</div></section>';
+ document.querySelectorAll('[data-basic-v82]').forEach((b,i)=>{const key='basic_cashier_seen_v82_'+items[i].id;if(localStorage.getItem(key))b.classList.remove('basic-new-v82');b.onclick=()=>{localStorage.setItem(key,'1');b.classList.remove('basic-new-v82');items[i].run()}});
+ document.querySelector('#basicCenterV82').onclick=()=>{screen='new';render()};
+}
+function homeAdvancedV82(){
   const view=document.querySelector('#view');
   const MAIN_NEW_KEY='cashier-orbit-main-v5';
   const seen=()=>{try{return localStorage.getItem(MAIN_NEW_KEY)==='seen'}catch(e){return false}};
