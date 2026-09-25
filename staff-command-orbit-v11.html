@@ -80,13 +80,22 @@ button,input,select{font:inherit}
   .orbit-ring{width:280px!important}
 }
 </style>
+
+<style id="roleLoginV13">
+/* ROLE LOGIN V13 */
+.login-role{
+  width:100%;height:48px;border:1px solid #d7e1db;border-radius:13px;
+  padding:0 13px;background:#fff;color:#16302a;font-weight:800
+}
+.role-select:disabled{opacity:1;cursor:default}
+</style>
 </head>
 <body>
 <header class="topbar">
   <div class="logo">S</div>
   <div class="brand"><b>Staff Command Orbit</b><small>Independent Operations Portal</small></div>
   <div class="staff-tools">
-    <select id="roleSelect" class="role-select">
+    <select id="roleSelect" class="role-select" aria-label="Current role" disabled>
       <option>Cashier</option><option>Barista</option><option>Supervisor</option><option>Manager</option>
     </select>
     <button id="shiftBtn" class="shift-btn">Clock In</button>
@@ -118,11 +127,18 @@ button,input,select{font:inherit}
 
 <div id="gate" class="gate">
 <div class="login">
-  <div class="mark">S</div><h2>Staff Login</h2><p>Independent staff access.</p>
+  <div class="mark">S</div><h2>Staff Login</h2><p>Choose your role. Each role has its own login.</p>
+  <label>Role</label>
+  <select id="loginRole" class="login-role">
+    <option>Cashier</option>
+    <option>Barista</option>
+    <option>Supervisor</option>
+    <option>Manager</option>
+  </select>
   <label>Staff Name</label><input id="staffName" value="Donna">
-  <label>Demo PIN</label><input id="staffPin" type="password" value="1234">
-  <button id="enterBtn" class="enter">Enter Staff Orbit</button>
-  <span class="demo">Demo PIN: 1234</span>
+  <label>Role PIN</label><input id="staffPin" type="password" value="1111">
+  <button id="enterBtn" class="enter">Login as Cashier</button>
+  <span class="demo" id="loginHint">Cashier demo PIN: 1111</span>
 </div>
 </div>
 
@@ -157,7 +173,7 @@ function saveState(){
   localStorage.setItem("staffV11Orders",JSON.stringify(orders));
 }
 function loadState(){
-  const savedRole=localStorage.getItem("staffV11Role"); if(savedRole) roleSelect.value=savedRole;
+  const savedRole=localStorage.getItem("staffV11Role");
   const savedShift=localStorage.getItem("staffV11Shift"); if(savedShift) shiftState=savedShift;
   const savedOrders=localStorage.getItem("staffV11Orders"); if(savedOrders){try{orders=JSON.parse(savedOrders)}catch(e){}}
   updateShiftUI(); applyRole();
@@ -241,12 +257,29 @@ document.getElementById("quickNewOrder").onclick=()=>{title.textContent="New Ord
 document.getElementById("panelClose").onclick=()=>panel.classList.remove("open");
 panel.onclick=e=>{if(e.target===panel)panel.classList.remove("open")};
 
+const ROLE_PINS_V13={Cashier:"1111",Barista:"2222",Supervisor:"3333",Manager:"4444"};
+const loginRole=document.getElementById("loginRole");
+const loginHint=document.getElementById("loginHint");
+function updateRoleLoginV13(){
+  const role=loginRole.value;
+  document.getElementById("enterBtn").textContent="Login as "+role;
+  loginHint.textContent=role+" demo PIN: "+ROLE_PINS_V13[role];
+  document.getElementById("staffPin").value=ROLE_PINS_V13[role];
+}
+loginRole.onchange=updateRoleLoginV13;
+updateRoleLoginV13();
+
 document.getElementById("enterBtn").onclick=()=>{
-  if(document.getElementById("staffPin").value!=="1234"){alert("Incorrect demo PIN");return}
-  staffName=(document.getElementById("staffName").value||"Donna").trim();
+  const role=loginRole.value;
+  const pin=document.getElementById("staffPin").value;
+  if(pin!==ROLE_PINS_V13[role]){alert("Incorrect PIN for "+role);return}
+  staffName=(document.getElementById("staffName").value||role).trim();
+  roleSelect.value=role;
   document.getElementById("gate").style.display="none";
-  updateShiftUI();applyRole();saveState();
-};
+  updateShiftUI();
+  applyRole();
+  saveState();
+}
 loadState();
 </script>
 </body>
