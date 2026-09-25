@@ -61,6 +61,25 @@ button,input,select{font:inherit}
 }
 @media(max-width:430px){.order-board{grid-template-columns:1fr}.orbit-ring{width:286px}.core{width:138px;height:138px}.node{width:74px;height:74px}.n1{margin-top:-160px}.n2{margin-left:121px;margin-top:-80px}.n3{margin-left:121px;margin-top:80px}.n4{margin-top:160px}.n5{margin-left:-121px;margin-top:80px}.n6{margin-left:-121px;margin-top:-80px}}
 </style>
+
+<style id="mobileRoleOrbitFixV12">
+/* MOBILE ROLE ORBIT FIX V12 */
+@media(max-width:760px){
+  .topbar{min-height:72px!important;padding:7px 10px!important;align-items:center!important}
+  .logo{width:42px!important;height:42px!important;flex:0 0 42px}
+  .brand b{font-size:15px!important;line-height:1.05}
+  .staff-tools{max-width:62%!important;gap:5px!important}
+  .role-select,.shift-btn{height:30px!important;font-size:9px!important}
+  .staff-status{height:27px!important;font-size:8px!important}
+  .stage{top:72px!important;padding-top:0!important;align-items:start!important}
+  .orbit-wrap{height:calc(100vh - 72px)!important;min-height:520px!important;transform:translateY(-28px)}
+  .orbit-ring{width:300px!important}
+}
+@media(max-width:390px){
+  .orbit-wrap{transform:translateY(-22px)}
+  .orbit-ring{width:280px!important}
+}
+</style>
 </head>
 <body>
 <header class="topbar">
@@ -151,7 +170,26 @@ function roleModules(){
 }
 function applyRole(){
   const visible=roleModules();
-  document.querySelectorAll(".node[data-module]").forEach(n=>n.style.display=visible.includes(n.dataset.module)?"flex":"none");
+  const nodes=[...document.querySelectorAll(".node[data-module]")];
+  nodes.forEach(n=>{
+    n.style.display=visible.includes(n.dataset.module)?"flex":"none";
+    n.style.marginLeft="";
+    n.style.marginTop="";
+  });
+
+  const active=nodes.filter(n=>visible.includes(n.dataset.module));
+  const mobile=window.matchMedia("(max-width:760px)").matches;
+  const small=window.matchMedia("(max-width:390px)").matches;
+
+  if(mobile){
+    const radius=small?142:154;
+    const start=-90;
+    active.forEach((n,i)=>{
+      const angle=(start+(360/active.length)*i)*Math.PI/180;
+      n.style.marginLeft=(Math.cos(angle)*radius)+"px";
+      n.style.marginTop=(Math.sin(angle)*radius)+"px";
+    });
+  }
   saveState();
 }
 function updateShiftUI(){
@@ -161,6 +199,11 @@ function updateShiftUI(){
 }
 shiftBtn.onclick=()=>{shiftState=shiftState==="off"?"in":shiftState==="in"?"break":"in";updateShiftUI();saveState()};
 roleSelect.onchange=applyRole;
+let roleOrbitResizeV12;
+window.addEventListener("resize",()=>{
+  clearTimeout(roleOrbitResizeV12);
+  roleOrbitResizeV12=setTimeout(applyRole,120);
+});
 
 function makeCard(name,description,parent){
   const b=document.createElement("button");b.className="card";b.type="button";
