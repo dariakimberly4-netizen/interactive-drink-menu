@@ -57,6 +57,12 @@ header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-betwe
 .customer-workspace-v63{display:none}
 .customer-back-v63{margin:12px 0 2px}
 @media(max-width:650px){.customer-orbit-v63{height:430px}.customer-center-v63{width:120px;height:120px;font-size:12px}.customer-node-v63{width:88px;height:88px;font-size:8px}.customer-node-v63 span{font-size:18px}}
+
+#customerOrbitWrapV63{display:block!important}
+#customerWorkspaceV63{display:none}
+body.customer-workspace-open-v64 #customerOrbitWrapV63{display:none!important}
+body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
+#customerOrbitWrapV63 .customer-orbit-v63{display:block!important}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn">‹ Back to Orbit</button></header>
@@ -120,7 +126,7 @@ const customerWorkspaceV63=document.querySelector('#customerWorkspaceV63');
 function openCustomerV63(id){
  localStorage.setItem('customer_orbit_seen_v63_'+id,'1');
  document.querySelector('[data-customer-v63="'+id+'"]')?.classList.remove('new-customer-v63');
- customerOrbitWrapV63.style.display='none';customerWorkspaceV63.style.display='block';
+ document.body.classList.add('customer-workspace-open-v64');
  if(id==='saved'){openSaved()}
  else if(id==='cart'){openCart()}
  else if(id==='compare'){const ids=read(compareKey,[]);if(ids.length>=2)openCompare();else toast('Select 2 products to compare')}
@@ -130,7 +136,7 @@ function openCustomerV63(id){
  scrollTo(0,0);
 }
 document.querySelectorAll('[data-customer-v63]').forEach(b=>{const id=b.dataset.customerV63;if(localStorage.getItem('customer_orbit_seen_v63_'+id))b.classList.remove('new-customer-v63');b.addEventListener('click',()=>openCustomerV63(id))});
-document.querySelector('#customerBackV63')?.addEventListener('click',()=>{customerWorkspaceV63.style.display='none';customerOrbitWrapV63.style.display='block';scrollTo(0,0)});
+document.querySelector('#customerBackV63')?.addEventListener('click',()=>{document.body.classList.remove('customer-workspace-open-v64');scrollTo(0,0)});
 
 const NEW_KEY_V62='mo_clean_browse_seen_v62';
 const newSeenV62=()=>read(NEW_KEY_V62,{});
