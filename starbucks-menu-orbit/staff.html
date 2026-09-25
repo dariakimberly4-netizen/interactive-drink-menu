@@ -90,18 +90,6 @@
  top:-34px!important;z-index:99!important
 }
 @keyframes v41flash{from{filter:brightness(1)}to{filter:brightness(1.35)}}
-</style><style>
-/* V42 MOBILE CLICK FIX */
-.ops-orbit:before,.new-orders-orbit-v38:before,.prep-orbit-v39:before,
-.ops-node:after,.new-node-v38:after,.prep-node-v39:after{pointer-events:none!important}
-.ops-node,.ops-center,.new-node-v38,.new-center-v38,.prep-node-v39,.prep-center-v39{
- pointer-events:auto!important;cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(255,242,0,.25)!important
-}
-.ops-node.parent-new-v40,.prep-node-v39.new-v39{
- transform:translate(-50%,-50%)!important;
- animation:v42glow .7s ease-in-out infinite alternate!important
-}
-@keyframes v42glow{from{filter:brightness(1)}to{filter:brightness(1.3)}}
 </style></head>
 <body>
 <div class="wrap">
@@ -225,17 +213,6 @@ function openPrepToolV39(id){
  document.querySelector('#backPrepV39').onclick=openPreparingOrbitV39;
  const b=document.querySelector('#openPrepOrdersV39');if(b)b.onclick=()=>{view='preparing';subview='orders';renderArea()};
 }
-
-function orbitTapV42(e){
- const b=e.target.closest&&e.target.closest('[data-orbit],[data-newtool],[data-preptool]');
- if(!b)return;
- if(b.dataset.orbit){
-  const id=b.dataset.orbit;
-  if(id==='new'){openNewOrdersOrbitV38();return}
-  if(id==='preparing'){localStorage.setItem('prep_parent_seen_v41','1');openPreparingOrbitV39();return}
- }
-}
-if(!window.__orbitTapV42){document.addEventListener('click',orbitTapV42,{passive:true});window.__orbitTapV42=true}
 function renderArea(){const area=document.querySelector('#area');if(subview==='kitchen')return renderKitchen(area);if(subview==='handover')return renderHandover(area);if(subview==='summary')return renderSummary(area);if(subview==='audit')return renderAudit(area);if(view==='inventory')return renderInventory(area);renderOrders(area)}
 function renderOrders(area){let list=orders.filter(o=>view==='new'?['new','confirmed'].includes(o.status):o.status===view);if(search)list=list.filter(o=>(o.order_ref+' '+(o.customer_name||'')).toLowerCase().includes(search.toLowerCase()));area.innerHTML=`<div class="toolbar"><input class="search" id="search" placeholder="Search order number or customer" value="${esc(search)}"><button class="btn" id="clear">Clear</button></div>${list.length?list.map(orderCard).join(''):'<div class="empty">No orders in this section.</div>'}`;document.querySelector('#search').oninput=e=>{search=e.target.value;renderOrders(area)};document.querySelector('#clear').onclick=()=>{search='';renderOrders(area)};wireOrders()}
 function priorityBadge(o){const p=o.priority|| (delayed(o)?'delayed':'normal');if(p==='accessibility')return '<span class="badge access">♿ Accessibility Assistance</span>';if(p==='urgent')return '<span class="badge priority">⚡ Urgent</span>';if(p==='delayed'||delayed(o))return '<span class="badge delay">Delayed</span>';return '<span class="badge priority">Normal</span>'}
