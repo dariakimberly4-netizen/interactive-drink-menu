@@ -89,6 +89,25 @@ button,input,select{font:inherit}
 }
 .role-select:disabled{opacity:1;cursor:default}
 </style>
+
+<style id="cashierPosV14">
+/* CASHIER POS V14 */
+.pos-shell{margin-top:18px;display:grid;grid-template-columns:1.35fr .85fr;gap:14px}
+.pos-menu,.pos-cart{background:#fff;border:1px solid #dce6e1;border-radius:20px;padding:14px}
+.pos-tabs{display:flex;gap:7px;overflow:auto;margin-bottom:12px}
+.pos-tabs button{border:0;border-radius:999px;padding:8px 12px;background:#edf3ef;color:#174c3a;font-weight:900;white-space:nowrap}
+.pos-tabs button.active{background:#006241;color:#fff}
+.pos-products{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.pos-product{border:1px solid #dce6e1;border-radius:14px;background:#fbfdfc;padding:12px;text-align:left;min-height:82px}
+.pos-product b{display:block}.pos-product span{display:block;color:#708078;font-size:11px;margin-top:5px}.pos-product strong{display:block;color:#006241;margin-top:7px}
+.pos-cart h3{margin:0 0 10px}.cart-line{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;border-bottom:1px solid #edf1ef}.cart-line b{display:block;font-size:13px}.cart-line small{color:#78867f}.qty{display:flex;gap:5px;align-items:center}.qty button{width:28px;height:28px;border:0;border-radius:8px;background:#e9f2ed;color:#075b3e;font-weight:900}
+.pos-total{display:flex;justify-content:space-between;font-size:20px;font-weight:1000;margin:14px 0}
+.pos-action{width:100%;min-height:48px;border:0;border-radius:13px;background:#006241;color:#fff;font-weight:900;margin-top:8px}.pos-action.secondary{background:#e9f2ed;color:#075b3e}
+.checkout-box{margin-top:14px;padding-top:14px;border-top:1px solid #e1e8e4}.pay-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.pay-grid button{min-height:42px;border:1px solid #d8e2dd;border-radius:11px;background:#fff;font-weight:900}.pay-grid button.active{background:#006241;color:#fff}
+.pos-field{width:100%;height:44px;border:1px solid #d7e1db;border-radius:11px;padding:0 11px;margin-top:8px}
+.receipt-v14{background:#fff;border:1px dashed #9eb2a8;border-radius:16px;padding:16px;margin-top:16px}.receipt-v14 h3{text-align:center;margin:0 0 8px}.receipt-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;padding:4px 0}.receipt-total{font-weight:1000;font-size:16px;border-top:1px solid #dde5e1;margin-top:7px;padding-top:8px}
+@media(max-width:760px){.pos-shell{grid-template-columns:1fr}.pos-products{grid-template-columns:1fr 1fr}}
+</style>
 </head>
 <body>
 <header class="topbar">
@@ -235,6 +254,10 @@ function openWorkspace(name,description,parent){
 }
 function renderOrders(){
   title.textContent="Orders";desc.textContent="Move orders through the live queue.";grid.innerHTML="";workspace.innerHTML="";
+  if(roleSelect.value==="Cashier"){
+    grid.innerHTML='<button class="card" id="cashierPOSLaunchV14"><b>＋ New POS Order</b><span>Create, pay and send an order to the barista queue.</span></button>';
+    document.getElementById("cashierPOSLaunchV14").onclick=openCashierPOSV14;
+  }
   const stages=[["new","New"],["preparing","Preparing"],["ready","Ready"],["completed","Completed"]];
   const next={new:"preparing",preparing:"ready",ready:"completed"};
   const back={preparing:"new",ready:"preparing",completed:"ready"};
@@ -253,7 +276,12 @@ function openModule(key){
   panel.classList.add("open");
 }
 document.querySelectorAll("[data-module]").forEach(btn=>btn.onclick=()=>openModule(btn.dataset.module));
-document.getElementById("quickNewOrder").onclick=()=>{title.textContent="New Order";desc.textContent="Start a cashier order.";grid.innerHTML="";workspace.innerHTML="";[["Drinks","Browse drink categories."],["Food","Browse food categories."],["Custom Order","Build a customized order."],["Scan / Search","Find an item quickly."]].forEach(([a,b])=>makeCard(a,b,"orders"));panel.classList.add("open")};
+document.getElementById("quickNewOrder").onclick=()=>{
+  if(roleSelect.value==="Cashier"){openCashierPOSV14();return}
+  title.textContent="New Order";desc.textContent="Start a staff order.";grid.innerHTML="";workspace.innerHTML="";
+  [["Drinks","Browse drink categories."],["Food","Browse food categories."],["Custom Order","Build a customized order."],["Scan / Search","Find an item quickly."]].forEach(([a,b])=>makeCard(a,b,"orders"));
+  panel.classList.add("open");
+};
 document.getElementById("panelClose").onclick=()=>panel.classList.remove("open");
 panel.onclick=e=>{if(e.target===panel)panel.classList.remove("open")};
 
