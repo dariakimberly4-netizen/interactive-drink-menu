@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Staff Command Orbit v11</title>
+<style>
+:root{--g:#006241;--g2:#00a862;--dark:#03120d;--gold:#d4ad62;--line:rgba(255,255,255,.16)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+body{min-height:100vh;color:#fff;overflow:hidden;background:radial-gradient(circle at 50% 43%,rgba(0,168,98,.24),transparent 28%),radial-gradient(circle at 50% 52%,#0c4633 0,#08281e 36%,#03120d 76%,#010705 100%)}
+button,input,select{font:inherit}
+.topbar{min-height:70px;padding:10px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);background:rgba(2,12,9,.75);backdrop-filter:blur(16px);position:relative;z-index:20}
+.logo{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--g);border:2px solid #fff;font-weight:900}
+.brand{margin-right:auto}.brand b{display:block}.brand small{color:#b9c9c1}
+.staff-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.role-select,.shift-btn,.staff-status{height:36px;border-radius:999px;border:1px solid rgba(255,255,255,.18);padding:0 11px}
+.role-select{background:#0a3428;color:#fff;font-weight:800}
+.shift-btn{background:#f4efe6;color:#07331f;font-weight:900;cursor:pointer}
+.staff-status{display:flex;align-items:center;background:rgba(0,168,98,.16);color:#d9efe4;font-size:11px;font-weight:800}
+.stage{position:absolute;inset:70px 0 0;display:grid;place-items:center;overflow:hidden}
+.orbit-wrap{position:relative;width:min(820px,94vw);height:min(820px,calc(100vh - 90px));min-height:560px;display:grid;place-items:center}
+.orbit-ring{position:absolute;width:min(650px,76vw);aspect-ratio:1;border-radius:50%;border:1px dashed rgba(255,255,255,.24);box-shadow:0 0 90px rgba(0,168,98,.12),inset 0 0 100px rgba(255,255,255,.03)}
+.orbit-ring:after{content:"";position:absolute;inset:11%;border-radius:50%;border:1px solid rgba(212,173,98,.14)}
+.core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:220px;height:220px;border-radius:50%;border:2px solid rgba(255,255,255,.92);background:radial-gradient(circle at 35% 25%,#23a36c,#00754a 58%,#00442d);color:#fff;z-index:5;box-shadow:0 0 0 10px rgba(0,117,74,.14),0 0 72px rgba(0,168,98,.35);padding:20px;text-align:center;cursor:pointer}
+.core small{display:block;letter-spacing:.14em;font-weight:800;opacity:.8}.core h1{font-size:24px;margin:8px 0 12px}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mini div{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.13);border-radius:11px;padding:7px}.mini b{display:block;font-size:15px}.mini span{font-size:9px;opacity:.8}
+.node{position:absolute;left:50%;top:50%;width:120px;height:120px;transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.22);border-radius:50%;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),rgba(255,255,255,.07) 58%,rgba(0,117,74,.18));backdrop-filter:blur(16px);color:#fff;box-shadow:0 16px 38px rgba(0,0,0,.25);z-index:6;cursor:pointer;padding:12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.node b{display:block;font-size:14px;line-height:1.05}.node span{display:block;color:#c9d8d1;font-size:8.5px;line-height:1.12;margin-top:5px;max-width:86px}
+.status-badge{position:absolute;top:-7px;right:-6px;min-width:26px;height:22px;padding:0 6px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#e44f4f;color:#fff;border:2px solid #0b2f24;font-style:normal;font-size:8px;font-weight:900;white-space:nowrap}
+.status-badge.ok{background:#00a862}.status-badge.warn{background:#c77c14}.status-badge.gold{background:#d4ad62;color:#143126}
+.n1{margin-top:-300px}.n2{margin-left:250px;margin-top:-145px}.n3{margin-left:250px;margin-top:145px}.n4{margin-top:300px}.n5{margin-left:-250px;margin-top:145px}.n6{margin-left:-250px;margin-top:-145px}
+.quick-new-order{position:absolute;left:50%;top:50%;transform:translate(-50%,112px);z-index:7;border:1px solid rgba(244,200,111,.7);border-radius:999px;background:linear-gradient(135deg,#f4efe6,#d4ad62);color:#07331f;font-weight:900;padding:9px 16px;box-shadow:0 10px 24px rgba(0,0,0,.3);cursor:pointer}
+.panel{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.58);backdrop-filter:blur(8px);z-index:50}
+.panel.open{display:flex}
+.sheet{width:min(980px,100%);max-height:84vh;overflow:auto;background:#f8fbf9;color:#16302a;border-radius:28px 28px 0 0;padding:24px}
+.sheet-head{display:flex;align-items:flex-start;gap:12px}.sheet-head>div{margin-right:auto}.sheet h2{margin:0 0 4px;font-size:30px}.sheet p{margin:0;color:#6d7b76}
+.close{width:42px;height:42px;border:0;border-radius:12px;background:#e9f0ec;font-size:22px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
+.card{min-height:110px;border:1px solid #dfe7e2;border-radius:18px;background:white;padding:16px;text-align:left;cursor:pointer;touch-action:manipulation}
+.card:active{transform:scale(.98);background:#eef7f2}.card b{display:block;font-size:17px;margin-bottom:7px}.card span{font-size:13px;color:#718079;line-height:1.4}
+.order-board{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.order-col{background:#eef4f0;border:1px solid #dbe6e0;border-radius:18px;padding:12px;min-height:220px}
+.order-col h3{margin:0 0 10px;font-size:15px}.order-card{background:#fff;border:1px solid #dde6e1;border-radius:14px;padding:12px;margin-bottom:9px}.order-card b{display:block}.order-card span,.order-card small{display:block;color:#6f7d76;font-size:11px;margin-top:4px}
+.order-actions{display:flex;gap:6px;margin-top:9px}.order-actions button{flex:1;min-height:34px;border:0;border-radius:9px;background:#006241;color:#fff;font-size:10px;font-weight:900}.order-actions button.secondary{background:#e9f2ed;color:#0a5d40}
+.summary-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.summary-pills span{padding:7px 10px;border-radius:999px;background:#e9f2ed;color:#0a5d40;font-size:11px;font-weight:900}
+.workspace-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.workspace-actions button{min-height:52px;border:0;border-radius:14px;background:#006241;color:#fff;font-weight:900}.workspace-actions button.secondary{background:#e9f2ed;color:#0a5d40}
+.back{margin-top:14px;width:100%;min-height:48px;border:1px solid #d7e2dc;border-radius:14px;background:#fff;color:#16302a;font-weight:900}
+.gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;background:linear-gradient(150deg,#04140e,#0b3c2c)}
+.login{width:min(420px,100%);background:#fff;color:#16302a;border-radius:28px;padding:28px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.login .mark{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:var(--g);color:white;font-weight:900;font-size:22px}.login h2{font-size:30px;margin:14px 0 5px}.login p{margin:0 0 20px;color:#6d7b76}.login label{display:block;font-size:12px;font-weight:800;margin:10px 0 6px}.login input{width:100%;height:48px;border:1px solid #d7e1db;border-radius:13px;padding:0 13px}.enter{margin-top:16px;width:100%;height:52px;border:0;border-radius:14px;background:var(--g);color:#fff;font-weight:900}.demo{display:block;text-align:center;color:#87948e;font-size:11px;margin-top:10px}
+@media(max-width:760px){
+  .topbar{min-height:82px;padding:8px 10px;align-items:flex-start}.brand small{display:none}.staff-tools{max-width:58%}.role-select,.shift-btn{height:30px;font-size:9px;padding:0 8px}.staff-status{height:30px;font-size:8px;padding:0 8px}
+  .stage{top:82px;align-items:start;padding-top:18px}.orbit-wrap{width:100vw;height:calc(100vh - 96px);min-height:560px}.orbit-ring{width:312px}
+  .core{width:148px;height:148px;padding:12px}.core small{font-size:7.5px}.core h1{font-size:16px;margin:3px 0 7px}.mini{gap:4px}.mini div{padding:4px 3px;border-radius:9px}.mini b{font-size:11px}.mini span{font-size:6.8px}
+  .node{width:80px;height:80px;padding:7px}.node b{font-size:10px}.node span{font-size:6.8px;max-width:58px}.n1{margin-top:-172px}.n2{margin-left:132px;margin-top:-86px}.n3{margin-left:132px;margin-top:86px}.n4{margin-top:172px}.n5{margin-left:-132px;margin-top:86px}.n6{margin-left:-132px;margin-top:-86px}
+  .quick-new-order{transform:translate(-50%,93px);font-size:9px;padding:7px 11px}.grid{grid-template-columns:1fr 1fr}.order-board{grid-template-columns:1fr 1fr}.sheet{padding:18px}
+}
+@media(max-width:430px){.order-board{grid-template-columns:1fr}.orbit-ring{width:286px}.core{width:138px;height:138px}.node{width:74px;height:74px}.n1{margin-top:-160px}.n2{margin-left:121px;margin-top:-80px}.n3{margin-left:121px;margin-top:80px}.n4{margin-top:160px}.n5{margin-left:-121px;margin-top:80px}.n6{margin-left:-121px;margin-top:-80px}}
+</style>
+
+<style id="mobileRoleOrbitFixV12">
+/* MOBILE ROLE ORBIT FIX V12 */
+@media(max-width:760px){
+  .topbar{min-height:72px!important;padding:7px 10px!important;align-items:center!important}
+  .logo{width:42px!important;height:42px!important;flex:0 0 42px}
+  .brand b{font-size:15px!important;line-height:1.05}
+  .staff-tools{max-width:62%!important;gap:5px!important}
+  .role-select,.shift-btn{height:30px!important;font-size:9px!important}
+  .staff-status{height:27px!important;font-size:8px!important}
+  .stage{top:72px!important;padding-top:0!important;align-items:start!important}
+  .orbit-wrap{height:calc(100vh - 72px)!important;min-height:520px!important;transform:translateY(-28px)}
+  .orbit-ring{width:300px!important}
+}
+@media(max-width:390px){
+  .orbit-wrap{transform:translateY(-22px)}
+  .orbit-ring{width:280px!important}
+}
+</style>
+
+<style id="roleLoginV13">
+/* ROLE LOGIN V13 */
+.login-role{
+  width:100%;height:48px;border:1px solid #d7e1db;border-radius:13px;
+  padding:0 13px;background:#fff;color:#16302a;font-weight:800
+}
+.role-select:disabled{opacity:1;cursor:default}
+</style>
+
+<style id="cashierPosV14">
+/* CASHIER POS V14 */
+.pos-shell{margin-top:18px;display:grid;grid-template-columns:1.35fr .85fr;gap:14px}
+.pos-menu,.pos-cart{background:#fff;border:1px solid #dce6e1;border-radius:20px;padding:14px}
+.pos-tabs{display:flex;gap:7px;overflow:auto;margin-bottom:12px}
+.pos-tabs button{border:0;border-radius:999px;padding:8px 12px;background:#edf3ef;color:#174c3a;font-weight:900;white-space:nowrap}
+.pos-tabs button.active{background:#006241;color:#fff}
+.pos-products{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.pos-product{border:1px solid #dce6e1;border-radius:14px;background:#fbfdfc;padding:12px;text-align:left;min-height:82px}
+.pos-product b{display:block}.pos-product span{display:block;color:#708078;font-size:11px;margin-top:5px}.pos-product strong{display:block;color:#006241;margin-top:7px}
+.pos-cart h3{margin:0 0 10px}.cart-line{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;border-bottom:1px solid #edf1ef}.cart-line b{display:block;font-size:13px}.cart-line small{color:#78867f}.qty{display:flex;gap:5px;align-items:center}.qty button{width:28px;height:28px;border:0;border-radius:8px;background:#e9f2ed;color:#075b3e;font-weight:900}
+.pos-total{display:flex;justify-content:space-between;font-size:20px;font-weight:1000;margin:14px 0}
+.pos-action{width:100%;min-height:48px;border:0;border-radius:13px;background:#006241;color:#fff;font-weight:900;margin-top:8px}.pos-action.secondary{background:#e9f2ed;color:#075b3e}
+.checkout-box{margin-top:14px;padding-top:14px;border-top:1px solid #e1e8e4}.pay-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.pay-grid button{min-height:42px;border:1px solid #d8e2dd;border-radius:11px;background:#fff;font-weight:900}.pay-grid button.active{background:#006241;color:#fff}
+.pos-field{width:100%;height:44px;border:1px solid #d7e1db;border-radius:11px;padding:0 11px;margin-top:8px}
+.receipt-v14{background:#fff;border:1px dashed #9eb2a8;border-radius:16px;padding:16px;margin-top:16px}.receipt-v14 h3{text-align:center;margin:0 0 8px}.receipt-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;padding:4px 0}.receipt-total{font-weight:1000;font-size:16px;border-top:1px solid #dde5e1;margin-top:7px;padding-top:8px}
+@media(max-width:760px){.pos-shell{grid-template-columns:1fr}.pos-products{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="logo">S</div>
+  <div class="brand"><b>Staff Command Orbit</b><small>Independent Operations Portal</small></div>
+  <div class="staff-tools">
+    <select id="roleSelect" class="role-select" aria-label="Current role" disabled>
+      <option>Cashier</option><option>Barista</option><option>Supervisor</option><option>Manager</option>
+    </select>
+    <button id="shiftBtn" class="shift-btn">Clock In</button>
+    <span id="staffStatus" class="staff-status">Donna • Off Duty</span>
+  </div>
+</header>
+
+<main class="stage">
+<section class="orbit-wrap">
+  <div class="orbit-ring"></div>
+  <button class="core" data-module="today"><small>LIVE STORE</small><h1>Today’s Store</h1><div class="mini"><div><b>₱18.4K</b><span>Sales</span></div><div><b>12</b><span>New</span></div><div><b>5</b><span>Preparing</span></div><div><b>4</b><span>Low Stock</span></div></div></button>
+  <button id="quickNewOrder" class="quick-new-order">＋ New Order</button>
+  <button class="node n1" data-module="orders"><i class="status-badge">12</i><b>Orders</b><span>Queue & fulfillment</span></button>
+  <button class="node n2" data-module="menu"><i class="status-badge ok">96%</i><b>Menu</b><span>Drinks, food & availability</span></button>
+  <button class="node n3" data-module="inventory"><i class="status-badge warn">4 Low</i><b>Inventory</b><span>Stock & suppliers</span></button>
+  <button class="node n4" data-module="promotions"><i class="status-badge gold">2 Active</i><b>Promotions</b><span>Offers & campaigns</span></button>
+  <button class="node n5" data-module="customers"><i class="status-badge ok">3 New</i><b>Customers</b><span>Loyalty & feedback</span></button>
+  <button class="node n6" data-module="business"><i class="status-badge gold">₱18.4K</i><b>Business</b><span>Sales & reports</span></button>
+</section>
+</main>
+
+<div id="panel" class="panel">
+<section class="sheet">
+  <div class="sheet-head"><div><h2 id="panelTitle"></h2><p id="panelDesc"></p></div><button id="panelClose" class="close">×</button></div>
+  <div id="panelGrid" class="grid"></div>
+  <div id="workspace"></div>
+</section>
+</div>
+
+<div id="gate" class="gate">
+<div class="login">
+  <div class="mark">S</div><h2>Staff Login</h2><p>Choose your role. Each role has its own login.</p>
+  <label>Role</label>
+  <select id="loginRole" class="login-role">
+    <option>Cashier</option>
+    <option>Barista</option>
+    <option>Supervisor</option>
+    <option>Manager</option>
+  </select>
+  <label>Staff Name</label><input id="staffName" value="Donna">
+  <label>Role PIN</label><input id="staffPin" type="password" value="1111">
+  <button id="enterBtn" class="enter">Login as Cashier</button>
+  <span class="demo" id="loginHint">Cashier demo PIN: 1111</span>
+</div>
+</div>
+
+<script>
+
+const POS_PRODUCTS_V15=[
+{id:"d1",cat:"Drinks",name:"Caffè Latte",price:165},{id:"d2",cat:"Drinks",name:"Caramel Macchiato",price:190},{id:"d3",cat:"Drinks",name:"Cold Brew",price:175},{id:"d4",cat:"Drinks",name:"Matcha Latte",price:185},
+{id:"f1",cat:"Food",name:"Croissant",price:120},{id:"f2",cat:"Food",name:"Chicken Sandwich",price:195},{id:"f3",cat:"Food",name:"Chocolate Cake",price:160},
+{id:"a1",cat:"Add-ons",name:"Extra Shot",price:30},{id:"a2",cat:"Add-ons",name:"Syrup",price:25}
+];
+let posCartV15=[],posCatV15="Drinks",posPayV15="Cash",posDiscountV15=0;
+function moneyV15(n){return "₱"+Number(n).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function posTotalsV15(){const s=posCartV15.reduce((a,x)=>a+x.price*x.qty,0),d=s*posDiscountV15;return{subtotal:s,discount:d,total:s-d}}
+function openCashierPOSV15(){
+ title.textContent="Cashier POS";desc.textContent="New Order → Cart → Discount → Payment → Receipt";grid.innerHTML="";
+ workspace.innerHTML='<div class="pos-shell"><section class="pos-menu"><div class="pos-tabs" id="posTabsV15"></div><div class="pos-products" id="posProductsV15"></div></section><aside class="pos-cart"><h3>Current Order</h3><div id="posCartV15"></div><button class="pos-action secondary" id="holdV15">Hold Order</button><div class="checkout-box"><select class="pos-field" id="discountV15"><option value="0">No Discount</option><option value=".20">Senior Citizen 20%</option><option value=".20">PWD 20%</option></select><input class="pos-field" id="refV15" placeholder="Discount ID / reference"><div class="pay-grid" id="payV15"><button data-pay="Cash" class="active">Cash</button><button data-pay="Card">Card</button><button data-pay="GCash">GCash</button><button data-pay="Maya">Maya</button></div><input class="pos-field" id="tenderV15" type="number" placeholder="Amount tendered"><div class="pos-total"><span>Total</span><span id="totalV15">₱0.00</span></div><button class="pos-action" id="checkoutV15">Pay & Send Order</button></div><div id="receiptV15"></div></aside></div>';
+ renderPOSV15();
+ document.getElementById("discountV15").onchange=e=>{posDiscountV15=Number(e.target.value);renderCartV15()};
+ document.querySelectorAll("#payV15 button").forEach(b=>b.onclick=()=>{posPayV15=b.dataset.pay;document.querySelectorAll("#payV15 button").forEach(x=>x.classList.toggle("active",x===b))});
+ document.getElementById("holdV15").onclick=()=>{localStorage.setItem("heldOrderV15",JSON.stringify(posCartV15));alert("Order held.")};
+ document.getElementById("checkoutV15").onclick=checkoutV15;
+ panel.classList.add("open");
+}
+function renderPOSV15(){
+ const tabs=document.getElementById("posTabsV15"),products=document.getElementById("posProductsV15");if(!tabs||!products)return;
+ tabs.innerHTML=["Drinks","Food","Add-ons"].map(x=>'<button class="'+(x===posCatV15?'active':'')+'" data-cat="'+x+'">'+x+'</button>').join("");
+ tabs.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{posCatV15=b.dataset.cat;renderPOSV15()});
+ products.innerHTML=POS_PRODUCTS_V15.filter(p=>p.cat===posCatV15).map(p=>'<button class="pos-product" data-p="'+p.id+'"><b>'+p.name+'</b><span>'+p.cat+'</span><strong>'+moneyV15(p.price)+'</strong></button>').join("");
+ products.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{const p=POS_PRODUCTS_V15.find(x=>x.id===b.dataset.p),r=posCartV15.find(x=>x.id===p.id);if(r)r.qty++;else posCartV15.push({...p,qty:1});renderCartV15()});
+ renderCartV15();
+}
+function renderCartV15(){
+ const box=document.getElementById("posCartV15");if(!box)return;
+ box.innerHTML=posCartV15.length?posCartV15.map(x=>'<div class="cart-line"><div><b>'+x.name+'</b><small>'+moneyV15(x.price)+' × '+x.qty+'</small></div><div class="qty"><button data-minus="'+x.id+'">−</button><b>'+x.qty+'</b><button data-plus="'+x.id+'">+</button></div></div>').join(""):'<p style="color:#78867f">No items yet.</p>';
+ box.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>{const r=posCartV15.find(x=>x.id===b.dataset.minus);r.qty--;if(r.qty<=0)posCartV15=posCartV15.filter(x=>x.id!==r.id);renderCartV15()});
+ box.querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>{posCartV15.find(x=>x.id===b.dataset.plus).qty++;renderCartV15()});
+ document.getElementById("totalV15").textContent=moneyV15(posTotalsV15().total);
+}
+function checkoutV15(){
+ if(!posCartV15.length){alert("Add at least one item.");return}
+ const t=posTotalsV15();
+ if(posDiscountV15>0&&!document.getElementById("refV15").value.trim()){alert("Enter the Senior/PWD ID or reference.");return}
+ const tender=Number(document.getElementById("tenderV15").value||0);
+ if(posPayV15==="Cash"&&tender<t.total){alert("Cash tendered is less than the total.");return}
+ const id="A-"+(1100+orders.length+1);
+ orders.unshift({id,items:posCartV15.reduce((a,x)=>a+x.qty,0)+" items",age:"Just now",status:"new"});saveState();
+ const change=posPayV15==="Cash"?tender-t.total:0;
+ document.getElementById("receiptV15").innerHTML='<div class="receipt-v14"><h3>ORDER #'+id+'</h3>'+posCartV15.map(x=>'<div class="receipt-row"><span>'+x.qty+' × '+x.name+'</span><b>'+moneyV15(x.price*x.qty)+'</b></div>').join("")+'<div class="receipt-row"><span>Discount</span><b>-'+moneyV15(t.discount)+'</b></div><div class="receipt-row"><span>Payment</span><b>'+posPayV15+'</b></div>'+(posPayV15==="Cash"?'<div class="receipt-row"><span>Change</span><b>'+moneyV15(change)+'</b></div>':'')+'<div class="receipt-row receipt-total"><span>TOTAL</span><b>'+moneyV15(t.total)+'</b></div><button class="pos-action secondary" onclick="window.print()">Print Receipt</button><button class="pos-action" id="newSaleV15">New Sale</button></div>';
+ document.getElementById("newSaleV15").onclick=()=>{posCartV15=[];posDiscountV15=0;posPayV15="Cash";openCashierPOSV15()};
+}
+
+
+const modules={
+menu:[["Drinks","Coffee, tea and blended drinks."],["Food","Pastries, sandwiches and snacks."],["Add-ons","Shots, syrups, milk and toppings."],["Sizes","Manage serving sizes."],["Availability","Turn items on or off."],["Sold Out","Mark unavailable products."]],
+inventory:[["Ingredients","Beans, milk, syrups and food."],["Packaging","Cups, lids, bags and tissue."],["Low Stock","Below reorder level."],["Stock In","Record incoming stock."],["Stock Out","Record usage and transfers."],["Supplier Deliveries","Receive deliveries."]],
+promotions:[["Discounts","Store discounts."],["Vouchers","Voucher codes."],["Bundles","Drink and food bundles."],["Happy Hour","Time-based offers."],["Featured Drinks","Highlight selected items."],["Campaigns","Seasonal campaigns."]],
+customers:[["Customer Directory","Search customer profiles."],["Order History","Repeat purchase history."],["Favorites","Favorite menu items."],["Loyalty / Stars","Rewards activity."],["Feedback","Ratings and service comments."],["Frequent Customers","Recurring customer view."]],
+business:[["Sales Dashboard","Revenue and order trends."],["Payments","Cash, card and digital totals."],["Expenses","Operating expenses."],["Best Sellers","Top menu items."],["Product Performance","Performance by category."],["Reports","Daily, weekly and monthly."]]
+};
+const titles={today:"Today's Store",orders:"Orders",menu:"Menu",inventory:"Inventory",promotions:"Promotions",customers:"Customers",business:"Business"};
+const descs={today:"Live shift command center.",orders:"Live order queue.",menu:"Manage sellable products.",inventory:"Control stock and supplies.",promotions:"Manage store offers.",customers:"Customer and loyalty tools.",business:"Management performance view."};
+
+const panel=document.getElementById("panel"), title=document.getElementById("panelTitle"), desc=document.getElementById("panelDesc"), grid=document.getElementById("panelGrid"), workspace=document.getElementById("workspace");
+const roleSelect=document.getElementById("roleSelect"), shiftBtn=document.getElementById("shiftBtn"), staffStatus=document.getElementById("staffStatus");
+
+let staffName="Donna";
+let shiftState="off";
+let orders=[
+{id:"A-1043",items:"2 drinks",age:"1 min",status:"new"},
+{id:"A-1042",items:"1 drink + 1 food",age:"3 min",status:"new"},
+{id:"A-1041",items:"3 drinks",age:"6 min",status:"preparing"},
+{id:"A-1040",items:"1 food",age:"8 min",status:"preparing"},
+{id:"A-1039",items:"2 drinks",age:"10 min",status:"ready"},
+{id:"A-1038",items:"1 drink",age:"14 min",status:"completed"}
+];
+
+function saveState(){
+  localStorage.setItem("staffV11Role",roleSelect.value);
+  localStorage.setItem("staffV11Shift",shiftState);
+  localStorage.setItem("staffV11Orders",JSON.stringify(orders));
+}
+function loadState(){
+  const savedRole=localStorage.getItem("staffV11Role");
+  const savedShift=localStorage.getItem("staffV11Shift"); if(savedShift) shiftState=savedShift;
+  const savedOrders=localStorage.getItem("staffV11Orders"); if(savedOrders){try{orders=JSON.parse(savedOrders)}catch(e){}}
+  updateShiftUI(); applyRole();
+}
+function roleModules(){
+  const role=roleSelect.value;
+  if(role==="Cashier") return ["orders","menu","customers","promotions"];
+  if(role==="Barista") return ["orders","menu","inventory"];
+  return ["orders","menu","inventory","promotions","customers","business"];
+}
+function applyRole(){
+  const visible=roleModules();
+  const nodes=[...document.querySelectorAll(".node[data-module]")];
+  nodes.forEach(n=>{
+    n.style.display=visible.includes(n.dataset.module)?"flex":"none";
+    n.style.marginLeft="";
+    n.style.marginTop="";
+  });
+
+  const active=nodes.filter(n=>visible.includes(n.dataset.module));
+  const mobile=window.matchMedia("(max-width:760px)").matches;
+  const small=window.matchMedia("(max-width:390px)").matches;
+
+  if(mobile){
+    const radius=small?142:154;
+    const start=-90;
+    active.forEach((n,i)=>{
+      const angle=(start+(360/active.length)*i)*Math.PI/180;
+      n.style.marginLeft=(Math.cos(angle)*radius)+"px";
+      n.style.marginTop=(Math.sin(angle)*radius)+"px";
+    });
+  }
+  saveState();
+}
+function updateShiftUI(){
+  if(shiftState==="off"){shiftBtn.textContent="Clock In";staffStatus.textContent=staffName+" • Off Duty";}
+  if(shiftState==="in"){shiftBtn.textContent="Take Break";staffStatus.textContent=staffName+" • On Duty";}
+  if(shiftState==="break"){shiftBtn.textContent="Resume";staffStatus.textContent=staffName+" • On Break";}
+}
+shiftBtn.onclick=()=>{shiftState=shiftState==="off"?"in":shiftState==="in"?"break":"in";updateShiftUI();saveState()};
+roleSelect.onchange=applyRole;
+let roleOrbitResizeV12;
+window.addEventListener("resize",()=>{
+  clearTimeout(roleOrbitResizeV12);
+  roleOrbitResizeV12=setTimeout(applyRole,120);
+});
+
+function makeCard(name,description,parent){
+  const b=document.createElement("button");b.className="card";b.type="button";
+  b.innerHTML="<b>"+name+"</b><span>"+description+"</span>";
+  b.onclick=()=>openWorkspace(name,description,parent);
+  grid.appendChild(b);
+}
+function openWorkspace(name,description,parent){
+  title.textContent=name;desc.textContent=description;grid.innerHTML="";
+  workspace.innerHTML='<div class="workspace-actions"><button>＋ Add New</button><button class="secondary">Manage Existing</button></div><button id="backBtn" class="back">← Back</button>';
+  document.getElementById("backBtn").onclick=()=>openModule(parent);
+  workspace.querySelectorAll(".workspace-actions button").forEach(btn=>btn.onclick=()=>{const t=btn.textContent;btn.textContent="✓ Opened";setTimeout(()=>btn.textContent=t,700)});
+}
+function renderOrders(){
+  title.textContent="Orders";desc.textContent="Move orders through the live queue.";grid.innerHTML="";workspace.innerHTML="";
+  if(roleSelect.value==="Cashier"){
+    grid.innerHTML='<button class="card" id="cashierPOSLaunchV14"><b>＋ New POS Order</b><span>Create, pay and send an order to the barista queue.</span></button>';
+    document.getElementById("cashierPOSLaunchV14").onclick=openCashierPOSV15;
+  }
+  const stages=[["new","New"],["preparing","Preparing"],["ready","Ready"],["completed","Completed"]];
+  const next={new:"preparing",preparing:"ready",ready:"completed"};
+  const back={preparing:"new",ready:"preparing",completed:"ready"};
+  workspace.innerHTML='<div class="summary-pills">'+stages.map(([k,l])=>'<span>'+l+': '+orders.filter(o=>o.status===k).length+'</span>').join("")+'</div><div class="order-board">'+stages.map(([k,l])=>'<section class="order-col"><h3>'+l+'</h3>'+orders.filter(o=>o.status===k).map(o=>'<div class="order-card"><b>#'+o.id+'</b><span>'+o.items+'</span><small>'+o.age+'</small><div class="order-actions">'+(back[k]?'<button class="secondary" data-id="'+o.id+'" data-next="'+back[k]+'">Back</button>':'')+(next[k]?'<button data-id="'+o.id+'" data-next="'+next[k]+'">Move Next</button>':'')+'</div></div>').join("")+'</section>').join("")+'</div>';
+  workspace.querySelectorAll("[data-id]").forEach(btn=>btn.onclick=()=>{const o=orders.find(x=>x.id===btn.dataset.id);if(o)o.status=btn.dataset.next;saveState();renderOrders()});
+  panel.classList.add("open");
+}
+function openModule(key){
+  if(key==="orders"){renderOrders();return}
+  title.textContent=titles[key];desc.textContent=descs[key];grid.innerHTML="";workspace.innerHTML="";
+  if(key==="today"){
+    [["Sales Today","₱18,420"],["Orders Waiting","12"],["Preparing","5"],["Ready","3"],["Low Stock","4"],["Staff Online","4"]].forEach(([a,b])=>makeCard(a,b,"today"));
+  }else{
+    (modules[key]||[]).forEach(([a,b])=>makeCard(a,b,key));
+  }
+  panel.classList.add("open");
+}
+document.querySelectorAll("[data-module]").forEach(btn=>btn.onclick=()=>openModule(btn.dataset.module));
+document.getElementById("quickNewOrder").onclick=()=>{
+  if(roleSelect.value==="Cashier"){openCashierPOSV15();return}
+  title.textContent="New Order";desc.textContent="Start a staff order.";grid.innerHTML="";workspace.innerHTML="";
+  [["Drinks","Browse drink categories."],["Food","Browse food categories."],["Custom Order","Build a customized order."],["Scan / Search","Find an item quickly."]].forEach(([a,b])=>makeCard(a,b,"orders"));
+  panel.classList.add("open");
+};
+document.getElementById("panelClose").onclick=()=>panel.classList.remove("open");
+panel.onclick=e=>{if(e.target===panel)panel.classList.remove("open")};
+
+const ROLE_PINS_V13={Cashier:"1111",Barista:"2222",Supervisor:"3333",Manager:"4444"};
+const loginRole=document.getElementById("loginRole");
+const loginHint=document.getElementById("loginHint");
+function updateRoleLoginV13(){
+  const role=loginRole.value;
+  document.getElementById("enterBtn").textContent="Login as "+role;
+  loginHint.textContent=role+" demo PIN: "+ROLE_PINS_V13[role];
+  document.getElementById("staffPin").value=ROLE_PINS_V13[role];
+}
+loginRole.onchange=updateRoleLoginV13;
+updateRoleLoginV13();
+
+document.getElementById("enterBtn").onclick=()=>{
+  const role=loginRole.value;
+  const pin=document.getElementById("staffPin").value;
+  if(pin!==ROLE_PINS_V13[role]){alert("Incorrect PIN for "+role);return}
+  staffName=(document.getElementById("staffName").value||role).trim();
+  roleSelect.value=role;
+  document.getElementById("gate").style.display="none";
+  updateShiftUI();
+  applyRole();
+  saveState();
+}
+loadState();
+</script>
+</body>
+</html>
