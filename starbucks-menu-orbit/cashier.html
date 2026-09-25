@@ -449,6 +449,15 @@
  box-shadow:0 0 0 7px #fff,0 0 0 13px #fff200,0 0 55px 22px rgba(255,242,0,.75)!important;
  animation:v25Blink .85s ease-in-out infinite!important;z-index:999!important
 }
+
+/* MOBILE CLICK + ORBIT SAFETY V28 */
+@media(max-width:430px){
+ .cashier-orbit{height:540px!important;min-height:540px!important;overflow:visible!important}
+ .cashier-orbit-node{width:86px!important;height:86px!important;padding:6px!important;font-size:9px!important;z-index:20;touch-action:manipulation}
+ .cashier-orbit-center{z-index:10;touch-action:manipulation}
+ .cashier-orbit-ring{width:250px!important;height:250px!important}
+}
+.cashier-orbit-node,.cashier-orbit-center{pointer-events:auto!important}
 </style>
 </head>
 <body>
@@ -772,6 +781,15 @@ function toolDailySummary(){
     </tbody></table>
     <div class="business-note">Use End Shift for cashier closing and reconciliation.</div>`);
 }
+/* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
+const NEW_FEATURES_V26=['Payment Retry','Duplicate Payment Lock','Failed Payment Queue','Manager PIN Override','Offline Payment Sync','Refund Original Method'];
+const NEW_SEEN_KEY_V26='cashier_seen_new_features_v26';
+function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
+function markNewSeenV26(label){
+ if(!NEW_FEATURES_V26.includes(label))return;
+ const s=seenNewV26(); if(!s.includes(label)){s.push(label);localStorage.setItem(NEW_SEEN_KEY_V26,JSON.stringify(s))}
+}
+
 function home(){
   const view=document.querySelector('#view');
   const MAIN_NEW_KEY='cashier-orbit-main-v5';
@@ -945,7 +963,7 @@ function home(){
   function bind(items,isMain){
     document.querySelectorAll('[data-orbit-id]').forEach((b,i)=>b.onclick=()=>{
       if(isMain){markSeen();showOrbit(items[i].id)}
-      else items[i].run();
+      else { markNewSeenV26(items[i].label); items[i].run(); }
     });
     document.querySelector('#cashierOrbitBack')?.addEventListener('click',()=>showOrbit());
 
@@ -988,13 +1006,5 @@ document.querySelector('#closeProblem').onclick=()=>document.querySelector('#pro
 if(!db)login();else init();
 </script>
 <script src="new-feature-highlights.js"></script><script src="ecosystem-sync.js">
-/* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
-const NEW_FEATURES_V26=['Payment Retry','Duplicate Payment Lock','Failed Payment Queue','Manager PIN Override','Offline Payment Sync','Refund Original Method'];
-const NEW_SEEN_KEY_V26='cashier_seen_new_features_v26';
-function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
-function markNewSeenV26(label){
- if(!NEW_FEATURES_V26.includes(label))return;
- const s=seenNewV26(); if(!s.includes(label)){s.push(label);localStorage.setItem(NEW_SEEN_KEY_V26,JSON.stringify(s))}
-}
 </script></body>
 </html>
