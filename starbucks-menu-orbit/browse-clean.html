@@ -68,17 +68,17 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 
 .healthy-orbit-v66{position:relative;width:min(620px,92vw);height:min(620px,92vw);margin:18px auto 50px}
 .healthy-orbit-v66:before{content:"";position:absolute;inset:14%;border:2px solid rgba(244,200,111,.55);border-radius:50%}
-.healthy-center-v66,.healthy-node-v66{position:absolute;transform:translate(-50%,-50%);border-radius:50%;color:#fff;font-weight:950;text-align:center;cursor:pointer;z-index:2}
+.healthy-center-v66,.healthy-node-v66{position:absolute;pointer-events:auto!important;transform:translate(-50%,-50%);border-radius:50%;color:#fff;font-weight:950;text-align:center;cursor:pointer;z-index:2}
 .healthy-center-v66{left:50%;top:50%;width:170px;height:170px;background:radial-gradient(circle,#167755,#042c20);border:5px solid var(--gold)}
 .healthy-center-v66 small{display:block;font-size:9px;color:#f4d992;margin-top:6px}
-.healthy-node-v66{width:112px;height:112px;background:#0c382a;border:3px solid var(--gold);font-size:9px}.healthy-node-v66 span{display:block;font-size:22px;margin-bottom:3px}
+.healthy-node-v66{pointer-events:auto!important;width:112px;height:112px;background:#0c382a;border:3px solid var(--gold);font-size:9px}.healthy-node-v66 span{display:block;font-size:22px;margin-bottom:3px}
 .healthy-node-v66.new-healthy-v66{outline:6px solid #fff200;box-shadow:0 0 0 11px rgba(255,242,0,.24),0 0 42px rgba(255,242,0,.55)}
 .nutrition-list-v66{display:grid;gap:10px;margin-top:14px}.nutrition-card-v66{display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;padding:11px;border:1px solid rgba(255,255,255,.12);border-radius:14px}.nutrition-card-v66 img{width:60px;height:60px;object-fit:cover;border-radius:10px}.nutrition-note-v66{padding:12px;border:1px solid rgba(244,200,111,.35);border-radius:12px;color:#d5e0da;font-size:12px;margin-top:12px}
 @media(max-width:650px){.healthy-orbit-v66{height:430px}.healthy-center-v66{width:118px;height:118px;font-size:11px}.healthy-node-v66{width:84px;height:84px;font-size:7px}.healthy-node-v66 span{font-size:17px}}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
-<div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="tracking">CUSTOMER<small>ORDER TRACKING</small></button><button class="customer-node-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="healthy" style="left:12%;top:72%"><span>♥</span>HEALTHY CHOICES</button><button class="customer-node-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
+<div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="tracking">CUSTOMER<small>ORDER TRACKING</small></button><button class="customer-node-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="healthy" style="left:12%;top:72%"><span>♥</span>HEALTHY<br>CHOICES</button><button class="customer-node-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
 <section class="hero"><div><span class="eyebrow">MENU</span><h1 id="title">Browse Menu</h1><div class="count" id="count"></div></div><div class="actions"><button class="topbtn" id="savedBtn">♡ Saved <span id="savedCount">0</span></button><button class="topbtn primary" id="cartBtn">🛒 Cart <span id="cartCount">0</span></button></div></section>
 <div class="search-wrap"><input class="search" id="search" type="search" placeholder="Search drinks and food…"><button id="clearSearchBtn" type="button" aria-label="Clear search">×</button></div>
 <div class="controls"><div class="filters"><button class="active" data-filter="all">All</button><button data-filter="drinks">Drinks</button><button data-filter="food">Food</button><button data-filter="hot">Hot</button><button data-filter="iced">Iced</button><button data-filter="favorites">♡ Favorites</button></div><select id="sort"><option value="featured">Featured</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option><option value="name">Name: A–Z</option></select></div>
@@ -179,10 +179,12 @@ function openTrackingV65(){
 /* HEALTHY CHOICES ORBIT V66 */
 const healthyToolsV66=[['nutrition','▥','NUTRITION'],['calories','◎','CALORIES'],['protein','P','PROTEIN'],['sugar','◇','SUGAR'],['sodium','S','SODIUM'],['allergens','!','ALLERGENS'],['diet','⌕','DIET FILTERS'],['compare','⚖','COMPARE']];
 const healthyPtsV66=[[50,7],[79,18],[93,50],[79,82],[50,93],[21,82],[7,50],[21,18]];
+let customerWorkspaceOriginalV67=customerWorkspaceV63.innerHTML;
+function restoreCustomerOrbitV67(){document.body.classList.remove('customer-workspace-open-v64');customerWorkspaceV63.innerHTML=customerWorkspaceOriginalV67;customerWorkspaceV63.style.display='none';customerOrbitWrapV63.style.display='block';scrollTo(0,0)}
 function openHealthyOrbitV66(){
  customerOrbitWrapV63.style.display='none';customerWorkspaceV63.style.display='block';document.body.classList.add('customer-workspace-open-v64');
  customerWorkspaceV63.innerHTML='<button class="topbtn customer-back-v63" id="healthyBackMainV66">‹ Back to Customer Orbit</button><section class="hero"><div><span class="eyebrow">CUSTOMER WELLNESS</span><h1>Healthy Choices</h1><div class="count">Nutrition-aware menu tools</div></div></section><section class="healthy-orbit-v66"><button class="healthy-center-v66" data-health-v66="nutrition">HEALTHY<small>CHOICES ORBIT</small></button>'+healthyToolsV66.map((x,i)=>'<button class="healthy-node-v66 '+(localStorage.getItem('healthy_seen_v66_'+x[0])?'':'new-healthy-v66')+'" data-health-v66="'+x[0]+'" style="left:'+healthyPtsV66[i][0]+'%;top:'+healthyPtsV66[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
- $('#healthyBackMainV66').onclick=()=>location.reload();
+ $('#healthyBackMainV66').onclick=restoreCustomerOrbitV67;
  document.querySelectorAll('[data-health-v66]').forEach(b=>b.onclick=()=>{localStorage.setItem('healthy_seen_v66_'+b.dataset.healthV66,'1');b.classList.remove('new-healthy-v66');openHealthyToolV66(b.dataset.healthV66)});
 }
 function knownNutritionV66(){
@@ -216,7 +218,12 @@ function openCustomerV63(id){
  else {filter='all';$('[data-filter]').forEach(x=>x.classList.toggle('active',x.dataset.filter==='all'));render()}
  scrollTo(0,0);
 }
-document.querySelectorAll('[data-customer-v63]').forEach(b=>{const id=b.dataset.customerV63;if(localStorage.getItem('customer_orbit_seen_v63_'+id))b.classList.remove('new-customer-v63');b.addEventListener('click',()=>openCustomerV63(id))});
+document.querySelectorAll('[data-customer-v63]').forEach(b=>{const id=b.dataset.customerV63;if(id!=='healthy'&&localStorage.getItem('customer_orbit_seen_v63_'+id))b.classList.remove('new-customer-v63');b.addEventListener('click',()=>openCustomerV63(id))});
+const healthyMainV67=document.querySelector('[data-customer-v63="healthy"]');
+if(healthyMainV67){
+ healthyMainV67.classList.toggle('new-customer-v63',!localStorage.getItem('healthy_parent_seen_v67'));
+ healthyMainV67.addEventListener('click',()=>{localStorage.setItem('healthy_parent_seen_v67','1');healthyMainV67.classList.remove('new-customer-v63')});
+}
 document.querySelector('#customerBackV63')?.addEventListener('click',()=>{document.body.classList.remove('customer-workspace-open-v64');scrollTo(0,0)});
 
 const NEW_KEY_V62='mo_clean_browse_seen_v62';
