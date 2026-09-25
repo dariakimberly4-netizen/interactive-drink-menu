@@ -165,6 +165,13 @@
 /* DIRECT SENIOR PWD HIGHLIGHT V8 */
 .choice[data-discount="Senior Citizen"],.choice[data-discount="PWD"]{background:#ffd84d!important;color:#062b1c!important;border:3px solid #fff2a8!important;box-shadow:0 0 0 5px rgba(255,216,77,.24),0 0 34px rgba(255,216,77,.55)!important;font-weight:950!important;transform:scale(1.03)}
 .choice[data-discount="Senior Citizen"]::after,.choice[data-discount="PWD"]::after{content:'NEW';position:absolute;top:-11px;right:-7px;background:#fff;color:#073421;padding:5px 8px;border-radius:999px;font:950 8px/1 system-ui;letter-spacing:.08em}
+
+/* MOBILE MODAL FIT FIX V9 */
+@media(max-width:600px){
+.modal-card,.modal-panel,.sheet,.panel[role="dialog"]{width:calc(100vw - 24px)!important;max-width:calc(100vw - 24px)!important;margin:12px auto!important;box-sizing:border-box!important;left:auto!important;right:auto!important;overflow-x:hidden!important}
+.modal-card h2,.modal-panel h2{font-size:clamp(24px,7vw,34px)!important;line-height:1.05!important;overflow-wrap:anywhere}
+.modal-card button,.modal-panel button{max-width:100%!important;box-sizing:border-box!important}
+}
 </style>
 </head>
 <body>
