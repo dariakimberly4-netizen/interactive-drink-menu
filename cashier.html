@@ -108,7 +108,11 @@ button,input,select{font:inherit}
 .receipt-v14{background:#fff;border:1px dashed #9eb2a8;border-radius:16px;padding:16px;margin-top:16px}.receipt-v14 h3{text-align:center;margin:0 0 8px}.receipt-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;padding:4px 0}.receipt-total{font-weight:1000;font-size:16px;border-top:1px solid #dde5e1;margin-top:7px;padding-top:8px}
 @media(max-width:760px){.pos-shell{grid-template-columns:1fr}.pos-products{grid-template-columns:1fr 1fr}}
 </style>
-</head>
+<style>
+body.cashier-active .node[data-module="orders"],body.cashier-active #quickNewOrder{border:3px solid #d4af37!important;box-shadow:0 0 0 5px rgba(212,175,55,.18),0 12px 30px rgba(0,98,65,.18)!important}
+body.cashier-active #quickNewOrder{background:#006241!important;color:#fff!important;font-weight:1000!important}
+body.cashier-active .role-select{border:2px solid #d4af37!important;background:#fff8dd!important}
+</style></head>
 <body>
 <header class="topbar">
   <div class="logo">S</div>
@@ -351,6 +355,7 @@ document.getElementById("enterBtn").onclick=()=>{
   if(pin!==ROLE_PINS_V13[role]){alert("Incorrect PIN for "+role);return}
   staffName=(document.getElementById("staffName").value||role).trim();
   roleSelect.value=role;
+  document.body.classList.toggle("cashier-active",role==="Cashier");
   document.getElementById("gate").style.display="none";
   updateShiftUI();
   applyRole();
