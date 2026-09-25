@@ -162,6 +162,54 @@ button,input,select{font:inherit}
 </div>
 
 <script>
+
+const POS_PRODUCTS_V15=[
+{id:"d1",cat:"Drinks",name:"Caffè Latte",price:165},{id:"d2",cat:"Drinks",name:"Caramel Macchiato",price:190},{id:"d3",cat:"Drinks",name:"Cold Brew",price:175},{id:"d4",cat:"Drinks",name:"Matcha Latte",price:185},
+{id:"f1",cat:"Food",name:"Croissant",price:120},{id:"f2",cat:"Food",name:"Chicken Sandwich",price:195},{id:"f3",cat:"Food",name:"Chocolate Cake",price:160},
+{id:"a1",cat:"Add-ons",name:"Extra Shot",price:30},{id:"a2",cat:"Add-ons",name:"Syrup",price:25}
+];
+let posCartV15=[],posCatV15="Drinks",posPayV15="Cash",posDiscountV15=0;
+function moneyV15(n){return "₱"+Number(n).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function posTotalsV15(){const s=posCartV15.reduce((a,x)=>a+x.price*x.qty,0),d=s*posDiscountV15;return{subtotal:s,discount:d,total:s-d}}
+function openCashierPOSV15(){
+ title.textContent="Cashier POS";desc.textContent="New Order → Cart → Discount → Payment → Receipt";grid.innerHTML="";
+ workspace.innerHTML='<div class="pos-shell"><section class="pos-menu"><div class="pos-tabs" id="posTabsV15"></div><div class="pos-products" id="posProductsV15"></div></section><aside class="pos-cart"><h3>Current Order</h3><div id="posCartV15"></div><button class="pos-action secondary" id="holdV15">Hold Order</button><div class="checkout-box"><select class="pos-field" id="discountV15"><option value="0">No Discount</option><option value=".20">Senior Citizen 20%</option><option value=".20">PWD 20%</option></select><input class="pos-field" id="refV15" placeholder="Discount ID / reference"><div class="pay-grid" id="payV15"><button data-pay="Cash" class="active">Cash</button><button data-pay="Card">Card</button><button data-pay="GCash">GCash</button><button data-pay="Maya">Maya</button></div><input class="pos-field" id="tenderV15" type="number" placeholder="Amount tendered"><div class="pos-total"><span>Total</span><span id="totalV15">₱0.00</span></div><button class="pos-action" id="checkoutV15">Pay & Send Order</button></div><div id="receiptV15"></div></aside></div>';
+ renderPOSV15();
+ document.getElementById("discountV15").onchange=e=>{posDiscountV15=Number(e.target.value);renderCartV15()};
+ document.querySelectorAll("#payV15 button").forEach(b=>b.onclick=()=>{posPayV15=b.dataset.pay;document.querySelectorAll("#payV15 button").forEach(x=>x.classList.toggle("active",x===b))});
+ document.getElementById("holdV15").onclick=()=>{localStorage.setItem("heldOrderV15",JSON.stringify(posCartV15));alert("Order held.")};
+ document.getElementById("checkoutV15").onclick=checkoutV15;
+ panel.classList.add("open");
+}
+function renderPOSV15(){
+ const tabs=document.getElementById("posTabsV15"),products=document.getElementById("posProductsV15");if(!tabs||!products)return;
+ tabs.innerHTML=["Drinks","Food","Add-ons"].map(x=>'<button class="'+(x===posCatV15?'active':'')+'" data-cat="'+x+'">'+x+'</button>').join("");
+ tabs.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{posCatV15=b.dataset.cat;renderPOSV15()});
+ products.innerHTML=POS_PRODUCTS_V15.filter(p=>p.cat===posCatV15).map(p=>'<button class="pos-product" data-p="'+p.id+'"><b>'+p.name+'</b><span>'+p.cat+'</span><strong>'+moneyV15(p.price)+'</strong></button>').join("");
+ products.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{const p=POS_PRODUCTS_V15.find(x=>x.id===b.dataset.p),r=posCartV15.find(x=>x.id===p.id);if(r)r.qty++;else posCartV15.push({...p,qty:1});renderCartV15()});
+ renderCartV15();
+}
+function renderCartV15(){
+ const box=document.getElementById("posCartV15");if(!box)return;
+ box.innerHTML=posCartV15.length?posCartV15.map(x=>'<div class="cart-line"><div><b>'+x.name+'</b><small>'+moneyV15(x.price)+' × '+x.qty+'</small></div><div class="qty"><button data-minus="'+x.id+'">−</button><b>'+x.qty+'</b><button data-plus="'+x.id+'">+</button></div></div>').join(""):'<p style="color:#78867f">No items yet.</p>';
+ box.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>{const r=posCartV15.find(x=>x.id===b.dataset.minus);r.qty--;if(r.qty<=0)posCartV15=posCartV15.filter(x=>x.id!==r.id);renderCartV15()});
+ box.querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>{posCartV15.find(x=>x.id===b.dataset.plus).qty++;renderCartV15()});
+ document.getElementById("totalV15").textContent=moneyV15(posTotalsV15().total);
+}
+function checkoutV15(){
+ if(!posCartV15.length){alert("Add at least one item.");return}
+ const t=posTotalsV15();
+ if(posDiscountV15>0&&!document.getElementById("refV15").value.trim()){alert("Enter the Senior/PWD ID or reference.");return}
+ const tender=Number(document.getElementById("tenderV15").value||0);
+ if(posPayV15==="Cash"&&tender<t.total){alert("Cash tendered is less than the total.");return}
+ const id="A-"+(1100+orders.length+1);
+ orders.unshift({id,items:posCartV15.reduce((a,x)=>a+x.qty,0)+" items",age:"Just now",status:"new"});saveState();
+ const change=posPayV15==="Cash"?tender-t.total:0;
+ document.getElementById("receiptV15").innerHTML='<div class="receipt-v14"><h3>ORDER #'+id+'</h3>'+posCartV15.map(x=>'<div class="receipt-row"><span>'+x.qty+' × '+x.name+'</span><b>'+moneyV15(x.price*x.qty)+'</b></div>').join("")+'<div class="receipt-row"><span>Discount</span><b>-'+moneyV15(t.discount)+'</b></div><div class="receipt-row"><span>Payment</span><b>'+posPayV15+'</b></div>'+(posPayV15==="Cash"?'<div class="receipt-row"><span>Change</span><b>'+moneyV15(change)+'</b></div>':'')+'<div class="receipt-row receipt-total"><span>TOTAL</span><b>'+moneyV15(t.total)+'</b></div><button class="pos-action secondary" onclick="window.print()">Print Receipt</button><button class="pos-action" id="newSaleV15">New Sale</button></div>';
+ document.getElementById("newSaleV15").onclick=()=>{posCartV15=[];posDiscountV15=0;posPayV15="Cash";openCashierPOSV15()};
+}
+
+
 const modules={
 menu:[["Drinks","Coffee, tea and blended drinks."],["Food","Pastries, sandwiches and snacks."],["Add-ons","Shots, syrups, milk and toppings."],["Sizes","Manage serving sizes."],["Availability","Turn items on or off."],["Sold Out","Mark unavailable products."]],
 inventory:[["Ingredients","Beans, milk, syrups and food."],["Packaging","Cups, lids, bags and tissue."],["Low Stock","Below reorder level."],["Stock In","Record incoming stock."],["Stock Out","Record usage and transfers."],["Supplier Deliveries","Receive deliveries."]],
@@ -256,7 +304,7 @@ function renderOrders(){
   title.textContent="Orders";desc.textContent="Move orders through the live queue.";grid.innerHTML="";workspace.innerHTML="";
   if(roleSelect.value==="Cashier"){
     grid.innerHTML='<button class="card" id="cashierPOSLaunchV14"><b>＋ New POS Order</b><span>Create, pay and send an order to the barista queue.</span></button>';
-    document.getElementById("cashierPOSLaunchV14").onclick=openCashierPOSV14;
+    document.getElementById("cashierPOSLaunchV14").onclick=openCashierPOSV15;
   }
   const stages=[["new","New"],["preparing","Preparing"],["ready","Ready"],["completed","Completed"]];
   const next={new:"preparing",preparing:"ready",ready:"completed"};
@@ -277,7 +325,7 @@ function openModule(key){
 }
 document.querySelectorAll("[data-module]").forEach(btn=>btn.onclick=()=>openModule(btn.dataset.module));
 document.getElementById("quickNewOrder").onclick=()=>{
-  if(roleSelect.value==="Cashier"){openCashierPOSV14();return}
+  if(roleSelect.value==="Cashier"){openCashierPOSV15();return}
   title.textContent="New Order";desc.textContent="Start a staff order.";grid.innerHTML="";workspace.innerHTML="";
   [["Drinks","Browse drink categories."],["Food","Browse food categories."],["Custom Order","Build a customized order."],["Scan / Search","Find an item quickly."]].forEach(([a,b])=>makeCard(a,b,"orders"));
   panel.classList.add("open");
