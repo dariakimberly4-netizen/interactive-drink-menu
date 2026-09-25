@@ -63,10 +63,12 @@ header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-betwe
 body.customer-workspace-open-v64 #customerOrbitWrapV63{display:none!important}
 body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 #customerOrbitWrapV63 .customer-orbit-v63{display:block!important}
+
+.checkout-v65{display:grid;gap:12px;margin-top:14px}.checkout-v65 label{font-size:11px;font-weight:900}.checkout-v65 input,.checkout-v65 select,.checkout-v65 textarea{width:100%;min-height:46px;padding:11px;border-radius:11px;border:1px solid #cad3ce;background:#fff;color:#17352a;font-size:16px}.checkout-v65 textarea{min-height:90px}.checkout-total-v65{display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid rgba(255,255,255,.12);font-size:19px}.checkout-actions-v65{display:grid;grid-template-columns:1fr 1fr;gap:9px}.checkout-actions-v65 button{min-height:48px;border-radius:12px;border:0;font-weight:950}.checkout-primary-v65{background:var(--green);color:#fff}.checkout-secondary-v65{background:#fff;color:#07331f}.track-v65{display:grid;gap:10px;margin-top:18px}.track-step-v65{padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:13px;color:#8fa89c}.track-step-v65.done{background:#164c39;color:#fff;border-color:#3dc98b}.cart-checkout-v65{width:100%;min-height:50px;margin-top:14px;border:0;border-radius:12px;background:var(--green);color:#fff;font-weight:950}.cart-clear-v65{width:100%;min-height:44px;margin-top:8px;border:1px solid rgba(255,255,255,.2);border-radius:12px;background:transparent;color:#fff;font-weight:900}
 </style></head>
 <body>
-<header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn">‹ Back to Orbit</button></header>
-<div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="browse">CUSTOMER<small>MENU ORBIT</small></button><button class="customer-node-v63 new-customer-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="favorites" style="left:12%;top:72%"><span>★</span>FAVORITES</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
+<header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
+<div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="tracking">CUSTOMER<small>ORDER TRACKING</small></button><button class="customer-node-v63 new-customer-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="favorites" style="left:12%;top:72%"><span>★</span>FAVORITES</button><button class="customer-node-v63 new-customer-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
 <section class="hero"><div><span class="eyebrow">MENU</span><h1 id="title">Browse Menu</h1><div class="count" id="count"></div></div><div class="actions"><button class="topbtn" id="savedBtn">♡ Saved <span id="savedCount">0</span></button><button class="topbtn primary" id="cartBtn">🛒 Cart <span id="cartCount">0</span></button></div></section>
 <div class="search-wrap"><input class="search" id="search" type="search" placeholder="Search drinks and food…"><button id="clearSearchBtn" type="button" aria-label="Clear search">×</button></div>
 <div class="controls"><div class="filters"><button class="active" data-filter="all">All</button><button data-filter="drinks">Drinks</button><button data-filter="food">Food</button><button data-filter="hot">Hot</button><button data-filter="iced">Iced</button><button data-filter="favorites">♡ Favorites</button></div><select id="sort"><option value="featured">Featured</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option><option value="name">Name: A–Z</option></select></div>
@@ -76,7 +78,9 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 <div class="modal" id="compareModal"><div class="modal-card"><div class="modal-head"><div><h2>Compare Products</h2><small>Side-by-side details</small></div><button data-close="compareModal">×</button></div><div class="compare-grid" id="compareGrid"></div></div></div>
 <div class="modal" id="detailModal"><div class="modal-card"><div class="modal-head"><div><h2 id="detailTitle">Product</h2><small id="detailMeta"></small></div><button data-close="detailModal">×</button></div><div id="detailBody"></div></div></div>
 <div class="modal" id="cartModal"><div class="modal-card"><div class="modal-head"><div><h2>Your Cart</h2><small>Demo cart saved in this browser</small></div><button data-close="cartModal">×</button></div><div id="cartList"></div></div></div>
-</div><div class="toast" id="toast"></div>
+</div><div class="modal" id="checkoutModal"><div class="modal-card"><div class="modal-head"><div><h2>Checkout</h2><small>Review and place your order</small></div><button data-close="checkoutModal">×</button></div><div id="checkoutBody"></div></div></div>
+<div class="modal" id="trackingModal"><div class="modal-card"><div class="modal-head"><div><h2>Order Tracking</h2><small>Your latest customer order</small></div><button data-close="trackingModal">×</button></div><div id="trackingBody"></div></div></div>
+<div class="toast" id="toast"></div>
 <script>
 const photoIds={
       9:'https://images.deliveryhero.io/image/global-menu-service/FP_PH/vendor/d8fz/product/29e863c9-2ed3-49e3-b634-25f996608abe.jpg',10:'https://images.deliveryhero.io/image/global-menu-service/FP_PH/vendor/d8fz/product/5fb1b211-1abd-4460-b304-34ced319d4ba.jpg',11:'https://images.deliveryhero.io/image/global-menu-service/FP_PH/vendor/d8fz/product/3cf2b38e-d3fd-444d-acf6-27d039ac7220.jpg',12:'https://images.deliveryhero.io/image/global-menu-service/FP_PH/vendor/d8fz/product/146154781/8301f2be-30c3-48fd-830b-6a4b79f0e61f.jpg',13:'https://images.deliveryhero.io/image/global-menu-service/FP_PH/vendor/d8fz/product/cca287ac-2c35-4500-b8ab-0bd5d8f9d5fc.jpg',14:'https://images.deliveryhero.io/image/global-menu-service/FP_PH/vendor/d8fz/product/a4bd76f6-d72a-417a-9c2f-21bc7502190e.jpg',15:'https://images.deliveryhero.io/image/global-menu-service/FP_PH/vendor/d8fz/product/a7953621-f875-4050-b7a6-ac6aec6edf64.jpg',16:'https://images.deliveryhero.io/image/global-menu-service/FP_PH/vendor/d8fz/product/efe317fb-ae74-483e-a93d-97a617817642.jpg',
@@ -120,6 +124,46 @@ function openCart(){const a=read(cartKey,[]);$('#cartList').innerHTML=a.length?a
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.view)return openDetail(b.dataset.view);if(b.dataset.quick)return quick(b.dataset.quick);if(b.dataset.save)return toggleSave(b.dataset.save);if(b.dataset.compare)return toggleCompare(b.dataset.compare);if(b.dataset.uncompare)return toggleCompare(b.dataset.uncompare);if(b.dataset.sview){$('#savedModal').classList.remove('open');return openDetail(b.dataset.sview)}if(b.dataset.scart){quick(b.dataset.scart);write(savedKey,read(savedKey,[]).filter(x=>x.id!==b.dataset.scart));openSaved();return render()}if(b.dataset.sremove){write(savedKey,read(savedKey,[]).filter(x=>x.id!==b.dataset.sremove));openSaved();return render()}if(b.dataset.close)return $('#'+b.dataset.close).classList.remove('open')});
 $('#search').addEventListener('input',e=>{query=e.target.value;render()});$$('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));render()});$('#sort').onchange=e=>{sort=e.target.value;render()};$('#savedBtn').onclick=openSaved;$('#cartBtn').onclick=openCart;$('#clearCompare').onclick=()=>{write(compareKey,[]);render()};$('#openCompare').onclick=openCompare;$('#backBtn').onclick=()=>{document.querySelector('#customerWorkspaceV63').style.display='none';document.querySelector('#customerOrbitWrapV63').style.display='block';scrollTo(0,0)};
 
+
+/* CUSTOMER CHECKOUT + TRACKING V65 */
+const ORDER_KEY_V65='menuorbit_customer_latest_order_v65';
+function updateCartV65(key,delta){
+ let a=read(cartKey,[]),i=a.findIndex(x=>String(x.key)===String(key));if(i<0)return;
+ if(delta===0)a.splice(i,1);else a[i].qty=Math.max(1,(Number(a[i].qty)||1)+delta);
+ write(cartKey,a);render();openCart();
+}
+openCart=function(){
+ const a=read(cartKey,[]),total=a.reduce((s,x)=>s+(Number(x.price)||0)*(Number(x.qty)||1),0);
+ $('#cartList').innerHTML=a.length?a.map(x=>`<div class="saved-row"><img src="${x.img}"><div><b>${x.name}</b><small style="display:block;color:#9eb5aa">${x.size||''} ${x.style||''}</small><div class="cart-row-actions"><button data-v65minus="${x.key}">−</button><span>${x.qty||1}</span><button data-v65plus="${x.key}">+</button><button class="cart-remove" data-v65remove="${x.key}">Remove</button></div></div><b>${money((Number(x.price)||0)*(Number(x.qty)||1))}</b></div>`).join('')+`<div class="cart-total"><b>Subtotal</b><strong>${money(total)}</strong></div><button class="cart-checkout-v65" id="checkoutV65">CHECKOUT / PLACE ORDER</button><button class="cart-clear-v65" id="clearCartV65">CLEAR CART</button>`:'<div class="empty"><b>Your cart is empty.</b><span>Add an item from the Menu Orbit.</span></div>';
+ $('#cartModal').classList.add('open');
+ $('#checkoutV65')?.addEventListener('click',openCheckoutV65);
+ $('#clearCartV65')?.addEventListener('click',()=>{write(cartKey,[]);render();openCart()});
+ document.querySelectorAll('[data-v65minus]').forEach(b=>b.onclick=()=>updateCartV65(b.dataset.v65minus,-1));
+ document.querySelectorAll('[data-v65plus]').forEach(b=>b.onclick=()=>updateCartV65(b.dataset.v65plus,1));
+ document.querySelectorAll('[data-v65remove]').forEach(b=>b.onclick=()=>updateCartV65(b.dataset.v65remove,0));
+};
+function openCheckoutV65(){
+ const a=read(cartKey,[]);if(!a.length)return;
+ const total=a.reduce((s,x)=>s+(Number(x.price)||0)*(Number(x.qty)||1),0);
+ $('#cartModal').classList.remove('open');
+ $('#checkoutBody').innerHTML=`<div class="checkout-v65"><label>CUSTOMER NAME<input id="custNameV65" placeholder="Your name"></label><label>ORDER TYPE<select id="orderTypeV65"><option>Pickup</option><option>Dine-in</option><option>Takeout</option></select></label><label>ORDER NOTES<textarea id="orderNotesV65" placeholder="Optional notes"></textarea></label><div class="checkout-total-v65"><b>Total</b><strong>${money(total)}</strong></div><div class="checkout-actions-v65"><button class="checkout-secondary-v65" id="editCartV65">EDIT CART</button><button class="checkout-primary-v65" id="placeOrderV65">PLACE ORDER</button></div></div>`;
+ $('#checkoutModal').classList.add('open');
+ $('#editCartV65').onclick=()=>{$('#checkoutModal').classList.remove('open');openCart()};
+ $('#placeOrderV65').onclick=placeOrderV65;
+}
+function placeOrderV65(){
+ const name=$('#custNameV65').value.trim();if(!name){toast('Enter customer name');$('#custNameV65').focus();return}
+ const items=read(cartKey,[]),num='MO-'+String(Date.now()).slice(-5),order={number:num,name,type:$('#orderTypeV65').value,notes:$('#orderNotesV65').value.trim(),items,status:'Received',createdAt:new Date().toISOString()};
+ write(ORDER_KEY_V65,order);
+ // Also publish into shared browser order queue for staff demo interoperability.
+ let q=read('menuorbit_orders',[]);q.unshift({id:num,customer_name:name,status:'new',items,notes:order.notes,order_type:order.type,created_at:order.createdAt});write('menuorbit_orders',q);
+ write(cartKey,[]);render();$('#checkoutModal').classList.remove('open');openTrackingV65();toast('Order '+num+' placed');
+}
+function openTrackingV65(){
+ const o=read(ORDER_KEY_V65,null);
+ $('#trackingBody').innerHTML=o?`<p><b>${o.number}</b> • ${o.name} • ${o.type}</p><div class="track-v65"><div class="track-step-v65 done">✓ RECEIVED</div><div class="track-step-v65 ${['Preparing','Ready'].includes(o.status)?'done':''}">2 PREPARING</div><div class="track-step-v65 ${o.status==='Ready'?'done':''}">3 READY FOR PICKUP</div></div>`:'<div class="empty"><b>No active order yet.</b><span>Place an order to start tracking.</span></div>';
+ $('#trackingModal').classList.add('open');
+}
 /* CUSTOMER ORBIT JS V63 */
 const customerOrbitWrapV63=document.querySelector('#customerOrbitWrapV63');
 const customerWorkspaceV63=document.querySelector('#customerWorkspaceV63');
@@ -127,7 +171,7 @@ function openCustomerV63(id){
  localStorage.setItem('customer_orbit_seen_v63_'+id,'1');
  document.querySelector('[data-customer-v63="'+id+'"]')?.classList.remove('new-customer-v63');
  document.body.classList.add('customer-workspace-open-v64');
- if(id==='saved'){openSaved()}
+ if(id==='tracking'){openTrackingV65()} else if(id==='saved'){openSaved()}
  else if(id==='cart'){openCart()}
  else if(id==='compare'){const ids=read(compareKey,[]);if(ids.length>=2)openCompare();else toast('Select 2 products to compare')}
  else if(id==='favorites'){filter='favorites';$('[data-filter]').forEach(x=>x.classList.toggle('active',x.dataset.filter==='favorites'));render()}
@@ -157,7 +201,7 @@ const clearBtn=$('#clearSearchBtn');
 function syncSearchClearV62(){searchWrap?.classList.toggle('has-query',!!query)}
 $('#search')?.addEventListener('input',syncSearchClearV62);
 clearBtn?.addEventListener('click',()=>{
-  query='';$('#search').value='';syncSearchClearV62();render();$('#search').focus();
+  query='';$('#search').value='';document.querySelectorAll('.modal').forEach(m=>m.classList.remove('open'));query='';if($('#search'))$('#search').value='';filter='all';$('[data-filter]').forEach(x=>x.classList.toggle('active',x.dataset.filter==='all'));syncSearchClearV62();render();$('#search').focus();
 });
 
 const originalOpenCartV62=openCart;
