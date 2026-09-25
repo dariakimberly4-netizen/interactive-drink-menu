@@ -52,12 +52,78 @@ button,input{font:inherit}
 }
 @media(max-width:390px){.orbit-ring{width:286px}.core{width:138px;height:138px}.node{width:74px;height:74px}.n1{margin-top:-160px}.n2{margin-left:121px;margin-top:-80px}.n3{margin-left:121px;margin-top:80px}.n4{margin-top:160px}.n5{margin-left:-121px;margin-top:80px}.n6{margin-left:-121px;margin-top:-80px}}
 </style>
+
+<style id="staffOpsV11">
+/* STAFF OPS V11 */
+.staff-controls-v11{
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap
+}
+.role-select-v11{
+  height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);color:#fff;padding:0 12px;font-weight:800
+}
+.shift-btn-v11{
+  height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);color:#fff;padding:0 12px;font-weight:900
+}
+.shift-btn-v11.break{background:rgba(212,173,98,.16);border-color:rgba(212,173,98,.5)}
+.shift-btn-v11.off{background:rgba(228,79,79,.14);border-color:rgba(228,79,79,.5)}
+.role-note-v11{
+  font-size:10px;color:#b9c9c1;white-space:nowrap
+}
+.order-board-v11{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px
+}
+.order-col-v11{
+  background:#f1f6f3;border:1px solid #dbe6e0;border-radius:18px;padding:12px;min-height:220px
+}
+.order-col-v11 h3{margin:0 0 10px;font-size:15px}
+.order-card-v11{
+  background:#fff;border:1px solid #dde6e1;border-radius:14px;padding:12px;margin-bottom:9px;
+  box-shadow:0 6px 16px rgba(0,0,0,.04)
+}
+.order-card-v11 b{display:block;font-size:14px}
+.order-card-v11 span{display:block;font-size:11px;color:#6f7d76;margin-top:4px}
+.order-card-v11 small{display:block;font-size:10px;color:#8b9791;margin-top:4px}
+.order-actions-v11{display:flex;gap:6px;margin-top:9px}
+.order-actions-v11 button{
+  flex:1;min-height:34px;border:0;border-radius:9px;background:#006241;color:#fff;font-size:10px;font-weight:900
+}
+.order-actions-v11 button.secondary{background:#e9f2ed;color:#0a5d40}
+.order-summary-v11{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:12px
+}
+.order-summary-v11 span{
+  padding:7px 10px;border-radius:999px;background:#e9f2ed;color:#0a5d40;font-size:11px;font-weight:900
+}
+@media(max-width:760px){
+  .topbar{height:auto;min-height:64px;padding:9px 12px;align-items:flex-start}
+  .staff-controls-v11{margin-left:auto;justify-content:flex-end;max-width:52%}
+  .role-select-v11,.shift-btn-v11{height:32px;font-size:10px;padding:0 9px}
+  .role-note-v11{display:none}
+  .stage{top:82px}
+  .order-board-v11{grid-template-columns:1fr 1fr}
+}
+@media(max-width:430px){
+  .order-board-v11{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 <header class="topbar">
   <div class="logo">S</div>
   <div class="brand"><b>Staff Command Orbit</b><small>Independent Operations Portal</small></div>
-  <div class="badge" id="staffBadge">Donna • On Duty</div>
+  <div class="staff-controls-v11" id="staffControlsV11">
+      <select class="role-select-v11" id="roleSelectV11" aria-label="Staff role">
+        <option>Cashier</option>
+        <option>Barista</option>
+        <option>Supervisor</option>
+        <option>Manager</option>
+      </select>
+      <button class="shift-btn-v11" id="shiftBtnV11">Clock In</button>
+      <span class="role-note-v11" id="roleNoteV11">Not clocked in</span>
+    </div>
+    <div class="badge" id="staffBadge">Donna • Off Duty</div>
 </header>
 
 <main class="stage">
@@ -101,8 +167,125 @@ button,input{font:inherit}
 </div>
 
 <script>
+
+/* STAFF OPS V11 */
+const ROLE_KEY_V11="staffOrbitRoleV11";
+const SHIFT_KEY_V11="staffOrbitShiftV11";
+const ORDERS_KEY_V11="staffOrbitOrdersV11";
+
+const ORDERS_V11_DEFAULT=[
+  {id:"A-1043",items:"2 drinks",age:"1 min",status:"new"},
+  {id:"A-1042",items:"1 drink + 1 food",age:"3 min",status:"new"},
+  {id:"A-1041",items:"3 drinks",age:"6 min",status:"preparing"},
+  {id:"A-1040",items:"1 food",age:"8 min",status:"preparing"},
+  {id:"A-1039",items:"2 drinks",age:"10 min",status:"ready"},
+  {id:"A-1038",items:"1 drink",age:"14 min",status:"completed"}
+];
+
+function getOrdersV11(){
+  try{
+    const x=JSON.parse(localStorage.getItem(ORDERS_KEY_V11)||"null");
+    return Array.isArray(x)?x:[...ORDERS_V11_DEFAULT];
+  }catch(e){return [...ORDERS_V11_DEFAULT]}
+}
+function saveOrdersV11(list){
+  try{localStorage.setItem(ORDERS_KEY_V11,JSON.stringify(list))}catch(e){}
+}
+function moveOrderV11(id,next){
+  const list=getOrdersV11();
+  const o=list.find(x=>x.id===id);
+  if(!o)return;
+  o.status=next;
+  saveOrdersV11(list);
+  renderOrdersV11();
+}
+function renderOrdersV11(){
+  title.textContent="Orders";
+  desc.textContent="Live queue — move orders through each stage.";
+  grid.innerHTML="";
+  workspace.innerHTML="";
+  const list=getOrdersV11();
+  const stages=[
+    ["new","New Orders"],
+    ["preparing","Preparing"],
+    ["ready","Ready"],
+    ["completed","Completed"]
+  ];
+  const nextMap={new:"preparing",preparing:"ready",ready:"completed"};
+  const backMap={preparing:"new",ready:"preparing",completed:"ready"};
+
+  workspace.innerHTML=
+    '<div class="order-summary-v11">'+
+    stages.map(([k,label])=>'<span>'+label+': '+list.filter(o=>o.status===k).length+'</span>').join('')+
+    '</div>'+
+    '<div class="order-board-v11">'+
+    stages.map(([k,label])=>{
+      const rows=list.filter(o=>o.status===k);
+      return '<section class="order-col-v11"><h3>'+label+'</h3>'+
+      (rows.length?rows.map(o=>{
+        const forward=nextMap[k]?'<button data-move="'+o.id+'" data-next="'+nextMap[k]+'">Move Next</button>':'';
+        const back=backMap[k]?'<button class="secondary" data-move="'+o.id+'" data-next="'+backMap[k]+'">Back</button>':'';
+        return '<div class="order-card-v11"><b>#'+o.id+'</b><span>'+o.items+'</span><small>'+o.age+'</small><div class="order-actions-v11">'+back+forward+'</div></div>';
+      }).join(''):'<div class="order-card-v11"><span>No orders</span></div>')+
+      '</section>';
+    }).join('')+
+    '</div>';
+
+  workspace.querySelectorAll("[data-move]").forEach(btn=>{
+    btn.onclick=()=>moveOrderV11(btn.dataset.move,btn.dataset.next);
+  });
+  panel.classList.add("open");
+}
+
+function roleModulesV11(role){
+  const map={
+    Cashier:["orders","menu","customers","promotions"],
+    Barista:["orders","menu","inventory"],
+    Supervisor:["orders","menu","inventory","promotions","customers","business"],
+    Manager:["orders","menu","inventory","promotions","customers","business"]
+  };
+  return map[role]||map.Cashier;
+}
+function applyRoleV11(role){
+  document.querySelectorAll(".node[data-module]").forEach(node=>{
+    const k=node.dataset.module;
+    node.style.display=roleModulesV11(role).includes(k)?"flex":"none";
+  });
+  try{localStorage.setItem(ROLE_KEY_V11,role)}catch(e){}
+}
+function loadRoleV11(){
+  let role="Cashier";
+  try{role=localStorage.getItem(ROLE_KEY_V11)||"Cashier"}catch(e){}
+  document.getElementById("roleSelectV11").value=role;
+  applyRoleV11(role);
+}
+function setShiftV11(state){
+  const btn=document.getElementById("shiftBtnV11");
+  const note=document.getElementById("roleNoteV11");
+  const badge=document.getElementById("staffBadge");
+  const name=(document.getElementById("staffName")?.value||badge.textContent.split(" • ")[0]||"Staff").trim();
+
+  if(state==="in"){
+    btn.textContent="Take Break";btn.className="shift-btn-v11 break";
+    note.textContent="On duty";badge.textContent=name+" • On Duty";
+  }else if(state==="break"){
+    btn.textContent="Resume";btn.className="shift-btn-v11";
+    note.textContent="On break";badge.textContent=name+" • On Break";
+  }else{
+    btn.textContent="Clock In";btn.className="shift-btn-v11 off";
+    note.textContent="Not clocked in";badge.textContent=name+" • Off Duty";
+  }
+  try{localStorage.setItem(SHIFT_KEY_V11,state)}catch(e){}
+}
+function cycleShiftV11(){
+  let s="off";try{s=localStorage.getItem(SHIFT_KEY_V11)||"off"}catch(e){}
+  if(s==="off")setShiftV11("in");
+  else if(s==="in")setShiftV11("break");
+  else setShiftV11("in");
+}
+
 const modules={
-orders:[["New Orders","Accept incoming orders."],["Preparing","Track active preparation."],["Ready for Pickup","Completed orders for handoff."],["Completed","Fulfilled transactions."],["Cancelled / Refunded","Handle exceptions."],["Order History","Search past orders."]],
+orders:[["Live Order Queue","New → Preparing → Ready → Completed."],["Order History","Search past orders."],["Cancelled / Refunded","Handle exceptions."],["Priority Orders","Review urgent orders."]],
 menu:[["Drinks","Coffee, tea and blended drinks."],["Food","Pastries, sandwiches and snacks."],["Add-ons","Shots, syrups, milk and toppings."],["Sizes","Manage serving sizes."],["Availability","Turn items on or off."],["Sold Out","Mark unavailable products."]],
 inventory:[["Ingredients","Beans, milk, syrups and food."],["Packaging","Cups, lids, bags and tissue."],["Low Stock","Below reorder level."],["Stock In","Record incoming stock."],["Stock Out","Record usage and transfers."],["Supplier Deliveries","Receive deliveries."]],
 promotions:[["Discounts","Store discounts."],["Vouchers","Voucher codes."],["Bundles","Drink and food bundles."],["Happy Hour","Time-based offers."],["Featured Drinks","Highlight selected items."],["Campaigns","Seasonal campaigns."]],
@@ -120,6 +303,7 @@ const workspace=document.getElementById("workspaceArea");
 
 function openModule(key){
   currentModule=key;
+  if(key==="orders"){renderOrdersV11();return;}
   title.textContent=titles[key]||key;
   desc.textContent=descs[key]||"";
   workspace.innerHTML="";
@@ -185,13 +369,22 @@ document.getElementById("quickNewOrder").onclick=()=>{
 };
 
 document.getElementById("panelClose").onclick=()=>panel.classList.remove("open");
+document.getElementById("roleSelectV11").addEventListener("change",e=>applyRoleV11(e.target.value));
+document.getElementById("shiftBtnV11").addEventListener("click",cycleShiftV11);
+loadRoleV11();
+let savedShiftV11="off";try{savedShiftV11=localStorage.getItem(SHIFT_KEY_V11)||"off"}catch(e){}
+setShiftV11(savedShiftV11);
+
 panel.addEventListener("click",e=>{if(e.target===panel)panel.classList.remove("open")});
 
 document.getElementById("enterBtn").onclick=()=>{
   if(document.getElementById("staffPin").value!=="1234"){alert("Incorrect demo PIN");return}
   const name=(document.getElementById("staffName").value||"Staff").trim();
-  document.getElementById("staffBadge").textContent=name+" • On Duty";
+  document.getElementById("staffBadge").textContent=name+" • Off Duty";
   document.getElementById("gate").style.display="none";
+  loadRoleV11();
+  let currentShiftV11="off";try{currentShiftV11=localStorage.getItem(SHIFT_KEY_V11)||"off"}catch(e){}
+  setShiftV11(currentShiftV11);
 };
 </script>
 </body>
