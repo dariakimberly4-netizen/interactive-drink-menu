@@ -108,6 +108,11 @@
 /* V45 HANDOFF click repair only */
 .ops-node[data-orbit="ready"]{pointer-events:auto!important;cursor:pointer!important;touch-action:manipulation!important;z-index:60!important}
 .ops-node[data-orbit="ready"]:after{pointer-events:none!important}
+</style><style>
+/* V46 definitive orbit layer fix */
+#opsOrbit.orbit-hidden-v46{display:none!important;visibility:hidden!important;pointer-events:none!important}
+#moduleShell.module-open-v46{display:block!important;position:relative!important;z-index:100!important}
+.handoff-orbit-v44,.handoff-node-v44,.handoff-center-v44{pointer-events:auto!important}
 </style></head>
 <body>
 <div class="wrap">
@@ -169,7 +174,7 @@ function doneCount(o){return (o.order_items||[]).filter(i=>i.prep_status==='done
 function allDone(o){return (o.order_items||[]).length>0&&doneCount(o)===(o.order_items||[]).length}
 function render(){const alerts=inventory.filter(x=>x.availability!=='available').length;app.innerHTML=`${demo?'<div class="demo"><b>DEMO MODE:</b> no real customer records, live inventory, real orders, or payments are changed.</div>':''}<section class="ops-orbit" id="opsOrbit"><button class="ops-center" id="opsCenter">BARISTA<small>${counts('new')} WAIT • ${counts('preparing')} PREP • ${counts('ready')} READY</small></button>${[
 ['new','🧾','NEW ORDERS'],['preparing','☕','PREPARING'],['ready','✓','HANDOFF'],['inventory','▣','STOCK'],['kitchen','▤','BAR DISPLAY'],['handover','⇄','HANDOVER'],['summary','▥','SHIFT SUMMARY'],['audit','⌕','AUDIT LOG']
-].map((x,i)=>`<button class="ops-node${x[0]==='ready' && !localStorage.getItem('handoff_parent_seen_v44')?' handoff-parent-new-v44':''}" data-orbit="${x[0]}" onclick="${x[0]==='ready'?"localStorage.setItem('handoff_parent_seen_v44','1');openHandoffOrbitV44();return false;":""}" style="--ox:${[50,76,87,76,50,24,13,24][i]}%;--oy:${[8,20,50,80,92,80,50,20][i]}%"><span>${x[1]}</span>${x[2]}</button>`).join('')}</section><section id="moduleShell" style="display:none"><button class="btn cream orbit-back" id="backOrbit">← Back to Orbit</button><section id="area"></section></section>`;document.querySelectorAll('[data-orbit]').forEach(b=>b.onclick=()=>{const id=b.dataset.orbit;if(id==='new'){openNewOrdersOrbitV38();return}if(id==='preparing'){localStorage.setItem('prep_parent_seen_v41','1');openPreparingOrbitV39();return}if(id==='ready'){localStorage.setItem('handoff_parent_seen_v44','1');openHandoffOrbitV44();return}localStorage.setItem('staff_orbit_v36_'+id,'1');b.classList.remove('new-v36');if(['preparing','ready','inventory'].includes(id)){view=id;subview='orders'}else{subview=id}document.querySelector('#opsOrbit').style.display='none';document.querySelector('#moduleShell').style.display='block';renderArea()});document.querySelector('#opsCenter').onclick=()=>{document.querySelector('[data-orbit="new"]').click()};document.querySelector('#backOrbit').onclick=()=>{document.querySelector('#moduleShell').style.display='none';document.querySelector('#opsOrbit').style.display='grid'}}
+].map((x,i)=>`<button class="ops-node${x[0]==='ready' && !localStorage.getItem('handoff_parent_seen_v44')?' handoff-parent-new-v44':''}" data-orbit="${x[0]}" onclick="${x[0]==='ready'?"localStorage.setItem('handoff_parent_seen_v44','1');openHandoffOrbitV44();return false;":""}" style="--ox:${[50,76,87,76,50,24,13,24][i]}%;--oy:${[8,20,50,80,92,80,50,20][i]}%"><span>${x[1]}</span>${x[2]}</button>`).join('')}</section><section id="moduleShell" style="display:none"><button class="btn cream orbit-back" id="backOrbit">← Back to Orbit</button><section id="area"></section></section>`;document.querySelectorAll('[data-orbit]').forEach(b=>b.onclick=()=>{const id=b.dataset.orbit;if(id==='new'){openNewOrdersOrbitV38();return}if(id==='preparing'){localStorage.setItem('prep_parent_seen_v41','1');openPreparingOrbitV39();return}if(id==='ready'){localStorage.setItem('handoff_parent_seen_v44','1');openHandoffOrbitV44();return}localStorage.setItem('staff_orbit_v36_'+id,'1');b.classList.remove('new-v36');if(['preparing','ready','inventory'].includes(id)){view=id;subview='orders'}else{subview=id}document.querySelector('#opsOrbit').style.display='none';document.querySelector('#moduleShell').style.display='block';renderArea()});const handoffBtn=document.querySelector('[data-orbit="ready"]');if(handoffBtn){handoffBtn.onclick=(e)=>{e.preventDefault();e.stopPropagation();localStorage.setItem('handoff_parent_seen_v44','1');openHandoffOrbitV44()}};document.querySelector('#opsCenter').onclick=()=>{document.querySelector('[data-orbit="new"]').click()};document.querySelector('#backOrbit').onclick=()=>{document.querySelector('#moduleShell').style.display='none';document.querySelector('#opsOrbit').style.display='grid'}}
 
 const NEW_ORDER_TOOLS_V38=[
  ['incoming','🧾','INCOMING QUEUE'],['priority','⚡','PRIORITY / RUSH'],['changes','✎','ORDER CHANGES'],
@@ -177,10 +182,10 @@ const NEW_ORDER_TOOLS_V38=[
 ];
 function openNewOrdersOrbitV38(){
  const main=document.querySelector('#opsOrbit'),shell=document.querySelector('#moduleShell'),area=document.querySelector('#area');
- if(main)main.style.display='none';if(shell)shell.style.display='block';
+ if(main){main.style.display='none';main.classList.add('orbit-hidden-v46')}if(shell){shell.style.display='block';shell.classList.add('module-open-v46')};
  const pts=[[50,8],[84,27],[84,73],[50,92],[16,73],[16,27]];
  area.innerHTML='<div class="suborbit-title"><h2>New Orders</h2><p>Incoming order control</p></div><section class="new-orders-orbit-v38"><button class="new-center-v38" id="newCenterV38">NEW ORDERS<small>'+counts('new')+' WAITING</small></button>'+NEW_ORDER_TOOLS_V38.map((x,i)=>'<button class="new-node-v38 '+(localStorage.getItem('new_orders_v38_'+x[0])?'':'new-v38')+'" data-newtool="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
- document.querySelector('#backOrbit').onclick=()=>{shell.style.display='none';main.style.display='block'};
+ document.querySelector('#backOrbit').onclick=()=>{shell.style.display='none';shell.classList.remove('module-open-v46');main.classList.remove('orbit-hidden-v46');main.style.display='block'};
  document.querySelectorAll('[data-newtool]').forEach(b=>b.onclick=()=>{localStorage.setItem('new_orders_v38_'+b.dataset.newtool,'1');b.classList.remove('new-v38');openNewOrderToolV38(b.dataset.newtool)});
  document.querySelector('#newCenterV38').onclick=()=>openNewOrderToolV38('incoming');
 }
@@ -209,10 +214,10 @@ function prepOrdersV39(){return orders.filter(o=>o.status==='preparing')}
 function prepLateV39(o){const s=(o.order_items||[]).find(i=>i.started_at)?.started_at;return s?age(s)>=10:false}
 function openPreparingOrbitV39(){
  const main=document.querySelector('#opsOrbit'),shell=document.querySelector('#moduleShell'),area=document.querySelector('#area'),a=prepOrdersV39(),late=a.filter(prepLateV39).length;
- if(main)main.style.display='none';if(shell)shell.style.display='block';
+ if(main){main.style.display='none';main.classList.add('orbit-hidden-v46')}if(shell){shell.style.display='block';shell.classList.add('module-open-v46')};
  const pts=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
  area.innerHTML='<div class="suborbit-title"><h2>Preparing</h2><p>Drink preparation control</p></div><section class="prep-orbit-v39"><button class="prep-center-v39" id="prepCenterV39">PREPARING<small>'+a.length+' ACTIVE • '+late+' LATE</small></button>'+PREP_TOOLS_V39.map((x,i)=>'<button class="prep-node-v39 '+(localStorage.getItem('prep_child_seen_v41_'+x[0])?'':'new-v39')+'" data-preptool="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
- document.querySelector('#backOrbit').onclick=()=>{shell.style.display='none';main.style.display='block'};
+ document.querySelector('#backOrbit').onclick=()=>{shell.style.display='none';shell.classList.remove('module-open-v46');main.classList.remove('orbit-hidden-v46');main.style.display='block'};
  document.querySelectorAll('[data-preptool]').forEach(b=>b.onclick=()=>{localStorage.setItem('prep_child_seen_v41_'+b.dataset.preptool,'1');b.classList.remove('new-v39');openPrepToolV39(b.dataset.preptool)});
  document.querySelector('#prepCenterV39').onclick=()=>openPrepToolV39('progress');
 }
@@ -239,10 +244,10 @@ const HANDOFF_TOOLS_V44=[
 function readyOrdersV44(){return orders.filter(o=>o.status==='ready')}
 function openHandoffOrbitV44(){
  const main=document.querySelector('#opsOrbit'),shell=document.querySelector('#moduleShell'),area=document.querySelector('#area'),a=readyOrdersV44();
- if(main)main.style.display='none';if(shell)shell.style.display='block';
+ if(main){main.style.display='none';main.classList.add('orbit-hidden-v46')}if(shell){shell.style.display='block';shell.classList.add('module-open-v46')};
  const pts=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
  area.innerHTML='<div class="suborbit-title"><h2>Handoff</h2><p>Final pickup and release control</p></div><section class="handoff-orbit-v44"><button class="handoff-center-v44" id="handoffCenterV44">HANDOFF<small>'+a.length+' READY • '+a.filter(o=>age(o.updated_at||o.created_at)>=10).length+' UNCLAIMED</small></button>'+HANDOFF_TOOLS_V44.map((x,i)=>'<button class="handoff-node-v44 '+(localStorage.getItem('handoff_seen_v44_'+x[0])?'':'new-v44')+'" data-handoff="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
- document.querySelector('#backOrbit').onclick=()=>{shell.style.display='none';main.style.display='block'};
+ document.querySelector('#backOrbit').onclick=()=>{shell.style.display='none';shell.classList.remove('module-open-v46');main.classList.remove('orbit-hidden-v46');main.style.display='block'};
  document.querySelectorAll('[data-handoff]').forEach(b=>b.onclick=()=>{localStorage.setItem('handoff_seen_v44_'+b.dataset.handoff,'1');b.classList.remove('new-v44');openHandoffToolV44(b.dataset.handoff)});
  document.querySelector('#handoffCenterV44').onclick=()=>openHandoffToolV44('queue');
 }
