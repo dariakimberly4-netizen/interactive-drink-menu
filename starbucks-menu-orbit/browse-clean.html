@@ -385,14 +385,14 @@ render();
  document.getElementById('healthyCloseV71').addEventListener('click',closePanel);
  document.addEventListener('click',function(e){
    const main=e.target.closest('[data-customer-v63="healthy"]');
-   if(main){e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('healthy_parent_seen_v72','1');main.classList.remove('new-customer-v63');openPanel();return}
+   if(main){e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('healthy_parent_seen_v73','1');main.classList.remove('new-customer-v63');openPanel();return}
  },true);
  document.querySelectorAll('[data-h71]').forEach(function(btn){
    const id=btn.getAttribute('data-h71');
-   const newestV72=['ingredients','caffeine','healthyfavorites'].includes(id);btn.classList.toggle('new',newestV72&&!localStorage.getItem('healthy_child_seen_v72_'+id));
+   const newestV72=['ingredients','caffeine','healthyfavorites'].includes(id);btn.classList.toggle('new',newestV72&&!localStorage.getItem('healthy_child_seen_v73_'+id));
    btn.addEventListener('click',function(e){
      e.preventDefault();e.stopPropagation();
-     localStorage.setItem('healthy_child_seen_v72_'+id,'1');btn.classList.remove('new');
+     localStorage.setItem('healthy_child_seen_v73_'+id,'1');btn.classList.remove('new');
      closePanel();
      if(typeof openHealthyToolV66==='function') openHealthyToolV66(id);
    });
