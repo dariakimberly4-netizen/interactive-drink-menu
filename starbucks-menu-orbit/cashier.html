@@ -435,6 +435,20 @@
  padding:7px 10px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:1000!important;
 }
 @keyframes v25Blink{50%{filter:brightness(1.45);box-shadow:0 0 0 10px #fff,0 0 0 17px #fff200,0 0 75px 28px rgba(255,242,0,.95)}}
+
+/* PAYMENT CONTROL V27 — latest-only discovery highlight */
+.cashier-orbit-node[data-orbit-id="orders"],
+.cashier-orbit-node[data-orbit-id="shift"]{
+ border:1px solid rgba(255,255,255,.16)!important;background:linear-gradient(145deg,#154535,#08261c)!important;
+ box-shadow:0 14px 30px rgba(0,0,0,.28)!important;animation:none!important
+}
+.cashier-orbit-node[data-orbit-id="orders"]::after,
+.cashier-orbit-node[data-orbit-id="shift"]::after{display:none!important;content:none!important}
+.cashier-orbit-node.latest-v25-hub,.cashier-orbit-node.latest-v25-item{
+ border:7px solid #fff200!important;background:#8b6800!important;
+ box-shadow:0 0 0 7px #fff,0 0 0 13px #fff200,0 0 55px 22px rgba(255,242,0,.75)!important;
+ animation:v25Blink .85s ease-in-out infinite!important;z-index:999!important
+}
 </style>
 </head>
 <body>
@@ -535,19 +549,58 @@ function toolShiftSummary(){
 
 function toolDiscounts(){openCashierTool('Discounts & Vouchers',`<div class="tool-grid"><div class="tool-card discount-feature senior-feature"><b>👴 SENIOR CITIZEN</b><small>Verify Senior Citizen ID and apply eligible discount.</small><button type="button" class="btn primary" data-disc="Senior Citizen">APPLY SENIOR</button></div><div class="tool-card discount-feature pwd-feature"><b>♿ PWD</b><small>Verify PWD ID and apply eligible discount.</small><button type="button" class="btn primary" data-disc="PWD">APPLY PWD</button></div><div class="tool-card"><b>Promo Code</b><small>Validate branch promo.</small><button type="button" class="btn" data-disc="Promo Code">VALIDATE</button></div><div class="tool-card"><b>Voucher</b><small>Validate and prevent duplicate redemption.</small><button type="button" class="btn" data-disc="Voucher">VALIDATE / REDEEM</button></div><div class="tool-card"><b>Search Order</b><small>Find by order number or customer.</small><button type="button" class="btn" id="quickSearchOrder">SEARCH</button></div><div class="tool-card"><b>Shift Summary</b><small>Sales and reconciliation overview.</small><button type="button" class="btn" id="quickShiftSummary">OPEN</button></div></div>`);document.querySelectorAll('#cashierToolModal [data-disc]').forEach(b=>b.onclick=()=>{if(b.dataset.disc==='Senior Citizen'||b.dataset.disc==='PWD'){toolDiscountVerify();setTimeout(()=>{const s=document.querySelector('#dvType');if(s)s.value=b.dataset.disc},0);return;}if(b.dataset.disc==='Voucher'){toolVoucherVerify();return;}discountType=b.dataset.disc;logCashierOp('Discount/Voucher',b.dataset.disc);b.textContent='APPLIED ✓';document.querySelectorAll('#cashierToolModal [data-disc]').forEach(x=>{if(x!==b&&x.dataset.disc!=='Promo Code'&&x.dataset.disc!=='Voucher')x.textContent=x.dataset.disc==='PWD'?'APPLY PWD':'APPLY SENIOR'})});document.querySelector('#quickSearchOrder')?.addEventListener('click',toolSearchOrder);document.querySelector('#quickShiftSummary')?.addEventListener('click',toolShiftSummary)}
 
-function toolPaymentProtection(){
- const paid=activeOrders.filter(x=>(x.payment_status||'Pending')==='Paid').length;
- openCashierTool('Payment Protection',`<div class="tool-grid">
- <div class="tool-card"><b>🔒 Paid Order Lock</b><small>${paid} paid order(s) protected from duplicate collection.</small><button class="btn primary" id="ppLock">CHECK PROTECTION</button></div>
- <div class="tool-card"><b>↻ Payment Retry</b><small>Retry failed payment or switch method.</small><button class="btn" id="ppRetry">OPEN RETRY</button></div>
- <div class="tool-card"><b>🔐 Manager Override</b><small>Void, refund and exceptional changes require authorization.</small><button class="btn" id="ppManager">MANAGER APPROVAL</button></div>
- <div class="tool-card"><b>☁ Offline Queue</b><small>Demo sync status for transactions waiting to upload.</small><button class="btn" id="ppOffline">SYNC STATUS</button></div>
- </div>`);
- document.querySelector('#ppLock').onclick=()=>alert('Paid Order Lock is active. Paid transactions cannot be collected twice.');
- document.querySelector('#ppRetry').onclick=()=>openCashierTool('Payment Retry',`<div class="form"><label>Order Number<input id="retryOrder" placeholder="MO-1201"></label><label>New Method<select id="retryMethod"><option>Cash</option><option>Card</option><option>E-Wallet</option></select></label><button class="btn primary" id="retryGo">RETRY PAYMENT</button></div>`);
- document.querySelector('#ppManager').onclick=toolApprovals;
- document.querySelector('#ppOffline').onclick=()=>alert(navigator.onLine?'ONLINE • Transactions can sync.':'OFFLINE • Transactions should remain queued until connection returns.');
+
+const PAYMENT_FAIL_KEY='cashier_failed_payments_v27';
+const OFFLINE_PAY_KEY='cashier_offline_payments_v27';
+const MANAGER_PIN_V27='2468';
+function findOrderV27(ref){return activeOrders.find(o=>String(o.order_no||o.order_number||o.id||'').toLowerCase()===String(ref||'').trim().toLowerCase())}
+function paymentStatusV27(o){return String(o?.payment_status||'Pending').toLowerCase()}
+function setPaymentV27(o,status,method){if(!o)return false;o.payment_status=status;if(method)o.payment_method=method;return true}
+function toolPaymentRetry(){
+ const failed=readLocal(PAYMENT_FAIL_KEY,[]);
+ openCashierTool('Payment Retry',`<div class="form"><label>Order Number<input id="retryOrder" placeholder="MO-1201"></label><label>New Method<select id="retryMethod"><option>Cash</option><option>Card</option><option>E-Wallet</option></select></label><button class="btn primary" id="retryGo">RETRY PAYMENT</button></div><div class="business-note">${failed.length} failed payment(s) currently recorded.</div>`);
+ document.querySelector('#retryGo').onclick=()=>{const ref=document.querySelector('#retryOrder').value.trim(),method=document.querySelector('#retryMethod').value,o=findOrderV27(ref);if(!ref)return alert('Enter an order number.');if(o&&paymentStatusV27(o)==='paid')return alert('BLOCKED • This order is already paid. Duplicate payment is not allowed.');if(!navigator.onLine){const q=readLocal(OFFLINE_PAY_KEY,[]);q.push({ref,method,at:new Date().toISOString(),status:'Queued'});writeLocal(OFFLINE_PAY_KEY,q);logCashierOp('Offline Payment Queued',ref+' • '+method);return alert('OFFLINE • Payment queued for sync.');}if(o)setPaymentV27(o,'Paid',method);writeLocal(PAYMENT_FAIL_KEY,failed.filter(x=>String(x.ref)!==ref));logCashierOp('Payment Retry Completed',ref+' • '+method);alert('PAYMENT COMPLETED • '+ref+' • '+method);document.querySelector('#cashierToolModal').classList.remove('open');render()};
 }
+function toolDuplicatePaymentLock(){
+ const paid=activeOrders.filter(x=>paymentStatusV27(x)==='paid');
+ openCashierTool('Duplicate Payment Lock',`<div class="kpi-grid"><div class="kpi"><b>${paid.length}</b><span>Paid Orders Locked</span></div></div><div class="business-note">Any order already marked PAID is blocked from Payment Retry. This protects against accidental double collection.</div>`);
+}
+function toolFailedPaymentQueue(){
+ const failed=readLocal(PAYMENT_FAIL_KEY,[]);
+ openCashierTool('Failed Payment Queue',failed.length?`<div class="orders">${failed.map(x=>`<div class="order-row"><div><b>${esc(x.ref)}</b><small>${esc(x.method||'Unknown')} • ${esc(x.reason||'Payment failed')}</small></div><button class="btn" data-fretry="${esc(x.ref)}">RETRY</button></div>`).join('')}</div>`:'<div class="empty">No failed payments need attention.</div>');
+ document.querySelectorAll('[data-fretry]').forEach(b=>b.onclick=()=>{document.querySelector('#cashierToolModal').classList.remove('open');toolPaymentRetry();setTimeout(()=>{const i=document.querySelector('#retryOrder');if(i)i.value=b.dataset.fretry},0)});
+}
+function requireManagerPinV27(next){
+ openCashierTool('Manager PIN Override',`<div class="form"><label>Manager PIN<input id="mgrPinV27" type="password" inputmode="numeric" maxlength="6" placeholder="Enter manager PIN"></label><label>Reason<input id="mgrReasonV27" placeholder="Reason for override"></label><button class="btn primary" id="mgrApproveV27">AUTHORIZE</button></div>`);
+ document.querySelector('#mgrApproveV27').onclick=()=>{const pin=document.querySelector('#mgrPinV27').value,reason=document.querySelector('#mgrReasonV27').value.trim();if(pin!==MANAGER_PIN_V27)return alert('Incorrect manager PIN.');if(!reason)return alert('Enter an override reason.');logCashierOp('Manager PIN Override',reason);document.querySelector('#cashierToolModal').classList.remove('open');if(next)next(reason);else alert('Manager override authorized.')};
+}
+function toolManagerPinOverride(){requireManagerPinV27()}
+function toolOfflinePaymentQueue(){
+ const q=readLocal(OFFLINE_PAY_KEY,[]);
+ openCashierTool('Offline Payment Queue + Sync',`<div class="kpi-grid"><div class="kpi"><b>${navigator.onLine?'ONLINE':'OFFLINE'}</b><span>Connection</span></div><div class="kpi"><b>${q.length}</b><span>Queued Payments</span></div></div><button class="btn primary" id="syncPayV27" style="width:100%;margin-top:12px">SYNC QUEUE</button><div class="business-note">Queued payment attempts stay on this device until connection is available.</div>`);
+ document.querySelector('#syncPayV27').onclick=()=>{if(!navigator.onLine)return alert('Still offline. Queue was not changed.');const items=readLocal(OFFLINE_PAY_KEY,[]),remaining=[];items.forEach(x=>{const o=findOrderV27(x.ref);if(o&&paymentStatusV27(o)==='paid')return;if(o)setPaymentV27(o,'Paid',x.method);else remaining.push(x)});writeLocal(OFFLINE_PAY_KEY,remaining);logCashierOp('Offline Payment Sync','Synced '+(items.length-remaining.length)+' payment(s)');alert('SYNC COMPLETE • '+(items.length-remaining.length)+' payment(s) synced.');document.querySelector('#cashierToolModal').classList.remove('open');render()};
+}
+function toolRefundOriginalMethod(){
+ openCashierTool('Refund to Original Method',`<div class="form"><label>Order Number<input id="refundOrderV27" placeholder="MO-1201"></label><label>Refund Reason<input id="refundReasonV27" placeholder="Required reason"></label><button class="btn primary" id="refundGoV27">REQUEST REFUND</button></div>`);
+ document.querySelector('#refundGoV27').onclick=()=>{const ref=document.querySelector('#refundOrderV27').value.trim(),reason=document.querySelector('#refundReasonV27').value.trim(),o=findOrderV27(ref);if(!o)return alert('Order not found.');if(paymentStatusV27(o)!=='paid')return alert('Only paid orders can be refunded.');if(!reason)return alert('Enter a refund reason.');const method=o.payment_method||'Original Method';requireManagerPinV27(()=>{setPaymentV27(o,'Refunded',method);logCashierOp('Refund Completed',ref+' • '+method+' • '+reason);alert('REFUND RECORDED • '+ref+' • '+method);render()})};
+}
+function toolPaymentProtection(){
+ openCashierTool('Payment Control',`<div class="tool-grid">
+ <div class="tool-card"><b>↻ Payment Retry</b><small>Complete a failed payment or switch method.</small><button class="btn primary" id="ppRetry">OPEN RETRY</button></div>
+ <div class="tool-card"><b>🔒 Duplicate Payment Lock</b><small>Blocks retry when an order is already paid.</small><button class="btn" id="ppLock">VIEW LOCK</button></div>
+ <div class="tool-card"><b>⚠ Failed Payment Queue</b><small>Transactions needing attention.</small><button class="btn" id="ppFailed">OPEN QUEUE</button></div>
+ <div class="tool-card"><b>🔐 Manager PIN Override</b><small>Authorization for sensitive actions.</small><button class="btn" id="ppManager">AUTHORIZE</button></div>
+ <div class="tool-card"><b>☁ Offline Queue + Sync</b><small>Keep and sync queued payment attempts.</small><button class="btn" id="ppOffline">OPEN QUEUE</button></div>
+ <div class="tool-card"><b>↩ Refund Original Method</b><small>Manager-authorized refund workflow.</small><button class="btn" id="ppRefund">OPEN REFUND</button></div>
+ </div>`);
+ document.querySelector('#ppRetry').onclick=toolPaymentRetry;
+ document.querySelector('#ppLock').onclick=toolDuplicatePaymentLock;
+ document.querySelector('#ppFailed').onclick=toolFailedPaymentQueue;
+ document.querySelector('#ppManager').onclick=toolManagerPinOverride;
+ document.querySelector('#ppOffline').onclick=toolOfflinePaymentQueue;
+ document.querySelector('#ppRefund').onclick=toolRefundOriginalMethod;
+}
+
 function toolReconciliation(){
  const tx=demoTransactions(),cashSales=tx.filter(x=>String(x.payment||x.payment_method||'').toLowerCase().includes('cash')).reduce((s,x)=>s+Number(x.total||x.total_amount||0),0);
  openCashierTool('Cash Reconciliation',`<div class="form ops-upgrade">
@@ -749,9 +802,12 @@ function home(){
       {icon:'✓',label:'Review Order',sub:cart.length?'Continue checkout':'Cart is empty',run:()=>{if(!cart.length)return alert('Add an item first.');screen='checkout';render()}},
       {icon:'💵',label:'Cash',sub:'Payment option',run:()=>{payment='Cash';if(cart.length){screen='checkout';render()}else alert('Start an order first.')}},
       {icon:'▣',label:'Card / E-Wallet',sub:'Record status',run:()=>{payment='Card';if(cart.length){screen='checkout';render()}else alert('Start an order first.')}},
-      {icon:'⌛',label:'Pending Payments',sub:'Awaiting confirmation',run:toolPending},
-      {icon:'↩',label:'Void / Refund',sub:'Approval required',run:toolVoidRefund},
-      {icon:'🔐',label:'Manager Approval',sub:'Void / refund / override',run:toolApprovals},
+      {icon:'↻',label:'Payment Retry',sub:'Retry failed payment',run:toolPaymentRetry},
+      {icon:'🔒',label:'Duplicate Payment Lock',sub:'Prevent double charge',run:toolDuplicatePaymentLock},
+      {icon:'⚠',label:'Failed Payment Queue',sub:'Needs attention',run:toolFailedPaymentQueue},
+      {icon:'🔐',label:'Manager PIN Override',sub:'Authorize exception',run:toolManagerPinOverride},
+      {icon:'☁',label:'Offline Payment Sync',sub:'Queue + reconnect',run:toolOfflinePaymentQueue},
+      {icon:'↩',label:'Refund Original Method',sub:'Authorized refund',run:toolRefundOriginalMethod},
       {icon:'🧮',label:'Change Calculator',sub:'Cash received → change',run:()=>toolChangeCalculator()},
       {icon:'⇄',label:'Split Payment',sub:'Cash + Card / E-Wallet',run:toolSplitPayment}
     ],
@@ -877,7 +933,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&((item.id==='orders'&&['Park Order','Order Recall'].some(x=>!seenNewV26().includes(x)))||(item.id==='shift'&&['Cashier Handover','Daily Z-Report'].some(x=>!seenNewV26().includes(x))))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&item.id==='payments'&&NEW_FEATURES_V26.some(x=>!seenNewV26().includes(x))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
@@ -933,7 +989,7 @@ if(!db)login();else init();
 </script>
 <script src="new-feature-highlights.js"></script><script src="ecosystem-sync.js">
 /* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
-const NEW_FEATURES_V26=['Park Order','Order Recall','Cashier Handover','Daily Z-Report'];
+const NEW_FEATURES_V26=['Payment Retry','Duplicate Payment Lock','Failed Payment Queue','Manager PIN Override','Offline Payment Sync','Refund Original Method'];
 const NEW_SEEN_KEY_V26='cashier_seen_new_features_v26';
 function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
 function markNewSeenV26(label){
