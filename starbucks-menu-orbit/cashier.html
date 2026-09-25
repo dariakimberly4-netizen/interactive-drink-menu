@@ -412,6 +412,29 @@
 .cashier-orbit-node.latest-v24-highlight{border:6px solid #ffea00!important;background:linear-gradient(145deg,#806000,#124832)!important;box-shadow:0 0 0 8px rgba(255,234,0,.2),0 0 50px rgba(255,234,0,.8)!important;animation:latestV24Pulse 1.15s ease-in-out infinite!important;z-index:90!important}
 .cashier-orbit-node.latest-v24-highlight::before{content:'★ NEW ★'!important;position:absolute!important;top:-22px!important;left:50%!important;transform:translateX(-50%)!important;background:#ffea00!important;color:#073421!important;border:2px solid white!important;border-radius:999px!important;padding:6px 9px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:110!important}
 @keyframes latestV24Pulse{50%{filter:brightness(1.22);box-shadow:0 0 0 11px rgba(255,234,0,.1),0 0 60px rgba(255,234,0,.9)}}
+
+/* HARD LATEST HIGHLIGHT V25 */
+.cashier-orbit-node.latest-v25-hub,
+.cashier-orbit-node.latest-v25-item{
+ border:7px solid #fff200!important;
+ background:#8b6800!important;
+ box-shadow:0 0 0 7px #ffffff,0 0 0 13px #fff200,0 0 55px 22px rgba(255,242,0,.75)!important;
+ z-index:999!important;
+ animation:v25Blink .85s ease-in-out infinite!important;
+}
+.cashier-orbit-node.latest-v25-hub::after{
+ display:block!important;content:'★ NEW FEATURES ★'!important;
+ position:absolute!important;top:-25px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;
+ background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;
+ padding:7px 10px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:1000!important;
+}
+.cashier-orbit-node.latest-v25-item::before{
+ display:block!important;content:'★ JUST ADDED ★'!important;
+ position:absolute!important;top:-25px!important;left:50%!important;transform:translateX(-50%)!important;
+ background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;
+ padding:7px 10px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:1000!important;
+}
+@keyframes v25Blink{50%{filter:brightness(1.45);box-shadow:0 0 0 10px #fff,0 0 0 17px #fff200,0 0 75px 28px rgba(255,242,0,.95)}}
 </style>
 </head>
 <body>
@@ -854,7 +877,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&!seen()?'new-orbit':''} ${isMain&&item.id==='promos'?'feature-hub':''} ${!isMain&&['Park Order','Order Recall','Cashier Handover','Daily Z-Report'].includes(item.label)?'latest-v24-highlight':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&['orders','shift'].includes(item.id)?'latest-v25-hub':''} ${!isMain&&['Park Order','Order Recall','Cashier Handover','Daily Z-Report'].includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
