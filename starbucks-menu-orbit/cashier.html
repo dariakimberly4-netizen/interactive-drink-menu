@@ -399,6 +399,19 @@
 /* Inside SHIFT: only these newest additions */
 .cashier-orbit-node.shift-new-highlight{border:6px solid #ffea00!important;background:linear-gradient(145deg,#806000,#124832)!important;box-shadow:0 0 0 8px rgba(255,234,0,.22),0 0 52px rgba(255,234,0,.85)!important;animation:latestHubPulse 1s ease-in-out infinite!important}
 .cashier-orbit-node.shift-new-highlight::before{display:block!important}
+
+/* LATEST FEATURES V24 — ONLY THIS UPDATE IS HIGHLIGHTED */
+.cashier-orbit-node[data-orbit-id="shift"]{border:1px solid rgba(255,255,255,.16)!important;background:linear-gradient(145deg,#154535,#08261c)!important;box-shadow:0 14px 30px rgba(0,0,0,.28)!important;animation:none!important}
+.cashier-orbit-node[data-orbit-id="shift"]::after{display:none!important;content:none!important}
+.cashier-orbit-node[data-orbit-id="orders"],
+.cashier-orbit-node[data-orbit-id="shift"]{border:5px solid #ffea00!important;box-shadow:0 0 0 6px rgba(255,234,0,.18),0 0 42px rgba(255,234,0,.65)!important;animation:latestV24Pulse 1.15s ease-in-out infinite!important}
+.cashier-orbit-node[data-orbit-id="orders"]::after{display:block!important;content:'2 NEW'!important}
+.cashier-orbit-node[data-orbit-id="shift"]::after{display:block!important;content:'2 NEW'!important}
+.cashier-orbit-node[data-orbit-id="orders"]::after,
+.cashier-orbit-node[data-orbit-id="shift"]::after{position:absolute!important;top:-14px!important;right:-5px!important;background:#ffea00!important;color:#073421!important;border-radius:999px!important;padding:6px 8px!important;font:1000 8px/1 system-ui!important;z-index:100!important}
+.cashier-orbit-node.latest-v24-highlight{border:6px solid #ffea00!important;background:linear-gradient(145deg,#806000,#124832)!important;box-shadow:0 0 0 8px rgba(255,234,0,.2),0 0 50px rgba(255,234,0,.8)!important;animation:latestV24Pulse 1.15s ease-in-out infinite!important;z-index:90!important}
+.cashier-orbit-node.latest-v24-highlight::before{content:'★ NEW ★'!important;position:absolute!important;top:-22px!important;left:50%!important;transform:translateX(-50%)!important;background:#ffea00!important;color:#073421!important;border:2px solid white!important;border-radius:999px!important;padding:6px 9px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:110!important}
+@keyframes latestV24Pulse{50%{filter:brightness(1.22);box-shadow:0 0 0 11px rgba(255,234,0,.1),0 0 60px rgba(255,234,0,.9)}}
 </style>
 </head>
 <body>
@@ -531,6 +544,30 @@ function toolReceiptCenter(){
 function toolAuditTrail(){
  const a=readLocal('cashier_ops_v2',readLocal('cashier_ops',[]));
  openCashierTool('Transaction Audit Trail',a.length?`<div class="orders">${a.slice(-20).reverse().map(x=>`<div class="order-row"><div><b>${esc(x.action||x.type||'Cashier action')}</b><small>${esc(x.detail||'')} • ${esc(x.at||x.time||'')}</small></div></div>`).join('')}</div>`:'<div class="empty">No cashier audit entries yet.</div>');
+}
+
+const PARKED_KEY='cashier_parked_orders_v24';
+function toolParkOrder(){
+ if(!cart.length)return alert('There is no current order to park.');
+ const parked=readLocal(PARKED_KEY,[]);
+ const ref='PARK-'+Date.now().toString().slice(-5);
+ parked.push({ref,customer:customerName||'Walk-in',cart:JSON.parse(JSON.stringify(cart)),promo:promo?JSON.parse(JSON.stringify(promo)):null,voucher:voucherApplied?JSON.parse(JSON.stringify(voucherApplied)):null,discountType,at:new Date().toLocaleString('en-PH')});
+ writeLocal(PARKED_KEY,parked);cart=[];promo=null;voucherApplied=null;discountType='None';customerName='';
+ logCashierOp('Order Parked',ref);alert('Order parked: '+ref);showOrbit('orders');
+}
+function toolOrderRecall(){
+ const parked=readLocal(PARKED_KEY,[]);
+ openCashierTool('Order Recall',parked.length?`<div class="orders">${parked.map((p,i)=>`<div class="order-row"><div><b>${esc(p.ref)}</b><small>${esc(p.customer)} • ${p.cart.length} item(s) • ${esc(p.at)}</small></div><button class="btn primary" data-recall="${i}">RECALL</button></div>`).join('')}</div>`:'<div class="empty">No parked orders.</div>');
+ document.querySelectorAll('[data-recall]').forEach(b=>b.onclick=()=>{const a=readLocal(PARKED_KEY,[]),p=a[+b.dataset.recall];if(!p)return;cart=p.cart||[];promo=p.promo||null;voucherApplied=p.voucher||null;discountType=p.discountType||'None';customerName=p.customer==='Walk-in'?'':p.customer;a.splice(+b.dataset.recall,1);writeLocal(PARKED_KEY,a);logCashierOp('Order Recalled',p.ref);document.querySelector('#cashierToolModal').classList.remove('open');screen='new';render()});
+}
+function toolCashierHandover(){
+ openCashierTool('Cashier Handover',`<div class="form ops-upgrade"><label>Outgoing Cashier<input value="${esc(cashier.name)}" readonly></label><label>Incoming Cashier<input id="handoverName" placeholder="Incoming cashier name"></label><label>Handover Note<textarea id="handoverNote" placeholder="Drawer status, pending orders, notes"></textarea></label><button class="btn primary" id="handoverConfirm">CONFIRM HANDOVER</button><div class="business-note">Handover is recorded in the audit trail. Cash reconciliation should be completed before transfer.</div></div>`);
+ document.querySelector('#handoverConfirm').onclick=()=>{const n=document.querySelector('#handoverName').value.trim(),note=document.querySelector('#handoverNote').value.trim();if(!n)return alert('Enter incoming cashier name.');logCashierOp('Cashier Handover',cashier.name+' → '+n+(note?' • '+note:''));cashier.name=n;alert('Register handed over to '+n+'.');document.querySelector('#cashierToolModal').classList.remove('open');render()};
+}
+function toolZReport(){
+ const tx=demoTransactions(),sales=tx.reduce((s,x)=>s+Number(x.total||x.total_amount||0),0),cash=tx.filter(x=>String(x.payment||x.payment_method||'').toLowerCase().includes('cash')).reduce((s,x)=>s+Number(x.total||x.total_amount||0),0);
+ const approvals=readLocal(APPROVAL_KEY,[]);
+ openCashierTool('Daily Z-Report',`<div class="kpi-grid"><div class="kpi"><b>${money(sales)}</b><span>Gross Sales</span></div><div class="kpi"><b>${tx.length}</b><span>Transactions</span></div><div class="kpi"><b>${money(cash)}</b><span>Cash Sales</span></div></div><table class="business-table"><tbody><tr><td>Discount / Voucher</td><td><b>${esc(discountType)}</b></td></tr><tr><td>Manager Requests</td><td><b>${approvals.length}</b></td></tr><tr><td>Open Orders</td><td><b>${activeOrders.length}</b></td></tr><tr><td>Parked Orders</td><td><b>${readLocal(PARKED_KEY,[]).length}</b></td></tr></tbody></table><button class="btn primary" onclick="window.print()" style="width:100%;margin-top:12px">PRINT Z-REPORT</button><div class="business-note">Demo report. Production Z-Reports should be generated from finalized backend transaction records.</div>`);
 }
 function toolReports(){const tx=demoTransactions(),sales=tx.reduce((s,x)=>s+Number(x.total||x.total_amount||0),0),avg=tx.length?sales/tx.length:0;openCashierTool('Cashier Reports',`<div class="kpi-grid"><div class="kpi"><b>${money(sales)}</b><span>Sales</span></div><div class="kpi"><b>${tx.length}</b><span>Transactions</span></div><div class="kpi"><b>${money(avg)}</b><span>Average Order</span></div></div><div class="tool-card"><b>Payment Mix</b><small>Cash, Card, E-Wallet and Pending transactions summarized from demo activity.</small></div>`)}
 function toolRecent(){const tx=demoTransactions();openCashierTool('Recent Transactions',tx.map(x=>`<div class="receipt-row"><div><b>${esc(x.ref||x.order_ref)}</b><small>${money(x.total||x.total_amount)} • ${esc(x.pay||x.payment_status||'Paid')}</small></div><button class="btn" data-reorder="${esc(x.ref||x.order_ref)}">REORDER</button></div>`).join(''));document.querySelectorAll('[data-reorder]').forEach(b=>b.onclick=()=>{cart=[{...products[0],qty:1,size:'Grande',style:'Hot',milk:'Whole Milk',sugar:'Regular',ice:'Regular Ice',addon:'None',note:''}];logCashierOp('Quick Reorder',b.dataset.reorder);document.querySelector('#cashierToolModal').classList.remove('open');screen='new';render()})}
@@ -679,6 +716,8 @@ function home(){
       {icon:'＋',label:'New Order',sub:'Start a sale',run:()=>{screen='new';render()}},
       {icon:'◴',label:'Active Orders',sub:activeOrders.length+' open',run:()=>{screen='orders';render()}},
       {icon:'🛒',label:'Current Cart',sub:cart.length+' item'+(cart.length===1?'':'s'),run:()=>{screen='new';render()}},
+      {icon:'🅿',label:'Park Order',sub:'Save current cart',run:toolParkOrder},
+      {icon:'↩',label:'Order Recall',sub:'Restore parked order',run:toolOrderRecall},
       {icon:'⏸',label:'Hold / Resume',sub:'Pause a sale',run:toolHold},
       {icon:'↻',label:'Recent Transactions',sub:'Reopen / reorder',run:toolRecent},
       {icon:'🧾',label:'Receipts',sub:'Search & reprint',run:toolReceipts}
@@ -717,6 +756,8 @@ function home(){
       {icon:'💰',label:'Cash Drawer',sub:'Open / cash in / cash out',run:toolDrawer},
       {icon:'🏁',label:'End Shift',sub:'Closing summary',run:toolEndShift},
       {icon:'⚖',label:'Cash Reconciliation',sub:'Expected vs actual cash',run:toolReconciliation},
+      {icon:'🤝',label:'Cashier Handover',sub:'Transfer register safely',run:toolCashierHandover},
+      {icon:'🧮',label:'Daily Z-Report',sub:'Final shift totals',run:toolZReport},
       {icon:'🔒',label:'Payment Protection',sub:'Retry • lock • override',run:toolPaymentProtection},
       {icon:'🧾',label:'Receipt & Labels',sub:'Print • reprint • cup label',run:toolReceiptCenter},
       {icon:'📜',label:'Audit Trail',sub:'Cashier transaction history',run:toolAuditTrail},
@@ -813,7 +854,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&!seen()?'new-orbit':''} ${isMain&&item.id==='promos'?'feature-hub':''} ${!isMain&&['Cash Reconciliation','Payment Protection','Receipt & Labels','Audit Trail'].includes(item.label)?'shift-new-highlight':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&!seen()?'new-orbit':''} ${isMain&&item.id==='promos'?'feature-hub':''} ${!isMain&&['Park Order','Order Recall','Cashier Handover','Daily Z-Report'].includes(item.label)?'latest-v24-highlight':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
