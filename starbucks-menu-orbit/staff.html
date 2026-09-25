@@ -49,6 +49,17 @@
 .new-node-v38.new-v38:after{content:"★ NEW ★";position:absolute;top:-23px;left:50%;transform:translateX(-50%);background:#fff200;color:#073421;border-radius:999px;padding:5px 7px;font-size:8px;white-space:nowrap}
 .v38row{padding:14px;margin:9px 0;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.05)}
 @media(max-width:650px){.new-orders-orbit-v38{width:94vw;height:94vw;max-height:430px}.new-center-v38{width:120px;height:120px;font-size:12px}.new-node-v38{width:88px;height:88px;font-size:8px}.new-node-v38 span{font-size:17px}}
+</style><style>
+/* V39 PREPARING SUBMENU ORBIT */
+.prep-orbit-v39{position:relative;width:min(620px,94vw);height:min(620px,94vw);min-height:370px;margin:20px auto 40px}
+.prep-orbit-v39:before{content:"";position:absolute;left:14%;top:14%;width:72%;height:72%;border:1px solid rgba(212,173,98,.45);border-radius:50%}
+.prep-center-v39{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:165px;height:165px;border-radius:50%;border:4px solid var(--gold);background:radial-gradient(circle,#8b6813,#342508);color:#fff;font-weight:1000;z-index:3}
+.prep-center-v39 small{display:block;color:#ffe6a5;margin-top:7px;font-size:10px}
+.prep-node-v39{position:absolute;transform:translate(-50%,-50%);width:108px;height:108px;border-radius:50%;border:2px solid rgba(212,173,98,.72);background:#0b3023;color:#fff;font-weight:900;font-size:9px;z-index:4;touch-action:manipulation}
+.prep-node-v39 span{display:block;font-size:20px;margin-bottom:4px}
+.prep-node-v39.new-v39{outline:6px solid #fff200;box-shadow:0 0 0 12px rgba(255,242,0,.28),0 0 50px rgba(255,242,0,.75)}
+.prep-node-v39.new-v39:after{content:"★ NEW ★";position:absolute;top:-23px;left:50%;transform:translateX(-50%);background:#fff200;color:#073421;border-radius:999px;padding:5px 7px;font-size:8px;white-space:nowrap}
+@media(max-width:650px){.prep-orbit-v39{width:94vw;height:94vw;max-height:440px}.prep-center-v39{width:118px;height:118px;font-size:11px}.prep-node-v39{width:82px;height:82px;font-size:7.5px}.prep-node-v39 span{font-size:16px}}
 </style></head>
 <body>
 <div class="wrap">
@@ -110,7 +121,7 @@ function doneCount(o){return (o.order_items||[]).filter(i=>i.prep_status==='done
 function allDone(o){return (o.order_items||[]).length>0&&doneCount(o)===(o.order_items||[]).length}
 function render(){const alerts=inventory.filter(x=>x.availability!=='available').length;app.innerHTML=`${demo?'<div class="demo"><b>DEMO MODE:</b> no real customer records, live inventory, real orders, or payments are changed.</div>':''}<section class="ops-orbit" id="opsOrbit"><button class="ops-center" id="opsCenter">BARISTA<small>${counts('new')} WAIT • ${counts('preparing')} PREP • ${counts('ready')} READY</small></button>${[
 ['new','🧾','NEW ORDERS'],['preparing','☕','PREPARING'],['ready','✓','HANDOFF'],['inventory','▣','STOCK'],['kitchen','▤','BAR DISPLAY'],['handover','⇄','HANDOVER'],['summary','▥','SHIFT SUMMARY'],['audit','⌕','AUDIT LOG']
-].map((x,i)=>`<button class="ops-node${localStorage.getItem('staff_orbit_v36_'+x[0])?'':' new-v36'}" data-orbit="${x[0]}" style="--ox:${[50,76,87,76,50,24,13,24][i]}%;--oy:${[8,20,50,80,92,80,50,20][i]}%"><span>${x[1]}</span>${x[2]}</button>`).join('')}</section><section id="moduleShell" style="display:none"><button class="btn cream orbit-back" id="backOrbit">← Back to Orbit</button><section id="area"></section></section>`;document.querySelectorAll('[data-orbit]').forEach(b=>b.onclick=()=>{const id=b.dataset.orbit;if(id==='new'){openNewOrdersOrbitV38();return}localStorage.setItem('staff_orbit_v36_'+id,'1');b.classList.remove('new-v36');if(['preparing','ready','inventory'].includes(id)){view=id;subview='orders'}else{subview=id}document.querySelector('#opsOrbit').style.display='none';document.querySelector('#moduleShell').style.display='block';renderArea()});document.querySelector('#opsCenter').onclick=()=>{document.querySelector('[data-orbit="new"]').click()};document.querySelector('#backOrbit').onclick=()=>{document.querySelector('#moduleShell').style.display='none';document.querySelector('#opsOrbit').style.display='grid'}}
+].map((x,i)=>`<button class="ops-node${localStorage.getItem('staff_orbit_v36_'+x[0])?'':' new-v36'}" data-orbit="${x[0]}" style="--ox:${[50,76,87,76,50,24,13,24][i]}%;--oy:${[8,20,50,80,92,80,50,20][i]}%"><span>${x[1]}</span>${x[2]}</button>`).join('')}</section><section id="moduleShell" style="display:none"><button class="btn cream orbit-back" id="backOrbit">← Back to Orbit</button><section id="area"></section></section>`;document.querySelectorAll('[data-orbit]').forEach(b=>b.onclick=()=>{const id=b.dataset.orbit;if(id==='new'){openNewOrdersOrbitV38();return}if(id==='preparing'){openPreparingOrbitV39();return}localStorage.setItem('staff_orbit_v36_'+id,'1');b.classList.remove('new-v36');if(['preparing','ready','inventory'].includes(id)){view=id;subview='orders'}else{subview=id}document.querySelector('#opsOrbit').style.display='none';document.querySelector('#moduleShell').style.display='block';renderArea()});document.querySelector('#opsCenter').onclick=()=>{document.querySelector('[data-orbit="new"]').click()};document.querySelector('#backOrbit').onclick=()=>{document.querySelector('#moduleShell').style.display='none';document.querySelector('#opsOrbit').style.display='grid'}}
 
 const NEW_ORDER_TOOLS_V38=[
  ['incoming','🧾','INCOMING QUEUE'],['priority','⚡','PRIORITY / RUSH'],['changes','✎','ORDER CHANGES'],
@@ -140,6 +151,37 @@ function openNewOrderToolV38(id){
  area.innerHTML='<button class="btn cream orbit-back" id="backNewV38">← Back to New Orders Orbit</button><h2>'+title+'</h2>'+body;
  document.querySelector('#backNewV38').onclick=openNewOrdersOrbitV38;
  const start=document.querySelector('#startFirstV38');if(start)start.onclick=()=>{const o=newOrders[0];if(!o)return alert('No waiting order.');changeOrderStatus(o.id,'preparing')};
+}
+
+const PREP_TOOLS_V39=[
+ ['recipe','☕','RECIPE / CUSTOM'],['progress','✓','DRINK PROGRESS'],['timer','⏱','PREP TIMER'],['special','!','SPECIAL NOTES'],
+ ['blocked','Ⅱ','PAUSE / BLOCK'],['remake','↻','REMAKE / WASTE'],['equipment','⚙','EQUIPMENT'],['ready','→','MARK READY']
+];
+function prepOrdersV39(){return orders.filter(o=>o.status==='preparing')}
+function prepLateV39(o){const s=(o.order_items||[]).find(i=>i.started_at)?.started_at;return s?age(s)>=10:false}
+function openPreparingOrbitV39(){
+ const main=document.querySelector('#opsOrbit'),shell=document.querySelector('#moduleShell'),area=document.querySelector('#area'),a=prepOrdersV39(),late=a.filter(prepLateV39).length;
+ if(main)main.style.display='none';if(shell)shell.style.display='block';
+ const pts=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
+ area.innerHTML='<div class="suborbit-title"><h2>Preparing</h2><p>Drink preparation control</p></div><section class="prep-orbit-v39"><button class="prep-center-v39" id="prepCenterV39">PREPARING<small>'+a.length+' ACTIVE • '+late+' LATE</small></button>'+PREP_TOOLS_V39.map((x,i)=>'<button class="prep-node-v39 '+(localStorage.getItem('prep_v39_'+x[0])?'':'new-v39')+'" data-preptool="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
+ document.querySelector('#backOrbit').onclick=()=>{shell.style.display='none';main.style.display='block'};
+ document.querySelectorAll('[data-preptool]').forEach(b=>b.onclick=()=>{localStorage.setItem('prep_v39_'+b.dataset.preptool,'1');b.classList.remove('new-v39');openPrepToolV39(b.dataset.preptool)});
+ document.querySelector('#prepCenterV39').onclick=()=>openPrepToolV39('progress');
+}
+function prepRowsV39(a){return a.length?a.map(o=>'<div class="v38row"><b>'+esc(o.order_ref)+'</b> • '+esc(o.customer_name||'Customer')+'<br><small>'+doneCount(o)+' / '+(o.order_items||[]).length+' items done'+(prepLateV39(o)?' • ⚠ LATE':'')+'</small></div>').join(''):'<div class="empty">No orders preparing.</div>'}
+function openPrepToolV39(id){
+ const area=document.querySelector('#area'),a=prepOrdersV39(),o=a[0],items=o?.order_items||[];let title='',body='';
+ if(id==='recipe'){title='Recipe & Customization';body=o?items.map(i=>'<div class="v38row"><b>'+esc(i.product_name)+'</b><br><small>'+[i.size,i.style,i.milk,i.sugar_level,i.ice_level,i.addons].filter(Boolean).map(esc).join(' • ')+'</small></div>').join(''):'<div class="empty">No active preparation.</div>'}
+ if(id==='progress'){title='Drink-by-Drink Progress';body=prepRowsV39(a)}
+ if(id==='timer'){title='Preparation Timer';body=a.length?a.map(x=>'<div class="v38row"><b>'+esc(x.order_ref)+'</b><br><small>'+((x.order_items||[]).find(i=>i.started_at)?age((x.order_items||[]).find(i=>i.started_at).started_at):0)+' min in preparation '+(prepLateV39(x)?'• ⚠ LATE':'')+'</small></div>').join(''):'<div class="empty">No active timers.</div>'}
+ if(id==='special'){title='Special Instructions';body=o?items.map(i=>'<div class="v38row"><b>'+esc(i.product_name)+'</b><br><small>'+esc(i.note||i.allergy_note||'No special instruction')+'</small></div>').join(''):'<div class="empty">No active order.</div>'}
+ if(id==='blocked'){title='Pause / Block';body=prepRowsV39(a)+'<p class="notice">Use Problem / Cancel on the order workflow to record ingredient, equipment, or customer clarification issues.</p>'}
+ if(id==='remake'){title='Remake / Waste Log';body='<div class="notice">Record remake or waste through the order problem workflow so the event stays attached to the order audit trail.</div>'+prepRowsV39(a)}
+ if(id==='equipment'){title='Equipment Issue';body='<div class="notice">Flag espresso machine, blender, refrigerator, printer, or station issues during the shift handover workflow.</div>'}
+ if(id==='ready'){title='Mark Ready';body=prepRowsV39(a)+'<button class="btn primary" id="openPrepOrdersV39" style="width:100%;margin-top:12px">OPEN PREPARING ORDERS</button>'}
+ area.innerHTML='<button class="btn cream orbit-back" id="backPrepV39">← Back to Preparing Orbit</button><h2>'+title+'</h2>'+body;
+ document.querySelector('#backPrepV39').onclick=openPreparingOrbitV39;
+ const b=document.querySelector('#openPrepOrdersV39');if(b)b.onclick=()=>{view='preparing';subview='orders';renderArea()};
 }
 function renderArea(){const area=document.querySelector('#area');if(subview==='kitchen')return renderKitchen(area);if(subview==='handover')return renderHandover(area);if(subview==='summary')return renderSummary(area);if(subview==='audit')return renderAudit(area);if(view==='inventory')return renderInventory(area);renderOrders(area)}
 function renderOrders(area){let list=orders.filter(o=>view==='new'?['new','confirmed'].includes(o.status):o.status===view);if(search)list=list.filter(o=>(o.order_ref+' '+(o.customer_name||'')).toLowerCase().includes(search.toLowerCase()));area.innerHTML=`<div class="toolbar"><input class="search" id="search" placeholder="Search order number or customer" value="${esc(search)}"><button class="btn" id="clear">Clear</button></div>${list.length?list.map(orderCard).join(''):'<div class="empty">No orders in this section.</div>'}`;document.querySelector('#search').oninput=e=>{search=e.target.value;renderOrders(area)};document.querySelector('#clear').onclick=()=>{search='';renderOrders(area)};wireOrders()}
