@@ -439,6 +439,35 @@ function openHealthyDirectV76(id,el){
    const s=document.getElementById('hd76select'),o=document.getElementById('hd76result');
    const draw=()=>{const p=product(s.value);o.innerHTML='<b>'+p.name+'</b><p>Caffeine amount: <strong>Not verified</strong></p><small>No caffeine values are estimated.</small>'};s.onchange=draw;draw();
  }
+ if(id==='lighter'){
+   title.textContent='Build a Lighter Drink';
+   const ds=products.filter(p=>p.kind==='drink');
+   body.innerHTML='<label>SELECT DRINK</label><select id="hd76select">'+ds.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select><div class="hd76card" id="hd76result"></div>';
+   const s=document.getElementById('hd76select'),o=document.getElementById('hd76result');const draw=()=>{const p=product(s.value);o.innerHTML='<b>'+p.name+'</b><p>Listed base nutrition: <strong>'+(Number.isFinite(Number(p.cal))?p.cal+' calories':'Not available')+'</strong></p><small>Size and customizations can change nutrition.</small>'};s.onchange=draw;draw();
+ }
+ if(id==='size'){
+   title.textContent='Nutrition by Size';
+   body.innerHTML='<div class="hd76card"><b>Nutrition by Size</b><p>Choose a drink in Build a Lighter Drink. Exact Tall, Grande and Venti values are shown only when verified size-specific data is available.</p></div>';
+ }
+ if(id==='cartnutrition'){
+   title.textContent='Cart Nutrition Summary';
+   const cart=read(cartKey,[]);let total=0,known=0,unknown=0;cart.forEach(x=>{const p=product(x.id),q=Number(x.qty)||1;if(p&&Number.isFinite(Number(p.cal))){total+=Number(p.cal)*q;known+=q}else unknown+=q});
+   body.innerHTML='<div class="hd76card"><b>Known calories in cart</b><h2>'+total+' cal</h2><p>'+known+' item(s) with calorie data • '+unknown+' without verified calorie data</p></div>';
+ }
+ if(id==='nutrition'||id==='calories'){
+   title.textContent=id==='nutrition'?'Nutrition':'Calories';
+   const a=products.filter(p=>Number.isFinite(Number(p.cal))).sort((x,y)=>Number(x.cal)-Number(y.cal));
+   body.innerHTML=a.map(p=>'<div class="hd76card"><b>'+p.name+'</b><p>'+p.cal+' calories</p></div>').join('')||'<div class="hd76card">No verified calorie data available.</div>';
+ }
+ if(id==='allergens'){
+   title.textContent='Allergens';body.innerHTML='<div class="hd76card"><b>Allergen information</b><p>Check verified official allergen information. This demo does not claim any product is allergen-free.</p></div>';
+ }
+ if(id==='diet'){
+   title.textContent='Diet Filters';body.innerHTML='<div class="hd76card"><b>Dietary filters</b><p>Vegetarian, dairy-free and similar labels require verified ingredient and preparation data before they can be enabled.</p></div>';
+ }
+ if(id==='compare'){
+   title.textContent='Nutrition Compare';const a=products.filter(p=>Number.isFinite(Number(p.cal))).slice(0,8);body.innerHTML=a.map(p=>'<div class="hd76card"><b>'+p.name+'</b><p>'+p.cal+' calories</p></div>').join('');
+ }
  if(id==='healthyfavorites'){
    title.textContent='Healthy Favorites';
    body.innerHTML='<label>SELECT MENU ITEM</label><select id="hd76select">'+products.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select><button type="button" class="action" id="hd76save">♥ SAVE FAVORITE</button><div id="hd76result"></div>';
@@ -446,4 +475,12 @@ function openHealthyDirectV76(id,el){
    document.getElementById('hd76save').onclick=()=>{const id=document.getElementById('hd76select').value;let a=read('healthy_favorites_v76',[]);if(!a.includes(id))a.push(id);write('healthy_favorites_v76',a);render()};
  }
 }
+</script>
+<script>
+document.addEventListener('click',function(e){
+ const b=e.target.closest('[data-h71]');
+ if(!b)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ openHealthyDirectV76(b.getAttribute('data-h71'),b);
+},true);
 </script></body></html>
