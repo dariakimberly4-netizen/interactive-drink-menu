@@ -74,6 +74,22 @@
  background:#fff200!important;color:#073421!important;border:4px solid #fff!important;border-radius:999px!important;padding:6px 9px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important
 }
 @keyframes prepDiscoverV40{50%{filter:brightness(1.55)}}
+</style><style>
+/* V41 unmistakable latest-feature highlight */
+.ops-node.parent-new-v40,.prep-node-v39.new-v39{
+ background:#FFF200!important;color:#071f15!important;
+ border:7px solid #FF3B30!important;outline:8px solid #FFFFFF!important;
+ box-shadow:0 0 0 16px #FFF200,0 0 70px 32px rgba(255,242,0,.95)!important;
+ animation:v41flash .65s ease-in-out infinite alternate!important;
+ transform:translate(-50%,-50%) scale(1.08)!important;
+}
+.ops-node.parent-new-v40 span,.prep-node-v39.new-v39 span{color:#071f15!important}
+.ops-node.parent-new-v40:after,.prep-node-v39.new-v39:after{
+ content:"NEW — TAP ME"!important;background:#FF3B30!important;color:#fff!important;
+ border:4px solid #fff!important;padding:7px 10px!important;font-size:9px!important;
+ top:-34px!important;z-index:99!important
+}
+@keyframes v41flash{from{filter:brightness(1)}to{filter:brightness(1.35)}}
 </style></head>
 <body>
 <div class="wrap">
@@ -135,7 +151,7 @@ function doneCount(o){return (o.order_items||[]).filter(i=>i.prep_status==='done
 function allDone(o){return (o.order_items||[]).length>0&&doneCount(o)===(o.order_items||[]).length}
 function render(){const alerts=inventory.filter(x=>x.availability!=='available').length;app.innerHTML=`${demo?'<div class="demo"><b>DEMO MODE:</b> no real customer records, live inventory, real orders, or payments are changed.</div>':''}<section class="ops-orbit" id="opsOrbit"><button class="ops-center" id="opsCenter">BARISTA<small>${counts('new')} WAIT • ${counts('preparing')} PREP • ${counts('ready')} READY</small></button>${[
 ['new','🧾','NEW ORDERS'],['preparing','☕','PREPARING'],['ready','✓','HANDOFF'],['inventory','▣','STOCK'],['kitchen','▤','BAR DISPLAY'],['handover','⇄','HANDOVER'],['summary','▥','SHIFT SUMMARY'],['audit','⌕','AUDIT LOG']
-].map((x,i)=>`<button class="ops-node${x[0]==='preparing' && !['recipe','progress','timer','special','blocked','remake','equipment','ready'].every(k=>localStorage.getItem('prep_v40_'+k))?' parent-new-v40':''}" data-orbit="${x[0]}" style="--ox:${[50,76,87,76,50,24,13,24][i]}%;--oy:${[8,20,50,80,92,80,50,20][i]}%"><span>${x[1]}</span>${x[2]}</button>`).join('')}</section><section id="moduleShell" style="display:none"><button class="btn cream orbit-back" id="backOrbit">← Back to Orbit</button><section id="area"></section></section>`;document.querySelectorAll('[data-orbit]').forEach(b=>b.onclick=()=>{const id=b.dataset.orbit;if(id==='new'){openNewOrdersOrbitV38();return}if(id==='preparing'){openPreparingOrbitV39();return}localStorage.setItem('staff_orbit_v36_'+id,'1');b.classList.remove('new-v36');if(['preparing','ready','inventory'].includes(id)){view=id;subview='orders'}else{subview=id}document.querySelector('#opsOrbit').style.display='none';document.querySelector('#moduleShell').style.display='block';renderArea()});document.querySelector('#opsCenter').onclick=()=>{document.querySelector('[data-orbit="new"]').click()};document.querySelector('#backOrbit').onclick=()=>{document.querySelector('#moduleShell').style.display='none';document.querySelector('#opsOrbit').style.display='grid'}}
+].map((x,i)=>`<button class="ops-node${x[0]==='preparing' && !localStorage.getItem('prep_parent_seen_v41')?' parent-new-v40':''}" data-orbit="${x[0]}" style="--ox:${[50,76,87,76,50,24,13,24][i]}%;--oy:${[8,20,50,80,92,80,50,20][i]}%"><span>${x[1]}</span>${x[2]}</button>`).join('')}</section><section id="moduleShell" style="display:none"><button class="btn cream orbit-back" id="backOrbit">← Back to Orbit</button><section id="area"></section></section>`;document.querySelectorAll('[data-orbit]').forEach(b=>b.onclick=()=>{const id=b.dataset.orbit;if(id==='new'){openNewOrdersOrbitV38();return}if(id==='preparing'){localStorage.setItem('prep_parent_seen_v41','1');openPreparingOrbitV39();return}localStorage.setItem('staff_orbit_v36_'+id,'1');b.classList.remove('new-v36');if(['preparing','ready','inventory'].includes(id)){view=id;subview='orders'}else{subview=id}document.querySelector('#opsOrbit').style.display='none';document.querySelector('#moduleShell').style.display='block';renderArea()});document.querySelector('#opsCenter').onclick=()=>{document.querySelector('[data-orbit="new"]').click()};document.querySelector('#backOrbit').onclick=()=>{document.querySelector('#moduleShell').style.display='none';document.querySelector('#opsOrbit').style.display='grid'}}
 
 const NEW_ORDER_TOOLS_V38=[
  ['incoming','🧾','INCOMING QUEUE'],['priority','⚡','PRIORITY / RUSH'],['changes','✎','ORDER CHANGES'],
@@ -177,9 +193,9 @@ function openPreparingOrbitV39(){
  const main=document.querySelector('#opsOrbit'),shell=document.querySelector('#moduleShell'),area=document.querySelector('#area'),a=prepOrdersV39(),late=a.filter(prepLateV39).length;
  if(main)main.style.display='none';if(shell)shell.style.display='block';
  const pts=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
- area.innerHTML='<div class="suborbit-title"><h2>Preparing</h2><p>Drink preparation control</p></div><section class="prep-orbit-v39"><button class="prep-center-v39" id="prepCenterV39">PREPARING<small>'+a.length+' ACTIVE • '+late+' LATE</small></button>'+PREP_TOOLS_V39.map((x,i)=>'<button class="prep-node-v39 '+(localStorage.getItem('prep_v40_'+x[0])?'':'new-v39')+'" data-preptool="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
+ area.innerHTML='<div class="suborbit-title"><h2>Preparing</h2><p>Drink preparation control</p></div><section class="prep-orbit-v39"><button class="prep-center-v39" id="prepCenterV39">PREPARING<small>'+a.length+' ACTIVE • '+late+' LATE</small></button>'+PREP_TOOLS_V39.map((x,i)=>'<button class="prep-node-v39 '+(localStorage.getItem('prep_child_seen_v41_'+x[0])?'':'new-v39')+'" data-preptool="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
  document.querySelector('#backOrbit').onclick=()=>{shell.style.display='none';main.style.display='block'};
- document.querySelectorAll('[data-preptool]').forEach(b=>b.onclick=()=>{localStorage.setItem('prep_v40_'+b.dataset.preptool,'1');b.classList.remove('new-v39');openPrepToolV39(b.dataset.preptool)});
+ document.querySelectorAll('[data-preptool]').forEach(b=>b.onclick=()=>{localStorage.setItem('prep_child_seen_v41_'+b.dataset.preptool,'1');b.classList.remove('new-v39');openPrepToolV39(b.dataset.preptool)});
  document.querySelector('#prepCenterV39').onclick=()=>openPrepToolV39('progress');
 }
 function prepRowsV39(a){return a.length?a.map(o=>'<div class="v38row"><b>'+esc(o.order_ref)+'</b> • '+esc(o.customer_name||'Customer')+'<br><small>'+doneCount(o)+' / '+(o.order_items||[]).length+' items done'+(prepLateV39(o)?' • ⚠ LATE':'')+'</small></div>').join(''):'<div class="empty">No orders preparing.</div>'}
