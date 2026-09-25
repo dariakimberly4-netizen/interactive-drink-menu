@@ -75,6 +75,9 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 .healthy-node-v66.new-healthy-v66{outline:6px solid #fff200;box-shadow:0 0 0 11px rgba(255,242,0,.24),0 0 42px rgba(255,242,0,.55)}
 .nutrition-list-v66{display:grid;gap:10px;margin-top:14px}.nutrition-card-v66{display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;padding:11px;border:1px solid rgba(255,255,255,.12);border-radius:14px}.nutrition-card-v66 img{width:60px;height:60px;object-fit:cover;border-radius:10px}.nutrition-note-v66{padding:12px;border:1px solid rgba(244,200,111,.35);border-radius:12px;color:#d5e0da;font-size:12px;margin-top:12px}
 @media(max-width:650px){.healthy-orbit-v66{height:430px}.healthy-center-v66{width:118px;height:118px;font-size:11px}.healthy-node-v66{width:84px;height:84px;font-size:7px}.healthy-node-v66 span{font-size:17px}}
+
+.lighter-v68{display:grid;gap:12px;margin-top:14px}.lighter-v68 label{font-size:11px;font-weight:900}.lighter-v68 select{width:100%;min-height:46px;background:#fff;color:#17352a;border:1px solid #ccd5d0;border-radius:11px;padding:0 12px;font-size:16px}.lighter-result-v68{padding:14px;border:1px solid rgba(244,200,111,.4);border-radius:14px;background:rgba(255,255,255,.04)}.size-grid-v68{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.size-card-v68{padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:14px;text-align:center}.size-card-v68 b{display:block;font-size:18px}.verified-v68{font-size:10px;color:#9eb5aa;margin-top:7px}.cart-nutrition-v68{padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:14px;margin-top:10px}.cart-nutrition-v68 strong{font-size:22px;color:#f4d992}
+@media(max-width:500px){.size-grid-v68{grid-template-columns:1fr}}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
@@ -177,15 +180,15 @@ function openTrackingV65(){
 }
 
 /* HEALTHY CHOICES ORBIT V66 */
-const healthyToolsV66=[['nutrition','▥','NUTRITION'],['calories','◎','CALORIES'],['protein','P','PROTEIN'],['sugar','◇','SUGAR'],['sodium','S','SODIUM'],['allergens','!','ALLERGENS'],['diet','⌕','DIET FILTERS'],['compare','⚖','COMPARE']];
+const healthyToolsV66=[['lighter','☕','LIGHTER DRINK'],['size','◉','BY SIZE'],['cartnutrition','🛒','CART NUTRITION'],['nutrition','▥','NUTRITION'],['calories','◎','CALORIES'],['allergens','!','ALLERGENS'],['diet','⌕','DIET FILTERS'],['compare','⚖','COMPARE']];
 const healthyPtsV66=[[50,7],[79,18],[93,50],[79,82],[50,93],[21,82],[7,50],[21,18]];
 let customerWorkspaceOriginalV67=customerWorkspaceV63.innerHTML;
 function restoreCustomerOrbitV67(){document.body.classList.remove('customer-workspace-open-v64');customerWorkspaceV63.innerHTML=customerWorkspaceOriginalV67;customerWorkspaceV63.style.display='none';customerOrbitWrapV63.style.display='block';scrollTo(0,0)}
 function openHealthyOrbitV66(){
  customerOrbitWrapV63.style.display='none';customerWorkspaceV63.style.display='block';document.body.classList.add('customer-workspace-open-v64');
- customerWorkspaceV63.innerHTML='<button class="topbtn customer-back-v63" id="healthyBackMainV66">‹ Back to Customer Orbit</button><section class="hero"><div><span class="eyebrow">CUSTOMER WELLNESS</span><h1>Healthy Choices</h1><div class="count">Nutrition-aware menu tools</div></div></section><section class="healthy-orbit-v66"><button class="healthy-center-v66" data-health-v66="nutrition">HEALTHY<small>CHOICES ORBIT</small></button>'+healthyToolsV66.map((x,i)=>'<button class="healthy-node-v66 '+(localStorage.getItem('healthy_seen_v66_'+x[0])?'':'new-healthy-v66')+'" data-health-v66="'+x[0]+'" style="left:'+healthyPtsV66[i][0]+'%;top:'+healthyPtsV66[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
+ customerWorkspaceV63.innerHTML='<button class="topbtn customer-back-v63" id="healthyBackMainV66">‹ Back to Customer Orbit</button><section class="hero"><div><span class="eyebrow">CUSTOMER WELLNESS</span><h1>Healthy Choices</h1><div class="count">Nutrition-aware menu tools</div></div></section><section class="healthy-orbit-v66"><button class="healthy-center-v66" data-health-v66="nutrition">HEALTHY<small>CHOICES ORBIT</small></button>'+healthyToolsV66.map((x,i)=>'<button class="healthy-node-v66 '+((['lighter','size','cartnutrition'].includes(x[0])&&!localStorage.getItem('healthy_new_v68_'+x[0]))?'new-healthy-v66':'')+'" data-health-v66="'+x[0]+'" style="left:'+healthyPtsV66[i][0]+'%;top:'+healthyPtsV66[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
  $('#healthyBackMainV66').onclick=restoreCustomerOrbitV67;
- document.querySelectorAll('[data-health-v66]').forEach(b=>b.onclick=()=>{localStorage.setItem('healthy_seen_v66_'+b.dataset.healthV66,'1');b.classList.remove('new-healthy-v66');openHealthyToolV66(b.dataset.healthV66)});
+ document.querySelectorAll('[data-health-v66]').forEach(b=>b.onclick=()=>{localStorage.setItem('healthy_seen_v66_'+b.dataset.healthV66,'1');localStorage.setItem('healthy_new_v68_'+b.dataset.healthV66,'1');b.classList.remove('new-healthy-v66');openHealthyToolV66(b.dataset.healthV66)});
 }
 function knownNutritionV66(){
  return products.filter(p=>Number.isFinite(Number(p.cal))).sort((a,b)=>Number(a.cal)-Number(b.cal));
@@ -193,15 +196,38 @@ function knownNutritionV66(){
 function cardsV66(arr,labelFn){return '<div class="nutrition-list-v66">'+arr.slice(0,18).map(p=>'<div class="nutrition-card-v66"><img src="'+p.img+'"><div><b>'+p.name+'</b><small style="display:block;color:#9eb5aa">'+p.cat+'</small></div><strong>'+labelFn(p)+'</strong></div>').join('')+'</div>'}
 function openHealthyToolV66(id){
  let title='',body='',a=knownNutritionV66();
- if(id==='nutrition'){title='Nutrition Information';body=cardsV66(a,p=>p.cal+' cal')+'<div class="nutrition-note-v66">Nutrition shown only where values are available in this demo dataset. Customizations may change nutrition.</div>'}
- if(id==='calories'){title='Calories';body=cardsV66(a,p=>p.cal+' cal')}
- if(id==='protein'){title='Protein';body='<div class="empty"><b>Protein data not yet verified.</b><span>This system will not invent nutrition values. Add an official nutrition data source before displaying grams of protein.</span></div>'}
- if(id==='sugar'){title='Sugar';body='<div class="empty"><b>Sugar data not yet verified.</b><span>Exact sugar values should come from verified nutrition data, including customization effects.</span></div>'}
- if(id==='sodium'){title='Sodium';body='<div class="empty"><b>Sodium data not yet verified.</b><span>Exact sodium values will appear only when supported by verified nutrition data.</span></div>'}
- if(id==='allergens'){title='Allergen Information';body='<div class="empty"><b>Check official allergen information.</b><span>Preparation areas may handle multiple allergens. Do not rely on this demo as a medical or allergy-safety guarantee.</span></div>'}
- if(id==='diet'){title='Dietary Filters';body='<div class="empty"><b>Diet filters require verified ingredient data.</b><span>Vegetarian, dairy-free and similar labels will only be enabled when ingredients and preparation information are confirmed.</span></div>'}
- if(id==='compare'){title='Nutrition Compare';body=cardsV66(a.slice(0,8),p=>p.cal+' cal')+'<div class="nutrition-note-v66">Use the existing Compare tool to select products side-by-side. Current verified field in this demo is calories where listed.</div>'}
+ if(id==='lighter'){
+  title='Build a Lighter Drink';
+  const drinks=a.filter(p=>p.kind==='drink');
+  body='<div class="lighter-v68"><label>DRINK<select id="lightDrinkV68">'+drinks.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select></label><label>SIZE<select id="lightSizeV68"><option>Tall</option><option>Grande</option><option>Venti</option></select></label><label>MILK / BASE<select id="lightMilkV68"><option>Keep standard recipe</option><option>Change milk / base at checkout</option></select></label><label>SYRUP / TOPPINGS<select id="lightExtrasV68"><option>Keep standard recipe</option><option>Ask for fewer extras</option><option>No whipped cream where applicable</option></select></label><div class="lighter-result-v68" id="lightResultV68"></div></div>';
+ }
+ if(id==='size'){
+  title='Nutrition by Size';
+  const drinks=a.filter(p=>p.kind==='drink');
+  body='<div class="lighter-v68"><label>SELECT DRINK<select id="sizeDrinkV68">'+drinks.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('')+'</select></label><div id="sizeResultV68"></div></div>';
+ }
+ if(id==='cartnutrition'){
+  title='Cart Nutrition Summary';
+  const cart=read(cartKey,[]);let known=0,total=0,unknown=0;
+  cart.forEach(x=>{const p=product(x.id),q=Number(x.qty)||1;if(p&&Number.isFinite(Number(p.cal))){known+=q;total+=Number(p.cal)*q}else unknown+=q});
+  body=cart.length?'<div class="cart-nutrition-v68"><small>KNOWN CALORIES IN CART</small><br><strong>'+total+' cal</strong><p>'+known+' item(s) with listed calorie data'+(unknown?' • '+unknown+' item(s) without verified calorie data':'')+'</p></div><div class="nutrition-note-v66">This is a menu-information summary, not a dietary recommendation. Size and customizations can change nutrition.</div>':'<div class="empty"><b>Your cart is empty.</b><span>Add products to see available nutrition information.</span></div>';
+ }
+ else if(id==='nutrition'){title='Nutrition Information';body=cardsV66(a,p=>p.cal+' cal')+'<div class="nutrition-note-v66">Nutrition shown only where values are available in this demo dataset. Customizations may change nutrition.</div>'}
+ else if(id==='calories'){title='Calories';body=cardsV66(a,p=>p.cal+' cal')}
+ else if(id==='protein'){title='Protein';body='<div class="empty"><b>Protein data not yet verified.</b><span>This system will not invent nutrition values. Add an official nutrition data source before displaying grams of protein.</span></div>'}
+ else if(id==='sugar'){title='Sugar';body='<div class="empty"><b>Sugar data not yet verified.</b><span>Exact sugar values should come from verified nutrition data, including customization effects.</span></div>'}
+ else if(id==='sodium'){title='Sodium';body='<div class="empty"><b>Sodium data not yet verified.</b><span>Exact sodium values will appear only when supported by verified nutrition data.</span></div>'}
+ else if(id==='allergens'){title='Allergen Information';body='<div class="empty"><b>Check official allergen information.</b><span>Preparation areas may handle multiple allergens. Do not rely on this demo as a medical or allergy-safety guarantee.</span></div>'}
+ else if(id==='diet'){title='Dietary Filters';body='<div class="empty"><b>Diet filters require verified ingredient data.</b><span>Vegetarian, dairy-free and similar labels will only be enabled when ingredients and preparation information are confirmed.</span></div>'}
+ else if(id==='compare'){title='Nutrition Compare';body=cardsV66(a.slice(0,8),p=>p.cal+' cal')+'<div class="nutrition-note-v66">Use the existing Compare tool to select products side-by-side. Current verified field in this demo is calories where listed.</div>'}
  $('#healthyTitleV66').textContent=title;$('#healthyBodyV66').innerHTML=body;$('#healthyModal').classList.add('open');
+ if(id==='lighter'){
+  const renderLight=()=>{const p=product($('#lightDrinkV68').value);$('#lightResultV68').innerHTML='<b>'+p.name+'</b><p>Listed base nutrition: <strong>'+p.cal+' calories</strong></p><div class="verified-v68">Exact nutrition after milk, syrup, topping or size changes is not calculated unless verified customization data is available.</div>'};
+  $('#lightDrinkV68').onchange=renderLight;$('#lightSizeV68').onchange=renderLight;$('#lightMilkV68').onchange=renderLight;$('#lightExtrasV68').onchange=renderLight;renderLight();
+ }
+ if(id==='size'){
+  const renderSize=()=>{const p=product($('#sizeDrinkV68').value);$('#sizeResultV68').innerHTML='<div class="size-grid-v68"><div class="size-card-v68"><b>Tall</b><span>Nutrition varies by size</span></div><div class="size-card-v68"><b>Grande</b><span>'+p.cal+' cal listed*</span></div><div class="size-card-v68"><b>Venti</b><span>Nutrition varies by size</span></div></div><div class="nutrition-note-v66">*The current dataset provides one listed calorie value and does not reliably identify its serving size. Tall/Venti values are intentionally not estimated.</div>'};$('#sizeDrinkV68').onchange=renderSize;renderSize();
+ }
 }
 /* CUSTOMER ORBIT JS V63 */
 const customerOrbitWrapV63=document.querySelector('#customerOrbitWrapV63');
@@ -221,7 +247,7 @@ function openCustomerV63(id){
 document.querySelectorAll('[data-customer-v63]').forEach(b=>{const id=b.dataset.customerV63;if(id!=='healthy'&&localStorage.getItem('customer_orbit_seen_v63_'+id))b.classList.remove('new-customer-v63');b.addEventListener('click',()=>openCustomerV63(id))});
 const healthyMainV67=document.querySelector('[data-customer-v63="healthy"]');
 if(healthyMainV67){
- healthyMainV67.classList.toggle('new-customer-v63',!localStorage.getItem('healthy_parent_seen_v67'));
+ healthyMainV67.classList.toggle('new-customer-v63',!localStorage.getItem('healthy_parent_seen_v68'));
  healthyMainV67.addEventListener('click',()=>{localStorage.setItem('healthy_parent_seen_v67','1');healthyMainV67.classList.remove('new-customer-v63')});
 }
 document.querySelector('#customerBackV63')?.addEventListener('click',()=>{document.body.classList.remove('customer-workspace-open-v64');scrollTo(0,0)});
