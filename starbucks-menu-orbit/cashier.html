@@ -150,6 +150,12 @@
 .business-table th{color:#f4c86f;font-size:9px;text-transform:uppercase;letter-spacing:.08em}
 .business-note{padding:12px;border-radius:13px;background:rgba(244,200,111,.08);border:1px solid rgba(244,200,111,.22);margin-top:10px}
 @media(max-width:620px){.business-bar{grid-template-columns:90px 1fr auto}.business-table{font-size:11px}}
+
+/* CASHIER NEW FEATURE HIGHLIGHTS V6 */
+.choice[data-discount]{position:relative}
+.choice[data-discount]:not([data-discount="None"]){border:2px solid #ffd86b;box-shadow:0 0 0 3px rgba(255,216,107,.12),0 0 22px rgba(255,216,107,.18)}
+.choice[data-discount]:not([data-discount="None"])::after{content:'NEW';position:absolute;top:-9px;right:-5px;padding:4px 6px;border-radius:999px;background:#ffd86b;color:#07331f;font:950 7px/1 system-ui;letter-spacing:.08em}
+#customerName{border:2px solid #ffd86b;box-shadow:0 0 0 3px rgba(255,216,107,.10)}
 </style>
 </head>
 <body>
