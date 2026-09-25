@@ -287,6 +287,13 @@
 .voucher-total span{display:flex;justify-content:space-between;color:#d9e7df}.voucher-total strong{font-size:20px;color:#ffdf00}
 #vvScan{border:2px dashed #ffdf00!important;color:#ffe77a!important}
 .cashier-orbit-node[data-orbit-id="Voucher"]{animation:featureHubPulse 1.25s ease-in-out infinite!important}
+
+/* POS COMPLETION V19 */
+.cashier-orbit-node[data-orbit-id="Cash Reconciliation"],
+.cashier-orbit-node[data-orbit-id="Payment Protection"],
+.cashier-orbit-node[data-orbit-id="Receipt & Labels"],
+.cashier-orbit-node[data-orbit-id="Audit Trail"]{border:3px solid #ffdf00!important;box-shadow:0 0 0 4px rgba(255,223,0,.15),0 0 30px rgba(255,223,0,.45)!important}
+.cashier-orbit-node[data-orbit-id="Payment Protection"]::after{content:'NEW';position:absolute;top:-9px;right:-5px;background:#ffdf00;color:#073421;padding:5px 7px;border-radius:999px;font:1000 8px/1 system-ui}
 </style>
 </head>
 <body>
@@ -386,6 +393,40 @@ function toolShiftSummary(){
 }
 
 function toolDiscounts(){openCashierTool('Discounts & Vouchers',`<div class="tool-grid"><div class="tool-card discount-feature senior-feature"><b>👴 SENIOR CITIZEN</b><small>Verify Senior Citizen ID and apply eligible discount.</small><button type="button" class="btn primary" data-disc="Senior Citizen">APPLY SENIOR</button></div><div class="tool-card discount-feature pwd-feature"><b>♿ PWD</b><small>Verify PWD ID and apply eligible discount.</small><button type="button" class="btn primary" data-disc="PWD">APPLY PWD</button></div><div class="tool-card"><b>Promo Code</b><small>Validate branch promo.</small><button type="button" class="btn" data-disc="Promo Code">VALIDATE</button></div><div class="tool-card"><b>Voucher</b><small>Validate and prevent duplicate redemption.</small><button type="button" class="btn" data-disc="Voucher">VALIDATE / REDEEM</button></div><div class="tool-card"><b>Search Order</b><small>Find by order number or customer.</small><button type="button" class="btn" id="quickSearchOrder">SEARCH</button></div><div class="tool-card"><b>Shift Summary</b><small>Sales and reconciliation overview.</small><button type="button" class="btn" id="quickShiftSummary">OPEN</button></div></div>`);document.querySelectorAll('#cashierToolModal [data-disc]').forEach(b=>b.onclick=()=>{if(b.dataset.disc==='Senior Citizen'||b.dataset.disc==='PWD'){toolDiscountVerify();setTimeout(()=>{const s=document.querySelector('#dvType');if(s)s.value=b.dataset.disc},0);return;}if(b.dataset.disc==='Voucher'){toolVoucherVerify();return;}discountType=b.dataset.disc;logCashierOp('Discount/Voucher',b.dataset.disc);b.textContent='APPLIED ✓';document.querySelectorAll('#cashierToolModal [data-disc]').forEach(x=>{if(x!==b&&x.dataset.disc!=='Promo Code'&&x.dataset.disc!=='Voucher')x.textContent=x.dataset.disc==='PWD'?'APPLY PWD':'APPLY SENIOR'})});document.querySelector('#quickSearchOrder')?.addEventListener('click',toolSearchOrder);document.querySelector('#quickShiftSummary')?.addEventListener('click',toolShiftSummary)}
+
+function toolPaymentProtection(){
+ const paid=activeOrders.filter(x=>(x.payment_status||'Pending')==='Paid').length;
+ openCashierTool('Payment Protection',`<div class="tool-grid">
+ <div class="tool-card"><b>🔒 Paid Order Lock</b><small>${paid} paid order(s) protected from duplicate collection.</small><button class="btn primary" id="ppLock">CHECK PROTECTION</button></div>
+ <div class="tool-card"><b>↻ Payment Retry</b><small>Retry failed payment or switch method.</small><button class="btn" id="ppRetry">OPEN RETRY</button></div>
+ <div class="tool-card"><b>🔐 Manager Override</b><small>Void, refund and exceptional changes require authorization.</small><button class="btn" id="ppManager">MANAGER APPROVAL</button></div>
+ <div class="tool-card"><b>☁ Offline Queue</b><small>Demo sync status for transactions waiting to upload.</small><button class="btn" id="ppOffline">SYNC STATUS</button></div>
+ </div>`);
+ document.querySelector('#ppLock').onclick=()=>alert('Paid Order Lock is active. Paid transactions cannot be collected twice.');
+ document.querySelector('#ppRetry').onclick=()=>openCashierTool('Payment Retry',`<div class="form"><label>Order Number<input id="retryOrder" placeholder="MO-1201"></label><label>New Method<select id="retryMethod"><option>Cash</option><option>Card</option><option>E-Wallet</option></select></label><button class="btn primary" id="retryGo">RETRY PAYMENT</button></div>`);
+ document.querySelector('#ppManager').onclick=toolApprovals;
+ document.querySelector('#ppOffline').onclick=()=>alert(navigator.onLine?'ONLINE • Transactions can sync.':'OFFLINE • Transactions should remain queued until connection returns.');
+}
+function toolReconciliation(){
+ const tx=demoTransactions(),cashSales=tx.filter(x=>String(x.payment||x.payment_method||'').toLowerCase().includes('cash')).reduce((s,x)=>s+Number(x.total||x.total_amount||0),0);
+ openCashierTool('Cash Reconciliation',`<div class="form ops-upgrade">
+ <label>Opening Cash<input id="recOpen" type="number" min="0" value="2000"></label>
+ <label>Cash Sales<input id="recSales" type="number" value="${cashSales}" readonly></label>
+ <label>Cash In<input id="recIn" type="number" min="0" value="0"></label>
+ <label>Cash Out<input id="recOut" type="number" min="0" value="0"></label>
+ <label>Actual Cash<input id="recActual" type="number" min="0" value="0"></label>
+ <button class="btn primary" id="recCalc">RECONCILE</button><div id="recResult"></div></div>`);
+ document.querySelector('#recCalc').onclick=()=>{const o=+recOpen.value||0,s=+recSales.value||0,i=+recIn.value||0,out=+recOut.value||0,a=+recActual.value||0,e=o+s+i-out,v=a-e;recResult.innerHTML=`<div class="voucher-total"><span>Expected Cash <b>${money(e)}</b></span><span>Actual Cash <b>${money(a)}</b></span><strong>VARIANCE ${money(v)}</strong></div>`;logCashierOp('Cash Reconciliation','Variance '+money(v));};
+}
+function toolReceiptCenter(){
+ openCashierTool('Receipt & Label Center',`<div class="tool-grid"><div class="tool-card"><b>🧾 Receipt</b><small>Print or reprint transaction receipt.</small><button class="btn" onclick="window.print()">PRINT / REPRINT</button></div><div class="tool-card"><b>🏷 Cup / Order Label</b><small>Customer, order number, item and customization label.</small><button class="btn primary" id="labelPrint">PRINT LABEL</button></div><div class="tool-card"><b>✉ Digital Receipt</b><small>Demo digital receipt workflow.</small><button class="btn" id="digitalReceipt">SEND DIGITAL</button></div></div>`);
+ document.querySelector('#labelPrint').onclick=()=>window.print();
+ document.querySelector('#digitalReceipt').onclick=()=>alert('Digital receipt queued in demo mode.');
+}
+function toolAuditTrail(){
+ const a=readLocal('cashier_ops_v2',readLocal('cashier_ops',[]));
+ openCashierTool('Transaction Audit Trail',a.length?`<div class="orders">${a.slice(-20).reverse().map(x=>`<div class="order-row"><div><b>${esc(x.action||x.type||'Cashier action')}</b><small>${esc(x.detail||'')} • ${esc(x.at||x.time||'')}</small></div></div>`).join('')}</div>`:'<div class="empty">No cashier audit entries yet.</div>');
+}
 function toolReports(){const tx=demoTransactions(),sales=tx.reduce((s,x)=>s+Number(x.total||x.total_amount||0),0),avg=tx.length?sales/tx.length:0;openCashierTool('Cashier Reports',`<div class="kpi-grid"><div class="kpi"><b>${money(sales)}</b><span>Sales</span></div><div class="kpi"><b>${tx.length}</b><span>Transactions</span></div><div class="kpi"><b>${money(avg)}</b><span>Average Order</span></div></div><div class="tool-card"><b>Payment Mix</b><small>Cash, Card, E-Wallet and Pending transactions summarized from demo activity.</small></div>`)}
 function toolRecent(){const tx=demoTransactions();openCashierTool('Recent Transactions',tx.map(x=>`<div class="receipt-row"><div><b>${esc(x.ref||x.order_ref)}</b><small>${money(x.total||x.total_amount)} • ${esc(x.pay||x.payment_status||'Paid')}</small></div><button class="btn" data-reorder="${esc(x.ref||x.order_ref)}">REORDER</button></div>`).join(''));document.querySelectorAll('[data-reorder]').forEach(b=>b.onclick=()=>{cart=[{...products[0],qty:1,size:'Grande',style:'Hot',milk:'Whole Milk',sugar:'Regular',ice:'Regular Ice',addon:'None',note:''}];logCashierOp('Quick Reorder',b.dataset.reorder);document.querySelector('#cashierToolModal').classList.remove('open');screen='new';render()})}
 document.querySelector('#cashierToolClose').onclick=()=>document.querySelector('#cashierToolModal').classList.remove('open');
@@ -570,6 +611,10 @@ function home(){
       {icon:'◴',label:'Open Orders',sub:String(activeOrders.length),run:()=>{screen='orders';render()}},
       {icon:'💰',label:'Cash Drawer',sub:'Open / cash in / cash out',run:toolDrawer},
       {icon:'🏁',label:'End Shift',sub:'Closing summary',run:toolEndShift},
+      {icon:'⚖',label:'Cash Reconciliation',sub:'Expected vs actual cash',run:toolReconciliation},
+      {icon:'🔒',label:'Payment Protection',sub:'Retry • lock • override',run:toolPaymentProtection},
+      {icon:'🧾',label:'Receipt & Labels',sub:'Print • reprint • cup label',run:toolReceiptCenter},
+      {icon:'📜',label:'Audit Trail',sub:'Cashier transaction history',run:toolAuditTrail},
       {icon:'📊',label:'Cashier Reports',sub:'Sales & payment mix',run:toolReports}
     ],
     business:[
