@@ -877,7 +877,7 @@ function home(){
           const ry=window.innerWidth<=430?185:(window.innerWidth<=720?220:255);
           const x=50+Math.cos(a)*rx/(Math.min(680,window.innerWidth*.94))*100;
           const y=50+Math.sin(a)*ry/(window.innerWidth<=430?500:(window.innerWidth<=720?560:680))*100;
-          return `<button type="button" class="cashier-orbit-node ${isMain&&['orders','shift'].includes(item.id)?'latest-v25-hub':''} ${!isMain&&['Park Order','Order Recall','Cashier Handover','Daily Z-Report'].includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
+          return `<button type="button" class="cashier-orbit-node ${isMain&&((item.id==='orders'&&['Park Order','Order Recall'].some(x=>!seenNewV26().includes(x)))||(item.id==='shift'&&['Cashier Handover','Daily Z-Report'].some(x=>!seenNewV26().includes(x))))?'latest-v25-hub':''} ${!isMain&&NEW_FEATURES_V26.includes(item.label)&&!seenNewV26().includes(item.label)?'latest-v25-item':''}" data-orbit-id="${esc(item.id||item.label)}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%)">
             <span class="ico">${item.icon}</span><span>${esc(item.label)}</span><small>${esc(item.sub||'')}</small>
           </button>`;
         }).join('')}
@@ -931,5 +931,14 @@ function ordersView(){document.querySelector('#view').innerHTML=`<section class=
 document.querySelector('#closeProblem').onclick=()=>document.querySelector('#problemModal').classList.remove('open');document.querySelector('#submitProblem').onclick=()=>{const note=document.querySelector('#problemNote').value.trim();if(document.querySelector('#problemReason').value==='Other'&&!note){alert('Please add details for Other.');return}document.querySelector('#problemModal').classList.remove('open');document.querySelector('#problemNote').value='';alert(demo?'Demo problem recorded for manager review.':'Problem flagged for Branch Manager review.')};
 if(!db)login();else init();
 </script>
-<script src="new-feature-highlights.js"></script><script src="ecosystem-sync.js"></script></body>
+<script src="new-feature-highlights.js"></script><script src="ecosystem-sync.js">
+/* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
+const NEW_FEATURES_V26=['Park Order','Order Recall','Cashier Handover','Daily Z-Report'];
+const NEW_SEEN_KEY_V26='cashier_seen_new_features_v26';
+function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
+function markNewSeenV26(label){
+ if(!NEW_FEATURES_V26.includes(label))return;
+ const s=seenNewV26(); if(!s.includes(label)){s.push(label);localStorage.setItem(NEW_SEEN_KEY_V26,JSON.stringify(s))}
+}
+</script></body>
 </html>
