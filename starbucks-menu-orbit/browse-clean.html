@@ -92,7 +92,18 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 <div class="modal" id="detailModal"><div class="modal-card"><div class="modal-head"><div><h2 id="detailTitle">Product</h2><small id="detailMeta"></small></div><button data-close="detailModal">×</button></div><div id="detailBody"></div></div></div>
 <div class="modal" id="cartModal"><div class="modal-card"><div class="modal-head"><div><h2>Your Cart</h2><small>Demo cart saved in this browser</small></div><button data-close="cartModal">×</button></div><div id="cartList"></div></div></div>
 </div><div class="modal" id="checkoutModal"><div class="modal-card"><div class="modal-head"><div><h2>Checkout</h2><small>Review and place your order</small></div><button data-close="checkoutModal">×</button></div><div id="checkoutBody"></div></div></div>
-<div class="modal" id="healthyModal"><div class="modal-card"><div class="modal-head"><div><h2 id="healthyTitleV66">Healthy Choices</h2><small>Nutrition-aware menu tools</small></div><button data-close="healthyModal">×</button></div><div id="healthyBodyV66"></div></div></div>
+<div class="modal" id="healthyOrbitV70"><div class="modal-card" style="max-width:720px"><div class="modal-head"><div><h2>Healthy Choices</h2><small>Tap a feature</small></div><button type="button" onclick="document.getElementById('healthyOrbitV70').classList.remove('open')">×</button></div>
+<div class="healthy-orbit-v66" style="height:min(620px,82vw)">
+<button type="button" class="healthy-center-v66" onclick="openHealthyToolV66('lighter')">HEALTHY<small>CHOICES</small></button>
+<button type="button" class="healthy-node-v66 new-healthy-v66" data-v70="lighter" onclick="healthyV70('lighter',this)" style="left:50%;top:7%"><span>☕</span>LIGHTER DRINK</button>
+<button type="button" class="healthy-node-v66 new-healthy-v66" data-v70="size" onclick="healthyV70('size',this)" style="left:79%;top:18%"><span>◉</span>BY SIZE</button>
+<button type="button" class="healthy-node-v66 new-healthy-v66" data-v70="cartnutrition" onclick="healthyV70('cartnutrition',this)" style="left:93%;top:50%"><span>🛒</span>CART NUTRITION</button>
+<button type="button" class="healthy-node-v66" onclick="healthyV70('nutrition',this)" style="left:79%;top:82%"><span>▥</span>NUTRITION</button>
+<button type="button" class="healthy-node-v66" onclick="healthyV70('calories',this)" style="left:50%;top:93%"><span>◎</span>CALORIES</button>
+<button type="button" class="healthy-node-v66" onclick="healthyV70('allergens',this)" style="left:21%;top:82%"><span>!</span>ALLERGENS</button>
+<button type="button" class="healthy-node-v66" onclick="healthyV70('diet',this)" style="left:7%;top:50%"><span>⌕</span>DIET FILTERS</button>
+<button type="button" class="healthy-node-v66" onclick="healthyV70('compare',this)" style="left:21%;top:18%"><span>⚖</span>COMPARE</button>
+</div></div></div><div class="modal" id="healthyModal"><div class="modal-card"><div class="modal-head"><div><h2 id="healthyTitleV66">Healthy Choices</h2><small>Nutrition-aware menu tools</small></div><button data-close="healthyModal">×</button></div><div id="healthyBodyV66"></div></div></div>
 <div class="modal" id="trackingModal"><div class="modal-card"><div class="modal-head"><div><h2>Order Tracking</h2><small>Your latest customer order</small></div><button data-close="trackingModal">×</button></div><div id="trackingBody"></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
@@ -197,6 +208,7 @@ function knownNutritionV66(){
  return products.filter(p=>Number.isFinite(Number(p.cal))).sort((a,b)=>Number(a.cal)-Number(b.cal));
 }
 function cardsV66(arr,labelFn){return '<div class="nutrition-list-v66">'+arr.slice(0,18).map(p=>'<div class="nutrition-card-v66"><img src="'+p.img+'"><div><b>'+p.name+'</b><small style="display:block;color:#9eb5aa">'+p.cat+'</small></div><strong>'+labelFn(p)+'</strong></div>').join('')+'</div>'}
+function healthyV70(id,el){if(el&&el.dataset.v70){localStorage.setItem('healthy_new_v70_'+id,'1');el.classList.remove('new-healthy-v66')}document.getElementById('healthyOrbitV70').classList.remove('open');openHealthyToolV66(id)}
 function openHealthyToolV66(id){
  let title='',body='',a=knownNutritionV66();
  if(id==='lighter'){
@@ -232,6 +244,7 @@ function openHealthyToolV66(id){
   const renderSize=()=>{const p=product($('#sizeDrinkV68').value);$('#sizeResultV68').innerHTML='<div class="size-grid-v68"><div class="size-card-v68"><b>Tall</b><span>Nutrition varies by size</span></div><div class="size-card-v68"><b>Grande</b><span>'+p.cal+' cal listed*</span></div><div class="size-card-v68"><b>Venti</b><span>Nutrition varies by size</span></div></div><div class="nutrition-note-v66">*The current dataset provides one listed calorie value and does not reliably identify its serving size. Tall/Venti values are intentionally not estimated.</div>'};$('#sizeDrinkV68').onchange=renderSize;renderSize();
  }
 }
+document.querySelectorAll('[data-v70]').forEach(el=>{if(localStorage.getItem('healthy_new_v70_'+el.dataset.v70))el.classList.remove('new-healthy-v66')});
 /* CUSTOMER ORBIT JS V63 */
 const customerOrbitWrapV63=document.querySelector('#customerOrbitWrapV63');
 const customerWorkspaceV63=document.querySelector('#customerWorkspaceV63');
@@ -239,7 +252,7 @@ function openCustomerV63(id){
  localStorage.setItem('customer_orbit_seen_v63_'+id,'1');
  document.querySelector('[data-customer-v63="'+id+'"]')?.classList.remove('new-customer-v63');
  document.body.classList.add('customer-workspace-open-v64');
- if(id==='healthy'){openHealthyOrbitV66();return} else if(id==='tracking'){openTrackingV65()} else if(id==='saved'){openSaved()}
+ if(id==='healthy'){document.getElementById('healthyOrbitV70').classList.add('open');return} else if(id==='tracking'){openTrackingV65()} else if(id==='saved'){openSaved()}
  else if(id==='cart'){openCart()}
  else if(id==='compare'){const ids=read(compareKey,[]);if(ids.length>=2)openCompare();else toast('Select 2 products to compare')}
  else if(id==='favorites'){filter='favorites';$('[data-filter]').forEach(x=>x.classList.toggle('active',x.dataset.filter==='favorites'));render()}
