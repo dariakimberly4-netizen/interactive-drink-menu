@@ -339,6 +339,31 @@
  font:1000 10px/1 system-ui!important;white-space:nowrap!important;z-index:100!important;
 }
 @keyframes shiftNewFlash{50%{transform:translate(-50%,-50%) scale(1.10)!important;filter:brightness(1.25)}}
+
+/* LATEST-ONLY HIGHLIGHT CORRECTION V22 */
+.cashier-orbit-node[data-orbit-id="Senior Citizen"],
+.cashier-orbit-node[data-orbit-id="PWD"],
+.cashier-orbit-node[data-orbit-id="Voucher"]{
+ border:1px solid rgba(255,255,255,.16)!important;
+ background:linear-gradient(145deg,#154535,#08261c)!important;
+ box-shadow:0 14px 30px rgba(0,0,0,.28)!important;
+ animation:none!important;
+}
+.cashier-orbit-node[data-orbit-id="Senior Citizen"]::after,
+.cashier-orbit-node[data-orbit-id="PWD"]::after,
+.cashier-orbit-node[data-orbit-id="Voucher"]::after{display:none!important;content:none!important}
+
+/* The newest features are in SHIFT */
+.cashier-orbit-node[data-orbit-id="Cash Reconciliation"],
+.cashier-orbit-node[data-orbit-id="Payment Protection"],
+.cashier-orbit-node[data-orbit-id="Receipt & Labels"],
+.cashier-orbit-node[data-orbit-id="Audit Trail"]{
+ border:6px solid #ffea00!important;
+ background:linear-gradient(145deg,#806000,#124832)!important;
+ box-shadow:0 0 0 8px rgba(255,234,0,.22),0 0 50px rgba(255,234,0,.8)!important;
+ animation:shiftNewFlash 1s ease-in-out infinite!important;
+ z-index:80!important;
+}
 </style>
 </head>
 <body>
