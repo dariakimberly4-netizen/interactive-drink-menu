@@ -240,15 +240,6 @@ function healthyV70(id,el){if(el&&el.dataset.v70){localStorage.setItem('healthy_
 function openHealthyToolV66(id){
  let title='',body='',a=knownNutritionV66();
 
- if(id==='ingredients'){
-  const renderIngredientsV72=()=>{const p=product($('#ingredientItemV72').value);const txt=(p&&p.ingredients)?p.ingredients:'Verified ingredient list is not available in this demo dataset.';$('#ingredientResultV72').innerHTML='<div class="nutrition-note-v66"><b>'+p.name+'</b><p>'+txt+'</p><small>Ingredient and allergen information should be verified against the official product source before production use.</small></div>'};$('#ingredientItemV72').onchange=renderIngredientsV72;renderIngredientsV72();
- }
- if(id==='caffeine'){
-  const renderCaffeineV72=()=>{const p=product($('#caffeineItemV72').value);$('#caffeineResultV72').innerHTML='<div class="nutrition-note-v66"><b>'+p.name+'</b><p>Caffeine amount: <strong>Not verified</strong></p><small>This demo intentionally does not estimate caffeine values.</small></div>'};$('#caffeineItemV72').onchange=renderCaffeineV72;renderCaffeineV72();
- }
- if(id==='healthyfavorites'){
-  const btn=$('#saveHealthyFavV72');if(btn)btn.onclick=()=>{const id=$('#healthyFavItemV72').value;let favs=read('healthy_favorites_v72',[]);if(!favs.includes(id))favs.push(id);write('healthy_favorites_v72',favs);openHealthyToolV66('healthyfavorites')};
- }
  if(id==='lighter'){
   title='Build a Lighter Drink';
   const drinks=a.filter(p=>p.kind==='drink');
@@ -288,6 +279,20 @@ function openHealthyToolV66(id){
  else if(id==='diet'){title='Dietary Filters';body='<div class="empty"><b>Diet filters require verified ingredient data.</b><span>Vegetarian, dairy-free and similar labels will only be enabled when ingredients and preparation information are confirmed.</span></div>'}
  else if(id==='compare'){title='Nutrition Compare';body=cardsV66(a.slice(0,8),p=>p.cal+' cal')+'<div class="nutrition-note-v66">Use the existing Compare tool to select products side-by-side. Current verified field in this demo is calories where listed.</div>'}
  $('#healthyTitleV66').textContent=title;$('#healthyBodyV66').innerHTML=body;$('#healthyModal').classList.add('open');
+ if(id==='ingredients'){
+   const s=$('#ingredientItemV72'),out=$('#ingredientResultV72');
+   const render=()=>{const p=product(s.value);out.innerHTML='<div class="nutrition-note-v66"><b>'+p.name+'</b><p>'+((p&&p.ingredients)?p.ingredients:'Verified ingredient list is not available in this demo dataset.')+'</p><small>Verify ingredients and allergens against the official product source before production use.</small></div>'};
+   s.onchange=render;render();
+ }
+ if(id==='caffeine'){
+   const s=$('#caffeineItemV72'),out=$('#caffeineResultV72');
+   const render=()=>{const p=product(s.value);out.innerHTML='<div class="nutrition-note-v66"><b>'+p.name+'</b><p>Caffeine amount: <strong>Not verified</strong></p><small>This demo does not estimate caffeine values.</small></div>'};
+   s.onchange=render;render();
+ }
+ if(id==='healthyfavorites'){
+   const btn=$('#saveHealthyFavV72');
+   if(btn)btn.onclick=()=>{const item=$('#healthyFavItemV72').value;let favs=read('healthy_favorites_v72',[]);if(!favs.includes(item))favs.push(item);write('healthy_favorites_v72',favs);openHealthyToolV66('healthyfavorites')};
+ }
  if(id==='lighter'){
   const renderLight=()=>{const p=product($('#lightDrinkV68').value);$('#lightResultV68').innerHTML='<b>'+p.name+'</b><p>Listed base nutrition: <strong>'+p.cal+' calories</strong></p><div class="verified-v68">Exact nutrition after milk, syrup, topping or size changes is not calculated unless verified customization data is available.</div>'};
   $('#lightDrinkV68').onchange=renderLight;$('#lightSizeV68').onchange=renderLight;$('#lightMilkV68').onchange=renderLight;$('#lightExtrasV68').onchange=renderLight;renderLight();
@@ -392,15 +397,15 @@ render();
  document.getElementById('healthyCloseV71').addEventListener('click',closePanel);
  document.addEventListener('click',function(e){
    const main=e.target.closest('[data-customer-v63="healthy"]');
-   if(main){e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('healthy_parent_seen_v73','1');main.classList.remove('new-customer-v63');openPanel();return}
+   if(main){e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('healthy_parent_seen_v75','1');main.classList.remove('new-customer-v63');openPanel();return}
  },true);
  document.querySelectorAll('[data-h71]').forEach(function(btn){
    const id=btn.getAttribute('data-h71');
-   const newestV72=['ingredients','caffeine','healthyfavorites'].includes(id);btn.classList.toggle('new',newestV72&&!localStorage.getItem('healthy_child_seen_v73_'+id));
+   const newestV72=['ingredients','caffeine','healthyfavorites'].includes(id);btn.classList.toggle('new',newestV72&&!localStorage.getItem('healthy_child_seen_v75_'+id));
    if(btn.hasAttribute('onclick')) return;
    btn.addEventListener('click',function(e){
      e.preventDefault();e.stopPropagation();
-     localStorage.setItem('healthy_child_seen_v73_'+id,'1');btn.classList.remove('new');
+     localStorage.setItem('healthy_child_seen_v75_'+id,'1');btn.classList.remove('new');
      closePanel();
      if(typeof openHealthyToolV66==='function') openHealthyToolV66(id);
    });
