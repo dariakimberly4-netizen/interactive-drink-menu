@@ -156,6 +156,11 @@
 .choice[data-discount]:not([data-discount="None"]){border:2px solid #ffd86b;box-shadow:0 0 0 3px rgba(255,216,107,.12),0 0 22px rgba(255,216,107,.18)}
 .choice[data-discount]:not([data-discount="None"])::after{content:'NEW';position:absolute;top:-9px;right:-5px;padding:4px 6px;border-radius:999px;background:#ffd86b;color:#07331f;font:950 7px/1 system-ui;letter-spacing:.08em}
 #customerName{border:2px solid #ffd86b;box-shadow:0 0 0 3px rgba(255,216,107,.10)}
+
+/* FORCE-VISIBLE CASHIER HIGHLIGHTS V7 */
+.cashier-orbit-node[data-orbit-id="Payments"],.cashier-orbit-node[data-orbit-id="Promos & Customers"]{border:3px solid #ffd84d!important;background:linear-gradient(145deg,#705300,#173b2d)!important;box-shadow:0 0 0 6px rgba(255,216,77,.22),0 0 38px rgba(255,216,77,.55)!important;animation:newPulse 1.5s ease-in-out infinite}
+.cashier-orbit-node[data-orbit-id="Payments"]::after,.cashier-orbit-node[data-orbit-id="Promos & Customers"]::after{content:'NEW';position:absolute;top:-10px;right:-4px;background:#ffd84d;color:#062b1c;padding:6px 9px;border-radius:999px;font:950 9px/1 system-ui;z-index:8}
+@keyframes newPulse{50%{box-shadow:0 0 0 10px rgba(255,216,77,.10),0 0 52px rgba(255,216,77,.72)}}
 </style>
 </head>
 <body>
