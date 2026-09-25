@@ -26,11 +26,11 @@
 <section class="login" id="login"><div class="loginbox"><div class="seal">◆</div><h1>Shift Supervisor / Manager</h1><div class="muted">Independent operations portal</div><div class="field"><label>MANAGER EMAIL</label><input id="email" value="manager.demo@menuorbit.test"></div><div class="field"><label>PASSWORD</label><input id="pass" type="password" value="ManagerOrbit2026!"></div><button class="primary" id="signIn">SIGN IN</button><button class="primary demo" id="oneTap">ONE-TAP DEMO LOGIN</button></div></section>
 <section class="portal" id="portal"><header class="top"><div><b>SHIFT SUPERVISOR / MANAGER</b><br><small>Demo Bacoor Branch • Shift Control</small></div><button id="logout">Sign Out</button></header><section id="home"><div class="orbit manager-orbit-v2"><button class="center" id="center">SHIFT CONTROL<small>3 WAIT • 2 PREP • 1 READY • 2 ALERTS</small></button><div id="nodes"></div></div></section><section class="module" id="module"><button class="back" id="back">← Back to Manager Orbit</button><div class="panel" id="panel"></div></section></section>
 <script>
-const features=[['alerts','🔔','ALERT CENTER'],['staff','👤','STAFF & SHIFT'],['escalate','!','ORDER ESCALATIONS'],['approve','✓','REFUND / VOID'],['stock','▣','STOCK ALERTS'],['equipment','⚙','EQUIPMENT ISSUES'],['handover','⇄','SHIFT HANDOVER'],['report','▥','MANAGER REPORT']];
+const features=[['alerts','🔔','ALERT CENTER'],['staff','👤','STAFF & SHIFT'],['escalate','!','ORDER ESCALATIONS'],['approve','✓','REFUND / VOID'],['stock','▣','STOCK ALERTS'],['equipment','⚙','EQUIPMENT ISSUES'],['handover','⇄','SHIFT HANDOVER'],['closeout','◫','SHIFT CLOSEOUT']];
 const pts=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
 const rows=(a)=>a.map(x=>'<div class="row"><b>'+x[0]+'</b><span class="badge '+(x[2]?'alert':'')+'">'+x[1]+'</span><br><small>'+x[3]+'</small></div>').join('');
 function enter(){login.style.display='none';portal.style.display='block';render()}
-function render(){nodes.innerHTML=features.map((x,i)=>'<button class="node '+(x[0]==='alerts'&&!localStorage.getItem('manager_alert_parent_v4')?'new':'')+'" data-f="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('');document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{if(b.dataset.f==='alerts')localStorage.setItem('manager_alert_parent_v4','1');b.classList.remove('new');openFeature(b.dataset.f)})}
+function render(){nodes.innerHTML=features.map((x,i)=>'<button class="node '+(x[0]==='closeout'&&!localStorage.getItem('manager_close_parent_v5')?'new':'')+'" data-f="'+x[0]+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('');document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{if(b.dataset.f==='closeout')localStorage.setItem('manager_close_parent_v5','1');b.classList.remove('new');openFeature(b.dataset.f)})}
 
 const shiftToolsV3=[['clock','●','CLOCKED-IN'],['assign','◎','ASSIGN STATION'],['move','⇄','MOVE STATION'],['break','Ⅱ','BREAK STATUS'],['attendance','!','LATE / ABSENT'],['replace','↻','REPLACE STAFF'],['schedule','▦','SHIFT SCHEDULE'],['close','✓','CLOSE SHIFT']];
 const shiftPtsV3=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
@@ -75,6 +75,29 @@ function openAlertToolV4(id){
  panel.innerHTML='<button class="back" id="backAlertV4">← Back to Alert Center Orbit</button><h2>'+t+'</h2>'+b;
  document.querySelector('#backAlertV4').onclick=openAlertOrbitV4;
 }
+
+const closeToolsV5=[['orders','🧾','OPEN ORDERS'],['cash','₱','CASH RECON'],['inventory','▣','INVENTORY'],['waste','↻','WASTE REVIEW'],['equipment','⚙','EQUIPMENT'],['staff','👤','STAFF SIGN-OFF'],['notes','✎','HANDOVER NOTES'],['final','✓','FINAL CLOSE']];
+const closePtsV5=[[50,7],[79,17],[93,50],[79,83],[50,93],[21,83],[7,50],[21,17]];
+function openCloseoutOrbitV5(){
+ home.style.display='none';module.style.display='block';
+ panel.innerHTML='<div class="shiftTitleV3"><h2>End-of-Day / Shift Closeout</h2><p>Complete all checks before closing the shift</p></div><section class="shiftOrbitV3"><button class="shiftCenterV3" id="closeCenterV5">SHIFT CLOSEOUT<small>3 OPEN • 2 EXCEPTIONS</small></button>'+closeToolsV5.map((x,i)=>'<button class="shiftNodeV3 '+(localStorage.getItem('manager_close_v5_'+x[0])?'':'newShiftV3')+'" data-close="'+x[0]+'" style="left:'+closePtsV5[i][0]+'%;top:'+closePtsV5[i][1]+'%"><span>'+x[1]+'</span>'+x[2]+'</button>').join('')+'</section>';
+ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{localStorage.setItem('manager_close_v5_'+b.dataset.close,'1');b.classList.remove('newShiftV3');openCloseToolV5(b.dataset.close)});
+ document.querySelector('#closeCenterV5').onclick=()=>openCloseToolV5('orders');
+}
+function openCloseToolV5(id){
+ let t='',b='';
+ if(id==='orders'){t='Open Orders Check';b=rows([['New Orders','3','', 'Must be resolved before close'],['Preparing','2','', 'Active'],['Ready','1','', 'Waiting pickup']])}
+ if(id==='cash'){t='Cashier Reconciliation';b='<p>Confirm cashier closeout, cash count, payment exceptions, refunds, and void approvals.</p><button class="primary action">REVIEW CASHIER CLOSEOUT</button>'}
+ if(id==='inventory'){t='Inventory Exceptions';b=rows([['Whole Milk','LOW',1,'Restock required'],['Oat Milk','OUT',1,'Sold-out status active']])}
+ if(id==='waste'){t='Waste Review';b='<p>Review remakes, spills, damaged products, expired ingredients, and other recorded waste.</p><button class="primary action">REVIEW WASTE LOG</button>'}
+ if(id==='equipment'){t='Equipment Status';b=rows([['Espresso Station 1','CHECK',1,'Issue remains open'],['Receipt Printer','OK','', 'Online']])}
+ if(id==='staff'){t='Staff Sign-Off';b=rows([['Jamie Cruz','PENDING',1,'Barista'],['Cashier Demo','PENDING',1,'Cashier'],['Inventory Demo','PENDING',1,'Inventory']])}
+ if(id==='notes'){t='Handover Notes';b='<p>Record unresolved orders, stock exceptions, equipment issues, customer follow-ups, and instructions for the next shift.</p><textarea style="width:100%;min-height:130px;padding:12px;border-radius:12px" placeholder="Shift handover notes..."></textarea><button class="primary action">SAVE HANDOVER NOTES</button>'}
+ if(id==='final'){t='Final Close Shift';b='<p><b>Final manager control.</b> Close only after all operational exceptions have been reviewed.</p><button class="primary action" id="finalCloseV5">FINAL CLOSE SHIFT</button>'}
+ panel.innerHTML='<button class="back" id="backCloseV5">← Back to Closeout Orbit</button><h2>'+t+'</h2>'+b;
+ document.querySelector('#backCloseV5').onclick=openCloseoutOrbitV5;
+ const z=document.querySelector('#finalCloseV5');if(z)z.onclick=()=>{z.textContent='✓ SHIFT CLOSE RECORDED';z.disabled=true};
+}
 function openFeature(id){home.style.display='none';module.style.display='block';let t='',b='';
 if(id==='alerts'){openAlertOrbitV4();return}
 if(id==='staff'){openStaffShiftOrbitV3();return}
@@ -83,7 +106,7 @@ if(id==='approve'){t='Refund / Void Approval';b='<p>Manager-only approval queue 
 if(id==='stock'){t='Stock Alerts';b=rows([['Whole Milk','LOW',1,'4 cartons remaining'],['Oat Milk','OUT',1,'Inventory staff notified']])}
 if(id==='equipment'){t='Equipment Issues';b=rows([['Espresso Station 1','CHECK',1,'Reported by barista'],['Receipt Printer','OK','', 'Online']])}
 if(id==='handover'){t='Shift Handover';b='<p>Review unresolved orders, stock alerts, equipment issues, cash exceptions, and staff notes before handing the shift over.</p><button class="primary action">START HANDOVER</button>'}
-if(id==='report'){t='Manager Report';b=rows([['Orders','42','', 'Current demo shift'],['Escalations','2','', '1 unresolved'],['Stock Alerts','2','', '1 sold out'],['Equipment Alerts','1','', 'Needs review']])}
+if(id==='closeout'){openCloseoutOrbitV5();return}
 panel.innerHTML='<h2>'+t+'</h2>'+b}
 signIn.onclick=()=>{if(email.value&&pass.value)enter()};oneTap.onclick=enter;logout.onclick=()=>location.reload();back.onclick=()=>{module.style.display='none';home.style.display='block'};center.onclick=()=>openFeature('floor');
 </script></body></html>
