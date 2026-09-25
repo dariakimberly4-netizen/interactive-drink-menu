@@ -104,9 +104,9 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 <button type="button" class="healthyV71btn" data-h71="lighter">☕ BUILD A LIGHTER DRINK</button>
 <button type="button" class="healthyV71btn" data-h71="size">◉ NUTRITION BY SIZE</button>
 <button type="button" class="healthyV71btn" data-h71="cartnutrition">🛒 CART NUTRITION SUMMARY</button>
-<button type="button" class="healthyV71btn new" data-h71="ingredients">≡ INGREDIENT VIEWER</button>
-<button type="button" class="healthyV71btn new" data-h71="caffeine">⚡ CAFFEINE GUIDE</button>
-<button type="button" class="healthyV71btn new" data-h71="healthyfavorites">♥ HEALTHY FAVORITES</button>
+<button type="button" class="healthyV71btn new" data-h71="ingredients" onclick="healthyDirectV74('ingredients',this)">≡ INGREDIENT VIEWER</button>
+<button type="button" class="healthyV71btn new" data-h71="caffeine" onclick="healthyDirectV74('caffeine',this)">⚡ CAFFEINE GUIDE</button>
+<button type="button" class="healthyV71btn new" data-h71="healthyfavorites" onclick="healthyDirectV74('healthyfavorites',this)">♥ HEALTHY FAVORITES</button>
 <button type="button" class="healthyV71btn" data-h71="nutrition">▥ NUTRITION</button>
 <button type="button" class="healthyV71btn" data-h71="calories">◎ CALORIES</button>
 <button type="button" class="healthyV71btn" data-h71="allergens">! ALLERGENS</button>
@@ -229,6 +229,13 @@ function knownNutritionV66(){
  return products.filter(p=>Number.isFinite(Number(p.cal))).sort((a,b)=>Number(a.cal)-Number(b.cal));
 }
 function cardsV66(arr,labelFn){return '<div class="nutrition-list-v66">'+arr.slice(0,18).map(p=>'<div class="nutrition-card-v66"><img src="'+p.img+'"><div><b>'+p.name+'</b><small style="display:block;color:#9eb5aa">'+p.cat+'</small></div><strong>'+labelFn(p)+'</strong></div>').join('')+'</div>'}
+function healthyDirectV74(id,el){
+ try{localStorage.setItem('healthy_child_seen_v74_'+id,'1')}catch(e){}
+ if(el)el.classList.remove('new');
+ const p=document.getElementById('healthyPanelV71'); if(p)p.classList.remove('open');
+ document.body.style.overflow='';
+ openHealthyToolV66(id);
+}
 function healthyV70(id,el){if(el&&el.dataset.v70){localStorage.setItem('healthy_new_v70_'+id,'1');el.classList.remove('new-healthy-v66')}document.getElementById('healthyOrbitV70').classList.remove('open');openHealthyToolV66(id)}
 function openHealthyToolV66(id){
  let title='',body='',a=knownNutritionV66();
@@ -390,6 +397,7 @@ render();
  document.querySelectorAll('[data-h71]').forEach(function(btn){
    const id=btn.getAttribute('data-h71');
    const newestV72=['ingredients','caffeine','healthyfavorites'].includes(id);btn.classList.toggle('new',newestV72&&!localStorage.getItem('healthy_child_seen_v73_'+id));
+   if(btn.hasAttribute('onclick')) return;
    btn.addEventListener('click',function(e){
      e.preventDefault();e.stopPropagation();
      localStorage.setItem('healthy_child_seen_v73_'+id,'1');btn.classList.remove('new');
