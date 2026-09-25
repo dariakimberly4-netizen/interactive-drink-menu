@@ -221,6 +221,35 @@
  animation:featureGlowV14 1.6s ease-in-out infinite;
 }
 @keyframes featureGlowV14{50%{box-shadow:0 0 0 9px rgba(255,216,77,.12),0 0 52px rgba(255,216,77,.72)}}
+
+/* ALWAYS VISIBLE NEW FEATURE HIGHLIGHT V15 */
+#cashierToolModal .senior-feature,
+#cashierToolModal .pwd-feature,
+#cashierToolModal .tool-card:has([data-disc="Voucher"]),
+#cashierToolModal .tool-card:has(#quickSearchOrder),
+#cashierToolModal .tool-card:has(#quickShiftSummary){
+ outline:5px solid #ffdf00!important;
+ outline-offset:3px!important;
+ background:#5f4b00!important;
+ box-shadow:0 0 28px #ffdf00!important;
+}
+#cashierToolModal .senior-feature::after,
+#cashierToolModal .pwd-feature::after,
+#cashierToolModal .tool-card:has([data-disc="Voucher"])::after,
+#cashierToolModal .tool-card:has(#quickSearchOrder)::after,
+#cashierToolModal .tool-card:has(#quickShiftSummary)::after{
+ content:'★ NEW FEATURE';
+ display:block!important;
+ margin-top:10px!important;
+ padding:7px 10px!important;
+ border-radius:10px!important;
+ background:#ffdf00!important;
+ color:#102d20!important;
+ text-align:center!important;
+ font-weight:1000!important;
+ font-size:11px!important;
+ letter-spacing:.08em!important;
+}
 </style>
 </head>
 <body>
