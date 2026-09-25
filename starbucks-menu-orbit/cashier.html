@@ -470,6 +470,29 @@
 .cashier-orbit-node[data-orbit-id="orders"]{border:1px solid rgba(255,255,255,.16)!important;background:linear-gradient(145deg,#154535,#08261c)!important;box-shadow:0 14px 30px rgba(0,0,0,.28)!important;animation:none!important}
 .cashier-orbit-node[data-orbit-id="orders"]::after{display:none!important;content:none!important}
 .cashier-orbit-node.latest-v25-hub,.cashier-orbit-node.latest-v25-item{border:7px solid #fff200!important;background:#8b6800!important;box-shadow:0 0 0 7px #fff,0 0 0 13px #fff200,0 0 55px 22px rgba(255,242,0,.75)!important;animation:v25Blink .85s ease-in-out infinite!important;z-index:999!important}
+
+/* SERVICE HIGHLIGHT V31 — unmistakable and click-to-clear */
+.cashier-orbit-node.latest-v25-hub,
+.cashier-orbit-node.latest-v25-item{
+ border:7px solid #fff200!important;
+ background:#8b6800!important;
+ box-shadow:0 0 0 7px #fff,0 0 0 13px #fff200,0 0 62px 24px rgba(255,242,0,.92)!important;
+ animation:v31ServicePulse .8s ease-in-out infinite!important;
+ z-index:999!important;
+}
+.cashier-orbit-node.latest-v25-hub::after{
+ display:block!important;content:'★ 6 NEW ★'!important;
+ position:absolute!important;top:-24px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;
+ background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;
+ padding:7px 10px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:1001!important;
+}
+.cashier-orbit-node.latest-v25-item::before{
+ display:block!important;content:'★ NEW ★'!important;
+ position:absolute!important;top:-23px!important;left:50%!important;transform:translateX(-50%)!important;
+ background:#fff200!important;color:#062d20!important;border:3px solid #fff!important;border-radius:999px!important;
+ padding:6px 9px!important;font:1000 8px/1 system-ui!important;white-space:nowrap!important;z-index:1001!important;
+}
+@keyframes v31ServicePulse{50%{filter:brightness(1.5);box-shadow:0 0 0 10px #fff,0 0 0 17px #fff200,0 0 78px 30px rgba(255,242,0,1)}}
 </style>
 </head>
 <body>
@@ -840,7 +863,7 @@ function toolDailySummary(){
 }
 /* DISCOVERY-ONLY NEW FEATURE HIGHLIGHT V26 */
 const NEW_FEATURES_V26=['Customer Complaint','Problem Resolution','Remake Request','Missing / Wrong Item','Recovery Voucher','Escalate Manager'];
-const NEW_SEEN_KEY_V26='cashier_seen_new_features_v26';
+const NEW_SEEN_KEY_V26='cashier_seen_service_features_v31';
 function seenNewV26(){try{return JSON.parse(localStorage.getItem(NEW_SEEN_KEY_V26)||'[]')}catch(e){return []}}
 function markNewSeenV26(label){
  if(!NEW_FEATURES_V26.includes(label))return;
