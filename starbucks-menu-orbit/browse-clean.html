@@ -251,6 +251,9 @@ header{display:flex!important;align-items:center!important;width:100%!important}
 #headerAccountStaticV100{display:flex!important;visibility:visible!important;opacity:1!important;margin-left:auto!important;margin-right:0!important;min-height:46px!important;border:2px solid #e8c878!important;border-radius:999px!important;background:#0b4635!important;color:#fff!important;padding:0 14px!important;font-weight:950!important;font-size:11px!important;align-items:center!important;gap:6px!important;white-space:nowrap!important}
 #headerAccountV99{display:none!important}
 @media(max-width:560px){#headerAccountStaticV100{min-height:42px!important;padding:0 9px!important;font-size:9px!important}header{padding-left:14px!important;padding-right:14px!important}.brand b{font-size:20px!important}}
+</style><style id="single-account-v101">
+#customerOrbitV63>.v96node[data-v98="account"],
+#customerOrbitV63>.v96node[data-menu-id="account"]{display:none!important}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button type="button" id="headerAccountStaticV100">👤 <span>MY ACCOUNT</span></button><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
@@ -978,4 +981,15 @@ window.addEventListener('load',place);setTimeout(place,300);
 })();
 </script><script id="header-account-static-v100-script">
 (function(){function bind(){var b=document.getElementById('headerAccountStaticV100');if(!b)return;b.onclick=function(){var a=[...document.querySelectorAll('#customerOrbitV63>.v96node')].find(n=>n.textContent.trim()==='MY ACCOUNT');if(a)a.click()}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind()})();
+</script><script id="single-account-v101-script">
+(function(){
+function clean(){
+ var orbit=document.getElementById('customerOrbitV63');if(!orbit)return;
+ [...orbit.querySelectorAll('.v96node')].forEach(function(n){
+   if(n.textContent.replace(/\s+/g,' ').trim()==='MY ACCOUNT') n.remove();
+ });
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();
+window.addEventListener('load',clean);setTimeout(clean,100);setTimeout(clean,500);setTimeout(clean,1500);
+})();
 </script></body></html>
