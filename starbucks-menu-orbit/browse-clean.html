@@ -234,6 +234,18 @@ setTimeout(moveWifi,100);
 #wifiOrbitStaticV94::after{content:"NEW";position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:#fff200;color:#07331f;border-radius:999px;padding:4px 8px;font-size:8px;font-weight:950}
 #customerOrbitV63{margin-bottom:145px!important}
 #wifiV90{display:none!important}
+</style><style id="wifi-visible-inside-v95">
+/* 7-node mobile orbit: Wi-Fi is visible inside the viewport */
+@media(max-width:560px){
+ #customerOrbitV63{height:760px!important;margin-bottom:30px!important}
+ #customerOrbitV63 [data-customer-v63="browse"]{left:50%!important;top:6%!important}
+ #customerOrbitV63 [data-customer-v63="search"]{left:86%!important;top:25%!important}
+ #customerOrbitV63 [data-customer-v63="saved"]{left:86%!important;top:65%!important}
+ #customerOrbitV63 [data-customer-v63="cart"]{left:67%!important;top:88%!important}
+ #customerOrbitV63 [data-customer-v63="healthy"]{left:14%!important;top:65%!important}
+ #customerOrbitV63 [data-customer-v63="compare"]{left:14%!important;top:25%!important}
+ #wifiOrbitStaticV94{display:flex!important;visibility:visible!important;opacity:1!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;left:33%!important;top:88%!important;width:108px!important;height:108px!important;min-height:108px!important}
+}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
