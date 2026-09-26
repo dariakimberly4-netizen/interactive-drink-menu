@@ -852,4 +852,47 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 function bind(){var b=document.getElementById('wifiOrbitStaticV94'),p=document.getElementById('wifiPanelV90');if(!b||!p)return;b.onclick=function(e){e.preventDefault();e.stopPropagation();p.classList.add('open');var hidden=document.getElementById('wifiV90');if(hidden)hidden.click()}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();setTimeout(bind,100);
 })();
+</script><style id="customer-orbit-v96">
+/* Hide legacy orbit nodes; v96 provides the clean customer navigation */
+#customerOrbitV63>.customer-node-v63,#customerOrbitV63>#wifiOrbitStaticV94{display:none!important}
+#customerOrbitV63{height:720px!important;margin-bottom:40px!important}
+.v96node{display:flex!important;position:absolute!important;transform:translate(-50%,-50%)!important;width:118px!important;height:118px!important;min-height:118px!important;border:4px solid #e8c878!important;border-radius:50%!important;background:#0b4635!important;color:#fff!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;text-align:center!important;font-weight:950!important;font-size:10px!important;z-index:20!important;padding:8px!important}
+.v96node span{display:block;font-size:23px;margin-bottom:5px}.v96node.new96{border-color:#fff200!important;box-shadow:0 0 28px #fff20099!important}.v96node.new96:after{content:"NEW";position:absolute;top:-16px;background:#fff200;color:#07331f;padding:3px 8px;border-radius:999px;font-size:8px}
+#v96Panel{display:none;position:fixed;inset:0;z-index:11000;background:#061f17;color:#fff;overflow:auto;padding:18px;font-family:Arial,sans-serif}#v96Panel.open{display:block}.v96in{max-width:760px;margin:auto}.v96top{display:flex;justify-content:space-between;align-items:center;gap:10px}.v96in h2{font:700 40px Georgia,serif;margin:18px 0 5px}.v96in p{color:#aac0b5}.v96grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}.v96sub{min-height:74px;border:1px solid #ffffff20;border-radius:14px;background:#0b3024;color:#fff;font-weight:900;padding:12px;text-align:left}.v96back{min-height:44px;border:1px solid #ffffff22;border-radius:10px;background:#ffffff10;color:#fff;padding:0 14px;font-weight:900}
+#restaurantToolsV88{display:none!important}
+@media(max-width:560px){#customerOrbitV63{height:650px!important}.v96node{width:96px!important;height:96px!important;min-height:96px!important;font-size:8px!important}.v96node span{font-size:19px}.v96grid{grid-template-columns:1fr}}
+</style>
+<section id="v96Panel"><div class="v96in"><div class="v96top"><div><small style="color:#e8c878;font-weight:950">CUSTOMER</small><h2 id="v96Title">Menu</h2></div><button class="v96back" id="v96Back">← Orbit</button></div><p id="v96Desc"></p><div class="v96grid" id="v96Grid"></div></div></section>
+<script id="customer-orbit-v96-script">
+(function(){
+const orbit=document.getElementById('customerOrbitV63'),panel=document.getElementById('v96Panel'),title=document.getElementById('v96Title'),desc=document.getElementById('v96Desc'),grid=document.getElementById('v96Grid');
+if(!orbit)return;
+const menus=[
+ {id:'menu',icon:'☕',name:'MENU & ORDER',pos:[50,7],subs:['Browse Menu','Search','Customize','QR Table Order','My Cart']},
+ {id:'orders',icon:'⌖',name:'MY ORDER',pos:[86,28],subs:['Order Tracking','Current Order','Request Bill','Order History']},
+ {id:'rewards',icon:'★',name:'REWARDS',pos:[86,70],subs:['Points','Coupons','Birthday Rewards','Offers','Rewards History']},
+ {id:'account',icon:'👤',name:'MY ACCOUNT',pos:[50,94],subs:['Profile','Digital Membership','Personal Details','Saved Addresses','Preferences','Rewards History','Order History','Reservations','Sign Out']},
+ {id:'guest',icon:'⌁',name:'GUEST SERVICES',pos:[14,70],subs:['Wi-Fi Access','Wi-Fi QR','Session Status','Need Help']},
+ {id:'wellness',icon:'♡',name:'FAVORITES & WELLNESS',pos:[14,28],subs:['Saved','Healthy Choices','Compare','Nutrition','Healthy Favorites']},
+ {id:'reservations',icon:'◷',name:'RESERVATIONS',pos:[50,78],subs:['Reserve Table','My Reservations','Waitlist']}
+];
+menus.forEach(m=>{let b=document.createElement('button');b.className='v96node'+(m.id==='account'?' new96':'');b.style.left=m.pos[0]+'%';b.style.top=m.pos[1]+'%';b.innerHTML='<span>'+m.icon+'</span>'+m.name;b.onclick=()=>open(m);orbit.appendChild(b)});
+function open(m){title.textContent=m.name;desc.textContent='Choose a service.';grid.innerHTML=m.subs.map(s=>'<button class="v96sub" data-v96="'+s+'">'+s+'</button>').join('');panel.classList.add('open');grid.querySelectorAll('[data-v96]').forEach(b=>b.onclick=()=>route(b.dataset.v96))}
+function click(sel){const b=document.querySelector(sel);if(b){panel.classList.remove('open');b.click();return true}return false}
+function route(s){
+ if(s==='Browse Menu')return click('[data-customer-v63="browse"]');
+ if(s==='Search')return click('[data-customer-v63="search"]');
+ if(s==='My Cart')return click('[data-customer-v63="cart"]');
+ if(s==='Saved')return click('[data-customer-v63="saved"]');
+ if(s==='Healthy Choices'||s==='Nutrition'||s==='Healthy Favorites'||s==='Compare')return click('[data-customer-v63="healthy"]');
+ if(s==='Order Tracking'||s==='Current Order'||s==='Order History')return click('[data-customer-v63="tracking"]');
+ if(s==='QR Table Order'||s==='Customize'||s==='Request Bill')return click('#qrOrderV82');
+ if(s==='Reserve Table'||s==='My Reservations'||s==='Waitlist'||s==='Reservations')return click('#reserveFloatV81');
+ if(s==='Wi-Fi Access'||s==='Wi-Fi QR'||s==='Session Status'||s==='Need Help')return click('#wifiV90');
+ if(['Points','Coupons','Birthday Rewards','Offers','Rewards History','Digital Membership'].includes(s))return click('#loyaltyV86');
+ if(s==='Sign Out'){alert('Customer session signed out.');panel.classList.remove('open');return}
+ grid.innerHTML='<div class="v96sub"><b>'+s+'</b><p>This account section is ready for customer data integration.</p></div>'
+}
+document.getElementById('v96Back').onclick=()=>panel.classList.remove('open');
+})();
 </script></body></html>
