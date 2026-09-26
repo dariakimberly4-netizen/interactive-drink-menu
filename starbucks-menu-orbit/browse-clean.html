@@ -895,4 +895,41 @@ function route(s){
 }
 document.getElementById('v96Back').onclick=()=>panel.classList.remove('open');
 })();
+</script><style id="orbit-v97-final">
+/* Retire all legacy Wi-Fi orbit renderings */
+#wifiOrbitStaticV94,#wifiV90.wifi-orbit-node-v92{display:none!important;visibility:hidden!important}
+#wifiOrbitStaticV94::after,#wifiV90.wifi-orbit-node-v92::after{display:none!important;content:none!important}
+/* Clean seven-node customer orbit */
+#customerOrbitV63{height:690px!important;margin-bottom:30px!important}
+#customerOrbitV63>.v96node{display:flex!important;visibility:visible!important;opacity:1!important;width:102px!important;height:102px!important;min-height:102px!important}
+#customerOrbitV63>.v96node.new96{border:4px solid #fff200!important;outline:5px solid rgba(255,242,0,.22)!important;box-shadow:0 0 24px rgba(255,242,0,.58)!important}
+@media(max-width:560px){
+ #customerOrbitV63{height:650px!important}
+ #customerOrbitV63>.v96node{width:94px!important;height:94px!important;min-height:94px!important}
+}
+</style>
+<script id="orbit-v97-final-script">
+(function(){
+function clean(){
+ var orbit=document.getElementById('customerOrbitV63');if(!orbit)return;
+ ['wifiOrbitStaticV94','wifiV90'].forEach(function(id){var x=document.getElementById(id);if(x&&x.parentNode===orbit)x.remove()});
+ var nodes=[...orbit.querySelectorAll('.v96node')];
+ var map={};
+ nodes.forEach(n=>{var t=n.textContent.trim();map[t]=n});
+ var positions={
+ 'MENU & ORDER':[50,7],
+ 'MY ORDER':[86,27],
+ 'REWARDS':[86,69],
+ 'MY ACCOUNT':[50,94],
+ 'GUEST SERVICES':[14,69],
+ 'FAVORITES & WELLNESS':[14,27],
+ 'RESERVATIONS':[50,76]
+ };
+ Object.keys(positions).forEach(function(k){var n=map[k];if(n){n.style.left=positions[k][0]+'%';n.style.top=positions[k][1]+'%';n.style.display='flex'}});
+ nodes.forEach(n=>n.classList.remove('new96'));
+ if(map['MY ACCOUNT'])map['MY ACCOUNT'].classList.add('new96');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();
+window.addEventListener('load',clean);setTimeout(clean,200);setTimeout(clean,800);
+})();
 </script></body></html>
