@@ -932,4 +932,21 @@ function clean(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();
 window.addEventListener('load',clean);setTimeout(clean,200);setTimeout(clean,800);
 })();
+</script><style id="account-align-v98">
+/* My Account upper-right, aligned horizontally with Menu & Order */
+#customerOrbitV63>.v96node[data-v98="account"]{left:82%!important;top:7%!important}
+</style>
+<script id="account-align-v98-script">
+(function(){
+function align(){
+ const orbit=document.getElementById('customerOrbitV63');if(!orbit)return;
+ const nodes=[...orbit.querySelectorAll('.v96node')];
+ const account=nodes.find(n=>n.textContent.trim()==='MY ACCOUNT');
+ const menu=nodes.find(n=>n.textContent.trim()==='MENU & ORDER');
+ if(account){account.dataset.v98='account';account.style.left='82%';account.style.top='7%'}
+ if(menu){menu.style.left='50%';menu.style.top='7%'}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',align);else align();
+window.addEventListener('load',align);setTimeout(align,250);setTimeout(align,900);
+})();
 </script></body></html>
