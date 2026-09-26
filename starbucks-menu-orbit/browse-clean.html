@@ -871,7 +871,7 @@ const menus=[
  {id:'menu',icon:'☕',name:'MENU & ORDER',pos:[50,7],subs:['Browse Menu','Search','Customize','QR Table Order','My Cart']},
  {id:'orders',icon:'⌖',name:'MY ORDER',pos:[86,28],subs:['Order Tracking','Current Order','Request Bill','Order History']},
  {id:'rewards',icon:'★',name:'REWARDS',pos:[86,70],subs:['Points','Coupons','Birthday Rewards','Offers','Rewards History']},
- {id:'account',icon:'👤',name:'MY ACCOUNT',pos:[50,94],subs:['Profile','Digital Membership','Personal Details','Saved Addresses','Preferences','Rewards History','Order History','Reservations','Sign Out']},
+ {id:'account',icon:'👤',name:'MY ACCOUNT',pos:[82,7],subs:['Profile','Digital Membership','Personal Details','Saved Addresses','Preferences','Rewards History','Order History','Reservations','Sign Out']},
  {id:'guest',icon:'⌁',name:'GUEST SERVICES',pos:[14,70],subs:['Wi-Fi Access','Wi-Fi QR','Session Status','Need Help']},
  {id:'wellness',icon:'♡',name:'FAVORITES & WELLNESS',pos:[14,28],subs:['Saved','Healthy Choices','Compare','Nutrition','Healthy Favorites']},
  {id:'reservations',icon:'◷',name:'RESERVATIONS',pos:[50,78],subs:['Reserve Table','My Reservations','Waitlist']}
@@ -920,14 +920,14 @@ function clean(){
  'MENU & ORDER':[50,7],
  'MY ORDER':[86,27],
  'REWARDS':[86,69],
- 'MY ACCOUNT':[50,94],
+ 'MY ACCOUNT':[82,7],
  'GUEST SERVICES':[14,69],
  'FAVORITES & WELLNESS':[14,27],
  'RESERVATIONS':[50,76]
  };
  Object.keys(positions).forEach(function(k){var n=map[k];if(n){n.style.left=positions[k][0]+'%';n.style.top=positions[k][1]+'%';n.style.display='flex'}});
  nodes.forEach(n=>n.classList.remove('new96'));
- if(map['MY ACCOUNT'])map['MY ACCOUNT'].classList.add('new96');
+ if(map['MY ACCOUNT']){map['MY ACCOUNT'].style.left='82%';map['MY ACCOUNT'].style.top='7%';map['MY ACCOUNT'].classList.add('new96');}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();
 window.addEventListener('load',clean);setTimeout(clean,200);setTimeout(clean,800);
