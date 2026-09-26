@@ -879,7 +879,7 @@ const menus=[
  {id:'menu',icon:'☕',name:'MENU & ORDER',pos:[50,7],subs:['Browse Menu','Search','Customize','QR Table Order','My Cart']},
  {id:'orders',icon:'⌖',name:'MY ORDER',pos:[86,28],subs:['Order Tracking','Current Order','Request Bill','Order History']},
  {id:'rewards',icon:'★',name:'REWARDS',pos:[86,70],subs:['Points','Coupons','Birthday Rewards','Offers','Rewards History']},
- {id:'account',icon:'👤',name:'MY ACCOUNT',pos:[82,7],subs:['Profile','Digital Membership','Personal Details','Saved Addresses','Preferences','Rewards History','Order History','Reservations','Sign Out']},
+
  {id:'guest',icon:'⌁',name:'GUEST SERVICES',pos:[14,70],subs:['Wi-Fi Access','Wi-Fi QR','Session Status','Need Help']},
  {id:'wellness',icon:'♡',name:'FAVORITES & WELLNESS',pos:[14,28],subs:['Saved','Healthy Choices','Compare','Nutrition','Healthy Favorites']},
  {id:'reservations',icon:'◷',name:'RESERVATIONS',pos:[50,78],subs:['Reserve Table','My Reservations','Waitlist']}
@@ -991,5 +991,28 @@ function clean(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();
 window.addEventListener('load',clean);setTimeout(clean,100);setTimeout(clean,500);setTimeout(clean,1500);
+})();
+</script><script id="header-account-direct-v102">
+(function(){
+const account={id:'account',icon:'👤',name:'MY ACCOUNT',subs:['Profile','Digital Membership','Personal Details','Saved Addresses','Preferences','Rewards History','Order History','Reservations','Sign Out']};
+function setup(){
+ const btn=document.getElementById('headerAccountStaticV100');
+ const panel=document.getElementById('v96Panel'),title=document.getElementById('v96Title'),desc=document.getElementById('v96Desc'),grid=document.getElementById('v96Grid');
+ if(!btn||!panel||!title||!grid)return;
+ btn.onclick=function(){
+  title.textContent='MY ACCOUNT'; if(desc)desc.textContent='Choose an account service.';
+  grid.innerHTML=account.subs.map(s=>'<button class="v96sub" data-account-v102="'+s+'">'+s+'</button>').join('');
+  panel.classList.add('open');
+  grid.querySelectorAll('[data-account-v102]').forEach(b=>b.onclick=function(){
+   const s=b.dataset.accountV102;
+   if(s==='Digital Membership'){const x=document.getElementById('loyaltyV86');if(x){panel.classList.remove('open');x.click();return}}
+   if(s==='Reservations'){const x=document.getElementById('reserveFloatV81');if(x){panel.classList.remove('open');x.click();return}}
+   if(s==='Sign Out'){alert('Signed out of this demo session.');return}
+   alert(s+' is ready for customer data integration.');
+  });
+ };
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+window.addEventListener('load',setup);setTimeout(setup,500);
 })();
 </script></body></html>
