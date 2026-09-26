@@ -212,6 +212,30 @@ function putWifiFirst(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',putWifiFirst);else putWifiFirst();
 setTimeout(putWifiFirst,100);
 })();
+</script><style id="wifi-orbit-v92">
+#customerOrbitV63{margin-bottom:80px!important}
+#wifiV90.wifi-orbit-node-v92{
+ position:absolute!important;left:50%!important;top:108%!important;transform:translate(-50%,-50%)!important;
+ width:128px!important;height:128px!important;min-height:128px!important;border-radius:50%!important;
+ border:5px solid #fff200!important;outline:6px solid rgba(255,242,0,.28)!important;outline-offset:2px!important;
+ background:#0b4b36!important;box-shadow:0 0 30px rgba(255,242,0,.7)!important;padding:8px!important;
+ font-size:11px!important;z-index:25!important;
+}
+#wifiV90.wifi-orbit-node-v92::before{content:"⌁";display:block;font-size:24px;margin-bottom:5px}
+#wifiV90.wifi-orbit-node-v92::after{display:block!important;content:"NEW"!important;top:-17px!important}
+@media(max-width:560px){#wifiV90.wifi-orbit-node-v92{width:112px!important;height:112px!important;min-height:112px!important;top:108%!important}}
+</style>
+<script id="wifi-orbit-script-v92">
+(function(){
+function moveWifi(){
+ var orbit=document.getElementById('customerOrbitV63'),wifi=document.getElementById('wifiV90');
+ if(!orbit||!wifi)return;
+ if(wifi.parentNode!==orbit)orbit.appendChild(wifi);
+ wifi.classList.add('wifi-orbit-node-v92');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',moveWifi);else moveWifi();
+setTimeout(moveWifi,100);
+})();
 </script></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
