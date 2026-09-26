@@ -246,9 +246,14 @@ setTimeout(moveWifi,100);
  #customerOrbitV63 [data-customer-v63="compare"]{left:14%!important;top:25%!important}
  #wifiOrbitStaticV94{display:flex!important;visibility:visible!important;opacity:1!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;left:33%!important;top:88%!important;width:108px!important;height:108px!important;min-height:108px!important}
 }
+</style><style id="header-account-static-v100">
+header{display:flex!important;align-items:center!important;width:100%!important}
+#headerAccountStaticV100{display:flex!important;visibility:visible!important;opacity:1!important;margin-left:auto!important;margin-right:0!important;min-height:46px!important;border:2px solid #e8c878!important;border-radius:999px!important;background:#0b4635!important;color:#fff!important;padding:0 14px!important;font-weight:950!important;font-size:11px!important;align-items:center!important;gap:6px!important;white-space:nowrap!important}
+#headerAccountV99{display:none!important}
+@media(max-width:560px){#headerAccountStaticV100{min-height:42px!important;padding:0 9px!important;font-size:9px!important}header{padding-left:14px!important;padding-right:14px!important}.brand b{font-size:20px!important}}
 </style></head>
 <body>
-<header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
+<header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button type="button" id="headerAccountStaticV100">👤 <span>MY ACCOUNT</span></button><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
 <div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="tracking">CUSTOMER<small>ORDER TRACKING</small></button><button class="customer-node-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63" data-customer-v63="healthy" style="left:12%;top:72%"><span>♥</span>HEALTHY<br>CHOICES</button><button class="customer-node-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button><button type="button" id="wifiOrbitStaticV94" class="customer-node-v63 wifi-static-v94" style="left:50%;top:108%"><span>⌁</span>WI-FI ACCESS</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
 <section class="hero"><div><span class="eyebrow">MENU</span><h1 id="title">Browse Menu</h1><div class="count" id="count"></div></div><div class="actions"><button class="topbtn" id="savedBtn">♡ Saved <span id="savedCount">0</span></button><button class="topbtn primary" id="cartBtn">🛒 Cart <span id="cartCount">0</span></button></div></section>
 <div class="search-wrap"><input class="search" id="search" type="search" placeholder="Search drinks and food…"><button id="clearSearchBtn" type="button" aria-label="Clear search">×</button></div>
@@ -971,4 +976,6 @@ function place(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);else place();
 window.addEventListener('load',place);setTimeout(place,300);
 })();
+</script><script id="header-account-static-v100-script">
+(function(){function bind(){var b=document.getElementById('headerAccountStaticV100');if(!b)return;b.onclick=function(){var a=[...document.querySelectorAll('#customerOrbitV63>.v96node')].find(n=>n.textContent.trim()==='MY ACCOUNT');if(a)a.click()}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind()})();
 </script></body></html>
