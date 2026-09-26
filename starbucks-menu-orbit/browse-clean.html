@@ -949,4 +949,26 @@ function align(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',align);else align();
 window.addEventListener('load',align);setTimeout(align,250);setTimeout(align,900);
 })();
+</script><style id="header-account-v99">
+#headerAccountV99{margin-left:auto;min-height:48px;border:2px solid #e8c878;border-radius:999px;background:#0b4635;color:#fff;padding:0 14px;font-weight:950;font-size:11px;white-space:nowrap}
+#headerAccountV99 span{font-size:18px;vertical-align:middle;margin-right:5px}
+#customerOrbitV63>.v96node[data-v98="account"]{display:none!important}
+@media(max-width:560px){#headerAccountV99{min-height:44px;padding:0 10px;font-size:9px}}
+</style>
+<script id="header-account-v99-script">
+(function(){
+function place(){
+ var account=[...document.querySelectorAll('#customerOrbitV63>.v96node')].find(n=>n.textContent.trim()==='MY ACCOUNT');
+ if(account)account.style.display='none';
+ if(document.getElementById('headerAccountV99'))return;
+ var header=document.querySelector('header')||document.querySelector('.topbar')||document.body.firstElementChild;
+ if(!header)return;
+ var b=document.createElement('button');b.id='headerAccountV99';b.innerHTML='<span>👤</span> MY ACCOUNT';
+ b.onclick=function(){if(account)account.click()};
+ header.appendChild(b);
+ header.style.display='flex';header.style.alignItems='center';
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);else place();
+window.addEventListener('load',place);setTimeout(place,300);
+})();
 </script></body></html>
