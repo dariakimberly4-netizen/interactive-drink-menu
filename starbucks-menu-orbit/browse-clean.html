@@ -122,7 +122,39 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
 #kdsV84{left:14px!important;bottom:136px!important}
 #loyaltyV86{right:14px!important;bottom:194px!important;min-width:205px!important}
 }
-</style></head>
+</style><style id="orbit-layout-fix-v88">
+/* Keep added restaurant tools out of the circular customer orbit */
+#reserveFloatV81,#qrOrderV82,#kdsV84,#loyaltyV86{
+ position:static!important;left:auto!important;right:auto!important;bottom:auto!important;top:auto!important;
+ width:100%!important;min-width:0!important;max-width:none!important;min-height:52px!important;
+ margin:0!important;border-radius:14px!important;transform:none!important;
+}
+#reserveFloatV81,#qrOrderV82,#kdsV84{border:2px solid #e8c878!important;outline:none!important;box-shadow:none!important;background:#073b2b!important}
+#reserveFloatV81::after,#qrOrderV82::after,#kdsV84::after{display:none!important;content:none!important}
+#loyaltyV86{border:4px solid #fff200!important;outline:4px solid rgba(255,242,0,.22)!important;outline-offset:1px!important;box-shadow:0 0 22px rgba(255,242,0,.45)!important;background:#0b4b36!important}
+#loyaltyV86::after{display:block!important;content:"NEW"!important;position:absolute!important;top:-13px!important;left:50%!important;transform:translateX(-50%)!important;background:#fff200!important;color:#07331f!important;border-radius:999px!important;padding:3px 8px!important;font-size:8px!important;font-weight:950!important}
+#restaurantToolsV88{max-width:760px;margin:12px auto 34px;padding:0 22px 24px}
+#restaurantToolsV88 .rt88title{color:#e8c878;font-size:11px;font-weight:950;letter-spacing:.13em;margin-bottom:10px}
+#restaurantToolsV88 .rt88grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#restaurantToolsV88 button{position:relative!important}
+@media(max-width:560px){
+ #restaurantToolsV88{padding:0 22px 26px;margin-top:4px}
+ #restaurantToolsV88 .rt88grid{grid-template-columns:1fr}
+}
+</style>
+<script id="orbit-layout-fix-script-v88">
+(function(){
+ function fixRestaurantTools(){
+  var orbit=document.getElementById('customerOrbitV63'),wrap=document.getElementById('customerOrbitWrapV63');
+  if(!orbit||!wrap)return;
+  var box=document.getElementById('restaurantToolsV88');
+  if(!box){box=document.createElement('section');box.id='restaurantToolsV88';box.innerHTML='<div class="rt88title">RESTAURANT TOOLS</div><div class="rt88grid"></div>';wrap.parentNode.insertBefore(box,wrap.nextSibling)}
+  var grid=box.querySelector('.rt88grid');
+  ['loyaltyV86','kdsV84','qrOrderV82','reserveFloatV81'].forEach(function(id){var b=document.getElementById(id);if(b&&b.parentNode!==grid)grid.appendChild(b)});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fixRestaurantTools);else fixRestaurantTools();
+})();
+</script></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
 <div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="tracking">CUSTOMER<small>ORDER TRACKING</small></button><button class="customer-node-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63" data-customer-v63="healthy" style="left:12%;top:72%"><span>♥</span>HEALTHY<br>CHOICES</button><button class="customer-node-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
