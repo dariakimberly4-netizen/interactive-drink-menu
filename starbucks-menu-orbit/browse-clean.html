@@ -204,14 +204,7 @@ window.addEventListener('load',relocate);window.addEventListener('resize',reloca
 </style>
 <script id="wifi-highlight-order-v91">
 (function(){
-function putWifiFirst(){
- const grid=document.querySelector('#restaurantToolsV88 .rt88grid');
- const wifi=document.getElementById('wifiV90');
- if(grid&&wifi&&grid.firstElementChild!==wifi)grid.insertBefore(wifi,grid.firstElementChild);
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',putWifiFirst);else putWifiFirst();
-setTimeout(putWifiFirst,100);
-})();
+function putWifiFirst(){var orbit=document.getElementById('customerOrbitV63'),wifi=document.getElementById('wifiV90');if(orbit&&wifi&&wifi.parentNode!==orbit){orbit.appendChild(wifi);wifi.classList.add('wifi-orbit-node-v92')}} if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',putWifiFirst);else putWifiFirst();setTimeout(putWifiFirst,100);})();
 </script><style id="wifi-orbit-v92">
 #customerOrbitV63{margin-bottom:80px!important}
 #wifiV90.wifi-orbit-node-v92{
@@ -825,7 +818,16 @@ function home(){const s=localStorage.getItem(SESSION);body.innerHTML='<div class
 function verify(){const v=document.getElementById('w90verify').value.trim();if(!v){alert('Enter a table or receipt number.');return}localStorage.setItem(SESSION,JSON.stringify({verified:v,started:Date.now()}));details()}
 function details(){body.innerHTML='<div class="w90card"><small>VERIFIED GUEST ACCESS</small><h3>Connection Details</h3><p>Network</p><div class="w90pass">RESTAURANT-GUEST</div><p>Password</p><div class="w90pass" id="w90pass">ASK-STAFF-FOR-PASSWORD</div><button class="w90wide" id="w90copy">COPY PASSWORD</button><p><small>For security, replace this demo password text with the restaurant’s actual guest credential before deployment. Do not use the private staff/POS network.</small></p><button class="w90wide ghost" id="w90done">DONE</button></div>';document.getElementById('w90copy').onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById('w90pass').textContent);alert('Password copied.')}catch(e){alert('Press and hold the password to copy it.')}};document.getElementById('w90done').onclick=()=>panel.classList.remove('open')}
 document.getElementById('wifiV90').onclick=()=>{panel.classList.add('open');home()};document.getElementById('w90close').onclick=()=>panel.classList.remove('open');
-function place(){const grid=document.querySelector('#restaurantToolsV88 .rt88grid'),b=document.getElementById('wifiV90');if(grid&&b&&b.parentNode!==grid)grid.insertBefore(b,grid.firstChild)}
+function place(){var orbit=document.getElementById('customerOrbitV63'),b=document.getElementById('wifiV90');if(orbit&&b&&b.parentNode!==orbit){orbit.appendChild(b);b.classList.add('wifi-orbit-node-v92')}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);else place();setTimeout(place,100);
+})();
+</script><style id="wifi-final-v93">
+#wifiV90.wifi-orbit-node-v92{display:block!important;visibility:visible!important;opacity:1!important;position:absolute!important;left:50%!important;top:101%!important;transform:translate(-50%,-50%)!important;width:116px!important;height:116px!important;min-height:116px!important;border-radius:50%!important;z-index:999!important}
+#customerOrbitV63{margin-bottom:125px!important}
+</style>
+<script id="wifi-final-script-v93">
+(function(){
+function lockWifi(){var o=document.getElementById('customerOrbitV63'),w=document.getElementById('wifiV90');if(o&&w){if(w.parentNode!==o)o.appendChild(w);w.classList.add('wifi-orbit-node-v92')}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',lockWifi);else lockWifi();window.addEventListener('load',lockWifi);setTimeout(lockWifi,300);setTimeout(lockWifi,1000);
 })();
 </script></body></html>
