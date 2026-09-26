@@ -154,6 +154,37 @@ body.customer-workspace-open-v64 #customerWorkspaceV63{display:block!important}
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fixRestaurantTools);else fixRestaurantTools();
 })();
+</script><style id="orbit-clearance-v89">
+#customerOrbitWrapV63{position:relative!important;display:block!important;overflow:visible!important}
+#restaurantToolsV88{
+ position:relative!important;clear:both!important;display:block!important;
+ max-width:760px!important;margin:90px auto 40px!important;padding:24px 22px 30px!important;
+ z-index:20!important;background:#06291e!important;border-top:1px solid rgba(232,200,120,.28)!important;
+}
+#restaurantToolsV88 .rt88title{margin:0 0 14px!important}
+#restaurantToolsV88 .rt88grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+#restaurantToolsV88 .rt88grid>button{position:relative!important;inset:auto!important;transform:none!important;float:none!important;width:100%!important;margin:0!important}
+@media(max-width:560px){
+ #customerOrbitWrapV63{padding-bottom:70px!important}
+ #restaurantToolsV88{margin:120px auto 34px!important;padding:22px!important}
+ #restaurantToolsV88 .rt88grid{grid-template-columns:1fr!important}
+}
+</style>
+<script id="orbit-clearance-script-v89">
+(function(){
+function relocate(){
+ var wrap=document.getElementById('customerOrbitWrapV63'),box=document.getElementById('restaurantToolsV88');
+ if(!wrap||!box)return;
+ var parent=wrap.parentNode;
+ if(box.previousElementSibling!==wrap)parent.insertBefore(box,wrap.nextSibling);
+ var orbit=document.getElementById('customerOrbitV63');
+ if(orbit){
+   var h=Math.ceil(orbit.getBoundingClientRect().height);
+   if(h>0)wrap.style.minHeight=(orbit.offsetTop+h+40)+'px';
+ }
+}
+window.addEventListener('load',relocate);window.addEventListener('resize',relocate);setTimeout(relocate,100);
+})();
 </script></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
