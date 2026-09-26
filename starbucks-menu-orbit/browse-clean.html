@@ -229,10 +229,15 @@ function moveWifi(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',moveWifi);else moveWifi();
 setTimeout(moveWifi,100);
 })();
-</script></head>
+</script><style id="wifi-static-v94-style">
+#wifiOrbitStaticV94{border:5px solid #fff200!important;outline:6px solid rgba(255,242,0,.28)!important;outline-offset:2px!important;box-shadow:0 0 30px rgba(255,242,0,.72)!important;background:#0b4b36!important;z-index:50!important}
+#wifiOrbitStaticV94::after{content:"NEW";position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:#fff200;color:#07331f;border-radius:999px;padding:4px 8px;font-size:8px;font-weight:950}
+#customerOrbitV63{margin-bottom:145px!important}
+#wifiV90{display:none!important}
+</style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
-<div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="tracking">CUSTOMER<small>ORDER TRACKING</small></button><button class="customer-node-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63" data-customer-v63="healthy" style="left:12%;top:72%"><span>♥</span>HEALTHY<br>CHOICES</button><button class="customer-node-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
+<div class="wrap" id="customerOrbitWrapV63"><section class="hero"><div><span class="eyebrow">CUSTOMER</span><h1>Menu Orbit</h1><div class="count">Tap a module to begin</div></div></section><section class="customer-orbit-v63" id="customerOrbitV63"><button class="customer-center-v63" data-customer-v63="tracking">CUSTOMER<small>ORDER TRACKING</small></button><button class="customer-node-v63" data-customer-v63="browse" style="left:50%;top:7%"><span>☕</span>BROWSE MENU</button><button class="customer-node-v63" data-customer-v63="search" style="left:88%;top:28%"><span>⌕</span>SEARCH</button><button class="customer-node-v63" data-customer-v63="saved" style="left:88%;top:72%"><span>♡</span>SAVED</button><button class="customer-node-v63" data-customer-v63="cart" style="left:50%;top:93%"><span>🛒</span>MY CART</button><button class="customer-node-v63" data-customer-v63="healthy" style="left:12%;top:72%"><span>♥</span>HEALTHY<br>CHOICES</button><button class="customer-node-v63" data-customer-v63="compare" style="left:12%;top:28%"><span>⚖</span>COMPARE</button><button type="button" id="wifiOrbitStaticV94" class="customer-node-v63 wifi-static-v94" style="left:50%;top:108%"><span>⌁</span>WI-FI ACCESS</button></section></div><div class="wrap customer-workspace-v63" id="customerWorkspaceV63"><button class="topbtn customer-back-v63" id="customerBackV63">‹ Back to Customer Orbit</button>
 <section class="hero"><div><span class="eyebrow">MENU</span><h1 id="title">Browse Menu</h1><div class="count" id="count"></div></div><div class="actions"><button class="topbtn" id="savedBtn">♡ Saved <span id="savedCount">0</span></button><button class="topbtn primary" id="cartBtn">🛒 Cart <span id="cartCount">0</span></button></div></section>
 <div class="search-wrap"><input class="search" id="search" type="search" placeholder="Search drinks and food…"><button id="clearSearchBtn" type="button" aria-label="Clear search">×</button></div>
 <div class="controls"><div class="filters"><button class="active" data-filter="all">All</button><button data-filter="drinks">Drinks</button><button data-filter="food">Food</button><button data-filter="hot">Hot</button><button data-filter="iced">Iced</button><button data-filter="favorites">♡ Favorites</button></div><select id="sort"><option value="featured">Featured</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option><option value="name">Name: A–Z</option></select></div>
@@ -829,5 +834,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (function(){
 function lockWifi(){var o=document.getElementById('customerOrbitV63'),w=document.getElementById('wifiV90');if(o&&w){if(w.parentNode!==o)o.appendChild(w);w.classList.add('wifi-orbit-node-v92')}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',lockWifi);else lockWifi();window.addEventListener('load',lockWifi);setTimeout(lockWifi,300);setTimeout(lockWifi,1000);
+})();
+</script><script id="wifi-static-v94-script">
+(function(){
+function bind(){var b=document.getElementById('wifiOrbitStaticV94'),p=document.getElementById('wifiPanelV90');if(!b||!p)return;b.onclick=function(e){e.preventDefault();e.stopPropagation();p.classList.add('open');var hidden=document.getElementById('wifiV90');if(hidden)hidden.click()}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();setTimeout(bind,100);
 })();
 </script></body></html>
