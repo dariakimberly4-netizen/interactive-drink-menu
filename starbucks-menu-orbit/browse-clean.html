@@ -1577,4 +1577,24 @@ document.addEventListener("click",function(e){
  },0);
 },true);
 })();
+</script><style id="v132-hard-override">
+#v132Viewer{position:fixed!important;inset:0!important;z-index:2147483647!important;background:#f7f3ea!important;display:none!important;overflow:auto!important;padding:20px!important;box-sizing:border-box!important}
+#v132Viewer.show{display:block!important}
+#v132Viewer img{display:block!important;width:min(520px,92vw)!important;height:auto!important;margin:28px auto!important;object-fit:contain!important;background:white!important;border-radius:24px!important}
+#v132Viewer button{display:block!important;border:0!important;border-radius:999px!important;padding:14px 20px!important;background:#006241!important;color:white!important;font-weight:800!important;font-size:17px!important;cursor:pointer!important}
+#v132Viewer h2{text-align:center!important;color:#1e3932!important;font-size:clamp(28px,6vw,44px)!important}
+</style>
+<div id="v132Viewer"><button type="button" id="v132Back">‹ Back to Browse Menu</button><img src="https://raw.githubusercontent.com/dariakimberly4-netizen/interactive-drink-menu/main/starbucks-menu-orbit/images/products/image.png?v=132" alt="Product image"><h2 id="v132Name">Starbucks Menu Item</h2></div>
+<script id="v132-hard-override-script">
+(function(){
+const viewer=document.getElementById("v132Viewer"),name=document.getElementById("v132Name");
+window.addEventListener("click",function(e){
+ const card=e.target.closest&&e.target.closest("#v109Grid .v109item");
+ if(!card)return;
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+ name.textContent=card.querySelector("b")?.textContent.trim()||"Starbucks Menu Item";
+ viewer.classList.add("show");document.body.style.overflow="hidden";
+},true);
+document.getElementById("v132Back").addEventListener("click",function(e){e.preventDefault();e.stopPropagation();viewer.classList.remove("show");document.body.style.overflow="";},true);
+})();
 </script></body></html>
