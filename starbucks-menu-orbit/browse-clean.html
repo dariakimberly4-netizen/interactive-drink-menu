@@ -1083,4 +1083,21 @@ body.browse-direct-v108 .controls{display:flex!important}
 body.browse-direct-v108 #browseBackV108{display:inline-flex!important;align-items:center;justify-content:center;min-height:44px;padding:0 14px;border:1px solid #f4c86f;border-radius:12px;background:#153a2d;color:#fff;font-weight:900;position:fixed;right:18px;top:82px;z-index:9999}
 </style><button id="browseBackV108" type="button">← MENU & ORDER</button><script id="browse-direct-v108-script">
 document.getElementById('browseBackV108').onclick=function(){document.body.classList.remove('browse-direct-v108');document.getElementById('customerOrbitWrapV63')?.scrollIntoView({behavior:'smooth',block:'start'})};
+</script><style id="v109-browse-modal-fix">
+#v109Browse{display:none;position:fixed;inset:0;z-index:2147483647;background:#031811;color:#fff;overflow:auto;padding:18px}
+#v109Browse.open{display:block}.v109in{max-width:1200px;margin:auto}.v109head{display:flex;justify-content:space-between;align-items:center;gap:12px}.v109head h2{font:700 42px Georgia,serif;margin:8px 0}.v109back{min-height:48px;padding:0 16px;border:1px solid #f4c86f;border-radius:12px;background:#153a2d;color:#fff;font-weight:900}.v109cats{display:flex;gap:8px;overflow:auto;padding:12px 0 18px}.v109cat{flex:0 0 auto;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid #ffffff22;background:#0b3024;color:#fff;font-weight:900}.v109grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.v109item{padding:16px;border:1px solid #ffffff20;border-radius:16px;background:#0b3024}.v109item b{display:block;font-size:16px;margin-bottom:6px}.v109item small{color:#9eb5aa}.v109item strong{display:block;color:#f4d992;margin-top:10px}@media(max-width:700px){.v109grid{grid-template-columns:1fr 1fr}.v109head h2{font-size:32px}}@media(max-width:430px){.v109grid{grid-template-columns:1fr}}
+</style>
+<section id="v109Browse"><div class="v109in"><div class="v109head"><div><small style="color:#f4c86f;font-weight:900">STARBUCKS MENU</small><h2>Browse Menu</h2></div><button class="v109back" id="v109Back">← MENU & ORDER</button></div><div class="v109cats" id="v109Cats"></div><div class="v109grid" id="v109Grid"></div></div></section>
+<script id="v109-browse-script">
+(function(){
+const items=[
+['Featured','Ham and Cheese Croffle with Pork','₱205'],['Featured','Cookies and Cream Cheesecake','₱315'],['Refreshers','Mango Dragonfruit Lemonade Refresher','₱195'],['Refreshers','Pink Drink with Strawberry Açaí','₱195'],['Brewed Coffee','Hot Brewed Coffee','₱140'],['Brewed Coffee','Cold Brew','₱185'],['Brewed Coffee','Vanilla Sweet Cream Cold Brew','₱205'],['Espresso','Caffè Americano','₱175'],['Espresso','Caffè Latte','₱185'],['Espresso','Caffè Mocha','₱200'],['Espresso','White Mocha','₱210'],['Espresso','Caramel Macchiato','₱210'],['Chocolate','Signature Chocolate','₱185'],['Frappuccino','Coffee Jelly Frappuccino','₱205'],['Frappuccino','Java Chip Frappuccino','₱215'],['Frappuccino','Caramel Frappuccino','₱190'],['Matcha','Pure Matcha Latte','₱190'],['Tea','Chai Tea Latte','₱185'],['Bakery','French Butter Croissant','₱150'],['Bakery','Banana Bread','₱105'],['Pasta','Fusilli Baked Salmon','₱270'],['Pasta','Penne Pesto with Mushroom','₱225'],['Sandwiches','Grilled Cheese Sandwich','₱235'],['Cakes','New York Cheesecake Slice','₱265']
+];
+const modal=document.getElementById('v109Browse'),grid=document.getElementById('v109Grid'),cats=document.getElementById('v109Cats');
+function render(cat='All'){grid.innerHTML=items.filter(x=>cat==='All'||x[0]===cat).map(x=>'<article class="v109item"><small>'+x[0]+'</small><b>'+x[1]+'</b><strong>'+x[2]+'</strong></article>').join('')}
+['All',...new Set(items.map(x=>x[0]))].forEach(x=>{const b=document.createElement('button');b.className='v109cat';b.textContent=x;b.onclick=()=>render(x);cats.appendChild(b)});render();
+function open(){document.getElementById('v96Panel')?.classList.remove('open');modal.classList.add('open')}
+document.addEventListener('click',function(e){const b=e.target.closest('button');if(b&&b.textContent.replace(/\s+/g,' ').trim()==='Browse Menu'){e.preventDefault();e.stopImmediatePropagation();open()}},true);
+document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
+})();
 </script></body></html>
