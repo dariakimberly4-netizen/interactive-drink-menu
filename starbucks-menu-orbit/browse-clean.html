@@ -309,6 +309,8 @@ header .brand{transform:scale(.88);transform-origin:left center}
 #customerOrbitV63>.v96node:nth-of-type(7){left:9%!important;top:29%!important}
 #customerOrbitWrapV63 .hero h1{font-size:42px!important}
 }
+</style><style id="v133-renderer-image">
+#v109Grid .v133thumb{display:block!important;width:100%!important;max-width:360px!important;aspect-ratio:1/1!important;object-fit:contain!important;margin:0 auto 16px!important;border-radius:18px!important;background:#fff!important}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button type="button" id="headerAccountStaticV100">👤 <span>MY ACCOUNT</span></button><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
@@ -1181,7 +1183,7 @@ function render(cat='All'){
   if(cat.includes('Whole Bean')||cat.includes('VIA')||cat.includes('Origami'))return 'Enjoy Starbucks coffee at home with a convenient take-home selection.';
   return 'A Starbucks menu favorite crafted for an enjoyable café experience.';
  };
- grid.innerHTML=items.filter(x=>cat==='All'||x[0]===cat).map(x=>'<article class="v109item"><small>'+x[0]+'</small><b>'+x[1]+'</b><p class="v116desc">'+desc(x[1],x[0])+'</p><strong>'+x[2]+'</strong></article>').join('')
+ grid.innerHTML=items.filter(x=>cat==='All'||x[0]===cat).map(x=>'<article class="v109item" data-v133-product="1"><img class="v133thumb" src="./images/products/image.png?v=133" alt="'+x[1].replace(/"/g,'&quot;')+'"><small>'+x[0]+'</small><b>'+x[1]+'</b><p class="v116desc">'+desc(x[1],x[0])+'</p><strong>'+x[2]+'</strong></article>').join('')
 }
 ['All',...new Set(items.map(x=>x[0]))].forEach(x=>{const b=document.createElement('button');b.className='v109cat';b.textContent=x;b.onclick=()=>render(x);cats.appendChild(b)});render();
 function open(){document.getElementById('v96Panel')?.classList.remove('open');modal.classList.add('open')}
