@@ -1384,4 +1384,23 @@ document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
  const modal=document.getElementById('v118Product');if(modal)new MutationObserver(ensure).observe(modal,{attributes:true,attributeFilter:['class']});
  ensure();
 })();
+</script><script id="v121-official-featured-photo">
+(function(){
+ const officialFeatured='https://www.starbucks.ph/menu';
+ document.addEventListener('click',function(e){
+  const card=e.target.closest('#v109Grid .v109item'); if(!card)return;
+  const name=card.querySelector('b')?.textContent.trim()||'';
+  if(name==='Roasted Macadamia Oatmilk Frappuccino®'||name==='Roasted Macadamia Oatmilk Frappuccino ®'){
+   setTimeout(function(){
+    const pic=document.getElementById('v118Pic');
+    if(!pic)return;
+    pic.src='https://www.starbucks.ph/sites/starbucks-ph/files/styles/featured_image/public/2026-09/roasted-macadamia-oatmilk-frappuccino.png';
+    pic.onerror=function(){
+      this.onerror=null;
+      this.src='https://www.starbucks.ph/sites/starbucks-ph/files/2026-09/roasted-macadamia-oatmilk-frappuccino.png';
+    };
+   },0);
+  }
+ },true);
+})();
 </script></body></html>
