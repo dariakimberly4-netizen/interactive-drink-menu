@@ -1515,4 +1515,22 @@ function force(){
 document.addEventListener('click',function(e){if(e.target.closest('#v109Grid .v109item')){setTimeout(force,50);setTimeout(force,300);setTimeout(force,1000)}},true);
 new MutationObserver(force).observe(document.body,{subtree:true,childList:true,attributes:true});
 })();
+</script><style id="v129-repo-photo">
+#v118Product #v118Pic{display:none!important}
+#v118Product.repo-photo-ready #v118Pic{display:block!important;visibility:visible!important;opacity:1!important;width:min(320px,82vw)!important;height:min(320px,82vw)!important;object-fit:contain!important;border-radius:24px!important;background:#f7f3ea!important;margin:24px auto!important}
+</style>
+<script id="v129-repo-photo-script">
+(function(){
+const REPO_PHOTO="./images/products/image.png";
+function apply(){
+ const modal=document.getElementById("v118Product"),pic=document.getElementById("v118Pic");
+ if(!modal||!pic)return;
+ pic.onerror=function(){modal.classList.remove("repo-photo-ready");this.style.setProperty("display","none","important")};
+ pic.onload=function(){modal.classList.add("repo-photo-ready");this.style.setProperty("display","block","important")};
+ pic.src=REPO_PHOTO+"?v=129";
+}
+document.addEventListener("click",function(e){
+ if(e.target.closest("#v109Grid .v109item")){setTimeout(apply,20);setTimeout(apply,250)}
+},true);
+})();
 </script></body></html>
