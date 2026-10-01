@@ -1563,4 +1563,18 @@ document.addEventListener("click",function(e){
  },true);
  modal.querySelector(".v130back").addEventListener("click",function(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.style.overflow="";});
 })();
+</script><script id="v131-single-photo-controller">
+(function(){
+const PHOTO=new URL("./images/products/image.png",location.href).href+"?v=131";
+document.addEventListener("click",function(e){
+ const card=e.target.closest("#v109Grid .v109item"); if(!card)return;
+ setTimeout(function(){
+  const pic=document.getElementById("v118Pic"),modal=document.getElementById("v118Product");
+  if(!pic||!modal)return;
+  pic.onerror=null; pic.src=PHOTO;
+  pic.style.cssText="display:block!important;visibility:visible!important;opacity:1!important;width:min(420px,88vw)!important;height:auto!important;min-height:0!important;object-fit:contain!important;margin:24px auto!important;border-radius:24px!important;background:#fff!important";
+  modal.classList.add("open");
+ },0);
+},true);
+})();
 </script></body></html>
