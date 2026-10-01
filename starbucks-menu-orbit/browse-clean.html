@@ -1450,4 +1450,22 @@ document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
    },50);
  },true);
 })();
+</script><style id="v124-clean-official-only">
+#v118Product .v118pic{display:none!important}
+#v118Product.hasVerifiedPhoto .v118pic{display:block!important}
+</style>
+<script id="v124-clean-official-only-script">
+(function(){
+ const modal=document.getElementById('v118Product'),pic=document.getElementById('v118Pic');
+ if(pic){pic.removeAttribute('src');pic.style.display='none'}
+ if(modal)modal.classList.remove('hasVerifiedPhoto');
+ document.addEventListener('click',function(e){
+   if(!e.target.closest('#v109Grid .v109item'))return;
+   setTimeout(function(){
+     const p=document.getElementById('v118Pic'),m=document.getElementById('v118Product');
+     if(p){p.removeAttribute('src');p.style.setProperty('display','none','important')}
+     m?.classList.remove('hasVerifiedPhoto');
+   },100);
+ },true);
+})();
 </script></body></html>
