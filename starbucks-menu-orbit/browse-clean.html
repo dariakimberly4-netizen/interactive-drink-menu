@@ -1257,4 +1257,45 @@ document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
 </style><style id="v116-description-style">
 .v109item .v116desc{margin:8px 0 0;max-width:760px;color:#c6d6d0;font-size:15px;line-height:1.5;font-weight:400}
 @media(max-width:700px){.v109item .v116desc{font-size:14px;line-height:1.45;margin-top:7px}}
-</style></body></html>
+</style><style id="v117-desc-force">
+#v109Browse .v109item .v116desc{display:block!important;visibility:visible!important;opacity:1!important;color:#c8d8d2!important;font-size:16px!important;line-height:1.45!important;margin:10px 0 2px!important;max-width:850px!important}
+</style>
+<script id="v117-desc-force-script">
+(function(){
+ const descriptions={
+ 'Featured Drinks':'Seasonal Starbucks favorites crafted for a limited time.',
+ 'Brewed Coffee':'Freshly brewed coffee with a smooth, full-bodied character.',
+ 'Espresso':'Rich espresso crafted with milk, water or signature flavors.',
+ 'Blended Beverage':'Creamy, icy blended beverages made for a refreshing treat.',
+ 'Teavana Tea':'Refreshing tea beverages with bright and aromatic flavors.',
+ 'Starbucks Refreshers':'Light, fruity and refreshing beverages served cold.',
+ 'Chocolate & More':'Rich chocolate and non-coffee favorites for a comforting sip.',
+ 'Starbucks Reserve®':'Distinctive coffees and beverages from the Starbucks Reserve collection.',
+ 'Coffee Traveler':'Fresh brewed coffee prepared for sharing with a group.',
+ 'Featured Food':'Seasonal café food made to pair with your favorite beverage.',
+ 'All-day Bakery':'Fresh bakery favorites for breakfast, snacks or coffee pairing.',
+ 'Sandwiches & Pastas':'Savory and satisfying café meals for any time of day.',
+ 'Oatmeal & Fruits':'Lighter breakfast and snack choices for an easy café meal.',
+ 'Desserts':'Sweet café treats made for pairing with coffee or tea.',
+ 'Ready-to-Eat & More':'Convenient grab-and-go food selections.',
+ 'Bake-in':'Warm café favorites prepared for an easy snack or meal.',
+ 'Whole Bean':'Whole bean Starbucks coffee to brew and enjoy at home.',
+ 'Starbucks VIA®':'Convenient Starbucks instant coffee for enjoying anywhere.',
+ 'Starbucks Origami':'Single-cup pour-over coffee designed for easy home brewing.'
+ };
+ function apply(){
+  document.querySelectorAll('#v109Grid .v109item').forEach(card=>{
+   if(card.querySelector('.v117description'))return;
+   const cat=card.querySelector('small')?.textContent.trim()||'';
+   const title=card.querySelector('b');
+   if(!title)return;
+   const p=document.createElement('p');p.className='v116desc v117description';
+   p.textContent=descriptions[cat]||'A Starbucks café favorite crafted for an enjoyable coffeehouse experience.';
+   title.insertAdjacentElement('afterend',p);
+  });
+ }
+ const grid=document.getElementById('v109Grid');
+ if(grid){new MutationObserver(apply).observe(grid,{childList:true,subtree:true});apply()}
+ document.addEventListener('click',e=>{if(e.target.closest('#v109Cats'))setTimeout(apply,0)},true);
+})();
+</script></body></html>
