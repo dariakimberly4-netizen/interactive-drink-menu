@@ -885,7 +885,7 @@ menus.forEach(m=>{let b=document.createElement('button');b.className='v96node'+(
 function open(m){title.textContent=m.name;desc.textContent='Choose a service.';grid.innerHTML=m.subs.map(s=>'<button class="v96sub" data-v96="'+s+'">'+s+'</button>').join('');panel.classList.add('open');grid.querySelectorAll('[data-v96]').forEach(b=>b.onclick=()=>route(b.dataset.v96))}
 function click(sel){const b=document.querySelector(sel);if(b){panel.classList.remove('open');b.click();return true}return false}
 function route(s){
- if(s==='Browse Menu')return click('[data-customer-v63="browse"]');
+ if(s==='Browse Menu'){panel.classList.remove('open');document.body.classList.add('browse-direct-v108');setTimeout(()=>{const g=document.getElementById('grid');if(g)g.scrollIntoView({behavior:'smooth',block:'start'});},50);return;}
  if(s==='Search')return click('[data-customer-v63="search"]');
  if(s==='My Cart')return click('[data-customer-v63="cart"]');
  if(s==='Saved')return click('[data-customer-v63="saved"]');
@@ -1072,4 +1072,15 @@ function openCatalog(){
 document.addEventListener('click',function(e){const b=e.target.closest('button');if(b&&b.textContent.replace(/\s+/g,' ').trim()==='Browse Menu'){e.preventDefault();e.stopImmediatePropagation();openCatalog()}},true);
 window.openBrowseCatalogV107=openCatalog;
 })();
+</script><style id="browse-direct-v108-style">
+body.browse-direct-v108 #customerOrbitWrapV63{display:none!important}
+body.browse-direct-v108 .wrap{display:block!important}
+body.browse-direct-v108 .hero,body.browse-direct-v108 .search-wrap,body.browse-direct-v108 .controls,body.browse-direct-v108 #grid{display:grid!important}
+body.browse-direct-v108 .hero{display:flex!important}
+body.browse-direct-v108 .search-wrap{display:block!important}
+body.browse-direct-v108 .controls{display:flex!important}
+#browseBackV108{display:none}
+body.browse-direct-v108 #browseBackV108{display:inline-flex!important;align-items:center;justify-content:center;min-height:44px;padding:0 14px;border:1px solid #f4c86f;border-radius:12px;background:#153a2d;color:#fff;font-weight:900;position:fixed;right:18px;top:82px;z-index:9999}
+</style><button id="browseBackV108" type="button">← MENU & ORDER</button><script id="browse-direct-v108-script">
+document.getElementById('browseBackV108').onclick=function(){document.body.classList.remove('browse-direct-v108');document.getElementById('customerOrbitWrapV63')?.scrollIntoView({behavior:'smooth',block:'start'})};
 </script></body></html>
