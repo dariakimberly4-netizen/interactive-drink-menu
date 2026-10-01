@@ -1000,4 +1000,26 @@ window.addEventListener('load',setup);setTimeout(setup,500);
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
  setTimeout(purge,100);setTimeout(purge,1000);setTimeout(purge,3000);
 })();
+</script><script id="browse-menu-fix-v104">
+(function(){
+function fix(){
+ const panel=document.getElementById('v96Panel'), grid=document.getElementById('v96Grid');
+ if(!grid)return;
+ grid.addEventListener('click',function(e){
+   const b=e.target.closest('[data-v96]');
+   if(!b||b.dataset.v96!=='Browse Menu')return;
+   e.preventDefault();e.stopImmediatePropagation();
+   if(panel)panel.classList.remove('open');
+   document.body.classList.remove('customer-workspace-open-v64');
+   const wrap=document.querySelector('.wrap');
+   const hero=document.querySelector('.hero');
+   const search=document.querySelector('.search, #searchInput');
+   const cards=document.querySelector('.grid');
+   [wrap,hero,cards].forEach(x=>{if(x){x.style.removeProperty('display');x.hidden=false}});
+   if(search){search.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>search.focus(),300)}
+   else if(cards)cards.scrollIntoView({behavior:'smooth',block:'start'});
+ },true);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();
+})();
 </script></body></html>
