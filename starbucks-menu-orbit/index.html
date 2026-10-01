@@ -5479,5 +5479,53 @@
 
 
 
+
+<!-- PRODUCT CUSTOMIZER V60: additive only; approved orbit remains unchanged -->
+<style>
+#pc60{position:fixed;inset:0;z-index:160;display:none;background:rgba(1,10,7,.72);backdrop-filter:blur(9px);padding:14px}
+#pc60.open{display:flex;align-items:center;justify-content:center}
+.pc60-card{width:min(760px,100%);max-height:94vh;overflow:auto;background:#08251b;color:#fff;border:1px solid rgba(255,255,255,.14);border-radius:26px;box-shadow:0 24px 80px rgba(0,0,0,.55);padding:20px}
+.pc60-head{display:flex;align-items:center;gap:14px}.pc60-head img{width:92px;height:92px;border-radius:20px;object-fit:cover;background:#fff}.pc60-head div{min-width:0;flex:1}.pc60-head h2{font:700 clamp(22px,4vw,32px)/1.05 Georgia,serif;margin:0 0 5px}.pc60-price{color:#f2cf8b;font-weight:900}.pc60-close{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;font-size:22px}
+.pc60-tabs{display:flex;gap:7px;overflow:auto;margin:18px 0 14px}.pc60-tabs button{white-space:nowrap;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-weight:800}.pc60-tabs button.active{background:#f4efe6;color:#07331f}
+.pc60-panel{display:none}.pc60-panel.active{display:block}.pc60-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pc60-field{display:grid;gap:6px;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:15px;background:rgba(255,255,255,.045)}.pc60-field select{min-height:46px;border-radius:11px;border:1px solid rgba(255,255,255,.14);background:#0d3628;color:#fff;padding:0 10px}
+.pc60-light{border:1px solid rgba(244,200,111,.45);border-radius:18px;padding:15px;background:linear-gradient(135deg,rgba(244,200,111,.13),rgba(0,168,98,.12));margin-bottom:10px}.pc60-light h3{margin:0 0 5px}.pc60-light button{min-height:45px;border:0;border-radius:12px;background:#f4efe6;color:#07331f;font-weight:900;padding:0 14px}
+.pc60-nutrition{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.pc60-stat{text-align:center;padding:14px 7px;border-radius:14px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12)}.pc60-stat b{display:block;color:#f2cf8b;font-size:20px}.pc60-stat span{font-size:10px;color:#b8cbc1}
+.pc60-note{color:#b8cbc1;font-size:12px;line-height:1.5;margin-top:12px}.pc60-add{width:100%;min-height:56px;margin-top:18px;border:0;border-radius:16px;background:linear-gradient(135deg,#00a862,#00754a);color:#fff;font-weight:900;font-size:16px}
+@media(max-width:600px){#pc60{padding:0}.pc60-card{height:100%;max-height:none;border-radius:0;padding:16px}.pc60-head img{width:76px;height:76px}.pc60-grid{grid-template-columns:1fr}.pc60-nutrition{grid-template-columns:1fr 1fr}.pc60-tabs{position:sticky;top:-16px;z-index:2;background:#08251b;padding:12px 0 8px;margin-top:12px}}
+</style>
+<div id="pc60" role="dialog" aria-modal="true" aria-label="Customize drink">
+ <div class="pc60-card">
+  <div class="pc60-head"><img id="pc60img" alt=""><div><h2 id="pc60name">Customize</h2><div class="pc60-price" id="pc60price"></div></div><button class="pc60-close" id="pc60close" aria-label="Close">×</button></div>
+  <div class="pc60-tabs"><button class="active" data-pc60="custom">Customize</button><button data-pc60="lighter">Make It Lighter</button><button data-pc60="nutrition">Nutrition</button></div>
+  <section class="pc60-panel active" data-pc60-panel="custom"><div class="pc60-grid">
+   <label class="pc60-field">Size<select id="pc60size"><option>Tall</option><option selected>Grande</option><option>Venti</option></select></label>
+   <label class="pc60-field">Milk<select id="pc60milk"><option>Whole Milk</option><option selected>2% Milk</option><option>Nonfat Milk</option><option>Oatmilk</option><option>Almondmilk</option></select></label>
+   <label class="pc60-field">Espresso shots<select id="pc60shots"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
+   <label class="pc60-field">Syrup pumps<select id="pc60syrup"><option>0</option><option>1</option><option>2</option><option selected>3</option><option>4</option></select></label>
+   <label class="pc60-field">Whipped cream<select id="pc60whip"><option selected>Regular</option><option>Light</option><option>None</option></select></label>
+   <label class="pc60-field">Ice<select id="pc60ice"><option>Light</option><option selected>Regular</option><option>Extra</option></select></label>
+  </div></section>
+  <section class="pc60-panel" data-pc60-panel="lighter"><div class="pc60-light"><h3>Make It Lighter</h3><p>Apply a simple lighter configuration without changing your selected drink.</p><button id="pc60apply">Apply lighter choices</button></div><div class="pc60-grid"><div class="pc60-field"><b>Milk</b><span>Switch to nonfat milk.</span></div><div class="pc60-field"><b>Syrup</b><span>Reduce syrup pumps.</span></div><div class="pc60-field"><b>Whip</b><span>Remove whipped cream.</span></div><div class="pc60-field"><b>Keep your drink</b><span>Other selections stay editable.</span></div></div></section>
+  <section class="pc60-panel" data-pc60-panel="nutrition"><div class="pc60-nutrition"><div class="pc60-stat"><b id="pc60cal">—</b><span>CALORIES*</span></div><div class="pc60-stat"><b id="pc60sugar">—</b><span>SUGAR*</span></div><div class="pc60-stat"><b id="pc60fat">—</b><span>FAT*</span></div><div class="pc60-stat"><b id="pc60caf">—</b><span>CAFFEINE*</span></div></div><p class="pc60-note">*Nutrition values are shown only when available in this prototype's product data. Customizations may change nutrition. Shared equipment means allergen-free preparation cannot be guaranteed.</p></section>
+  <button class="pc60-add" id="pc60add">Add to Cart</button>
+ </div>
+</div>
+<script>
+(()=>{const q=s=>document.querySelector(s),modal=q('#pc60');let product=null;
+function money(v){return '₱'+Number(v||0).toLocaleString()}
+function data(){return window.MenuOrbitApp?.products||window.__MENU_ORBIT_PRODUCTS_V51||[]}
+function find(id){return data().find(p=>String(p.id)===String(id))}
+function updateNutrition(){if(!product)return; q('#pc60cal').textContent=product.cal??'See store';q('#pc60sugar').textContent=product.sugar??'See store';q('#pc60fat').textContent=product.fat??'See store';q('#pc60caf').textContent=product.caffeine??product.caf??'See store'}
+function open(p){if(!p)return;product=p;q('#pc60img').src=p.img||'';q('#pc60img').alt=p.name||'';q('#pc60name').textContent=p.name||'Customize';q('#pc60price').textContent=money(p.price);updateNutrition();modal.classList.add('open');document.body.style.overflow='hidden'}
+function close(){modal.classList.remove('open');document.body.style.overflow=''}
+document.addEventListener('click',e=>{const b=e.target.closest?.('.product,[data-recovery-view],[data-view-product]');if(!b||modal.classList.contains('open'))return;const id=b.dataset.id||b.dataset.recoveryView||b.dataset.viewProduct;if(!id)return;const p=find(id);if(p){e.preventDefault();e.stopImmediatePropagation();open(p)}},true);
+q('#pc60close').onclick=close;modal.addEventListener('click',e=>{if(e.target===modal)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))close()});
+document.querySelectorAll('[data-pc60]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-pc60]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('[data-pc60-panel]').forEach(x=>x.classList.toggle('active',x.dataset.pc60Panel===b.dataset.pc60))});
+q('#pc60apply').onclick=()=>{q('#pc60milk').value='Nonfat Milk';q('#pc60syrup').value='1';q('#pc60whip').value='None';q('[data-pc60="custom"]').click()};
+q('#pc60add').onclick=()=>{if(!product)return;const opts={size:q('#pc60size').value,milk:q('#pc60milk').value,shots:q('#pc60shots').value,syrup:q('#pc60syrup').value,whip:q('#pc60whip').value,ice:q('#pc60ice').value};if(typeof window.MenuOrbitApp?.addToCart==='function')window.MenuOrbitApp.addToCart(product.id,opts);else{let cart=[];try{cart=JSON.parse(localStorage.getItem('menuOrbitCart')||'[]')}catch(e){}cart.push({...product,customization:opts,qty:1});localStorage.setItem('menuOrbitCart',JSON.stringify(cart));window.dispatchEvent(new Event('storage'))}q('#pc60add').textContent='✓ Added to Cart';setTimeout(()=>{q('#pc60add').textContent='Add to Cart';close()},650)};
+window.ProductCustomizerV60={openById:id=>open(find(id)),open};
+})();
+</script>
+
 </body>
 </html>
