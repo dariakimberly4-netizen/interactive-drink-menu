@@ -1533,4 +1533,34 @@ document.addEventListener("click",function(e){
  if(e.target.closest("#v109Grid .v109item")){setTimeout(apply,20);setTimeout(apply,250)}
 },true);
 })();
+</script><style id="v130-clean-product-detail">
+#v130Detail{position:fixed;inset:0;z-index:2147483647;background:#f7f3ea;display:none;overflow:auto;padding:22px;box-sizing:border-box;color:#173f35;font-family:inherit}
+#v130Detail.open{display:block}
+#v130Detail .v130inner{max-width:760px;margin:0 auto}
+#v130Detail .v130back{border:0;background:#006241;color:#fff;border-radius:999px;padding:14px 20px;font-size:17px;font-weight:800;cursor:pointer}
+#v130Detail img{display:block;width:min(420px,90vw);height:auto;max-height:480px;object-fit:contain;margin:28px auto;border-radius:28px;background:#fff}
+#v130Detail .cat{text-transform:uppercase;letter-spacing:.12em;font-weight:800;font-size:13px;color:#6f817a;text-align:center}
+#v130Detail h2{font-size:clamp(28px,6vw,46px);line-height:1.05;text-align:center;margin:10px 0 16px}
+#v130Detail p{text-align:center;font-size:18px;line-height:1.6;max-width:620px;margin:0 auto 28px}
+</style>
+<div id="v130Detail" aria-hidden="true"><div class="v130inner"><button class="v130back" type="button">‹ Back to Browse Menu</button><img id="v130Img" src="./images/products/image.png?v=130" alt=""><div class="cat" id="v130Cat"></div><h2 id="v130Title"></h2><p id="v130Desc"></p></div></div>
+<script id="v130-clean-product-detail-script">
+(function(){
+ const modal=document.getElementById("v130Detail"),img=document.getElementById("v130Img"),title=document.getElementById("v130Title"),cat=document.getElementById("v130Cat"),desc=document.getElementById("v130Desc");
+ function openCard(card){
+   const name=(card.querySelector("h3,.name,strong,b")||card).textContent.trim();
+   title.textContent=name;
+   cat.textContent=(document.querySelector("#v109Browse .active,[aria-selected='true']")||{}).textContent||"Starbucks Philippines";
+   const d=card.querySelector("p,.desc,.description"); desc.textContent=d?d.textContent.trim():"";
+   img.src="./images/products/image.png?v=130";
+   img.alt=name;
+   modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";
+ }
+ document.addEventListener("click",function(e){
+   const card=e.target.closest("#v109Grid .v109item");
+   if(!card)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openCard(card);
+ },true);
+ modal.querySelector(".v130back").addEventListener("click",function(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.style.overflow="";});
+})();
 </script></body></html>
