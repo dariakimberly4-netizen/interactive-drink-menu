@@ -1426,4 +1426,28 @@ document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
    },20);
  },true);
 })();
+</script><style id="v123-no-reinvent">
+#v118Product .v118pic[src=""],#v118Product .v118pic:not([src]){display:none!important}
+</style>
+<script id="v123-no-reinvent-script">
+(function(){
+ const official='https://starbucks.ph/menu?utm_source=chatgpt.com';
+ document.addEventListener('click',function(e){
+   const card=e.target.closest('#v109Grid .v109item');if(!card)return;
+   setTimeout(function(){
+     const pic=document.getElementById('v118Pic');
+     if(pic){
+       pic.onerror=function(){this.style.display='none';this.removeAttribute('src')};
+       if((pic.src||'').startsWith('data:image/svg+xml')){pic.removeAttribute('src');pic.style.display='none'}
+     }
+     let a=document.getElementById('v123Official');
+     if(!a){
+       a=document.createElement('a');a.id='v123Official';a.href=official;a.target='_blank';a.rel='noopener';
+       a.textContent='VIEW ON STARBUCKS PHILIPPINES';
+       a.style.cssText='display:inline-flex;margin-top:18px;padding:13px 18px;border:1px solid #d4af37;border-radius:12px;color:#fff;text-decoration:none;font-weight:900';
+       document.getElementById('v118Desc')?.insertAdjacentElement('afterend',a);
+     }
+   },50);
+ },true);
+})();
 </script></body></html>
