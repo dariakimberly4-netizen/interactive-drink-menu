@@ -1480,4 +1480,19 @@ function useOfficial(){
 }
 document.addEventListener('click',e=>{if(e.target.closest('#v109Grid .v109item'))setTimeout(useOfficial,150)},true);
 })();
+</script><style id="v126-photo-fix">
+#v118Product.hasVerifiedPhoto #v118Pic{display:block!important;visibility:visible!important;opacity:1!important;width:min(520px,92vw)!important;height:auto!important;min-height:0!important;background:transparent!important;object-fit:contain!important}
+</style>
+<script id="v126-photo-fix-script">
+(function(){
+ const shot=document.querySelector('#v125-screenshot-official')?.textContent.match(/officialShot="([^"]+)"/)?.[1]||'';
+ function fix(){
+  const m=document.getElementById('v118Product'),p=document.getElementById('v118Pic'),t=document.getElementById('v118Title');
+  if(!m||!p||!t||!t.textContent.includes('Roasted Macadamia Oatmilk Frappuccino'))return;
+  if(shot){p.onerror=null;p.src=shot}
+  p.style.setProperty('display','block','important');p.style.setProperty('visibility','visible','important');p.style.setProperty('opacity','1','important');
+  m.classList.add('hasVerifiedPhoto');
+ }
+ document.addEventListener('click',e=>{if(e.target.closest('#v109Grid .v109item')){setTimeout(fix,250);setTimeout(fix,600)}},true);
+})();
 </script></body></html>
