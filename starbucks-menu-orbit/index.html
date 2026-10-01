@@ -4594,7 +4594,7 @@
       center(title,'Choose a path');document.getElementById('orbitSmartSuggestion')?.remove();document.getElementById('orbitResumeCard')?.remove();document.getElementById('orbitLongpressCoach')?.remove();
       (maps[name]||[]).forEach(([label,items])=>{
         const action=(name==='menu'&&label==='Browse')
-          ?()=>{location.href='browse-clean.html'}
+          ?()=>{location.href='browse-clean.html?v=134'}
           :()=>renderItems(label,items);
         const b=button(label,action);
         if(groupHasNew(name,label)){b.classList.add('customer-new-node');decorateNewButton(b)}
