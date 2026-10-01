@@ -311,6 +311,10 @@ header .brand{transform:scale(.88);transform-origin:left center}
 }
 </style><style id="v133-renderer-image">
 #v109Grid .v133thumb{display:block!important;width:100%!important;max-width:360px!important;aspect-ratio:1/1!important;object-fit:contain!important;margin:0 auto 16px!important;border-radius:18px!important;background:#fff!important}
+</style><style id="v135-crop-uploaded-shot">
+#v109Grid .v133thumb{display:none!important}
+#v109Grid .v135crop{display:block!important;width:220px!important;height:220px!important;margin:0 auto 18px!important;border-radius:50%!important;background-image:url("./images/products/image.png?v=135")!important;background-repeat:no-repeat!important;background-size:920px auto!important;background-position:-425px -250px!important;background-color:#003b2f!important;box-shadow:0 8px 24px #0003!important}
+@media(max-width:600px){#v109Grid .v135crop{width:180px!important;height:180px!important;background-size:753px auto!important;background-position:-348px -205px!important}}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button type="button" id="headerAccountStaticV100">👤 <span>MY ACCOUNT</span></button><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
@@ -1183,7 +1187,7 @@ function render(cat='All'){
   if(cat.includes('Whole Bean')||cat.includes('VIA')||cat.includes('Origami'))return 'Enjoy Starbucks coffee at home with a convenient take-home selection.';
   return 'A Starbucks menu favorite crafted for an enjoyable café experience.';
  };
- grid.innerHTML=items.filter(x=>cat==='All'||x[0]===cat).map(x=>'<article class="v109item" data-v133-product="1"><img class="v133thumb" src="./images/products/image.png?v=133" alt="'+x[1].replace(/"/g,'&quot;')+'"><small>'+x[0]+'</small><b>'+x[1]+'</b><p class="v116desc">'+desc(x[1],x[0])+'</p><strong>'+x[2]+'</strong></article>').join('')
+ grid.innerHTML=items.filter(x=>cat==='All'||x[0]===cat).map(x=>'<article class="v109item" data-v133-product="1"><div class="v135crop" role="img" aria-label="'+x[1].replace(/"/g,'&quot;')+'"></div><small>'+x[0]+'</small><b>'+x[1]+'</b><p class="v116desc">'+desc(x[1],x[0])+'</p><strong>'+x[2]+'</strong></article>').join('')
 }
 ['All',...new Set(items.map(x=>x[0]))].forEach(x=>{const b=document.createElement('button');b.className='v109cat';b.textContent=x;b.onclick=()=>render(x);cats.appendChild(b)});render();
 function open(){document.getElementById('v96Panel')?.classList.remove('open');modal.classList.add('open')}
