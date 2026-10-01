@@ -1165,7 +1165,24 @@ const items=[
 ['Whole Bean','Whole Bean Coffee',''],['Starbucks VIA®','Starbucks VIA®',''],['Starbucks Origami','Pike Place Roast',''],['Starbucks Origami','Caffe Verona',''],['Starbucks Reserve®','Starbucks Reserve™ Natural Brazil Rio Verde Yellow Bourbon',''],['Starbucks Reserve®','Starbucks Reserve™ Natural Indonesia West Java Jamumu','']
 ];
 const modal=document.getElementById('v109Browse'),grid=document.getElementById('v109Grid'),cats=document.getElementById('v109Cats');
-function render(cat='All'){grid.innerHTML=items.filter(x=>cat==='All'||x[0]===cat).map(x=>'<article class="v109item"><small>'+x[0]+'</small><b>'+x[1]+'</b><strong>'+x[2]+'</strong></article>').join('')}
+function render(cat='All'){
+ const desc=function(name,cat){
+  const n=name.toLowerCase();
+  if(n.includes('frappuccino'))return 'A smooth, creamy blended beverage crafted for a refreshing treat.';
+  if(n.includes('cold brew')||n.includes('nitro'))return 'Slow-steeped coffee with a smooth, rich finish and refreshing character.';
+  if(n.includes('espresso')||n.includes('americano'))return 'Bold espresso-forward flavor, carefully crafted for a rich coffee experience.';
+  if(n.includes('latte')||n.includes('mocha')||n.includes('macchiato'))return 'Espresso paired with creamy milk and signature flavor for a balanced cup.';
+  if(cat.includes('Refreshers'))return 'A bright, fruity and refreshing beverage served cold.';
+  if(cat.includes('Tea'))return 'A refreshing tea-based drink with layered, aromatic flavor.';
+  if(cat.includes('Chocolate'))return 'Rich chocolate flavor blended with a smooth, comforting finish.';
+  if(cat.includes('Bakery'))return 'A bakery favorite made for pairing with your favorite Starbucks beverage.';
+  if(cat.includes('Sandwich')||cat.includes('Pasta'))return 'A satisfying savory choice for breakfast, lunch or an anytime meal.';
+  if(cat.includes('Dessert')||cat.includes('Food'))return 'A delicious café favorite, perfect as a snack or sweet pairing.';
+  if(cat.includes('Whole Bean')||cat.includes('VIA')||cat.includes('Origami'))return 'Enjoy Starbucks coffee at home with a convenient take-home selection.';
+  return 'A Starbucks menu favorite crafted for an enjoyable café experience.';
+ };
+ grid.innerHTML=items.filter(x=>cat==='All'||x[0]===cat).map(x=>'<article class="v109item"><small>'+x[0]+'</small><b>'+x[1]+'</b><p class="v116desc">'+desc(x[1],x[0])+'</p><strong>'+x[2]+'</strong></article>').join('')
+}
 ['All',...new Set(items.map(x=>x[0]))].forEach(x=>{const b=document.createElement('button');b.className='v109cat';b.textContent=x;b.onclick=()=>render(x);cats.appendChild(b)});render();
 function open(){document.getElementById('v96Panel')?.classList.remove('open');modal.classList.add('open')}
 document.addEventListener('click',function(e){const b=e.target.closest('button');if(b&&b.textContent.replace(/\s+/g,' ').trim()==='Browse Menu'){e.preventDefault();e.stopImmediatePropagation();open()}},true);
@@ -1237,4 +1254,7 @@ document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
 #v109Browse .v109item b{font-size:22px!important;line-height:1.25!important;margin:5px 0 18px!important}
 #v109Browse .v109item strong{font-size:22px!important;color:#f4d37b!important}
 @media(max-width:700px){#v109Browse{padding:18px 18px 30px!important}#v109Browse .v109head{gap:18px!important}#v109Browse .v109head h2{font-size:58px!important}#v109Browse .v109back{min-width:0!important;width:44%!important;min-height:94px!important;font-size:20px!important}#v109Browse .v109cat{font-size:18px!important;min-height:66px!important;padding:0 24px!important}#v109Browse .v109item{padding:26px 28px!important;min-height:142px!important}#v109Browse .v109item b{font-size:20px!important}}
+</style><style id="v116-description-style">
+.v109item .v116desc{margin:8px 0 0;max-width:760px;color:#c6d6d0;font-size:15px;line-height:1.5;font-weight:400}
+@media(max-width:700px){.v109item .v116desc{font-size:14px;line-height:1.45;margin-top:7px}}
 </style></body></html>
