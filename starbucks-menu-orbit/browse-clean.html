@@ -29,8 +29,18 @@ html,body{width:100%;max-width:100%;overflow-x:hidden!important}
  .grid{grid-template-columns:1fr!important;gap:12px!important}
  .card{width:100%!important;min-width:0!important;padding:18px!important}
 }
+</style><style id="v150-deduplicate">
+.v150hide{display:none!important}
+/* uploaded artwork is visual hero only; crop before its embedded Featured Drinks cards */
+.hero{width:100%!important;height:auto!important;max-height:500px!important;object-fit:cover!important;object-position:top center!important}
+@media(max-width:800px){
+ .hero{height:390px!important;max-height:390px!important;object-fit:cover!important;object-position:top center!important}
+ .wrap{margin-top:0!important}
+}
+/* keep one real interactive category/product area */
+.wrap{padding-top:14px!important}
 </style></head><body>
-<header class="top"><a class="back" href="./index.html?v=147#orbit">← BACK TO ORBIT</a><strong>BROWSE MENU</strong></header>
+<header class="top v150hide"><a class="back" href="./index.html?v=150#orbit">← BACK TO ORBIT</a><strong>BROWSE MENU</strong></header>
 <img class="hero" src="./images/file_0000000058f08209ae65e1d68e23ca4a.png?v=148" alt="Browse Menu design">
 <main class="wrap"><nav class="cats" id="cats"></nav><section class="panel"><h1 id="heading">Featured Drinks</h1><p>Choose a category, then select a product to view details.</p><div class="grid" id="grid"></div></section></main>
 <div class="dialog" id="dialog"><div class="box"><button class="close" id="close">×</button><small id="dcat"></small><h2 id="dname"></h2><p id="ddesc"></p><div class="actions"><button>Customize</button><button>Make It Lighter</button><button>Nutrition</button><button id="add">Add to Cart</button></div></div></div>
