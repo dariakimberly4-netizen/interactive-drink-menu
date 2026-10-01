@@ -1022,4 +1022,21 @@ function fix(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();
 })();
+</script><script id="browse-menu-hardfix-v105">
+(function(){
+ function catalog(){
+   const p=document.getElementById('v96Panel'); if(p)p.classList.remove('open');
+   document.body.classList.remove('customer-workspace-open-v64');
+   const selectors=['.wrap','.hero','.search-wrap','.controls','.grid'];
+   selectors.forEach(s=>document.querySelectorAll(s).forEach(x=>{x.hidden=false;x.style.setProperty('display',s==='.grid'?'grid':'','important')}));
+   const g=document.querySelector('.grid');
+   if(g){g.style.setProperty('display','grid','important');g.scrollIntoView({block:'start'});}
+ }
+ document.addEventListener('click',function(e){
+   const b=e.target.closest('button');
+   if(!b)return;
+   if(b.textContent.trim()==='Browse Menu'){e.preventDefault();e.stopImmediatePropagation();catalog();}
+ },true);
+ window.openBrowseCatalogV105=catalog;
+})();
 </script></body></html>
