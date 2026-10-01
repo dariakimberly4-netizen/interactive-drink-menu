@@ -1055,4 +1055,21 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  document.getElementById('cd106back').onclick=()=>panel.classList.remove('open');search.oninput=()=>render(search.value);
  window.openBrowseCatalogV106=open;
 })();
+</script><style id="v107fix">#catalogDirectV106{z-index:2147483647!important}.cd106fallback{padding:20px;border:1px solid #ffffff20;border-radius:16px;background:#0b3024}</style>
+<script id="v107fixscript">
+(function(){
+function getCards(){
+ const source=[...document.querySelectorAll('.grid .card')];
+ return source.map((el,i)=>({name:el.querySelector('h3')?.textContent?.trim()||('Menu Item '+(i+1)),cat:el.querySelector('.meta')?.textContent?.trim()||'Menu',price:el.querySelector('.price strong')?.textContent?.trim()||'',img:el.querySelector('img')?.src||'',node:el}));
+}
+function openCatalog(){
+ const overlay=document.getElementById('catalogDirectV106'),grid=document.getElementById('cd106grid'),vp=document.getElementById('v96Panel');
+ if(vp)vp.classList.remove('open'); if(!overlay||!grid)return;
+ const cards=getCards(); overlay.classList.add('open');
+ grid.innerHTML=cards.length?cards.map((p,i)=>'<article class="cd106card"><img src="'+p.img+'" alt=""><div class="cd106body"><small>'+p.cat+'</small><h3>'+p.name+'</h3><strong>'+p.price+'</strong><button data-v107="'+i+'">VIEW ITEM</button></div></article>').join(''):'<div class="cd106fallback"><b>Menu catalog</b><p>Use Search or return to the Orbit while the product catalog loads.</p></div>';
+ grid.querySelectorAll('[data-v107]').forEach(b=>b.onclick=()=>{overlay.classList.remove('open');cards[+b.dataset.v107]?.node?.querySelector('button')?.click()});
+}
+document.addEventListener('click',function(e){const b=e.target.closest('button');if(b&&b.textContent.replace(/\s+/g,' ').trim()==='Browse Menu'){e.preventDefault();e.stopImmediatePropagation();openCatalog()}},true);
+window.openBrowseCatalogV107=openCatalog;
+})();
 </script></body></html>
