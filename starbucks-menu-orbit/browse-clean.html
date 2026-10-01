@@ -1298,4 +1298,30 @@ document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
  if(grid){new MutationObserver(apply).observe(grid,{childList:true,subtree:true});apply()}
  document.addEventListener('click',e=>{if(e.target.closest('#v109Cats'))setTimeout(apply,0)},true);
 })();
+</script><style id="v118-product-picture">
+#v118Product{display:none;position:fixed;inset:0;z-index:2147483647;background:#031811;color:#fff;overflow:auto;padding:22px}
+#v118Product.open{display:block}.v118box{max-width:760px;margin:auto}.v118back{min-height:48px;padding:0 16px;border:1px solid #f4c86f;border-radius:12px;background:#153a2d;color:#fff;font-weight:900}.v118pic{width:100%;max-height:460px;aspect-ratio:4/3;object-fit:contain;background:#f4efe6;border-radius:24px;margin:20px 0}.v118title{font:700 clamp(30px,6vw,52px) Georgia,serif;margin:6px 0}.v118cat{color:#f4c86f;font-weight:900}.v118desc{color:#c8d8d2;font-size:16px;line-height:1.55}
+</style>
+<section id="v118Product"><div class="v118box"><button id="v118Back" class="v118back">← BACK TO BROWSE</button><img id="v118Pic" class="v118pic" alt=""><div id="v118Cat" class="v118cat"></div><h2 id="v118Title" class="v118title"></h2><p id="v118Desc" class="v118desc"></p></div></section>
+<script id="v118-product-picture-script">
+(function(){
+ const modal=document.getElementById('v118Product'),pic=document.getElementById('v118Pic'),title=document.getElementById('v118Title'),cat=document.getElementById('v118Cat'),desc=document.getElementById('v118Desc');
+ function findImage(name){
+   const cards=[...document.querySelectorAll('#grid .card')];
+   const key=name.toLowerCase().replace(/[^a-z0-9]/g,'');
+   let card=cards.find(x=>(x.querySelector('h3')?.textContent||'').toLowerCase().replace(/[^a-z0-9]/g,'')===key);
+   if(!card) card=cards.find(x=>{const n=(x.querySelector('h3')?.textContent||'').toLowerCase();return n.includes(name.toLowerCase().split(' ')[0])});
+   return card?.querySelector('img')?.src||'';
+ }
+ document.addEventListener('click',function(e){
+   const card=e.target.closest('#v109Grid .v109item'); if(!card)return;
+   e.preventDefault();
+   const name=card.querySelector('b')?.textContent.trim()||'Menu Item';
+   title.textContent=name;cat.textContent=card.querySelector('small')?.textContent.trim()||'';
+   desc.textContent=card.querySelector('.v117description,.v116desc')?.textContent.trim()||'A Starbucks café favorite.';
+   const src=findImage(name);pic.src=src;pic.style.display=src?'block':'none';
+   modal.classList.add('open');
+ },true);
+ document.getElementById('v118Back').onclick=()=>modal.classList.remove('open');
+})();
 </script></body></html>
