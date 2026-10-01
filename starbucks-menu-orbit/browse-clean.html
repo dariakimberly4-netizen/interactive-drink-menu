@@ -1603,4 +1603,33 @@ window.addEventListener("click",function(e){
 },true);
 document.getElementById("v132Back").addEventListener("click",function(e){e.preventDefault();e.stopPropagation();viewer.classList.remove("show");document.body.style.overflow="";},true);
 })();
+</script><style id="v140-interactive-redesign">
+#v109Browse{background:linear-gradient(180deg,#003b2f,#002d24)!important}
+.v109in{max-width:1450px!important}
+.v109head{padding:28px 0 18px!important}
+.v109head small{color:#d8b45b!important}.v109head h2{font-family:Georgia,serif!important;font-size:clamp(52px,7vw,92px)!important;line-height:.86!important}
+.v109cats{display:flex!important;gap:18px!important;overflow-x:auto!important;padding:18px 4px 24px!important;scroll-snap-type:x proximity}
+.v109cat{flex:0 0 auto!important;min-height:58px!important;border-radius:999px!important;border:1px solid #d8b45b!important;background:#f7f1e5!important;color:#073b2e!important;font-weight:800!important;padding:0 25px!important;scroll-snap-align:start}
+.v109cat.active{background:#d8b45b!important;color:#073b2e!important;box-shadow:0 0 0 4px #fff2!important}
+.v109grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:22px!important;background:#f7f1e5!important;padding:28px!important;border-radius:28px!important}
+.v109item{background:#fffaf1!important;color:#073b2e!important;border-radius:22px!important;padding:0 0 20px!important;overflow:hidden!important;min-width:0!important;cursor:pointer!important;box-shadow:0 8px 24px #001b1418!important}
+.v109item small,.v109item b,.v109item p,.v109item strong{display:block!important;margin-left:20px!important;margin-right:20px!important}
+.v109item b{font-size:20px!important;margin-top:10px!important}.v109item p{line-height:1.45!important}
+.v135crop{width:100%!important;height:250px!important;border-radius:0!important;margin:0 0 16px!important}
+.v140view{display:block;margin:18px 20px 0;padding:13px 18px;border:1px solid #b58a31;border-radius:999px;text-align:center;font-weight:800}
+@media(max-width:1000px){.v109grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:600px){.v109grid{grid-template-columns:1fr!important;padding:16px!important}.v109head h2{font-size:58px!important}.v135crop{height:220px!important}}
+</style>
+<script id="v140-interactive-redesign-script">
+document.addEventListener('DOMContentLoaded',()=>{
+ const grid=document.getElementById('v109Grid'),cats=document.getElementById('v109Cats');
+ if(!grid||!cats)return;
+ const enhance=()=>{
+  grid.querySelectorAll('.v109item').forEach(card=>{if(!card.querySelector('.v140view')){const v=document.createElement('span');v.className='v140view';v.textContent='View Details →';card.appendChild(v)}});
+  [...cats.querySelectorAll('.v109cat')].forEach(b=>b.classList.toggle('active',b.textContent.trim()==='All'));
+ };
+ enhance();
+ cats.addEventListener('click',e=>{const b=e.target.closest('.v109cat');if(!b)return;[...cats.querySelectorAll('.v109cat')].forEach(x=>x.classList.toggle('active',x===b));setTimeout(enhance,0)});
+ new MutationObserver(enhance).observe(grid,{childList:true});
+});
 </script></body></html>
