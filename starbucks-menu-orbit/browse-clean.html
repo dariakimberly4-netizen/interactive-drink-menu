@@ -1100,4 +1100,24 @@ function open(){document.getElementById('v96Panel')?.classList.remove('open');mo
 document.addEventListener('click',function(e){const b=e.target.closest('button');if(b&&b.textContent.replace(/\s+/g,' ').trim()==='Browse Menu'){e.preventDefault();e.stopImmediatePropagation();open()}},true);
 document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
 })();
+</script><script id="menu-route-fix-v110">
+(function(){
+ function openBrowse(){
+   const browse=document.getElementById('v109Browse');
+   const panel=document.getElementById('v96Panel');
+   if(panel) panel.classList.remove('open');
+   if(browse){browse.classList.add('open');browse.scrollTop=0;}
+ }
+ document.addEventListener('click',function(e){
+   const el=e.target.closest('button,a,[role="button"]');
+   if(!el)return;
+   const t=(el.textContent||'').replace(/\s+/g,' ').trim().toUpperCase();
+   const id=(el.id||'').toLowerCase();
+   /* Main MENU must open Browse Menu, never return to the landing/main menu. */
+   if(t==='MENU' || id==='menumainbtnv61'){
+     e.preventDefault(); e.stopImmediatePropagation(); openBrowse(); return;
+   }
+ },true);
+ window.openMenuV110=openBrowse;
+})();
 </script></body></html>
