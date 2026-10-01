@@ -1324,4 +1324,40 @@ document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
  },true);
  document.getElementById('v118Back').onclick=()=>modal.classList.remove('open');
 })();
+</script><style id="v119-product-photo-force">
+#v109Grid .v109item{cursor:pointer}
+#v118Product .v118pic{display:block!important;width:min(100%,560px)!important;height:auto!important;min-height:280px!important;margin:22px auto!important;object-fit:contain!important;background:#f4efe6!important}
+</style>
+<script id="v119-product-photo-force-script">
+(function(){
+ function norm(s){return (s||'').toLowerCase().replace(/®|™/g,'').replace(/[^a-z0-9]+/g,' ').trim()}
+ function productData(name){
+   const cards=[...document.querySelectorAll('#grid .card')];
+   const target=norm(name);
+   let best=null,score=0;
+   cards.forEach(card=>{
+     const n=norm(card.querySelector('h3')?.textContent);
+     let s=0; target.split(' ').forEach(w=>{if(w.length>2&&n.includes(w))s++});
+     if(s>score){score=s;best=card}
+   });
+   return best;
+ }
+ document.addEventListener('click',function(e){
+   const card=e.target.closest('#v109Grid .v109item'); if(!card)return;
+   const name=card.querySelector('b')?.textContent.trim()||'Menu Item';
+   const source=productData(name);
+   const src=source?.querySelector('img')?.src||'';
+   const modal=document.getElementById('v118Product'),pic=document.getElementById('v118Pic');
+   if(!modal||!pic)return;
+   document.getElementById('v118Title').textContent=name;
+   document.getElementById('v118Cat').textContent=card.querySelector('small')?.textContent.trim()||'';
+   document.getElementById('v118Desc').textContent=card.querySelector('.v117description,.v116desc')?.textContent.trim()||'A Starbucks café favorite.';
+   if(src){pic.src=src;pic.removeAttribute('hidden');}
+   else{
+     pic.src='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect width="100%" height="100%" fill="#f4efe6"/><circle cx="400" cy="270" r="125" fill="#00754a"/><text x="400" y="285" text-anchor="middle" font-family="Arial" font-size="42" font-weight="700" fill="white">STARBUCKS</text><text x="400" y="450" text-anchor="middle" font-family="Arial" font-size="28" fill="#1e3932">Product photo</text></svg>');
+   }
+   pic.style.setProperty('display','block','important');
+   modal.classList.add('open');
+ },true);
+})();
 </script></body></html>
