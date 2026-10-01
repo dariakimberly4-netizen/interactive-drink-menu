@@ -356,6 +356,11 @@ body>header,body>.topbar,#app,#orbit,#mainOrbit,#customerOrbit,.orbit-shell,.orb
 body>*:not(#v109Browse):not(script):not(style){display:none!important}
 #v109Browse{display:block!important;position:relative!important;inset:auto!important;z-index:999999!important;margin:0!important;min-height:100vh!important}
 #v109Browse:before{display:block!important}
+</style><style id="v145-true-fullscreen-browse">
+#v109Browse{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;overflow-y:auto!important;z-index:2147483647!important;background:#003b2f!important;margin:0!important;padding:0!important}
+#v109Browse .v109in{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+#v109Browse:before{content:""!important;display:block!important;width:100%!important;aspect-ratio:16/9!important;background:url("./images/file_0000000012d482068dde4b9ed0bedf5f.png?v=145") top center/cover no-repeat!important}
+@media(max-width:700px){#v109Browse:before{aspect-ratio:16/15!important;background-size:cover!important;background-position:center top!important}}
 </style></head>
 <body>
 <header><div class="brand"><div class="logo">S</div><div><b>Menu Orbit</b><small>CLEAN BROWSE</small></div></div><button type="button" id="headerAccountStaticV100">👤 <span>MY ACCOUNT</span></button><button class="topbtn" id="backBtn" style="display:none">‹ Back to Orbit</button></header>
@@ -1673,4 +1678,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  cats.addEventListener('click',e=>{const b=e.target.closest('.v109cat');if(!b)return;[...cats.querySelectorAll('.v109cat')].forEach(x=>x.classList.toggle('active',x===b));setTimeout(enhance,0)});
  new MutationObserver(enhance).observe(grid,{childList:true});
 });
+</script><script id="v145-move-browse-to-body">
+document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('v109Browse');if(b&&b.parentElement!==document.body)document.body.appendChild(b);document.documentElement.style.overflow='hidden';});
 </script></body></html>
