@@ -1403,4 +1403,27 @@ document.getElementById('v109Back').onclick=()=>modal.classList.remove('open');
   }
  },true);
 })();
+</script><script id="v122-real-photo-match">
+(function(){
+ function n(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/®|™/g,'').replace(/[^a-z0-9]+/g,' ').trim()}
+ function words(s){return n(s).split(' ').filter(x=>x.length>2&&!['with','and','the','iced','hot','oatmilk','cream','blended','beverage'].includes(x))}
+ function findPhoto(name){
+   const target=words(name);let best=null,bestScore=0;
+   document.querySelectorAll('#grid .card').forEach(card=>{
+    const label=card.querySelector('h3')?.textContent||card.textContent||'';
+    const w=words(label);let score=target.filter(x=>w.includes(x)).length;
+    if(score>bestScore){bestScore=score;best=card}
+   });
+   return bestScore>=1?best?.querySelector('img')?.src||'':'';
+ }
+ document.addEventListener('click',function(e){
+   const card=e.target.closest('#v109Grid .v109item');if(!card)return;
+   const name=card.querySelector('b')?.textContent.trim()||'';
+   setTimeout(function(){
+    const pic=document.getElementById('v118Pic');if(!pic)return;
+    const src=findPhoto(name);
+    if(src){pic.onerror=null;pic.src=src;pic.style.setProperty('display','block','important')}
+   },20);
+ },true);
+})();
 </script></body></html>
