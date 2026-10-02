@@ -5537,5 +5537,107 @@ window.ProductCustomizerV60={openById:id=>open(find(id)),open};
 })();
 </script>
 
+
+<!-- MOBILE ORBIT PROPORTION FIX V62 -->
+<style>
+@media (max-width:700px) and (orientation:portrait){
+  html,body{min-height:100dvh!important}
+  body:not(.show-product-results){overflow:hidden!important}
+
+  #mainMenuDirect{
+    min-height:calc(100dvh - 64px)!important;
+    height:calc(100dvh - 64px)!important;
+    padding:6px 6px max(10px,env(safe-area-inset-bottom))!important;
+    justify-content:flex-start!important;
+    overflow:hidden!important;
+  }
+
+  #mainMenuDirect #orbitBreadcrumb{
+    flex:0 0 auto!important;
+    margin:0 auto 2px!important;
+  }
+
+  #mainMenuDirect #navOrbitDirect{
+    width:100%!important;
+    height:calc(100dvh - 96px)!important;
+    min-height:560px!important;
+    max-height:760px!important;
+    margin:0 auto!important;
+    flex:1 1 auto!important;
+    position:relative!important;
+    overflow:visible!important;
+  }
+
+  #mainMenuDirect #navOrbitDirect .nav-orbit-ring{
+    width:clamp(238px,68vw,284px)!important;
+    height:clamp(238px,68vw,284px)!important;
+  }
+
+  #mainMenuDirect #navOrbitDirect .nav-orbit-center{
+    width:clamp(122px,34vw,142px)!important;
+    height:clamp(122px,34vw,142px)!important;
+    padding:10px!important;
+  }
+
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
+    width:clamp(82px,23vw,96px)!important;
+    height:clamp(82px,23vw,96px)!important;
+    min-height:clamp(82px,23vw,96px)!important;
+    padding:7px!important;
+    font-size:clamp(10px,2.7vw,12px)!important;
+    line-height:1.05!important;
+  }
+
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button:nth-child(1){top:14%!important}
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button:nth-child(2){top:27%!important}
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button:nth-child(3){top:50%!important}
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button:nth-child(4){top:73%!important}
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button:nth-child(5){top:86%!important}
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button:nth-child(6){top:27%!important}
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button:nth-child(7){top:73%!important}
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button:nth-child(8){top:86%!important}
+
+  #mainMenuDirect #navOrbitCenter .smart-kicker{
+    font-size:7px!important;
+  }
+  #mainMenuDirect #navOrbitCenter .smart-main{
+    font-size:11px!important;
+    max-width:98px!important;
+  }
+  #mainMenuDirect #navOrbitCenter .smart-sub{
+    font-size:7.5px!important;
+    max-width:100px!important;
+  }
+  #mainMenuDirect #navOrbitCenter .smart-gesture-hint{
+    font-size:6.7px!important;
+    max-width:100px!important;
+  }
+}
+
+@media (max-width:430px) and (orientation:portrait){
+  #mainMenuDirect #navOrbitDirect{
+    min-height:540px!important;
+    height:calc(100dvh - 92px)!important;
+  }
+}
+
+@media (max-width:380px) and (orientation:portrait){
+  #mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
+    width:80px!important;
+    height:80px!important;
+    min-height:80px!important;
+    font-size:9.5px!important;
+  }
+  #mainMenuDirect #navOrbitDirect .nav-orbit-ring{
+    width:224px!important;
+    height:224px!important;
+  }
+  #mainMenuDirect #navOrbitDirect .nav-orbit-center{
+    width:116px!important;
+    height:116px!important;
+  }
+}
+</style>
+
 </body>
 </html>
