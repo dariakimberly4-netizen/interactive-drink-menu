@@ -5801,5 +5801,16 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradi
 @keyframes orbitAmbientV68{0%,100%{opacity:.62;transform:translate(-50%,-50%) scale(.96)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
 @media(prefers-reduced-motion:reduce){#mainMenuDirect::before{animation:none}}
 </style>
+
+<!-- V70 GUARANTEED VISIBLE CINEMATIC BACKGROUND -->
+<style>
+html,body{background:#031a12!important}
+body:not(.show-product-results){background-image:
+ linear-gradient(rgba(2,25,18,.62),rgba(1,17,12,.82)),
+ url("https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1800&q=85")!important;
+ background-size:cover!important;background-position:center!important;background-attachment:fixed!important;background-repeat:no-repeat!important}
+body:not(.show-product-results) #mainMenuDirect{background:rgba(2,25,18,.18)!important;backdrop-filter:none!important}
+#coffeeBackdropV69{display:none!important}
+</style>
 </body>
 </html>
