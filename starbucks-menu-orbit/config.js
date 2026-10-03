@@ -123,6 +123,55 @@ window.MENU_ORBIT_CONFIG = {
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 
+/* V85: closing MY ACCOUNT always returns to the main orbit instead of the bare background. */
+(() => {
+  const path=location.pathname.toLowerCase();
+  const isCustomerMenu=path.endsWith('/starbucks-menu-orbit/')||path.endsWith('/starbucks-menu-orbit/index.html');
+  if(!isCustomerMenu)return;
+
+  const restoreMainOrbit=()=>{
+    document.body.classList.remove('show-product-results','product-detail-open');
+    const main=document.getElementById('mainMenuDirect');
+    if(main){
+      main.style.setProperty('display','block','important');
+      main.style.setProperty('visibility','visible','important');
+      main.style.setProperty('opacity','1','important');
+      main.style.setProperty('pointer-events','auto','important');
+      requestAnimationFrame(()=>setTimeout(()=>{
+        main.style.removeProperty('display');
+        main.style.removeProperty('visibility');
+        main.style.removeProperty('opacity');
+        main.style.removeProperty('pointer-events');
+      },120));
+    }
+    const detail=document.getElementById('detail');
+    detail?.classList.remove('open');
+    document.querySelectorAll('.modal.open').forEach(m=>{if(m.id!=='customerLoginV66')m.classList.remove('open')});
+    const host=document.getElementById('mainSubmenuDirect');
+    if(host&&!host.querySelector('button[data-main-key]')){
+      const center=document.getElementById('navOrbitCenter');
+      if(center)setTimeout(()=>center.click(),30);
+    }
+  };
+
+  const start=()=>{
+    const modal=document.getElementById('customerLoginV66');
+    if(!modal)return;
+    let wasOpen=modal.classList.contains('open');
+    const check=()=>{
+      const isOpen=modal.classList.contains('open');
+      if(wasOpen&&!isOpen)setTimeout(restoreMainOrbit,20);
+      wasOpen=isOpen;
+    };
+    new MutationObserver(check).observe(modal,{attributes:true,attributeFilter:['class']});
+    document.addEventListener('click',e=>{
+      if(e.target.closest?.('#cl66Close'))setTimeout(restoreMainOrbit,40);
+    },true);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))setTimeout(restoreMainOrbit,40)},true);
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+
 /* Shared portal guard: customer navigation belongs only on the customer Menu Orbit. */
 (() => {
   const path=location.pathname.toLowerCase();
