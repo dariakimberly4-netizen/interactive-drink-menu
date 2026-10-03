@@ -5660,5 +5660,29 @@ window.ProductCustomizerV60={openById:id=>open(find(id)),open};
   filter:none!important;
 }
 </style>
+
+<!-- REMOVE ALL NEW/HIGHLIGHT STATES V64 -->
+<style>
+#mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button.customer-new-node,
+#mainMenuDirect #navOrbitCenter.orbit-new-highlight,
+#mainMenuDirect #navOrbitCenter.smart-attention{
+ animation:none!important; box-shadow:none!important; filter:none!important;
+}
+#mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button.customer-new-node::after,
+#mainMenuDirect #navOrbitCenter.orbit-new-highlight::before{
+ display:none!important; content:none!important;
+}
+#mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button{
+ box-shadow:none!important;
+}
+</style>
+<script>
+(()=>{
+ const clean=()=>{
+  document.querySelectorAll('.customer-new-node,.orbit-new-highlight,.smart-attention').forEach(el=>el.classList.remove('customer-new-node','orbit-new-highlight','smart-attention'));
+ };
+ clean(); new MutationObserver(clean).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+})();
+</script>
 </body>
 </html>
