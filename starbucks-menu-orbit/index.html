@@ -5779,5 +5779,16 @@ window.CustomerLoginV66={open,close};})();
  new MutationObserver(bindAccount).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+
+<!-- CINEMATIC COFFEE BACKGROUND V68 -->
+<style>
+:root{--orbit-coffee-bg:url("https://stories.starbucks.com/_next/image/?q=75&url=https%3A%2F%2Fstories.starbucks.com%2Fuploads%2Fsites%2F17%2F2023%2F03%2F10.jpg&w=640")}
+body::before{content:"";position:fixed;inset:0;z-index:-3;background:#041d14 var(--orbit-coffee-bg) center/cover no-repeat;transform:scale(1.06);filter:saturate(.72) contrast(1.08) brightness(.38);pointer-events:none}
+body::after{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 50% 45%,rgba(0,117,74,.20) 0,rgba(3,42,29,.72) 42%,rgba(1,22,15,.94) 100%),linear-gradient(180deg,rgba(3,38,27,.56),rgba(1,22,15,.88));pointer-events:none}
+#mainMenuDirect{position:relative;background:transparent!important;isolation:isolate}
+#mainMenuDirect::before{content:"";position:absolute;z-index:-1;left:50%;top:49%;width:min(76vw,560px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(244,200,111,.10) 0,rgba(0,117,74,.10) 30%,transparent 68%);filter:blur(12px);animation:orbitAmbientV68 9s ease-in-out infinite;pointer-events:none}
+@keyframes orbitAmbientV68{0%,100%{opacity:.62;transform:translate(-50%,-50%) scale(.96)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
+@media(prefers-reduced-motion:reduce){#mainMenuDirect::before{animation:none}}
+</style>
 </body>
 </html>
