@@ -2717,6 +2717,17 @@
   </style>
 </head>
 <body>
+<!-- V69 VISIBLE COFFEE BACKGROUND: placed above body background, below UI -->
+<style>
+#coffeeBackdropV69{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#031a12}
+#coffeeBackdropV69 .coffee-photo{position:absolute;inset:-4%;background-image:url("https://stories.starbucks.com/uploads/2023/03/10.jpg");background-position:center;background-size:cover;background-repeat:no-repeat;filter:brightness(.48) saturate(.72) contrast(1.06);transform:scale(1.04)}
+#coffeeBackdropV69 .coffee-shade{position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,rgba(0,117,74,.08) 0,rgba(3,35,25,.38) 40%,rgba(1,17,12,.82) 100%),linear-gradient(180deg,rgba(2,28,20,.22),rgba(1,17,12,.64))}
+body>.grain,body>header,body>.toolbar,body>#mainMenuDirect,body>#stage,body>.instructions,body>.control-dock,body>.drawer,body>.modal,body>[id$="Modal"],body>#customerLoginV66{position:relative;z-index:2}
+body>header{position:relative!important}
+#mainMenuDirect{background:transparent!important}
+</style>
+<div id="coffeeBackdropV69" aria-hidden="true"><div class="coffee-photo"></div><div class="coffee-shade"></div></div>
+
 <!-- BUILD 20260924-SMART-WELLNESS-V8 -->
   <div class="grain"></div>
   <header>
