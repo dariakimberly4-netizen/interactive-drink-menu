@@ -4,6 +4,16 @@ window.MENU_ORBIT_CONFIG = {
   branches: []
 };
 
+/* Customer orbit cleanup: permanently remove only the upper-left MENU shortcut. */
+(() => {
+  const hideStyle=document.createElement('style');
+  hideStyle.textContent='#menuMainBtnV61{display:none!important;visibility:hidden!important;pointer-events:none!important}';
+  document.head.appendChild(hideStyle);
+  const removeUpperLeftMenu=()=>document.getElementById('menuMainBtnV61')?.remove();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',removeUpperLeftMenu,{once:true});else removeUpperLeftMenu();
+  new MutationObserver(removeUpperLeftMenu).observe(document.documentElement,{childList:true,subtree:true});
+})();
+
 /* Shared portal guard: customer navigation belongs only on the customer Menu Orbit. */
 (() => {
   const path=location.pathname.toLowerCase();
