@@ -5812,5 +5812,13 @@ body:not(.show-product-results){background-image:
 body:not(.show-product-results) #mainMenuDirect{background:rgba(2,25,18,.18)!important;backdrop-filter:none!important}
 #coffeeBackdropV69{display:none!important}
 </style>
+
+<!-- V73 RESTORE ORBIT CENTER VISUALLY -->
+<style>
+#mainMenuDirect #navOrbitCenter{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;position:absolute!important;z-index:20!important}
+</style>
+<script>
+(()=>{const restore=()=>{const el=document.getElementById('navOrbitCenter');if(el){el.style.setProperty('display','flex','important');el.style.setProperty('visibility','visible','important');el.style.setProperty('opacity','1','important')}};restore();new MutationObserver(restore).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['style','class']});})();
+</script>
 </body>
 </html>
