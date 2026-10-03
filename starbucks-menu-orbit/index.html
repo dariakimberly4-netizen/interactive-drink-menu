@@ -5760,5 +5760,24 @@ document.getElementById('cl66LoginForm').onsubmit=e=>{e.preventDefault();localSt
 create.onsubmit=e=>{e.preventDefault();localStorage.setItem('menuOrbitCustomerEmail',document.getElementById('cl66NewEmail').value.trim());localStorage.setItem('menuOrbitCustomerMode','customer');create.classList.remove('open');login.classList.remove('hidden');document.getElementById('cl66Title').textContent='Customer Login';msg.textContent='✓ Account created for this prototype'};
 window.CustomerLoginV66={open,close};})();
 </script>
+
+<!-- DIRECT MY ACCOUNT LOGIN FIX V67 -->
+<script>
+(()=>{
+ function bindAccount(){
+   const btn=document.querySelector('#mainMenuDirect [data-direct-main="account"]');
+   if(!btn||btn.dataset.loginBoundV67)return;
+   btn.dataset.loginBoundV67='1';
+   btn.addEventListener('click',function(e){
+     e.preventDefault();e.stopImmediatePropagation();
+     if(window.CustomerLoginV66?.open) window.CustomerLoginV66.open();
+     else document.getElementById('customerLoginV66')?.classList.add('open');
+   },true);
+ }
+ bindAccount();
+ window.addEventListener('load',bindAccount);
+ new MutationObserver(bindAccount).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body>
 </html>
