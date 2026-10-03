@@ -5718,5 +5718,47 @@ window.ProductCustomizerV60={openById:id=>open(find(id)),open};
  setInterval(clean,250);
 })();
 </script>
+
+<!-- CUSTOMER LOGIN V66 -->
+<style>
+#customerLoginV66{position:fixed;inset:0;z-index:2147483646;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,18,12,.88);backdrop-filter:blur(12px)}
+#customerLoginV66.open{display:flex}.cl66-card{width:min(430px,100%);background:#08251b;border:1px solid rgba(255,255,255,.14);border-radius:26px;padding:24px;box-shadow:0 26px 80px rgba(0,0,0,.55);color:#fff}.cl66-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}.cl66-head h2{margin:0;font:700 28px/1.1 Georgia,serif}.cl66-close{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:#fff;font-size:22px}.cl66-sub{margin:0 0 20px;color:#b9cec3;font-size:13px;line-height:1.45}.cl66-form{display:grid;gap:13px}.cl66-form label{font-size:12px;font-weight:850;letter-spacing:.04em}.cl66-form input{width:100%;min-height:52px;margin-top:6px;border-radius:14px;border:1px solid rgba(255,255,255,.17);background:#f7f3ec;color:#08251b;padding:0 14px;font-size:16px;outline:none}.cl66-form input:focus{border-color:#f4c86f;box-shadow:0 0 0 3px rgba(244,200,111,.18)}.cl66-primary,.cl66-secondary,.cl66-guest{width:100%;min-height:52px;border-radius:14px;font-weight:900}.cl66-primary{border:0;background:linear-gradient(135deg,#00a862,#00754a);color:#fff;margin-top:3px}.cl66-secondary{border:1px solid #f4c86f;background:#f4efe6;color:#07331f}.cl66-guest{border:1px solid rgba(255,255,255,.18);background:transparent;color:#fff}.cl66-divider{display:flex;align-items:center;gap:10px;color:#91a99d;font-size:11px;margin:2px 0}.cl66-divider:before,.cl66-divider:after{content:"";height:1px;flex:1;background:rgba(255,255,255,.12)}.cl66-msg{min-height:18px;text-align:center;color:#9ce8bf;font-size:12px}.cl66-create{display:none}.cl66-create.open{display:grid;gap:13px}.cl66-login.hidden{display:none}.cl66-back{border:0;background:transparent;color:#f4d992;font-weight:850;padding:5px}
+@media(max-width:520px){#customerLoginV66{padding:0}.cl66-card{width:100%;height:100dvh;border-radius:0;padding:22px 18px;display:flex;flex-direction:column;justify-content:center}}
+</style>
+<div id="customerLoginV66" role="dialog" aria-modal="true" aria-labelledby="cl66Title">
+ <div class="cl66-card">
+  <div class="cl66-head"><h2 id="cl66Title">Customer Login</h2><button class="cl66-close" id="cl66Close" aria-label="Close">×</button></div>
+  <p class="cl66-sub">Sign in to access your account, saved favorites, rewards, and orders.</p>
+  <div class="cl66-login" id="cl66Login">
+   <form class="cl66-form" id="cl66LoginForm">
+    <label>Email<input id="cl66Email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+    <label>Password<input id="cl66Password" type="password" autocomplete="current-password" placeholder="Enter your password" required></label>
+    <button class="cl66-primary" type="submit">Log In</button>
+    <button class="cl66-secondary" id="cl66CreateBtn" type="button">Create Account</button>
+    <div class="cl66-divider">OR</div>
+    <button class="cl66-guest" id="cl66Guest" type="button">Continue as Guest</button>
+    <div class="cl66-msg" id="cl66Msg"></div>
+   </form>
+  </div>
+  <form class="cl66-create" id="cl66Create">
+   <label>Email<input id="cl66NewEmail" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+   <label>Password<input id="cl66NewPassword" type="password" autocomplete="new-password" placeholder="Create a password" minlength="6" required></label>
+   <button class="cl66-primary" type="submit">Create Account</button>
+   <button class="cl66-back" id="cl66Back" type="button">← Back to Log In</button>
+  </form>
+ </div>
+</div>
+<script>
+(()=>{const modal=document.getElementById('customerLoginV66'),login=document.getElementById('cl66Login'),create=document.getElementById('cl66Create'),msg=document.getElementById('cl66Msg');
+const open=()=>{modal.classList.add('open');setTimeout(()=>document.getElementById('cl66Email')?.focus(),50)};const close=()=>modal.classList.remove('open');
+document.addEventListener('click',e=>{const b=e.target.closest?.('button');if(!b)return;const t=(b.getAttribute('aria-label')||b.textContent||'').trim().toLowerCase();if(t==='my account'||t.includes('my account')){e.preventDefault();e.stopImmediatePropagation();open()}},true);
+document.getElementById('cl66Close').onclick=close;modal.addEventListener('click',e=>{if(e.target===modal)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+document.getElementById('cl66CreateBtn').onclick=()=>{login.classList.add('hidden');create.classList.add('open');document.getElementById('cl66Title').textContent='Create Account'};
+document.getElementById('cl66Back').onclick=()=>{create.classList.remove('open');login.classList.remove('hidden');document.getElementById('cl66Title').textContent='Customer Login'};
+document.getElementById('cl66Guest').onclick=()=>{localStorage.setItem('menuOrbitCustomerMode','guest');close();};
+document.getElementById('cl66LoginForm').onsubmit=e=>{e.preventDefault();localStorage.setItem('menuOrbitCustomerEmail',document.getElementById('cl66Email').value.trim());localStorage.setItem('menuOrbitCustomerMode','customer');msg.textContent='✓ Logged in for this prototype';setTimeout(close,650)};
+create.onsubmit=e=>{e.preventDefault();localStorage.setItem('menuOrbitCustomerEmail',document.getElementById('cl66NewEmail').value.trim());localStorage.setItem('menuOrbitCustomerMode','customer');create.classList.remove('open');login.classList.remove('hidden');document.getElementById('cl66Title').textContent='Customer Login';msg.textContent='✓ Account created for this prototype'};
+window.CustomerLoginV66={open,close};})();
+</script>
 </body>
 </html>
