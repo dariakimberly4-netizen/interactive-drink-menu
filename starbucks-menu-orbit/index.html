@@ -5684,5 +5684,39 @@ window.ProductCustomizerV60={openById:id=>open(find(id)),open};
  clean(); new MutationObserver(clean).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
 })();
 </script>
+
+<!-- DEFINITIVE REMOVE HIGHLIGHTS V65 -->
+<style>
+#mainMenuDirect .customer-new-badge,
+#mainMenuDirect .call-staff-new-text,
+#mainMenuDirect .add-table-new-text,
+#mainMenuDirect .dine-status-new-text,
+#mainMenuDirect .dine-new-direct::after,
+#mainMenuDirect #navOrbitCenter.orbit-new-highlight::before{display:none!important;content:none!important}
+#mainMenuDirect .customer-new-node,
+#mainMenuDirect .dine-new-direct,
+#mainMenuDirect #navOrbitDirect #mainSubmenuDirect>button.customer-new-node,
+#mainMenuDirect button[aria-label="Call Staff"].customer-new-node,
+#mainMenuDirect button[aria-label="Add More to My Table"].customer-new-node,
+#mainMenuDirect button[aria-label="Dine-In Order Status"].customer-new-node{
+ border-color:rgba(255,255,255,.15)!important;
+ box-shadow:none!important;
+ background:#0c281f!important;
+ animation:none!important;
+ filter:none!important;
+}
+#mainMenuDirect #navOrbitCenter.orbit-new-highlight,
+#mainMenuDirect #navOrbitCenter.smart-attention{animation:none!important;filter:none!important}
+</style>
+<script>
+(()=>{
+ const clean=()=>{
+  document.querySelectorAll('#mainMenuDirect .customer-new-badge,#mainMenuDirect .call-staff-new-text,#mainMenuDirect .add-table-new-text,#mainMenuDirect .dine-status-new-text').forEach(el=>el.remove());
+  document.querySelectorAll('#mainMenuDirect .customer-new-node,#mainMenuDirect .dine-new-direct,#mainMenuDirect .orbit-new-highlight,#mainMenuDirect .smart-attention').forEach(el=>el.classList.remove('customer-new-node','dine-new-direct','orbit-new-highlight','smart-attention'));
+ };
+ clean();
+ setInterval(clean,250);
+})();
+</script>
 </body>
 </html>
