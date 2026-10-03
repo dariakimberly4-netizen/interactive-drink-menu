@@ -5639,5 +5639,26 @@ window.ProductCustomizerV60={openById:id=>open(find(id)),open};
 }
 </style>
 
+
+<!-- REMOVE ORBIT HIGHLIGHT V63 -->
+<style>
+/* Keep the orbit clean: remove the yellow/glowing highlight treatment from orbit choices. */
+#mainMenuDirect #mainSubmenuDirect > button,
+#mainMenuDirect #mainSubmenuDirect > button:hover,
+#mainMenuDirect #mainSubmenuDirect > button:focus,
+#mainMenuDirect #mainSubmenuDirect > button:focus-visible,
+#mainMenuDirect #mainSubmenuDirect > button.active,
+#mainMenuDirect #mainSubmenuDirect > button.selected{
+  box-shadow:none!important;
+  filter:none!important;
+  animation:none!important;
+  outline:none!important;
+}
+#mainMenuDirect #mainSubmenuDirect > button::before,
+#mainMenuDirect #mainSubmenuDirect > button::after{
+  box-shadow:none!important;
+  filter:none!important;
+}
+</style>
 </body>
 </html>
