@@ -48,7 +48,16 @@ const style=document.createElement('style');style.textContent=`
 .mo-wellness-result small{display:block;color:#abc0b6;line-height:1.35;margin-top:3px}
 .mo-wellness-score{min-width:48px;text-align:center;border:1px solid rgba(126,226,170,.35);border-radius:999px;padding:5px 8px;color:#7ee2aa;font-size:10px;font-weight:900}
 
-@media(max-width:700px){.mo-next-grid{grid-template-columns:1fr}.mo-branch-table{font-size:10px}.mo-branch-table th,.mo-branch-table td{padding:7px 4px}}
+@media(max-width:700px){
+.mo-next-grid{grid-template-columns:1fr}.mo-branch-table{font-size:10px}.mo-branch-table th,.mo-branch-table td{padding:7px 4px}
+#moCustomerNextSheet.mo-sheet{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;max-width:100vw!important;max-height:100dvh!important;padding:12px!important;margin:0!important;overflow:hidden!important;align-items:flex-end!important;justify-content:center!important;box-sizing:border-box!important}
+#moCustomerNextSheet .mo-sheet-card{width:100%!important;min-width:0!important;max-width:100%!important;max-height:calc(100dvh - 24px)!important;margin:0!important;padding:18px 16px!important;overflow-x:hidden!important;overflow-y:auto!important;box-sizing:border-box!important}
+#moCustomerNextSheet .mo-sheet-head{display:grid!important;grid-template-columns:minmax(0,1fr) 44px!important;gap:10px!important}
+#moCustomerNextSheet .mo-sheet-head>div,#moCustomerNextSheet #moNextBody,#moCustomerNextSheet .mo-next-card{min-width:0!important;max-width:100%!important}
+#moCustomerNextSheet .mo-sheet-head h2{font-size:36px!important;line-height:1!important}
+#moCustomerNextSheet .mo-sheet-head p{white-space:normal!important;overflow-wrap:anywhere!important}
+#moCustomerNextSheet .mo-statgrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important}
+}
 .mo-pay-card{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;background:rgba(255,255,255,.04);margin:9px 0}.mo-pay-card strong{display:block}.mo-pay-card small{color:#abc0b6}.mo-pair-card{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.09)}.mo-pair-card img{width:70px;height:70px;object-fit:cover;border-radius:14px}.mo-pair-card button{min-height:40px;border:0;border-radius:11px;background:#f4efe6;color:#07331f;font-weight:900;padding:0 11px}.mo-share-box{width:100%;min-height:110px;border:1px solid rgba(255,255,255,.14);border-radius:13px;background:#0d3628;color:#fff;padding:10px}
 `;document.head.appendChild(style);
 
