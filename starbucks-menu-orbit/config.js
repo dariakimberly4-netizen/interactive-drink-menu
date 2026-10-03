@@ -41,6 +41,88 @@ window.MENU_ORBIT_CONFIG = {
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 
+/* V84: keep MY ACCOUNT permanently visible as a main orbit circle. */
+(() => {
+  const path=location.pathname.toLowerCase();
+  const isCustomerMenu=path.endsWith('/starbucks-menu-orbit/')||path.endsWith('/starbucks-menu-orbit/index.html');
+  if(!isCustomerMenu)return;
+
+  const style=document.createElement('style');
+  style.textContent=`
+    #mainMenuDirect #mainSubmenuDirect>button[data-main-key="account"]{
+      display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+      align-items:center!important;justify-content:center!important;flex-direction:column!important;z-index:28!important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  const mainIsShowing=()=>{
+    const host=document.getElementById('mainSubmenuDirect');
+    if(!host)return false;
+    if(host.querySelector('button[data-main-key]'))return true;
+    const crumb=(document.getElementById('orbitBreadcrumb')?.textContent||'').trim().toUpperCase();
+    return crumb==='MENU ORBIT';
+  };
+
+  const openAccount=()=>{
+    if(window.CustomerLoginV66?.open){window.CustomerLoginV66.open();return}
+    const legacy=document.getElementById('customerAccountBtn');
+    if(legacy){legacy.click();return}
+    document.querySelector('.customer-footer [data-footer-action="account"]')?.click();
+  };
+
+  let applying=false;
+  const ensureAccount=()=>{
+    if(applying||!mainIsShowing())return;
+    const host=document.getElementById('mainSubmenuDirect');
+    if(!host)return;
+    applying=true;
+    let account=host.querySelector('button[data-main-key="account"]');
+    if(!account){
+      account=document.createElement('button');
+      account.type='button';
+      account.dataset.mainKey='account';
+      account.className='main-orbit-node';
+      account.setAttribute('aria-label','MY ACCOUNT');
+      account.innerHTML='<span style="font-size:24px;display:block;margin-bottom:4px">👤</span>MY ACCOUNT';
+      account.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openAccount()});
+      host.appendChild(account);
+    }
+    account.hidden=false;
+    account.style.setProperty('display','flex','important');
+    account.style.setProperty('visibility','visible','important');
+    account.style.setProperty('opacity','1','important');
+    account.style.setProperty('pointer-events','auto','important');
+    account.style.setProperty('z-index','28','important');
+    if(window.matchMedia('(max-width:700px)').matches){
+      account.style.setProperty('position','absolute','important');
+      account.style.setProperty('left','17%','important');
+      account.style.setProperty('top','64%','important');
+      account.style.setProperty('width','72px','important');
+      account.style.setProperty('height','72px','important');
+      account.style.setProperty('min-height','72px','important');
+      account.style.setProperty('font-size','9px','important');
+    }
+    applying=false;
+  };
+
+  let queued=false;
+  const schedule=()=>{
+    if(queued)return;queued=true;
+    requestAnimationFrame(()=>setTimeout(()=>{queued=false;ensureAccount()},80));
+  };
+  const start=()=>{
+    ensureAccount();
+    const host=document.getElementById('mainSubmenuDirect');
+    if(host)new MutationObserver(schedule).observe(host,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});
+    new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true});
+    window.addEventListener('resize',schedule);
+    window.addEventListener('orientationchange',()=>setTimeout(schedule,180));
+    setInterval(ensureAccount,1000);
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+
 /* Shared portal guard: customer navigation belongs only on the customer Menu Orbit. */
 (() => {
   const path=location.pathname.toLowerCase();
