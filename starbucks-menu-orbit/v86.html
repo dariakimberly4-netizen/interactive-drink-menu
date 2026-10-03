@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Starbucks Menu Orbit</title>
+<style>html,body{margin:0;min-height:100%;background:#04140e;color:#fff;font-family:system-ui,sans-serif}#boot{position:fixed;inset:0;display:grid;place-items:center;background:#04140e;color:#d9e5df;font-weight:800;letter-spacing:.06em}</style>
+</head>
+<body>
+<div id="boot">LOADING MENU ORBIT…</div>
+<script>
+(async()=>{
+  try{
+    const r=await fetch('index.html?source=v86&ts='+Date.now(),{cache:'no-store'});
+    let html=await r.text();
+    html=html.replace('<script src="config.js"></'+'script>','<script src="config.js?v=86"></'+'script>');
+    html=html.replace('customer-next.js?v=20260924-61','customer-next.js?v=86');
+
+    const closeFix=`<script>
+    (()=>{
+      const isCustomerHome=()=>((document.getElementById('moNextTitle')?.textContent||'').trim().toLowerCase()==='customer home');
+      const mainReady=()=>!!document.querySelector('#mainSubmenuDirect button[data-main-key]');
+
+      function revealOrbit(){
+        document.body.classList.remove('show-product-results','product-detail-open');
+        try{history.replaceState(history.state,'',location.pathname+location.search+'#orbit')}catch{}
+        try{window.scrollTo(0,0)}catch{}
+
+        const main=document.getElementById('mainMenuDirect');
+        const nav=document.getElementById('navOrbitDirect');
+        const sub=document.getElementById('mainSubmenuDirect');
+        if(main){
+          main.style.setProperty('display','block','important');
+          main.style.setProperty('visibility','visible','important');
+          main.style.setProperty('opacity','1','important');
+          main.style.setProperty('pointer-events','auto','important');
+        }
+        if(nav){
+          nav.style.setProperty('display','block','important');
+          nav.style.setProperty('visibility','visible','important');
+          nav.style.setProperty('opacity','1','important');
+        }
+        if(sub){
+          sub.style.setProperty('display','block','important');
+          sub.style.setProperty('visibility','visible','important');
+          sub.style.setProperty('opacity','1','important');
+        }
+
+        document.querySelectorAll('.mo-sheet.open').forEach(x=>x.classList.remove('open'));
+        document.getElementById('customerLoginV66')?.classList.remove('open');
+        document.querySelectorAll('.drawer.open,.modal.open').forEach(x=>x.classList.remove('open'));
+
+        let tries=0;
+        const goHome=()=>{
+          const host=document.getElementById('mainSubmenuDirect');
+          if(!host)return;
+          if(mainReady()){
+            document.getElementById('navOrbitCenter')?.classList.remove('holding');
+            window.dispatchEvent(new Event('resize'));
+            return;
+          }
+          const back=host.querySelector('button.nav-back');
+          if(back&&tries<4){
+            tries++;
+            back.click();
+            setTimeout(goHome,230);
+            return;
+          }
+          const center=document.getElementById('navOrbitCenter');
+          if(center&&tries<5){
+            tries++;
+            center.dispatchEvent(new MouseEvent('dblclick',{bubbles:true,cancelable:true}));
+            setTimeout(goHome,260);
+            return;
+          }
+          if(!mainReady()) location.reload();
+        };
+        setTimeout(goHome,80);
+      }
+
+      document.addEventListener('click',e=>{
+        const close=e.target.closest?.('#cl66Close,#moCustomerNextSheet .mo-x');
+        if(close){
+          const accountClose=close.id==='cl66Close'||isCustomerHome();
+          if(accountClose)setTimeout(revealOrbit,70);
+          return;
+        }
+        const sheet=document.getElementById('moCustomerNextSheet');
+        if(sheet&&e.target===sheet&&isCustomerHome())setTimeout(revealOrbit,70);
+      },true);
+
+      document.addEventListener('keydown',e=>{
+        if(e.key==='Escape'&&(document.getElementById('customerLoginV66')?.classList.contains('open')||(document.getElementById('moCustomerNextSheet')?.classList.contains('open')&&isCustomerHome())))setTimeout(revealOrbit,70);
+      },true);
+
+      const watch=()=>{
+        const sheet=document.getElementById('moCustomerNextSheet');
+        if(sheet&&!sheet.dataset.restoreWatchV86){
+          sheet.dataset.restoreWatchV86='1';
+          let wasOpen=sheet.classList.contains('open');
+          new MutationObserver(()=>{
+            const nowOpen=sheet.classList.contains('open');
+            if(wasOpen&&!nowOpen&&isCustomerHome())setTimeout(revealOrbit,60);
+            wasOpen=nowOpen;
+          }).observe(sheet,{attributes:true,attributeFilter:['class']});
+        }
+      };
+      new MutationObserver(watch).observe(document.documentElement,{childList:true,subtree:true});
+      watch();
+    })();
+    </`+`script>`;
+
+    html=html.replace('</body>',closeFix+'</body>');
+    document.open();document.write(html);document.close();
+  }catch(e){
+    document.getElementById('boot').textContent='Unable to load the menu.';
+  }
+})();
+</script>
+</body>
+</html>
