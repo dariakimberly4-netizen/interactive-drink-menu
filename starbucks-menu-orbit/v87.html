@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Starbucks Menu Orbit</title>
+<style>html,body{margin:0;min-height:100%;background:#04140e;color:#fff;font-family:system-ui,sans-serif}#boot{position:fixed;inset:0;display:grid;place-items:center;background:#04140e;color:#d9e5df;font-weight:800;letter-spacing:.06em}</style>
+</head>
+<body>
+<div id="boot">LOADING MENU ORBIT…</div>
+<script>
+(async()=>{
+  try{
+    const r=await fetch('index.html?source=v87&ts='+Date.now(),{cache:'no-store'});
+    let html=await r.text();
+    html=html.replace('<script src="config.js"></'+'script>','<script src="config.js?v=87"></'+'script>');
+    html=html.replace('customer-next.js?v=20260924-61','customer-next.js?v=87');
+
+    const hardClose=`<script>
+    (()=>{
+      const returnToOrbit=()=>{
+        const u='./v87.html?reset='+Date.now()+'#orbit';
+        location.replace(u);
+      };
+      document.addEventListener('click',e=>{
+        const loginClose=e.target.closest?.('#cl66Close');
+        if(loginClose){
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          returnToOrbit();
+          return;
+        }
+        const sheetClose=e.target.closest?.('#moCustomerNextSheet .mo-x');
+        if(sheetClose){
+          const title=(document.getElementById('moNextTitle')?.textContent||'').trim().toLowerCase();
+          if(title==='customer home'){
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            returnToOrbit();
+          }
+        }
+      },true);
+      document.addEventListener('keydown',e=>{
+        if(e.key!=='Escape')return;
+        const login=document.getElementById('customerLoginV66');
+        const sheet=document.getElementById('moCustomerNextSheet');
+        const title=(document.getElementById('moNextTitle')?.textContent||'').trim().toLowerCase();
+        if(login?.classList.contains('open')||(sheet?.classList.contains('open')&&title==='customer home')){
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          returnToOrbit();
+        }
+      },true);
+    })();
+    </`+`script>`;
+
+    html=html.replace('</body>',hardClose+'</body>');
+    document.open();document.write(html);document.close();
+  }catch(e){document.getElementById('boot').textContent='Unable to load the menu.'}
+})();
+</script>
+</body>
+</html>
