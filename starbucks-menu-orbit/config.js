@@ -14,23 +14,22 @@ window.MENU_ORBIT_CONFIG = {
   new MutationObserver(removeUpperLeftMenu).observe(document.documentElement,{childList:true,subtree:true});
 })();
 
-/* Main orbit center: S sits above Tap Home. */
+/* Main orbit center: Tap Home only. */
 (() => {
   const style=document.createElement('style');
   style.textContent=`
-    #navOrbitCenter.smart-center{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;text-align:center!important}
-    #navOrbitCenter .smart-brand-s{display:block!important;font:900 40px/1 Georgia,serif!important;color:#fff!important;letter-spacing:0!important;margin:0!important}
-    #navOrbitCenter .smart-home-label{display:block!important;font:850 10px/1.1 system-ui!important;color:#f4d992!important;letter-spacing:.10em!important;text-transform:uppercase!important;margin:0!important}
-    @media(max-width:430px){#navOrbitCenter .smart-brand-s{font-size:36px!important}#navOrbitCenter .smart-home-label{font-size:9px!important}}
+    #navOrbitCenter.smart-center{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important}
+    #navOrbitCenter .smart-home-label{display:block!important;font:900 14px/1.1 system-ui!important;color:#f4d992!important;letter-spacing:.10em!important;text-transform:uppercase!important;margin:0!important}
+    @media(max-width:430px){#navOrbitCenter .smart-home-label{font-size:12px!important}}
   `;
   document.head.appendChild(style);
 
   const applyCenter=()=>{
     const el=document.getElementById('navOrbitCenter');
     if(!el||!el.classList.contains('smart-center'))return;
-    if(el.querySelector('.smart-brand-s')&&el.querySelector('.smart-home-label'))return;
+    if(el.querySelector('.smart-home-label')&&!el.querySelector('.smart-brand-s'))return;
     const badges=[...el.querySelectorAll('.smart-badge')].map(n=>n.outerHTML).join('');
-    el.innerHTML='<span class="smart-brand-s">S</span><span class="smart-home-label">Tap Home</span><i class="hold-progress" aria-hidden="true"></i>'+badges;
+    el.innerHTML='<span class="smart-home-label">Tap Home</span><i class="hold-progress" aria-hidden="true"></i>'+badges;
     el.setAttribute('aria-label','Tap Home');
   };
   const start=()=>{
