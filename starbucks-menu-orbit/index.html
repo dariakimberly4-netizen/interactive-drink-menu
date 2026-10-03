@@ -5491,6 +5491,17 @@ body>header{position:relative!important}
 
 
 
+
+<!-- VISIBLE MENU BUTTON V61 -->
+<style>
+#menuMainBtnV61{position:fixed;z-index:35;left:18px;top:86px;min-width:112px;min-height:48px;border:1px solid rgba(244,200,111,.72);border-radius:999px;background:#f4efe6;color:#07331f;font-weight:950;letter-spacing:.08em;box-shadow:0 12px 30px rgba(0,0,0,.3);cursor:pointer}
+#menuMainBtnV61:hover{transform:translateY(-1px)}
+@media(max-width:700px){#menuMainBtnV61{left:12px;top:76px;min-width:94px;min-height:44px;font-size:12px}}
+</style>
+<button type="button" id="menuMainBtnV61" aria-label="Open full menu">MENU</button>
+<script>
+(()=>{const b=document.getElementById('menuMainBtnV61');if(!b)return;b.addEventListener('click',()=>{location.hash='/Browse';window.dispatchEvent(new HashChangeEvent('hashchange'));});})();
+</script>
 <!-- PRODUCT CUSTOMIZER V60: additive only; approved orbit remains unchanged -->
 <style>
 #pc60{position:fixed;inset:0;z-index:160;display:none;background:rgba(1,10,7,.72);backdrop-filter:blur(9px);padding:14px}
