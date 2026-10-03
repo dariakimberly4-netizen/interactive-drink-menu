@@ -32,3 +32,33 @@
   };
   window.NewFeatureHighlight={register,clear,reset,isSeen:key=>!!seen()[key],storageKey:KEY};
 })();
+
+/* V79 — keep the orbit center as S; hide only the separate upper-left MENU shortcut. */
+(()=>{
+  const css=document.createElement('style');
+  css.textContent=`
+    #menuMainBtnV61{display:none!important}
+    html body #mainMenuDirect #navOrbitCenter{
+      display:flex!important;
+      align-items:center!important;
+      justify-content:center!important;
+      visibility:visible!important;
+      opacity:1!important;
+      font-size:0!important;
+      pointer-events:auto!important;
+    }
+    html body #mainMenuDirect #navOrbitCenter>*{display:none!important}
+    html body #mainMenuDirect #navOrbitCenter::before{
+      content:'S'!important;
+      display:block!important;
+      position:relative!important;
+      z-index:5!important;
+      color:#fff!important;
+      font:900 clamp(42px,12vw,72px)/1 Georgia,serif!important;
+      letter-spacing:0!important;
+      text-shadow:0 2px 16px rgba(0,0,0,.28)!important;
+      pointer-events:none!important;
+    }
+  `;
+  document.head.appendChild(css);
+})();
