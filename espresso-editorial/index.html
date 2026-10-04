@@ -10,7 +10,7 @@
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent;color:#fff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}button,a{font:inherit;color:inherit}a{text-decoration:none}button{border:0}.lock{overflow:hidden}
 .top{position:fixed;z-index:50;left:0;right:0;top:0;height:70px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(92,52,32,.92),rgba(92,52,32,.42),transparent);backdrop-filter:none}
 .brand{font-size:9.5px;font-weight:900;letter-spacing:.13em;white-space:nowrap}.nav{display:flex;gap:7px}.nav a{padding:9px 11px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:transparent;font-size:9.5px;font-weight:900;letter-spacing:.07em}
-.intro{position:fixed;z-index:70;inset:0;display:grid;place-items:center;background:transparent;transition:.75s var(--ease)}.intro.hide{opacity:0;visibility:hidden;pointer-events:none}.intro:before{content:"";position:absolute;width:min(84vw,420px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(244,238,223,.42);box-shadow:0 0 0 20px rgba(255,255,255,.018),0 0 100px rgba(216,189,119,.18);animation:breathe 3.4s ease-in-out infinite}.introBtn{position:absolute;inset:0;background:transparent}.introInner{position:relative;z-index:2;text-align:center;width:90vw}.introKicker{font-size:9px;letter-spacing:.24em;font-weight:900;color:var(--gold)}.intro h1{margin:11px 0 0;font-size:clamp(58px,17vw,88px);line-height:.78;letter-spacing:-.07em;font-family:Georgia,serif;font-weight:500}.intro h1 span{display:block;margin-top:12px;font:950 .52em/1 Inter,system-ui;letter-spacing:-.03em}.intro p{max-width:330px;margin:21px auto 0;color:#eee4da;font-size:14px;line-height:1.5}.introHint{position:absolute;left:50%;bottom:max(27px,calc(env(safe-area-inset-bottom) + 16px));transform:translateX(-50%);font-size:9px;letter-spacing:.2em;font-weight:900;color:var(--gold);white-space:nowrap;animation:hint 1.5s ease-in-out infinite}
+.intro{position:fixed;z-index:70;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 50% 44%,#8c5938 0,#5d3723 38%,#3a2116 72%,#2a170f 100%);transition:.75s var(--ease)}.intro.hide{opacity:0;visibility:hidden;pointer-events:none}.intro:before{content:"";position:absolute;width:min(84vw,420px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(244,238,223,.42);box-shadow:0 0 0 20px rgba(255,255,255,.018),0 0 100px rgba(216,189,119,.18);animation:breathe 3.4s ease-in-out infinite}.introBtn{position:absolute;inset:0;background:transparent}.introInner{position:relative;z-index:2;text-align:center;width:90vw}.introKicker{font-size:9px;letter-spacing:.24em;font-weight:900;color:var(--gold)}.intro h1{margin:11px 0 0;font-size:clamp(58px,17vw,88px);line-height:.78;letter-spacing:-.07em;font-family:Georgia,serif;font-weight:500}.intro h1 span{display:block;margin-top:12px;font:950 .52em/1 Inter,system-ui;letter-spacing:-.03em}.intro p{max-width:330px;margin:21px auto 0;color:#eee4da;font-size:14px;line-height:1.5}.introHint{position:absolute;left:50%;bottom:max(27px,calc(env(safe-area-inset-bottom) + 16px));transform:translateX(-50%);font-size:9px;letter-spacing:.2em;font-weight:900;color:var(--gold);white-space:nowrap;animation:hint 1.5s ease-in-out infinite}
 .stage{position:relative;width:100%;height:100dvh;min-height:680px;overflow:hidden;touch-action:pan-y;background:transparent}.stage:after{display:none}
 .bigWord{position:absolute;z-index:1;left:-5vw;top:25%;font-size:clamp(82px,26vw,210px);font-weight:950;letter-spacing:-.09em;line-height:.75;color:rgba(255,255,255,.055);white-space:nowrap;transition:opacity .3s var(--ease),transform .55s var(--ease)}
 .copy{position:absolute;z-index:8;left:20px;top:118px;width:min(58vw,390px);transition:.28s var(--ease)}.copy.swap{opacity:0;transform:translateY(-12px)}.eyebrow{font-size:9px;letter-spacing:.19em;font-weight:950;color:var(--gold)}.title{margin:8px 0 7px;font-size:clamp(34px,10vw,62px);line-height:.88;letter-spacing:-.055em}.desc{margin:0;max-width:330px;color:#f0e8df;font-size:12.7px;line-height:1.48}.sceneNo{margin-top:13px;font:500 italic 16px/1 Georgia,serif;color:rgba(255,255,255,.62)}
@@ -37,7 +37,7 @@
 <script>
 const STORY_URL='../starbucks-menu-orbit/about-motion.html';
 const drinks=[
-{name:'Caffe Misto',word:'MISTO',img:'https://starbucks.ph/seed_data/HESP_CaffeMisto.jpg',desc:'Fresh-brewed coffee and steamed milk in a smooth one-to-one balance.',c1:'#735039',c2:'#2b180f',glow:'#aa7955'},
+{name:'Caffe Misto',word:'MISTO',img:'https://about.starbucks.com/uploads/2024/12/SBX20241231-Espresso-Latte.png',desc:'Fresh-brewed coffee and steamed milk in a smooth one-to-one balance.',c1:'#735039',c2:'#2b180f',glow:'#aa7955'},
 {name:'Flat White',word:'FLAT WHITE',img:'https://starbucks.ph/seed_data/HESP_FlatWhite.jpg',desc:'Ristretto espresso shots finished with steamed whole milk for a velvety cup.',c1:'#7d604d',c2:'#2b1b13',glow:'#b18a6c'},
 {name:'Espresso',word:'ESPRESSO',img:'https://starbucks.ph/seed_data/HESP_Espresso.jpg',desc:'Rich, concentrated Starbucks espresso served straight.',c1:'#5a3220',c2:'#180b07',glow:'#865139'},
 {name:'Espresso Macchiato',word:'MACCHIATO',img:'https://starbucks.ph/seed_data/HESP_EspressoMacchiato.jpg',desc:'Espresso marked with a dollop of steamed milk and foam.',c1:'#6b412b',c2:'#211009',glow:'#9b6545'},
@@ -47,23 +47,7 @@ const intro=document.getElementById('intro'),stage=document.getElementById('stag
 let i=0,busy=false,startX=0,startY=0,down=false;
 function applyPalette(d){}
 function setCopy(d){title.textContent=d.name;desc.textContent=d.desc;eyebrow.textContent=`HOT ESPRESSO · 0${i+1} / 05`;sceneNo.textContent=`0${i+1}`;bigWord.textContent=d.word;tapCue.textContent=i===4?'ENTER OUR STORY →':'TAP / SWIPE · NEXT'}
-function removeGreen(img){
- const cv=document.createElement('canvas'),ctx=cv.getContext('2d',{willReadFrequently:true});
- cv.width=img.naturalWidth;cv.height=img.naturalHeight;ctx.drawImage(img,0,0);
- try{
-  const im=ctx.getImageData(0,0,cv.width,cv.height),p=im.data;
-  for(let n=0;n<p.length;n+=4){
-   const r=p[n],g=p[n+1],b=p[n+2];
-   const green=g-r*.72-b*.28;
-   if(g>55&&g>r*1.12&&g>b*1.08&&green>18){
-    const strength=Math.min(1,(green-18)/75);
-    p[n+3]=Math.round(p[n+3]*(1-strength));
-   }
-  }
-  ctx.putImageData(im,0,0);img.src=cv.toDataURL('image/png');
- }catch(e){}
-}
-function fillSlot(img,slot,d){if(d){img.crossOrigin='anonymous';img.onload=()=>{if(!img.dataset.cleaned){img.dataset.cleaned='1';removeGreen(img)}};img.dataset.cleaned='';img.src=d.img;img.alt=d.name;slot.classList.remove('is-empty')}else{img.removeAttribute('src');img.alt='';slot.classList.add('is-empty')}}
+function fillSlot(img,slot,d){if(d){img.src=d.img;img.alt=d.name;slot.classList.remove('is-empty')}else{img.removeAttribute('src');img.alt='';slot.classList.add('is-empty')}}
 function setImages(){fillSlot(heroImg,heroImg.parentElement,drinks[i]);fillSlot(nextImg,nextSlot,drinks[i+1]);fillSlot(peekImg,peekSlot,drinks[i+2])}
 function sync(){const d=drinks[i];applyPalette(d);setCopy(d);setImages();[...dots.children].forEach((el,n)=>el.classList.toggle('on',n===i))}
 drinks.forEach((d,n)=>{const b=document.createElement('button');b.className='dot'+(n===0?' on':'');b.setAttribute('aria-label',d.name);b.onclick=e=>{e.stopPropagation();jump(n)};dots.appendChild(b)});
