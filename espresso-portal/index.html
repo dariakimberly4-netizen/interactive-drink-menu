@@ -8,135 +8,65 @@
 <style>
 :root{--green:#00754a;--cream:#f4ead9;--gold:#e4c98d;--ink:#07130f;--ease:cubic-bezier(.18,.8,.18,1)}
 *{box-sizing:border-box}html{scroll-behavior:smooth;background:#071b14}html,body{margin:0;width:100%;min-height:100%;background:#071b14;color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}body{touch-action:pan-y}body.opening-active{overflow:hidden}
-.top{position:fixed;z-index:140;inset:0 0 auto 0;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 max(14px,env(safe-area-inset-left));background:linear-gradient(180deg,rgba(3,14,10,.94),rgba(3,14,10,.36),transparent);backdrop-filter:blur(10px)}
-.brand{font-size:10px;font-weight:900;letter-spacing:.14em;white-space:nowrap}.nav{display:flex;gap:7px}.nav a{font-size:10px;font-weight:850;letter-spacing:.08em;padding:9px 11px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(4,28,20,.45)}
+.top{position:fixed;z-index:200;inset:0 0 auto 0;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:linear-gradient(180deg,rgba(3,14,10,.96),rgba(3,14,10,.45),transparent);backdrop-filter:blur(10px)}
+.brand{font-size:9.4px;font-weight:900;letter-spacing:.12em;white-space:nowrap}.nav{display:flex;gap:7px}.nav a{font-size:9.6px;font-weight:850;letter-spacing:.07em;padding:8px 10px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(4,28,20,.5)}
 
-/* OPENING */
-.opening{position:fixed;z-index:130;inset:0;min-height:100dvh;display:grid;grid-template:"stack"/1fr;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 50%,#117653 0 7%,#0a4d38 20%,#05291e 45%,#02110b 74%,#010604 100%);transition:opacity .9s var(--ease),visibility .9s var(--ease)}
-.opening.hidden{opacity:0;visibility:hidden;pointer-events:none}.opening:before{content:"";position:absolute;inset:-24%;background:conic-gradient(from 0deg at 50% 50%,transparent 0 23%,rgba(0,117,74,.14) 31%,transparent 42% 69%,rgba(228,201,141,.08) 80%,transparent 91%);animation:ambient 18s linear infinite;pointer-events:none}.opening-hit{position:absolute;z-index:4;inset:0;border:0;background:transparent;cursor:pointer}.opening-ring{grid-area:stack;position:relative;width:min(72vw,500px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(240,229,194,.5);box-shadow:0 0 0 18px rgba(0,117,74,.07),0 0 95px rgba(72,211,154,.34),0 0 175px rgba(0,117,74,.18),inset 0 0 90px rgba(255,255,255,.055);animation:openingPulse 3.1s ease-in-out infinite}.opening-ring:before,.opening-ring:after{content:"";position:absolute;border-radius:50%;inset:10%;border:1px solid rgba(255,255,255,.14)}.opening-ring:after{inset:25%;border-color:rgba(228,201,141,.4);animation:spin 13s linear infinite}.opening-copy{grid-area:stack;position:relative;z-index:2;width:min(90vw,720px);text-align:center;padding:0 18px}.opening-kicker{font-size:10px;letter-spacing:.27em;font-weight:900;color:var(--gold)}.opening h1{margin:10px 0 14px;font-size:clamp(54px,12vw,116px);line-height:.76;letter-spacing:-.06em;text-shadow:0 14px 38px rgba(0,0,0,.3)}.opening h1 span{display:block;font-family:Georgia,serif;font-style:italic;font-weight:500;color:#f6e8c8}.opening p{max-width:470px;margin:18px auto 0;color:#d9e3de;font-size:15px;line-height:1.6}.opening-hint{position:absolute;z-index:3;left:50%;bottom:max(24px,calc(env(safe-area-inset-bottom) + 14px));transform:translateX(-50%);width:max-content;max-width:86vw;font-size:9.5px;letter-spacing:.2em;font-weight:900;color:var(--gold);animation:hint 1.6s ease-in-out infinite}@keyframes openingPulse{50%{transform:scale(1.05);box-shadow:0 0 0 30px rgba(0,117,74,.045),0 0 120px rgba(72,211,154,.4),0 0 200px rgba(0,117,74,.2),inset 0 0 95px rgba(255,255,255,.07)}}@keyframes hint{50%{opacity:.45;transform:translateX(-50%) translateY(6px)}}
+/* OPENING — deliberately locked for the first second so the tap that opens the browser cannot skip it */
+.opening{position:fixed;z-index:180;inset:0;display:grid;grid-template:"stack"/1fr;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 49%,#117653 0 7%,#0a4d38 20%,#05291e 45%,#02110b 74%,#010604 100%);transition:opacity .8s var(--ease),visibility .8s var(--ease)}
+.opening.hidden{opacity:0;visibility:hidden;pointer-events:none}.opening:before{content:"";position:absolute;inset:-24%;background:conic-gradient(from 0deg at 50% 50%,transparent 0 23%,rgba(0,117,74,.14) 31%,transparent 42% 69%,rgba(228,201,141,.08) 80%,transparent 91%);animation:ambient 18s linear infinite;pointer-events:none}.opening-hit{position:absolute;z-index:6;inset:0;border:0;background:transparent;cursor:pointer;pointer-events:none}.opening.ready .opening-hit{pointer-events:auto}.opening-ring{grid-area:stack;position:relative;width:min(80vw,420px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(240,229,194,.52);box-shadow:0 0 0 18px rgba(0,117,74,.07),0 0 95px rgba(72,211,154,.34),0 0 175px rgba(0,117,74,.18),inset 0 0 90px rgba(255,255,255,.055);animation:openingPulse 3.1s ease-in-out infinite}.opening-ring:before,.opening-ring:after{content:"";position:absolute;border-radius:50%;inset:10%;border:1px solid rgba(255,255,255,.15)}.opening-ring:after{inset:25%;border-color:rgba(228,201,141,.42);animation:spin 13s linear infinite}.opening-copy{grid-area:stack;position:relative;z-index:3;width:92vw;text-align:center;padding:0 18px}.opening-kicker{font-size:10px;letter-spacing:.25em;font-weight:900;color:var(--gold)}.opening h1{margin:10px 0 14px;font-size:clamp(54px,15vw,78px);line-height:.76;letter-spacing:-.06em;text-shadow:0 14px 38px rgba(0,0,0,.3)}.opening h1 span{display:block;font-family:Georgia,serif;font-style:italic;font-weight:500;color:#f6e8c8}.opening p{max-width:335px;margin:18px auto 0;color:#d9e3de;font-size:14px;line-height:1.55}.opening-hint{position:absolute;z-index:4;left:50%;bottom:max(24px,calc(env(safe-area-inset-bottom) + 14px));transform:translateX(-50%);width:max-content;max-width:86vw;font-size:9.5px;letter-spacing:.2em;font-weight:900;color:var(--gold);opacity:.6}.opening.ready .opening-hint{animation:hint 1.6s ease-in-out infinite;opacity:1}@keyframes openingPulse{50%{transform:scale(1.05);box-shadow:0 0 0 30px rgba(0,117,74,.045),0 0 120px rgba(72,211,154,.4),0 0 200px rgba(0,117,74,.2),inset 0 0 95px rgba(255,255,255,.07)}}@keyframes hint{50%{opacity:.45;transform:translateX(-50%) translateY(6px)}}
 
-/* ESPRESSO STAGE */
+/* ESPRESSO */
 .stage{position:relative;width:100%;height:100dvh;min-height:620px;overflow:hidden;cursor:pointer;touch-action:pan-y;background:radial-gradient(circle at 50% 42%,var(--glow,#1e8d65) 0,transparent 27%),linear-gradient(155deg,var(--bg1,#08291f),var(--bg2,#03120d) 70%);transition:background 1s var(--ease)}
 .stage:before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 20deg,transparent 0 20%,rgba(255,255,255,.045) 27%,transparent 35% 68%,rgba(228,201,141,.05) 75%,transparent 83%);animation:ambient 18s linear infinite;pointer-events:none}.stage:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 55%,transparent 0 28%,rgba(0,0,0,.16) 55%,rgba(0,0,0,.5) 100%);pointer-events:none}@keyframes ambient{to{transform:rotate(360deg)}}
-.marquee{position:absolute;z-index:1;top:17%;left:-7vw;right:-7vw;white-space:nowrap;font-size:clamp(92px,27vw,290px);font-weight:950;letter-spacing:-.085em;line-height:.78;color:rgba(255,255,255,.06);text-transform:uppercase;transform:translateX(0);transition:transform .95s var(--ease),opacity .5s}.marquee.fly{transform:translateX(-18vw);opacity:0}
-.halo{position:absolute;z-index:2;left:50%;top:47%;width:min(76vw,540px);aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.14);box-shadow:0 0 70px rgba(0,0,0,.08),inset 0 0 80px rgba(255,255,255,.025);animation:halo 7s ease-in-out infinite}.halo:before,.halo:after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(228,201,141,.22)}.halo:before{inset:12%}.halo:after{inset:28%;animation:spin 12s linear infinite}.spark{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 22px var(--gold);top:5%;left:47%}@keyframes halo{50%{transform:translate(-50%,-50%) scale(1.045)}}@keyframes spin{to{transform:rotate(360deg)}}
-.productWrap{position:absolute;z-index:5;left:50%;top:44%;width:min(76vw,520px);height:min(55vh,620px);transform:translate(-50%,-50%);display:grid;place-items:center;perspective:1200px}.product{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 40px 35px rgba(0,0,0,.5));transform:translateY(16px) scale(.78) rotate(-5deg);opacity:0;transition:transform .9s var(--ease),opacity .55s var(--ease)}.product.in{opacity:1;transform:translateY(0) scale(1) rotate(0)}.product.out{opacity:0;transform:translate(-35vw,-3vh) scale(1.3) rotate(-10deg)}
-.copy{position:absolute;z-index:8;left:max(20px,env(safe-area-inset-left));right:max(20px,env(safe-area-inset-right));bottom:108px}.eyebrow{font-size:10px;letter-spacing:.24em;font-weight:900;color:var(--gold);margin-bottom:7px}.title{margin:0;max-width:820px;font-size:clamp(42px,10.5vw,88px);line-height:.88;letter-spacing:-.055em;text-wrap:balance}.desc{margin:12px 0 0;max-width:560px;color:#d8e5df;font-size:14px;line-height:1.5}.tap{position:absolute;z-index:9;right:max(18px,env(safe-area-inset-right));bottom:114px;font-size:9px;letter-spacing:.18em;font-weight:900;color:var(--gold);writing-mode:vertical-rl;transform:rotate(180deg);opacity:.9;animation:tapPulse 1.6s ease-in-out infinite}@keyframes tapPulse{50%{opacity:.4;transform:rotate(180deg) translateY(5px)}}
-.footer{position:absolute;z-index:12;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px}.arrow{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.23);background:rgba(3,20,14,.56);backdrop-filter:blur(10px);font-size:22px;cursor:pointer}.progress{display:flex;align-items:center;gap:7px;padding:0 3px}.dot{width:7px;height:7px;border-radius:50%;border:0;background:rgba(255,255,255,.34);padding:0;transition:.35s;cursor:pointer}.dot.on{width:31px;border-radius:999px;background:var(--gold)}.count{position:absolute;right:max(18px,env(safe-area-inset-right));bottom:24px;font-size:10px;font-weight:900;letter-spacing:.16em;color:#e8d9b7}.flash{position:absolute;z-index:4;inset:0;background:#fff;opacity:0;pointer-events:none}.flash.go{animation:flash .48s ease-out}@keyframes flash{0%{opacity:0}.18%{opacity:.18}100%{opacity:0}}
+.marquee{position:absolute;z-index:1;top:20%;left:-7vw;right:-7vw;white-space:nowrap;font-size:27vw;font-weight:950;letter-spacing:-.085em;line-height:.78;color:rgba(255,255,255,.06);text-transform:uppercase;transition:transform .95s var(--ease),opacity .5s}.marquee.fly{transform:translateX(-18vw);opacity:0}.halo{position:absolute;z-index:2;left:50%;top:39%;width:82vw;max-width:430px;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.14);box-shadow:0 0 70px rgba(0,0,0,.08),inset 0 0 80px rgba(255,255,255,.025);animation:halo 7s ease-in-out infinite}.halo:before,.halo:after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(228,201,141,.22)}.halo:before{inset:12%}.halo:after{inset:28%;animation:spin 12s linear infinite}.spark{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 22px var(--gold);top:5%;left:47%}@keyframes halo{50%{transform:translate(-50%,-50%) scale(1.045)}}@keyframes spin{to{transform:rotate(360deg)}}
+.productWrap{position:absolute;z-index:5;left:50%;top:39%;width:82vw;max-width:430px;height:43vh;transform:translate(-50%,-50%);display:grid;place-items:center}.product{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 34px 30px rgba(0,0,0,.5));transform:translateY(16px) scale(.78) rotate(-5deg);opacity:0;transition:transform .9s var(--ease),opacity .55s var(--ease)}.product.in{opacity:1;transform:translateY(0) scale(1) rotate(0)}.product.out{opacity:0;transform:translate(-35vw,-3vh) scale(1.3) rotate(-10deg)}
+.copy{position:absolute;z-index:8;left:20px;right:36px;bottom:112px}.eyebrow{font-size:10px;letter-spacing:.24em;font-weight:900;color:var(--gold);margin-bottom:7px}.title{margin:0;max-width:90vw;font-size:clamp(38px,10.6vw,52px);line-height:.88;letter-spacing:-.055em}.desc{margin:9px 0 0;max-width:82vw;color:#d8e5df;font-size:13.5px;line-height:1.5}.tap{position:absolute;z-index:9;right:12px;bottom:126px;font-size:9px;letter-spacing:.18em;font-weight:900;color:var(--gold);writing-mode:vertical-rl;transform:rotate(180deg);opacity:.9}.footer{position:absolute;z-index:12;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px}.arrow{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.23);background:rgba(3,20,14,.56);backdrop-filter:blur(10px);font-size:22px;cursor:pointer}.progress{display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;border:0;background:rgba(255,255,255,.34);padding:0;transition:.35s;cursor:pointer}.dot.on{width:31px;border-radius:999px;background:var(--gold)}.count{display:none}.flash{position:absolute;z-index:4;inset:0;background:#fff;opacity:0;pointer-events:none}.flash.go{animation:flash .48s ease-out}@keyframes flash{0%{opacity:0}.18%{opacity:.18}100%{opacity:0}}
 
 /* CHAPTERS */
-.chapters{position:relative;z-index:20;min-height:100dvh;background:var(--cream);color:var(--ink);padding:110px clamp(20px,5vw,70px) 120px;overflow:hidden}.chapters:before{content:"ESPRESSO";position:absolute;left:-3vw;top:4vh;font-size:clamp(110px,24vw,340px);font-weight:950;letter-spacing:-.08em;color:rgba(0,117,74,.055);white-space:nowrap}.chapters-head{position:relative;z-index:2;max-width:820px;margin:0 auto 64px;text-align:center}.chapter-kicker{font-size:11px;letter-spacing:.25em;font-weight:900;color:var(--green)}.chapters-head h2{font-family:Georgia,serif;font-weight:500;font-size:clamp(52px,8vw,110px);line-height:.86;letter-spacing:-.05em;margin:12px 0 20px}.chapters-head p{max-width:650px;margin:0 auto;font-size:17px;line-height:1.7;color:#33483f}.chapter-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1180px;margin:auto}.chapter{min-height:500px;border-radius:30px;padding:32px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(160deg,#092a1f,#0c5b40);color:#fff;box-shadow:0 24px 60px rgba(18,53,39,.14)}.chapter:nth-child(2){background:linear-gradient(160deg,#704b2e,#c29259)}.chapter:nth-child(3){background:linear-gradient(160deg,#15392d,#061711)}.chapter-no{position:absolute;left:18px;top:8px;font-size:130px;font-weight:950;line-height:1;color:rgba(255,255,255,.08);letter-spacing:-.08em}.chapter-line{width:56px;height:2px;background:var(--gold);margin-bottom:18px;animation:breathe 2.5s ease-in-out infinite alternate}.chapter h3{font-size:38px;line-height:1;margin:8px 0 12px}.chapter p{line-height:1.65;margin:0;color:#edf4f0}.chapter small{letter-spacing:.2em;color:#ead098;font-weight:900}@keyframes breathe{to{width:125px}}
-
-@media(max-width:720px){.top{height:64px}.brand{font-size:9.2px}.nav a{font-size:9.7px;padding:8px 10px}.opening-ring{width:min(82vw,390px)}.opening-copy{width:94vw}.opening h1{font-size:clamp(52px,15vw,74px)}.opening p{font-size:14px;max-width:330px}.marquee{top:21%;font-size:27vw}.halo{top:39%;width:82vw}.productWrap{top:39%;width:82vw;height:43vh}.copy{bottom:112px;right:36px}.title{font-size:clamp(38px,10.6vw,52px);max-width:90vw}.desc{font-size:13.5px;max-width:82vw;margin-top:9px}.tap{bottom:126px;right:12px}.count{display:none}.footer{bottom:max(14px,env(safe-area-inset-bottom))}.chapters{padding:90px 18px 70px}.chapters-head{margin-bottom:34px}.chapters-head h2{font-size:13vw}.chapters-head p{font-size:15px}.chapter-grid{grid-template-columns:1fr}.chapter{min-height:420px}.chapters:before{top:7vh;font-size:34vw}}
-@media(max-width:390px){.brand{font-size:8.4px}.nav a{font-size:9px;padding:8px 8px}.opening-ring{width:78vw}.opening h1{font-size:14vw}.opening p{font-size:13.5px}.productWrap{top:38%;height:40vh}.halo{top:38%}.copy{bottom:105px}.title{font-size:10vw}.desc{font-size:13px}.tap{display:none}}
+.chapters{position:relative;z-index:20;min-height:100dvh;background:var(--cream);color:var(--ink);padding:90px 18px 70px;overflow:hidden}.chapters:before{content:"ESPRESSO";position:absolute;left:-3vw;top:7vh;font-size:34vw;font-weight:950;letter-spacing:-.08em;color:rgba(0,117,74,.055);white-space:nowrap}.chapters-head{position:relative;z-index:2;max-width:820px;margin:0 auto 34px;text-align:center}.chapter-kicker{font-size:11px;letter-spacing:.25em;font-weight:900;color:var(--green)}.chapters-head h2{font-family:Georgia,serif;font-weight:500;font-size:13vw;line-height:.86;letter-spacing:-.05em;margin:12px 0 20px}.chapters-head p{max-width:650px;margin:0 auto;font-size:15px;line-height:1.7;color:#33483f}.chapter-grid{position:relative;z-index:2;display:grid;grid-template-columns:1fr;gap:18px;max-width:1180px;margin:auto}.chapter{min-height:420px;border-radius:30px;padding:32px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(160deg,#092a1f,#0c5b40);color:#fff;box-shadow:0 24px 60px rgba(18,53,39,.14)}.chapter:nth-child(2){background:linear-gradient(160deg,#704b2e,#c29259)}.chapter:nth-child(3){background:linear-gradient(160deg,#15392d,#061711)}.chapter-no{position:absolute;left:18px;top:8px;font-size:130px;font-weight:950;line-height:1;color:rgba(255,255,255,.08);letter-spacing:-.08em}.chapter-line{width:56px;height:2px;background:var(--gold);margin-bottom:18px}.chapter h3{font-size:38px;line-height:1;margin:8px 0 12px}.chapter p{line-height:1.65;margin:0;color:#edf4f0}.chapter small{letter-spacing:.2em;color:#ead098;font-weight:900}
+@media(min-width:721px){.marquee{top:17%;font-size:clamp(92px,27vw,290px)}.halo{top:47%;width:min(76vw,540px)}.productWrap{top:44%;width:min(76vw,520px);height:min(55vh,620px)}.copy{left:clamp(24px,6vw,88px);right:40px;bottom:108px}.title{font-size:clamp(42px,7vw,88px)}.desc{font-size:14px}.chapters{padding:110px clamp(20px,5vw,70px) 120px}.chapters-head{margin-bottom:64px}.chapters-head h2{font-size:clamp(52px,8vw,110px)}.chapters-head p{font-size:17px}.chapter-grid{grid-template-columns:repeat(3,1fr)}.chapter{min-height:500px}}
+@media(max-width:390px){.brand{font-size:8.3px}.nav a{font-size:9px;padding:8px 8px}.opening-ring{width:78vw}.opening h1{font-size:14vw}.opening p{font-size:13.5px}.productWrap{top:38%;height:40vh}.halo{top:38%}.copy{bottom:105px}.title{font-size:10vw}.desc{font-size:13px}.tap{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body class="opening-active">
-<header class="top">
-  <div class="brand">STARBUCKS® PHILIPPINES</div>
-  <nav class="nav" aria-label="Primary">
-    <a href="../starbucks-menu-orbit/v89.html?refresh=94#orbit">MENU</a>
-    <a href="../starbucks-menu-orbit/about-motion.html">OUR STORY</a>
-  </nav>
-</header>
-
-<section class="opening" id="opening" aria-label="Enter Espresso Portal">
+<header class="top"><div class="brand">STARBUCKS® PHILIPPINES</div><nav class="nav"><a href="../starbucks-menu-orbit/v89.html?refresh=94#orbit">MENU</a><a href="../starbucks-menu-orbit/about-motion.html">OUR STORY</a></nav></header>
+<section class="opening" id="opening" aria-label="Espresso Portal opening">
   <button class="opening-hit" id="enterOpening" aria-label="Enter Espresso Portal"></button>
   <div class="opening-ring" aria-hidden="true"></div>
-  <div class="opening-copy" aria-hidden="true">
-    <div class="opening-kicker">STARBUCKS® PHILIPPINES</div>
-    <h1>ESPRESSO <span>PORTAL</span></h1>
-    <p>Step into five iced espresso moments. Tap anywhere to move through the collection.</p>
-  </div>
-  <div class="opening-hint">TAP ANYWHERE TO ENTER ↓</div>
+  <div class="opening-copy"><div class="opening-kicker">STARBUCKS® PHILIPPINES</div><h1>ESPRESSO <span>PORTAL</span></h1><p>Step into five iced espresso moments. Tap anywhere to move through the collection.</p></div>
+  <div class="opening-hint" id="openingHint">OPENING…</div>
 </section>
-
-<main class="stage" id="stage" aria-label="Five iced espresso drinks. Tap anywhere for the next drink.">
-  <div class="marquee" id="marquee">CARAMEL</div>
-  <div class="halo"><span class="spark"></span></div>
-  <div class="flash" id="flash"></div>
+<main class="stage" id="stage" aria-label="Five iced espresso drinks">
+  <div class="marquee" id="marquee">CARAMEL</div><div class="halo"><span class="spark"></span></div><div class="flash" id="flash"></div>
   <div class="productWrap"><img class="product in" id="product" src="../assets/drink-01.jpg" alt="Iced Caramel Macchiato"></div>
-  <section class="copy">
-    <div class="eyebrow" id="eyebrow">01 / 05 · ICED ESPRESSO</div>
-    <h1 class="title" id="title">Iced Caramel Macchiato</h1>
-    <p class="desc" id="desc">Layered espresso, chilled milk and caramel character in a clean iced classic.</p>
-  </section>
+  <section class="copy"><div class="eyebrow" id="eyebrow">01 / 05 · ICED ESPRESSO</div><h1 class="title" id="title">Iced Caramel Macchiato</h1><p class="desc" id="desc">Layered espresso, chilled milk and caramel character in a clean iced classic.</p></section>
   <div class="tap" id="tapHint">TAP ANYWHERE · NEXT</div>
-  <div class="footer">
-    <button class="arrow" id="prev" aria-label="Previous drink">‹</button>
-    <div class="progress" id="progress" aria-label="Drink navigation"></div>
-    <button class="arrow" id="next" aria-label="Next drink">›</button>
-  </div>
+  <div class="footer"><button class="arrow" id="prev" aria-label="Previous drink">‹</button><div class="progress" id="progress"></div><button class="arrow" id="next" aria-label="Next drink">›</button></div>
   <div class="count" id="count">01 / 05</div>
 </main>
-
-<section class="chapters" id="chapters">
-  <div class="chapters-head">
-    <div class="chapter-kicker">BEYOND THE CUP</div>
-    <h2>THREE MOVING CHAPTERS.</h2>
-    <p>Espresso begins small, then becomes texture, temperature and a moment of its own.</p>
-  </div>
-  <div class="chapter-grid">
-    <article class="chapter"><div class="chapter-no">01</div><div class="chapter-line"></div><small>THE SHOT</small><h3>Small. Bold. Precise.</h3><p>A concentrated beginning that gives every espresso drink its center.</p></article>
-    <article class="chapter"><div class="chapter-no">02</div><div class="chapter-line"></div><small>THE TEXTURE</small><h3>Milk. Foam. Ice.</h3><p>Temperature and texture change how espresso moves through the cup.</p></article>
-    <article class="chapter"><div class="chapter-no">03</div><div class="chapter-line"></div><small>THE MOMENT</small><h3>Your cup. Your pace.</h3><p>One familiar drink, experienced differently depending on the moment.</p></article>
-  </div>
-</section>
-
+<section class="chapters" id="chapters"><div class="chapters-head"><div class="chapter-kicker">BEYOND THE CUP</div><h2>THREE MOVING CHAPTERS.</h2><p>Espresso begins small, then becomes texture, temperature and a moment of its own.</p></div><div class="chapter-grid"><article class="chapter"><div class="chapter-no">01</div><div class="chapter-line"></div><small>THE SHOT</small><h3>Small. Bold. Precise.</h3><p>A concentrated beginning that gives every espresso drink its center.</p></article><article class="chapter"><div class="chapter-no">02</div><div class="chapter-line"></div><small>THE TEXTURE</small><h3>Milk. Foam. Ice.</h3><p>Temperature and texture change how espresso moves through the cup.</p></article><article class="chapter"><div class="chapter-no">03</div><div class="chapter-line"></div><small>THE MOMENT</small><h3>Your cup. Your pace.</h3><p>One familiar drink, experienced differently depending on the moment.</p></article></div></section>
 <script>
 const drinks=[
- {name:'Iced Caramel Macchiato',word:'CARAMEL',img:'../assets/drink-01.jpg',desc:'Layered espresso, chilled milk and caramel character in a clean iced classic.',bg1:'#104734',bg2:'#04120d',glow:'#13734f'},
- {name:'Iced Caffè Latte',word:'LATTE',img:'../assets/drink-02.jpg',desc:'Espresso and chilled milk meet in a smooth, bright and refreshing iced cup.',bg1:'#405846',bg2:'#071a12',glow:'#9b8c66'},
- {name:'Iced Caffè Mocha',word:'MOCHA',img:'../assets/drink-04.jpg',desc:'Espresso, milk and chocolate character move together over ice.',bg1:'#4a2b21',bg2:'#100b08',glow:'#7d4b35'},
- {name:'Iced Americano',word:'AMERICANO',img:'../assets/drink-05.jpg',desc:'Bold espresso lengthened with cold water and ice for a crisp finish.',bg1:'#14382f',bg2:'#03100c',glow:'#1f6f5a'},
- {name:'Iced White Chocolate Mocha',word:'WHITE MOCHA',img:'../assets/drink-06.jpg',desc:'Iced espresso and milk with a smooth white chocolate profile.',bg1:'#5c574a',bg2:'#15120d',glow:'#a39273'}
-];
-const opening=document.getElementById('opening');
-const enterOpening=document.getElementById('enterOpening');
-const stage=document.getElementById('stage'),product=document.getElementById('product'),marquee=document.getElementById('marquee'),title=document.getElementById('title'),desc=document.getElementById('desc'),eyebrow=document.getElementById('eyebrow'),count=document.getElementById('count'),flash=document.getElementById('flash'),progress=document.getElementById('progress'),chapters=document.getElementById('chapters'),tapHint=document.getElementById('tapHint');
-let i=0,startX=0,startY=0,down=false,busy=false;
-
-enterOpening.addEventListener('click',()=>{
- opening.classList.add('hidden');
- document.body.classList.remove('opening-active');
- window.scrollTo({top:0,left:0,behavior:'instant'});
-});
-
+{name:'Iced Caramel Macchiato',word:'CARAMEL',img:'../assets/drink-01.jpg',desc:'Layered espresso, chilled milk and caramel character in a clean iced classic.',bg1:'#104734',bg2:'#04120d',glow:'#13734f'},
+{name:'Iced Caffè Latte',word:'LATTE',img:'../assets/drink-02.jpg',desc:'Espresso and chilled milk meet in a smooth, bright and refreshing iced cup.',bg1:'#405846',bg2:'#071a12',glow:'#9b8c66'},
+{name:'Iced Caffè Mocha',word:'MOCHA',img:'../assets/drink-04.jpg',desc:'Espresso, milk and chocolate character move together over ice.',bg1:'#4a2b21',bg2:'#100b08',glow:'#7d4b35'},
+{name:'Iced Americano',word:'AMERICANO',img:'../assets/drink-05.jpg',desc:'Bold espresso lengthened with cold water and ice for a crisp finish.',bg1:'#14382f',bg2:'#03100c',glow:'#1f6f5a'},
+{name:'Iced White Chocolate Mocha',word:'WHITE MOCHA',img:'../assets/drink-06.jpg',desc:'Iced espresso and milk with a smooth white chocolate profile.',bg1:'#5c574a',bg2:'#15120d',glow:'#a39273'}];
+const opening=document.getElementById('opening'),enterOpening=document.getElementById('enterOpening'),openingHint=document.getElementById('openingHint'),stage=document.getElementById('stage'),product=document.getElementById('product'),marquee=document.getElementById('marquee'),title=document.getElementById('title'),desc=document.getElementById('desc'),eyebrow=document.getElementById('eyebrow'),count=document.getElementById('count'),flash=document.getElementById('flash'),progress=document.getElementById('progress'),chapters=document.getElementById('chapters'),tapHint=document.getElementById('tapHint');
+let i=0,startX=0,startY=0,down=false,busy=false,openingReady=false;
+window.scrollTo(0,0);
+setTimeout(()=>{openingReady=true;opening.classList.add('ready');openingHint.textContent='TAP ANYWHERE TO ENTER ↓'},1000);
+enterOpening.addEventListener('click',()=>{if(!openingReady)return;opening.classList.add('hidden');document.body.classList.remove('opening-active');setTimeout(()=>window.scrollTo(0,0),20)});
 drinks.forEach((d,n)=>{const b=document.createElement('button');b.className='dot'+(n===0?' on':'');b.type='button';b.setAttribute('aria-label',`Show ${d.name}`);b.onclick=e=>{e.stopPropagation();show(n,n>i?1:-1)};progress.appendChild(b)});
 function paint(d){stage.style.setProperty('--bg1',d.bg1);stage.style.setProperty('--bg2',d.bg2);stage.style.setProperty('--glow',d.glow)}paint(drinks[0]);
-function updateHint(){tapHint.textContent=i===drinks.length-1?'TAP ANYWHERE · BEYOND THE CUP':'TAP ANYWHERE · NEXT'}
-function show(n,dir=1){
- if(busy||n===i||n<0||n>=drinks.length)return;
- busy=true;
- const d=drinks[n];
- product.classList.remove('in');product.classList.add('out');
- marquee.classList.add('fly');
- flash.classList.remove('go');void flash.offsetWidth;flash.classList.add('go');
- setTimeout(()=>{
-  i=n;product.src=d.img;product.alt=d.name;marquee.textContent=d.word;title.textContent=d.name;desc.textContent=d.desc;
-  eyebrow.textContent=`0${i+1} / 05 · ICED ESPRESSO`;count.textContent=`0${i+1} / 05`;paint(d);
-  [...progress.children].forEach((el,x)=>el.classList.toggle('on',x===i));
-  product.classList.remove('out');marquee.classList.remove('fly');void product.offsetWidth;product.classList.add('in');updateHint();
-  setTimeout(()=>busy=false,540);
- },330);
-}
+function show(n,dir=1){if(busy||n===i)return;busy=true;const d=drinks[n];product.classList.remove('in');product.classList.add('out');marquee.classList.add('fly');flash.classList.remove('go');void flash.offsetWidth;flash.classList.add('go');setTimeout(()=>{i=n;product.src=d.img;product.alt=d.name;marquee.textContent=d.word;title.textContent=d.name;desc.textContent=d.desc;eyebrow.textContent=`0${i+1} / 05 · ICED ESPRESSO`;count.textContent=`0${i+1} / 05`;paint(d);[...progress.children].forEach((el,x)=>el.classList.toggle('on',x===i));product.classList.remove('out');marquee.classList.remove('fly');void product.offsetWidth;product.classList.add('in');tapHint.textContent=i===drinks.length-1?'TAP ANYWHERE · BEYOND THE CUP':'TAP ANYWHERE · NEXT';setTimeout(()=>busy=false,540)},330)}
 function goChapters(){chapters.scrollIntoView({behavior:'smooth',block:'start'})}
-function next(){if(busy)return;if(i===drinks.length-1){goChapters();return}show(i+1,1)}
-function prev(){if(busy)return;if(i===0)return;show(i-1,-1)}
-document.getElementById('next').onclick=e=>{e.stopPropagation();next()};
-document.getElementById('prev').onclick=e=>{e.stopPropagation();prev()};
-stage.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY;down=true});
-stage.addEventListener('pointerup',e=>{
- if(!down)return;down=false;if(e.target.closest('a,button'))return;
- const dx=e.clientX-startX,dy=e.clientY-startY;
- if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev();return}
- if(Math.abs(dy)>45){if(dy<0&&i===drinks.length-1)goChapters();return}
- next();
-});
-stage.addEventListener('pointercancel',()=>down=false);
-document.addEventListener('keydown',e=>{if(opening.classList.contains('hidden')){if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev();if((e.key==='ArrowDown'||e.key==='Enter')&&i===drinks.length-1)goChapters()}});
-updateHint();
+function next(){if(i===drinks.length-1){goChapters();return}show(i+1,1)}
+function prev(){if(i===0)return;show(i-1,-1)}
+document.getElementById('next').onclick=e=>{e.stopPropagation();next()};document.getElementById('prev').onclick=e=>{e.stopPropagation();prev()};
+stage.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY;down=true});stage.addEventListener('pointerup',e=>{if(!down)return;down=false;if(e.target.closest('a,button'))return;const dx=e.clientX-startX,dy=e.clientY-startY;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev()}else if(Math.abs(dx)<14&&Math.abs(dy)<14){next()}});stage.addEventListener('pointercancel',()=>down=false);
+document.addEventListener('keydown',e=>{if(opening&&!opening.classList.contains('hidden'))return;if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev()});
 </script>
 </body>
 </html>
