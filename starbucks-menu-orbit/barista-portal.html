@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Barista Portal</title>
+<style>
+:root{--green:#00754a;--dark:#04140e;--panel:#0b2a20;--cream:#f4efe6;--gold:#d4ad62;--muted:#b8c8c0}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 50% 0,#145d42 0,#07271d 38%,#04140e 100%);color:#fff}body{padding:18px}.wrap{width:min(1080px,100%);margin:auto}.top{display:flex;align-items:center;gap:12px;margin-bottom:22px}.back{min-height:48px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:800}.brand{margin-right:auto}.brand small{display:block;color:var(--gold);font-weight:900;letter-spacing:.16em}.brand h1{margin:2px 0 0;font-family:Georgia,serif;font-size:clamp(28px,5vw,46px)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{min-height:170px;border:1px solid rgba(255,255,255,.13);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.035));padding:20px;color:#fff;text-align:left;box-shadow:0 18px 44px rgba(0,0,0,.22)}.card b{display:block;font-size:20px;margin:10px 0 6px}.card span{color:var(--muted);line-height:1.45}.icon{font-size:28px}.live{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;background:rgba(0,168,98,.16);border:1px solid rgba(0,168,98,.3);font-size:12px;font-weight:800}.dot{width:8px;height:8px;border-radius:50%;background:#00a862}.note{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}@media(max-width:760px){body{padding:12px}.grid{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.brand h1{font-size:30px}}@media(max-width:480px){.grid{grid-template-columns:1fr}.card{min-height:130px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <button class="back" onclick="location.href='./v89.html?refresh=barista#orbit'">← Menu Orbit</button>
+    <div class="brand"><small>STARBUCKS MENU ORBIT</small><h1>Barista Portal</h1></div>
+    <div class="live"><span class="dot"></span>Ready</div>
+  </div>
+  <div class="grid">
+    <button class="card"><div class="icon">☕</div><b>Incoming Orders</b><span>View new drink orders and preparation details.</span></button>
+    <button class="card"><div class="icon">✓</div><b>Order Queue</b><span>Manage preparing, ready, and completed orders.</span></button>
+    <button class="card"><div class="icon">🥤</div><b>Drink Details</b><span>Review size, milk, add-ons, notes, and customizations.</span></button>
+    <button class="card"><div class="icon">📦</div><b>Inventory</b><span>Check ingredient and cup availability.</span></button>
+    <button class="card"><div class="icon">⏱</div><b>Preparation Time</b><span>Track active drink preparation time.</span></button>
+    <button class="card"><div class="icon">📊</div><b>Shift Summary</b><span>See completed orders and current shift activity.</span></button>
+  </div>
+  <div class="note">Barista workspace connected to the Menu Orbit prototype.</div>
+</div>
+</body>
+</html>
