@@ -1,0 +1,44 @@
+/* Customer Orbit readability patch v98 */
+#premiumCustomerOrbitV96 .pco-card{width:27%!important;border-width:3px!important;box-shadow:0 24px 70px rgba(0,0,0,.58)!important}
+#premiumCustomerOrbitV96 .pco-card:after{background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.18) 34%,rgba(2,10,8,.72) 56%,rgba(2,10,8,.97) 100%)!important}
+#premiumCustomerOrbitV96 .pco-card .pco-label{left:18px!important;right:62px!important;bottom:20px!important;padding:8px 4px 4px!important;text-shadow:0 2px 5px rgba(0,0,0,.95)!important}
+#premiumCustomerOrbitV96 .pco-card h3{font-size:clamp(22px,1.8vw,30px)!important;line-height:1!important;font-weight:950!important;letter-spacing:.015em!important;color:#fff!important}
+#premiumCustomerOrbitV96 .pco-card p{font-size:clamp(12px,.85vw,15px)!important;line-height:1.3!important;font-weight:800!important;letter-spacing:.035em!important;color:#fff!important;max-width:155px!important;text-shadow:0 2px 4px #000!important}
+#premiumCustomerOrbitV96 .pco-card .pco-ico{width:50px!important;height:50px!important;left:16px!important;top:16px!important;font-size:24px!important;background:rgba(2,16,12,.78)!important;border:2px solid rgba(255,255,255,.52)!important}
+#premiumCustomerOrbitV96 .pco-card .pco-go{width:46px!important;height:46px!important;right:15px!important;bottom:18px!important;font-size:26px!important;background:#f2c85f!important;box-shadow:0 7px 20px rgba(0,0,0,.42)!important}
+#premiumCustomerOrbitV96 .pco-hub{width:37%!important;background:linear-gradient(145deg,rgba(4,38,27,.98),rgba(3,20,15,.99))!important}
+#premiumCustomerOrbitV96 .pco-hub-title{font-size:clamp(28px,2.3vw,38px)!important}
+#premiumCustomerOrbitV96 .pco-hub-sub{font-size:clamp(13px,1vw,17px)!important;font-weight:800!important}
+#premiumCustomerOrbitV96 .pco-copy{font-size:clamp(12px,.9vw,15px)!important;line-height:1.5!important;color:#fff!important;max-width:250px!important}
+#premiumCustomerOrbitV96 .pco-menu{top:1%!important}
+#premiumCustomerOrbitV96 .pco-order{right:0!important;top:17%!important}
+#premiumCustomerOrbitV96 .pco-stores{right:5%!important;bottom:8%!important}
+#premiumCustomerOrbitV96 .pco-rewards{bottom:-1%!important}
+#premiumCustomerOrbitV96 .pco-account{left:0!important;bottom:17%!important}
+#premiumCustomerOrbitV96 .pco-settings{left:5%!important;top:17%!important}
+
+@media(max-width:900px){
+  #premiumCustomerOrbitV96 .pco-card{width:32%!important}
+  #premiumCustomerOrbitV96 .pco-card h3{font-size:17px!important}
+  #premiumCustomerOrbitV96 .pco-card p{font-size:10px!important;max-width:118px!important}
+  #premiumCustomerOrbitV96 .pco-card .pco-label{left:11px!important;right:44px!important;bottom:11px!important;padding:4px 0!important}
+  #premiumCustomerOrbitV96 .pco-card .pco-ico{width:38px!important;height:38px!important;left:10px!important;top:10px!important;font-size:18px!important}
+  #premiumCustomerOrbitV96 .pco-card .pco-go{width:34px!important;height:34px!important;right:9px!important;bottom:10px!important;font-size:19px!important}
+  #premiumCustomerOrbitV96 .pco-hub{width:46%!important}
+  #premiumCustomerOrbitV96 .pco-hub-title{font-size:22px!important}
+  #premiumCustomerOrbitV96 .pco-copy{font-size:11px!important;max-width:170px!important}
+}
+
+@media(max-width:560px){
+  #premiumCustomerOrbitV96 .pco-card{display:none!important}
+  #premiumCustomerOrbitV96 .pco-mobile{grid-template-columns:1fr!important;gap:12px!important;padding:0 4px!important}
+  #premiumCustomerOrbitV96 .pco-mobile button{min-height:128px!important;border-radius:22px!important;border-width:2px!important;padding:18px!important}
+  #premiumCustomerOrbitV96 .pco-mobile button img{opacity:.28!important}
+  #premiumCustomerOrbitV96 .pco-mobile button:after{background:linear-gradient(90deg,rgba(2,10,8,.90),rgba(2,10,8,.54))!important}
+  #premiumCustomerOrbitV96 .pco-mobile .mi span{font-size:26px!important}
+  #premiumCustomerOrbitV96 .pco-mobile .mi b{font-size:19px!important;line-height:1.05!important;margin-top:10px!important}
+  #premiumCustomerOrbitV96 .pco-mobile .mi small{font-size:13px!important;line-height:1.35!important;color:#fff!important;font-weight:700!important;max-width:230px!important}
+  #premiumCustomerOrbitV96 .pco-hub{width:58%!important}
+  #premiumCustomerOrbitV96 .pco-hub-title{font-size:19px!important}
+  #premiumCustomerOrbitV96 .pco-hub-sub{font-size:10px!important}
+}
