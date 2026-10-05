@@ -1,26 +1,77 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Menu Orbit — Staff Portal</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Menu Orbit — Staff Portal</title>
 <style>
-:root{--g:#063b2b;--gold:#d4ad62;--cream:#f7f1e6}*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;background:radial-gradient(circle at 50% 18%,#17684a,#03251b 68%);color:#fff}button{font:inherit}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #ffffff22}header b{color:#f2d493}.wrap{text-align:center;padding:22px 10px}.wrap h1{margin:5px 0;font-size:clamp(28px,5vw,44px)}.wrap p{margin:4px;color:#c9d8d1}
-.orbit{position:relative;width:min(680px,94vw);height:min(680px,94vw);min-height:380px;margin:18px auto 40px}.orbit:before{content:"";position:absolute;left:14%;top:14%;width:72%;height:72%;border:2px solid #d4ad6277;border-radius:50%;pointer-events:none}.center,.role{position:absolute;border-radius:50%;color:#fff;font-weight:950;text-align:center;touch-action:manipulation}.center{left:50%;top:50%;transform:translate(-50%,-50%);width:180px;height:180px;background:radial-gradient(circle,#167755,#042c20);border:5px solid var(--gold);z-index:3}.center small{display:block;color:#f2d493;font-size:10px;margin-top:7px}.role{transform:translate(-50%,-50%);width:125px;height:125px;background:#0a3527;border:3px solid var(--gold);z-index:4}.role span{display:block;font-size:27px;margin-bottom:5px}.role.new{outline:7px solid #fff200;box-shadow:0 0 0 13px #fff20055,0 0 60px #fff200dd}.role.new:after{content:"★ NEW ★";position:absolute;top:-27px;left:50%;transform:translateX(-50%);background:#fff200;color:#073421;border:3px solid white;border-radius:999px;padding:5px 8px;font-size:8px;white-space:nowrap;pointer-events:none}
-.login{display:none;width:min(430px,92vw);margin:25px auto;background:#fff;color:#17352a;padding:25px;border-radius:24px;box-shadow:0 20px 60px #0007;text-align:left}.login h2{text-align:center;margin:0 0 5px}.login .sub{text-align:center;color:#68766f;margin-bottom:18px}.field{margin:13px 0}.field label{display:block;font-size:11px;font-weight:900;margin-bottom:5px}.field input{width:100%;padding:13px;border:1px solid #ccd5d0;border-radius:11px}.primary,.back{width:100%;padding:13px;border:0;border-radius:12px;font-weight:950}.primary{background:var(--g);color:#fff}.demo{margin-top:10px;background:#fff3a6;color:#443800;border:2px solid #e4bc00}.back{margin-top:10px;background:#ecefeb;color:#17352a}
-@media(max-width:650px){.orbit{width:94vw;height:94vw;max-height:440px}.center{width:122px;height:122px;font-size:12px}.role{width:94px;height:94px;font-size:9px}.role span{font-size:20px}}
-</style></head><body>
-<header><div><b>MENU ORBIT</b><br><small>Unified Staff System</small></div><small>ROLE-BASED ACCESS</small></header>
-<section class="wrap" id="roleScreen"><h1>Staff Portal</h1><p>Choose your staff role</p><div class="orbit"><button class="center">STAFF<small>SELECT ROLE</small></button>
-<button class="role new" data-role="cashier" style="left:50%;top:8%"><span>₱</span>CASHIER</button>
-<button class="role new" data-role="barista" style="left:88%;top:50%"><span>☕</span>BARISTA</button>
-<button class="role new" data-role="inventory" style="left:50%;top:92%"><span>▣</span>INVENTORY</button>
-<button class="role new" data-role="manager" style="left:12%;top:50%"><span>◆</span>MANAGER</button></div></section>
-<section class="login" id="login"><h2 id="roleTitle">Role Login</h2><div class="sub">Independent secure role access</div><div class="field"><label>STAFF EMAIL</label><input id="email"></div><div class="field"><label>PASSWORD</label><input id="pass" type="password"></div><button class="primary" id="signIn">SIGN IN</button><button class="primary demo" id="demo">ONE-TAP DEMO LOGIN</button><button class="back" id="back">← Back to Staff Orbit</button></section>
+:root{--green:#063b2b;--green2:#0b5b43;--gold:#d4ad62;--cream:#f7f1e6;--ink:#17352a}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{background:radial-gradient(circle at 50% 12%,#17684a 0,#063b2b 48%,#021b14 100%);color:#fff;display:flex;flex-direction:column}
+button,input{font:inherit}
+header{padding:16px 20px;border-bottom:1px solid #ffffff22;background:#031f17aa;backdrop-filter:blur(14px)}
+header b{display:block;color:#f2d493;letter-spacing:.08em;font-size:14px}header small{color:#c9d8d1}
+main{width:min(760px,100%);margin:auto;padding:24px 16px 38px}
+.hero{text-align:center;margin-bottom:22px}.hero h1{font-size:clamp(30px,7vw,48px);margin:0 0 6px}.hero p{margin:0;color:#c9d8d1}
+.roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.role{min-height:150px;border:1px solid #ffffff26;border-radius:22px;background:linear-gradient(145deg,#0c4c39,#073326);color:#fff;padding:20px;text-align:left;box-shadow:0 16px 34px #0004;transition:.18s transform,.18s border-color}
+.role:active{transform:scale(.98)}.role:hover{border-color:var(--gold)}
+.icon{font-size:34px;display:block;margin-bottom:14px}.role strong{font-size:21px;display:block}.role small{display:block;margin-top:5px;color:#c8d8d1}
+.login{display:none;background:#fff;color:var(--ink);border-radius:24px;padding:24px;box-shadow:0 24px 70px #0007}
+.login.show{display:block}.roles.hide,.hero.hide{display:none}
+.login h2{text-align:center;margin:0 0 5px}.login .sub{text-align:center;color:#6e7a74;margin-bottom:20px}
+.field{margin:14px 0}.field label{display:block;font-size:11px;font-weight:900;letter-spacing:.05em;margin-bottom:6px}.field input{width:100%;padding:14px;border:1px solid #cbd5cf;border-radius:12px;background:#fff;color:#17352a}
+.actions{display:grid;gap:10px;margin-top:18px}.primary,.back{min-height:52px;border:0;border-radius:13px;font-weight:900}.primary{background:var(--green);color:#fff}.demo{background:#f6e4a8;color:#4d3d00}.back{background:#e9eeeb;color:#17352a}
+.note{margin-top:14px;font-size:12px;color:#718078;text-align:center;line-height:1.5}
+@media(max-width:560px){.roles{grid-template-columns:1fr}.role{min-height:118px}.hero{margin-bottom:18px}}
+</style>
+</head>
+<body>
+<header><b>MENU ORBIT</b><small>Unified Staff System</small></header>
+<main>
+<section class="hero" id="hero"><h1>Staff Portal</h1><p>Select your role. One login per role.</p></section>
+<section class="roles" id="roles">
+<button class="role" data-role="cashier"><span class="icon">₱</span><strong>Cashier</strong><small>Orders and payments</small></button>
+<button class="role" data-role="barista"><span class="icon">☕</span><strong>Barista</strong><small>Drink preparation and queue</small></button>
+<button class="role" data-role="inventory"><span class="icon">▣</span><strong>Inventory</strong><small>Stock and supply control</small></button>
+<button class="role" data-role="manager"><span class="icon">◆</span><strong>Manager</strong><small>Shift and operations overview</small></button>
+</section>
+<section class="login" id="login">
+<h2 id="roleTitle">Role Login</h2>
+<div class="sub">Sign in once to open your role workspace.</div>
+<div class="field"><label>STAFF EMAIL</label><input id="email" autocomplete="username"></div>
+<div class="field"><label>PASSWORD</label><input id="pass" type="password" autocomplete="current-password"></div>
+<div class="actions">
+<button class="primary" id="signIn">SIGN IN</button>
+<button class="primary demo" id="demo">ONE-TAP DEMO LOGIN</button>
+<button class="back" id="back">← Back to Roles</button>
+</div>
+<div class="note">Each role has only one login screen. No second login is shown after this step.</div>
+</section>
+</main>
 <script>
-const roles={
+const roleData={
  cashier:{name:'Cashier',email:'cashier.demo@menuorbit.test',pass:'CashierOrbit2026!',url:'cashier.html'},
- barista:{name:'Barista / Service Crew',email:'barista.demo@menuorbit.test',pass:'BaristaOrbit2026!',url:'staff.html'},
- inventory:{name:'Inventory / Stock Staff',email:'inventory.demo@menuorbit.test',pass:'StockOrbit2026!',url:'inventory-staff.html'},
- manager:{name:'Shift Supervisor / Manager',email:'manager.demo@menuorbit.test',pass:'ManagerOrbit2026!',url:'manager.html'}
-};let selected='';
-document.querySelectorAll('[data-role]').forEach(b=>b.onclick=()=>{selected=b.dataset.role;localStorage.setItem('staff_hub_seen_v1_'+selected,'1');b.classList.remove('new');const r=roles[selected];roleTitle.textContent=r.name+' Login';email.value=r.email;pass.value=r.pass;roleScreen.style.display='none';login.style.display='block'});
-function go(){if(!selected)return;sessionStorage.setItem('menuorbit_role',selected);location.href=roles[selected].url}
-signIn.onclick=()=>{if(email.value&&pass.value)go()};demo.onclick=go;back.onclick=()=>{login.style.display='none';roleScreen.style.display='block';document.querySelectorAll('[data-role]').forEach(b=>{if(localStorage.getItem('staff_hub_seen_v1_'+b.dataset.role))b.classList.remove('new')})};
-</script></body></html>
+ barista:{name:'Barista',email:'barista.demo@menuorbit.test',pass:'BaristaOrbit2026!',url:'staff.html'},
+ inventory:{name:'Inventory',email:'inventory.demo@menuorbit.test',pass:'StockOrbit2026!',url:'inventory-staff.html'},
+ manager:{name:'Manager',email:'manager.demo@menuorbit.test',pass:'ManagerOrbit2026!',url:'manager.html'}
+};
+let selected='';
+const roles=document.getElementById('roles'),hero=document.getElementById('hero'),login=document.getElementById('login'),roleTitle=document.getElementById('roleTitle'),email=document.getElementById('email'),pass=document.getElementById('pass');
+document.querySelectorAll('[data-role]').forEach(btn=>btn.addEventListener('click',()=>{
+ selected=btn.dataset.role;
+ const r=roleData[selected];
+ roleTitle.textContent=r.name+' Login';
+ email.value=r.email;pass.value=r.pass;
+ roles.classList.add('hide');hero.classList.add('hide');login.classList.add('show');
+ setTimeout(()=>email.focus(),50);
+}));
+function openRole(){if(!selected)return;sessionStorage.setItem('menuorbit_role',selected);location.href=roleData[selected].url}
+document.getElementById('signIn').addEventListener('click',()=>{if(email.value.trim()&&pass.value)openRole()});
+document.getElementById('demo').addEventListener('click',openRole);
+document.getElementById('back').addEventListener('click',()=>{login.classList.remove('show');roles.classList.remove('hide');hero.classList.remove('hide');selected=''});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&login.classList.contains('show'))document.getElementById('signIn').click()});
+</script>
+</body>
+</html>
