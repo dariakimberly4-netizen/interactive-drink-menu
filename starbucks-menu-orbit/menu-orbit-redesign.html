@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06271d">
+<title>Starbucks Menu Orbit — Drink First</title>
+<style>
+:root{--green:#00754a;--deep:#06271d;--deep2:#031610;--cream:#f7f2e8;--gold:#d8b66a;--muted:#c9d6cf;--line:rgba(216,182,106,.72)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:#031610;color:#fff;overflow:hidden}button{font:inherit}
+body{background:radial-gradient(circle at 50% 34%,rgba(0,117,74,.32),transparent 32%),linear-gradient(180deg,#082f23 0%,#041a13 48%,#020c09 100%)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 14% 18%,rgba(255,255,255,.06),transparent 16%),radial-gradient(circle at 84% 26%,rgba(216,182,106,.06),transparent 18%),linear-gradient(rgba(255,255,255,.018),rgba(255,255,255,0));mix-blend-mode:screen}
+header{height:74px;padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(216,182,106,.22);background:rgba(3,22,16,.72);backdrop-filter:blur(18px);position:relative;z-index:20}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}.brandmark{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#00a862,#006241);border:2px solid #f7f2e8;box-shadow:0 0 0 4px rgba(216,182,106,.16)}.brandmark span{font-family:Georgia,serif;font-size:25px;font-weight:900}.brandtext strong{display:block;font-size:18px;letter-spacing:.02em}.brandtext small{display:block;font-size:9px;letter-spacing:.16em;color:#b8c9c0;margin-top:2px}.top-actions{margin-left:auto;display:flex;gap:8px}.topbtn{height:46px;border-radius:999px;border:1px solid rgba(216,182,106,.34);background:rgba(255,255,255,.06);color:#fff;padding:0 14px;font-weight:800}.cart-badge{background:var(--gold);color:#1b2b23;border-radius:99px;padding:2px 7px;margin-left:5px;font-size:11px}
+main{position:absolute;inset:74px 0 0;overflow:hidden}.orbit-stage{position:absolute;inset:0;display:grid;place-items:center;touch-action:pan-y}.orbit-ring,.orbit-ring:before,.orbit-ring:after{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none}.orbit-ring{width:min(82vw,760px);height:min(82vw,760px);border:1px solid rgba(216,182,106,.48);box-shadow:0 0 80px rgba(0,168,98,.12),inset 0 0 80px rgba(255,255,255,.025)}.orbit-ring:before,.orbit-ring:after{content:""}.orbit-ring:before{width:76%;height:76%;border:1px dashed rgba(216,182,106,.28)}.orbit-ring:after{width:50%;height:50%;border:1px solid rgba(216,182,106,.16)}
+.center-card{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);width:min(42vw,330px);aspect-ratio:1;border-radius:50%;border:2px solid rgba(255,248,232,.9);background:radial-gradient(circle at 36% 26%,#10a86a,#00754a 46%,#004c32 76%,#06271d);box-shadow:0 0 0 10px rgba(216,182,106,.12),0 0 70px rgba(0,168,98,.35),0 28px 80px rgba(0,0,0,.46);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center;z-index:6;overflow:hidden}.center-card:after{content:"";position:absolute;inset:9%;border-radius:50%;border:1px dashed rgba(216,182,106,.46);pointer-events:none}.hero-icon{font-size:clamp(58px,10vw,92px);filter:drop-shadow(0 14px 18px rgba(0,0,0,.34));line-height:1}.center-card h1{font-family:Georgia,serif;font-size:clamp(19px,3vw,30px);margin:10px 0 3px}.center-card p{font-size:clamp(10px,1.6vw,13px);color:#e3efe8;margin:0 0 7px;max-width:210px}.price{font-weight:900;color:#f4d28a;font-size:clamp(13px,2vw,17px)}.add-btn{margin-top:10px;min-height:42px;border-radius:999px;border:1px solid #f7e6b8;background:#f7f2e8;color:#073723;padding:0 18px;font-weight:900;position:relative;z-index:3}
+.node{position:absolute;left:50%;top:47%;width:clamp(90px,15vw,132px);aspect-ratio:1;border-radius:50%;border:2px solid rgba(216,182,106,.74);background:linear-gradient(160deg,rgba(15,62,46,.98),rgba(5,35,26,.98));box-shadow:0 14px 35px rgba(0,0,0,.42),0 0 0 4px rgba(216,182,106,.08);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;padding:10px;transform:translate(-50%,-50%);transition:transform .28s ease,box-shadow .28s ease,background .28s ease;z-index:5}.node:hover,.node:focus-visible,.node.active{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 18px 48px rgba(0,0,0,.48),0 0 30px rgba(216,182,106,.22);background:linear-gradient(160deg,#0e5a3f,#063828)}.node .ico{font-size:clamp(30px,5vw,46px);line-height:1}.node b{font-size:clamp(10px,1.5vw,13px);letter-spacing:.02em}.node small{font-size:8px;color:#cbdad2;display:none}
+.n0{transform:translate(-50%,-50%) translateY(calc(-1 * min(34vw,285px)))}.n1{transform:translate(-50%,-50%) translate(calc(min(29vw,245px)),calc(-1 * min(17vw,145px)))}.n2{transform:translate(-50%,-50%) translate(calc(min(29vw,245px)),calc(min(17vw,145px)))}.n3{transform:translate(-50%,-50%) translateY(calc(min(34vw,285px)))}.n4{transform:translate(-50%,-50%) translate(calc(-1 * min(29vw,245px)),calc(min(17vw,145px)))}.n5{transform:translate(-50%,-50%) translate(calc(-1 * min(29vw,245px)),calc(-1 * min(17vw,145px)))}
+.n0:hover,.n0:focus-visible,.n0.active{transform:translate(-50%,-50%) translateY(calc(-1 * min(34vw,285px))) scale(1.08)}.n1:hover,.n1:focus-visible,.n1.active{transform:translate(-50%,-50%) translate(calc(min(29vw,245px)),calc(-1 * min(17vw,145px))) scale(1.08)}.n2:hover,.n2:focus-visible,.n2.active{transform:translate(-50%,-50%) translate(calc(min(29vw,245px)),calc(min(17vw,145px))) scale(1.08)}.n3:hover,.n3:focus-visible,.n3.active{transform:translate(-50%,-50%) translateY(calc(min(34vw,285px))) scale(1.08)}.n4:hover,.n4:focus-visible,.n4.active{transform:translate(-50%,-50%) translate(calc(-1 * min(29vw,245px)),calc(min(17vw,145px))) scale(1.08)}.n5:hover,.n5:focus-visible,.n5.active{transform:translate(-50%,-50%) translate(calc(-1 * min(29vw,245px)),calc(-1 * min(17vw,145px))) scale(1.08)}
+.hint{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9;border:1px solid rgba(216,182,106,.28);border-radius:999px;background:rgba(3,22,16,.72);backdrop-filter:blur(12px);padding:9px 14px;color:#cbdad2;font-size:11px;white-space:nowrap}
+.panel{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.66);backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}.panel.open{display:flex}.sheet{width:min(760px,100%);max-height:88vh;min-height:58vh;background:#06271d;border:1px solid rgba(216,182,106,.34);border-radius:28px 28px 0 0;overflow:hidden;box-shadow:0 -24px 80px rgba(0,0,0,.5)}.sheet-head{height:64px;display:flex;align-items:center;padding:0 14px 0 18px;border-bottom:1px solid rgba(216,182,106,.22)}.sheet-head strong{font-size:17px}.sheet-head button{margin-left:auto;width:42px;height:42px;border-radius:50%;border:1px solid rgba(216,182,106,.3);background:rgba(255,255,255,.06);color:#fff;font-size:22px}.legacy-frame{width:100%;height:calc(88vh - 64px);border:0;background:#04140e}
+@media(max-width:620px){header{height:68px}.brandmark{width:44px;height:44px}.brandtext strong{font-size:16px}.topbtn{height:42px;padding:0 11px;font-size:12px}main{inset:68px 0 0}.orbit-ring{width:92vw;height:92vw;top:46%}.center-card{top:46%;width:43vw;max-width:210px;padding:14px}.node{top:46%;width:22vw;max-width:104px;padding:7px}.node b{font-size:9px}.n0{transform:translate(-50%,-50%) translateY(-39vw)}.n1{transform:translate(-50%,-50%) translate(34vw,-20vw)}.n2{transform:translate(-50%,-50%) translate(34vw,20vw)}.n3{transform:translate(-50%,-50%) translateY(39vw)}.n4{transform:translate(-50%,-50%) translate(-34vw,20vw)}.n5{transform:translate(-50%,-50%) translate(-34vw,-20vw)}.n0:hover,.n0:focus-visible,.n0.active{transform:translate(-50%,-50%) translateY(-39vw) scale(1.06)}.n1:hover,.n1:focus-visible,.n1.active{transform:translate(-50%,-50%) translate(34vw,-20vw) scale(1.06)}.n2:hover,.n2:focus-visible,.n2.active{transform:translate(-50%,-50%) translate(34vw,20vw) scale(1.06)}.n3:hover,.n3:focus-visible,.n3.active{transform:translate(-50%,-50%) translateY(39vw) scale(1.06)}.n4:hover,.n4:focus-visible,.n4.active{transform:translate(-50%,-50%) translate(-34vw,20vw) scale(1.06)}.n5:hover,.n5:focus-visible,.n5.active{transform:translate(-50%,-50%) translate(-34vw,-20vw) scale(1.06)}.hint{bottom:12px;font-size:10px}.sheet{min-height:72vh}.legacy-frame{height:calc(88vh - 64px)}}
+@media(max-height:700px){.orbit-ring{width:min(70vh,680px);height:min(70vh,680px)}.center-card{width:min(30vh,260px)}.node{width:min(18vh,118px)}.n0{transform:translate(-50%,-50%) translateY(-31vh)}.n3{transform:translate(-50%,-50%) translateY(31vh)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="brandmark"><span>S</span></div><div class="brandtext"><strong>Menu Orbit</strong><small>STARBUCKS PHILIPPINES • PROTOTYPE</small></div></div>
+  <div class="top-actions"><button class="topbtn" id="hubBtn">Customer Hub</button><button class="topbtn" id="orderBtn">My Order <span class="cart-badge" id="cartCount">0</span></button></div>
+</header>
+<main>
+  <section class="orbit-stage" id="orbit" aria-label="Interactive drink category orbit">
+    <div class="orbit-ring"></div>
+    <button class="node n0 active" data-key="espresso"><span class="ico">☕</span><b>ESPRESSO</b></button>
+    <button class="node n1" data-key="frappuccino"><span class="ico">🥤</span><b>FRAPPUCCINO®</b></button>
+    <button class="node n2" data-key="refreshers"><span class="ico">🍓</span><b>REFRESHERS®</b></button>
+    <button class="node n3" data-key="teavana"><span class="ico">🍵</span><b>TEAVANA™</b></button>
+    <button class="node n4" data-key="food"><span class="ico">🥐</span><b>FOOD</b></button>
+    <button class="node n5" data-key="featured"><span class="ico">★</span><b>FEATURED</b></button>
+    <div class="center-card" id="heroCard">
+      <div class="hero-icon" id="heroIcon">☕</div>
+      <h1 id="heroTitle">Caramel Macchiato</h1>
+      <p id="heroDesc">Espresso, vanilla and steamed milk with caramel drizzle.</p>
+      <div class="price" id="heroPrice">₱180 – ₱205</div>
+      <button class="add-btn" id="addBtn">Add to Order +</button>
+    </div>
+  </section>
+</main>
+<div class="hint">Tap a category • Your old orbit remains available in Customer Hub</div>
+<div class="panel" id="legacyPanel" aria-hidden="true"><div class="sheet"><div class="sheet-head"><strong>Previous Orbit — Customer Hub</strong><button id="closeHub" aria-label="Close">×</button></div><iframe class="legacy-frame" id="legacyFrame" title="Previous Menu Orbit" loading="lazy"></iframe></div></div>
+<script>
+const catalog={
+ espresso:{icon:'☕',title:'Caramel Macchiato',desc:'Espresso, vanilla and steamed milk with caramel drizzle.',price:'₱180 – ₱205'},
+ frappuccino:{icon:'🥤',title:'Caramel Frappuccino®',desc:'Blended coffee, milk, ice and caramel with whipped cream.',price:'₱185 – ₱215'},
+ refreshers:{icon:'🍓',title:'Strawberry Refresher',desc:'Bright fruit flavor served chilled over ice.',price:'₱160 – ₱190'},
+ teavana:{icon:'🍵',title:'Green Tea Latte',desc:'Smooth green tea with milk, served hot or iced.',price:'₱170 – ₱200'},
+ food:{icon:'🥐',title:'Butter Croissant',desc:'Flaky, buttery pastry for pairing with your favorite drink.',price:'₱125'},
+ featured:{icon:'★',title:'Featured Seasonal Drink',desc:'A rotating Starbucks-inspired seasonal highlight.',price:'₱190 – ₱220'}
+};
+let current='espresso',cart=0;
+const nodes=[...document.querySelectorAll('.node')],heroIcon=document.getElementById('heroIcon'),heroTitle=document.getElementById('heroTitle'),heroDesc=document.getElementById('heroDesc'),heroPrice=document.getElementById('heroPrice'),cartCount=document.getElementById('cartCount');
+function select(key){current=key;const d=catalog[key];nodes.forEach(n=>n.classList.toggle('active',n.dataset.key===key));heroIcon.animate([{transform:'scale(.78)',opacity:.3},{transform:'scale(1.05)',opacity:1},{transform:'scale(1)',opacity:1}],{duration:330,easing:'ease-out'});heroIcon.textContent=d.icon;heroTitle.textContent=d.title;heroDesc.textContent=d.desc;heroPrice.textContent=d.price;}
+nodes.forEach(n=>n.addEventListener('click',()=>select(n.dataset.key)));
+document.getElementById('addBtn').addEventListener('click',()=>{cart++;cartCount.textContent=cart;const b=document.getElementById('addBtn');const old=b.textContent;b.textContent='Added ✓';setTimeout(()=>b.textContent=old,850)});
+const panel=document.getElementById('legacyPanel'),frame=document.getElementById('legacyFrame');
+function openHub(hash='orbit'){if(!frame.src)frame.src='./index.html?from=menu-redesign#'+hash;panel.classList.add('open');panel.setAttribute('aria-hidden','false')}
+function closeHub(){panel.classList.remove('open');panel.setAttribute('aria-hidden','true')}
+document.getElementById('hubBtn').addEventListener('click',()=>openHub('orbit'));
+document.getElementById('orderBtn').addEventListener('click',()=>openHub('cart'));
+document.getElementById('closeHub').addEventListener('click',closeHub);panel.addEventListener('click',e=>{if(e.target===panel)closeHub()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeHub()});
+let startX=null;document.getElementById('orbit').addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX},{passive:true});document.getElementById('orbit').addEventListener('touchend',e=>{if(startX===null)return;const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>55){const keys=nodes.map(n=>n.dataset.key),i=keys.indexOf(current),next=dx<0?(i+1)%keys.length:(i-1+keys.length)%keys.length;select(keys[next])}startX=null},{passive:true});
+</script>
+</body>
+</html>
