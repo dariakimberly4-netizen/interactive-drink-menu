@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Menu Orbit — Café Edition</title>
+<style>
+:root{--green:#003b2c;--deep:#00251c;--cream:#f7f0dc;--gold:#d8b66a;--ink:#082e24}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--deep);color:var(--cream);font-family:Arial,sans-serif}
+body{overflow-x:hidden;background:radial-gradient(circle at 50% 38%,#075d43 0,#003b2c 36%,#00251c 76%)}
+header{min-height:92px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #d8b66a66;background:#00291fdd;position:sticky;top:0;z-index:20;backdrop-filter:blur(10px)}
+.brand{display:flex;gap:12px;align-items:center}.seal{width:54px;height:54px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;font:700 28px Georgia;background:#07523d}
+.brand h1{font-size:22px;margin:0}.brand small{display:block;letter-spacing:3px;opacity:.75;font-size:9px;margin-top:3px}
+.actions{display:flex;gap:8px}.pill{border:1px solid #d8b66a99;border-radius:999px;background:#06382d;color:white;padding:10px 14px;font-weight:700;font-size:12px}
+.intro{text-align:center;padding:34px 18px 12px}.eyebrow{color:var(--gold);letter-spacing:5px;font-size:11px}.intro h2{font:400 clamp(38px,9vw,68px)/.95 Georgia;margin:14px auto 12px;max-width:700px}.intro p{margin:0;opacity:.8;font-size:14px}
+.stage{height:min(720px,105vw);min-height:520px;position:relative;margin:auto;max-width:760px;touch-action:pan-y}
+.ring{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:min(76vw,560px);aspect-ratio:1;border:1px solid var(--gold);border-radius:50%;box-shadow:0 0 0 26px #d8b66a14,0 0 0 52px #d8b66a0b}
+.hero{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:min(40vw,280px);aspect-ratio:.76;border-radius:48% 48% 28% 28%;background:linear-gradient(#07845b,#006747);border:2px solid var(--cream);padding:18px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;box-shadow:0 20px 50px #0008;z-index:3}
+.cup{font-size:64px;filter:drop-shadow(0 10px 8px #0005)}.hero h3{font:700 clamp(20px,4vw,32px) Georgia;margin:8px 0}.hero p{font-size:12px;line-height:1.35;margin:0;opacity:.9}.price{color:#f2cf7a;font-weight:800;margin:10px 0}.add{border:0;background:linear-gradient(#f7d88f,#d9a84e);color:#07382b;border-radius:999px;padding:12px 18px;font-weight:900;width:100%;cursor:pointer}
+.node{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:min(19vw,125px);aspect-ratio:1;border-radius:50%;border:2px solid var(--gold);background:linear-gradient(#07513e,#00372b);color:white;display:grid;place-items:center;align-content:center;gap:5px;box-shadow:0 10px 24px #0006;cursor:pointer;z-index:4}
+.node span{font-size:34px}.node b{font-size:10px}.n0{transform:translate(-50%,-50%) translateY(-38vw)}.n1{transform:translate(-50%,-50%) translate(34vw,-20vw)}.n2{transform:translate(-50%,-50%) translate(34vw,20vw)}.n3{transform:translate(-50%,-50%) translateY(38vw)}.n4{transform:translate(-50%,-50%) translate(-34vw,20vw)}.n5{transform:translate(-50%,-50%) translate(-34vw,-20vw)}
+.guide{margin:0 auto 26px;width:min(92%,780px);border:1px solid #d8b66a88;border-radius:999px;padding:14px;text-align:center;font-size:12px;background:#00291fe8}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120px);background:var(--cream);color:var(--ink);padding:12px 18px;border-radius:999px;font-weight:800;transition:.3s;z-index:30}.toast.show{transform:translateX(-50%) translateY(0)}
+@media(min-width:700px){.n0{transform:translate(-50%,-50%) translateY(-260px)}.n1{transform:translate(-50%,-50%) translate(225px,-130px)}.n2{transform:translate(-50%,-50%) translate(225px,130px)}.n3{transform:translate(-50%,-50%) translateY(260px)}.n4{transform:translate(-50%,-50%) translate(-225px,130px)}.n5{transform:translate(-50%,-50%) translate(-225px,-130px)}}
+@media(max-width:480px){header{padding:10px}.seal{width:44px;height:44px}.brand h1{font-size:17px}.brand small{font-size:7px;letter-spacing:2px}.pill{padding:8px 10px;font-size:10px}.intro{padding-top:26px}.stage{height:590px}.ring{width:70vw}.hero{width:34vw;padding:10px}.cup{font-size:38px}.hero h3{font-size:16px}.hero p{font-size:8px}.price{font-size:11px;margin:6px}.add{font-size:10px;padding:9px}.node{width:16vw}.node span{font-size:25px}.node b{font-size:7px}.n0{transform:translate(-50%,-50%) translateY(-34vw)}.n1{transform:translate(-50%,-50%) translate(30vw,-17vw)}.n2{transform:translate(-50%,-50%) translate(30vw,17vw)}.n3{transform:translate(-50%,-50%) translateY(34vw)}.n4{transform:translate(-50%,-50%) translate(-30vw,17vw)}.n5{transform:translate(-50%,-50%) translate(-30vw,-17vw)}}
+.cinema-bg{position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 50% 62%,rgba(220,170,70,.25),transparent 22%),radial-gradient(circle at 20% 30%,rgba(255,220,150,.16),transparent 18%),linear-gradient(135deg,#021c16,#063c2e 48%,#1b120b);filter:saturate(1.1)}.cinema-bg:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 70%,transparent 0 26%,rgba(0,0,0,.42) 70%),repeating-radial-gradient(circle at 50% 55%,transparent 0 115px,rgba(216,182,106,.13) 116px 117px);pointer-events:none}.hero{background:linear-gradient(180deg,rgba(4,79,58,.92),rgba(0,39,29,.96));border-color:#f2d180;box-shadow:0 0 28px rgba(235,186,79,.36),0 22px 55px #000a}.node{background:radial-gradient(circle at 45% 35%,#0b5b45,#00291f 70%);box-shadow:0 0 18px rgba(216,182,106,.24),0 12px 30px #0008}.ring{box-shadow:0 0 0 22px rgba(216,182,106,.05),0 0 50px rgba(224,175,66,.22)}.intro h2{text-shadow:0 5px 28px #0009}.add{box-shadow:0 8px 24px rgba(216,168,78,.32)}
+</style></head>
+<body><div class="cinema-bg"></div>
+<header><div class="brand"><div class="seal">S</div><div><h1>Menu Orbit</h1><small>STARBUCKS PHILIPPINES • PROTOTYPE</small></div></div><div class="actions"><button class="pill" id="hub">Customer Hub</button><button class="pill" id="order">My Order <span id="count">0</span></button></div></header>
+<section class="intro"><div class="eyebrow">EXPLORE OUR WORLD</div><h2>Good Coffee<br>Brings Us Together.</h2><p>Tap a category. Swipe to explore.</p></section>
+<main class="stage" id="stage"><div class="ring"></div>
+<button class="node n0" data-name="Espresso" data-icon="☕"><span>☕</span><b>ESPRESSO</b></button>
+<button class="node n1" data-name="Frappuccino" data-icon="🥤"><span>🥤</span><b>FRAPPUCCINO®</b></button>
+<button class="node n2" data-name="Refreshers" data-icon="🍓"><span>🍓</span><b>REFRESHERS®</b></button>
+<button class="node n3" data-name="Teavana" data-icon="🍵"><span>🍵</span><b>TEAVANA™</b></button>
+<button class="node n4" data-name="Food" data-icon="🥐"><span>🥐</span><b>FOOD</b></button>
+<button class="node n5" data-name="Featured" data-icon="★"><span>★</span><b>FEATURED</b></button>
+<section class="hero"><div class="cup" id="icon">☕</div><h3 id="title">Caramel Macchiato</h3><p id="desc">Espresso, vanilla and steamed milk with caramel drizzle.</p><div class="price" id="price">₱180 – ₱205</div><button class="add" id="add">Add to Order +</button></section></main>
+<div class="guide">☝ Tap a category &nbsp; • &nbsp; ↔ Swipe left/right &nbsp; • &nbsp; Clean café-inspired motion</div><div class="toast" id="toast"></div>
+<script>
+const data={Espresso:['☕','Caffè Latte','Rich espresso balanced with steamed milk.','₱170 – ₱195'],Frappuccino:['🥤','Caramel Frappuccino','Blended coffee with caramel and creamy finish.','₱185 – ₱215'],Refreshers:['🍓','Strawberry Refresher','Bright fruit notes served chilled over ice.','₱175 – ₱195'],Teavana:['🍵','Green Tea Latte','Smooth tea and milk with a mellow finish.','₱180 – ₱205'],Food:['🥐','Butter Croissant','Flaky, buttery pastry baked until golden.','₱120 – ₱145'],Featured:['★','Caramel Macchiato','Espresso, vanilla and steamed milk with caramel drizzle.','₱180 – ₱205']};
+let current='Featured',count=0,startX=0;const nodes=[...document.querySelectorAll('.node')];
+function select(name){current=name;let d=data[name];icon.textContent=d[0];title.textContent=d[1];desc.textContent=d[2];price.textContent=d[3];nodes.forEach(n=>n.style.opacity=n.dataset.name===name?'1':'.72')}
+nodes.forEach(n=>n.onclick=()=>select(n.dataset.name));
+add.onclick=()=>{count++;document.querySelector('#count').textContent=count;toast.textContent=title.textContent+' added';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1300)}
+stage.addEventListener('touchstart',e=>startX=e.touches[0].clientX,{passive:true});stage.addEventListener('touchend',e=>{let dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>45){let i=nodes.findIndex(n=>n.dataset.name===current);select(nodes[(i+(dx<0?1:5))%6].dataset.name)}},{passive:true});
+hub.onclick=()=>{toast.textContent='Customer Hub';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1000)};order.onclick=()=>{toast.textContent=count+' item'+(count===1?'':'s')+' in your order';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1000)};select('Featured');
+</script></body></html>
