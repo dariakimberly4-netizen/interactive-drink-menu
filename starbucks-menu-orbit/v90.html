@@ -15,7 +15,14 @@
     let html=await r.text();
     html=html.replace('<script src="config.js"></'+'script>','<script src="config.js?v=90"></'+'script>');
     html=html.replace('customer-next.js?v=20260924-61','customer-next.js?v=90');
-    html=html.replace('</head>','<style>#orbitBreadcrumb{display:none!important}</style></head>');
+    html=html.replace('</head>',`<style>
+      #orbitBreadcrumb{display:none!important}
+      #baristaOrbitBtn{position:fixed;z-index:9999;right:16px;top:88px;min-height:46px;padding:0 17px;border:1px solid rgba(244,239,230,.7);border-radius:999px;background:linear-gradient(135deg,#f4efe6,#d4ad62);color:#073b28;font:800 13px system-ui,sans-serif;letter-spacing:.06em;box-shadow:0 12px 30px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:8px}
+      #baristaOrbitBtn:before{content:'';width:8px;height:8px;border-radius:50%;background:#00754a;box-shadow:0 0 0 4px rgba(0,117,74,.14)}
+      @media(max-width:640px){#baristaOrbitBtn{top:auto;bottom:86px;right:12px;min-height:44px;padding:0 14px;font-size:12px}}
+    </style></head>`);
+
+    const barista=`<button id="baristaOrbitBtn" type="button" onclick="location.href='./barista-portal.html'">BARISTA</button>`;
 
     const hardClose=`<script>
     (()=>{
@@ -41,7 +48,7 @@
     })();
     </`+`script>`;
 
-    html=html.replace('</body>','<script src="presentation-remove-v90.js?v=90"></'+'script>'+hardClose+'</body>');
+    html=html.replace('</body>',barista+'<script src="presentation-remove-v90.js?v=90"></'+'script>'+hardClose+'</body>');
     document.open();document.write(html);document.close();
   }catch(e){document.getElementById('boot').textContent='Unable to load the menu.'}
 })();
