@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#04140e">
+<title>Starbucks Menu Orbit — Redesigned</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#04140e}
+#menu{position:fixed;inset:0;width:100%;height:100%;border:0;background:#04140e}
+#fallback{position:fixed;inset:0;display:none;place-items:center;background:#04140e;color:#fff;font:700 16px system-ui,sans-serif;text-align:center;padding:24px;z-index:5}
+#fallback a{display:inline-block;margin-top:16px;padding:12px 18px;border-radius:999px;background:#00754a;color:#fff;text-decoration:none}
+</style>
+</head>
+<body>
+<iframe id="menu" title="Starbucks Menu Orbit" src="./index.html?orbitShell=97#orbit"></iframe>
+<div id="fallback"><div>Unable to open the menu orbit.<br><a href="./index.html#orbit">Open Menu Orbit</a></div></div>
+<script>
+(() => {
+  const frame = document.getElementById('menu');
+  const fallback = document.getElementById('fallback');
+  let loaded = false;
+
+  frame.addEventListener('load', () => {
+    loaded = true;
+    try {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+      const addCss = (href) => {
+        if (doc.querySelector(`link[href*="${href.split('?')[0]}"]`)) return;
+        const link = doc.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        doc.head.appendChild(link);
+      };
+      addCss('./responsive-v95.css?v=95');
+      addCss('./orbit-redesign-v96.css?v=97');
+      const style = doc.createElement('style');
+      style.textContent = '#orbitBreadcrumb{display:none!important}';
+      doc.head.appendChild(style);
+      if (frame.contentWindow.location.hash !== '#orbit') frame.contentWindow.location.hash = 'orbit';
+    } catch (e) {
+      // Same-origin normally allows styling; menu still remains usable if injection is blocked.
+    }
+  });
+
+  setTimeout(() => {
+    if (!loaded) {
+      frame.style.display = 'none';
+      fallback.style.display = 'grid';
+    }
+  }, 8000);
+})();
+</script>
+</body>
+</html>
