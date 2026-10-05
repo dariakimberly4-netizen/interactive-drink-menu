@@ -15,7 +15,7 @@
     let html=await r.text();
     html=html.replace('<script src="config.js"></'+'script>','<script src="config.js?v=89"></'+'script>');
     html=html.replace('customer-next.js?v=20260924-61','customer-next.js?v=89');
-    html=html.replace('</head>','<link rel="stylesheet" href="responsive-v95.css?v=95"><style>#orbitBreadcrumb{display:none!important}</style></head>');
+    html=html.replace('</head>','<link rel="stylesheet" href="responsive-v95.css?v=95"><link rel="stylesheet" href="orbit-redesign-v96.css?v=96"><style>#orbitBreadcrumb{display:none!important}</style></head>');
 
     const hardClose=`<script>
     (()=>{
