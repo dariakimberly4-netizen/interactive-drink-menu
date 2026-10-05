@@ -15,7 +15,7 @@
     let html=await r.text();
     html=html.replace('<script src="config.js"></'+'script>','<script src="config.js?v=89"></'+'script>');
     html=html.replace('customer-next.js?v=20260924-61','customer-next.js?v=89');
-    html=html.replace('</head>','<link rel="stylesheet" href="responsive-v95.css?v=95"><style>#orbitBreadcrumb{display:none!important}</style></head>');
+    html=html.replace('</head>','<link rel="stylesheet" href="responsive-v95.css?v=95"><style>#orbitBreadcrumb{display:none!important}#premiumCustomerOrbitV96{z-index:2147483000!important;isolation:isolate!important}</style></head>');
 
     const hardClose=`<script>
     (()=>{
@@ -41,7 +41,7 @@
     })();
     </`+`script>`;
 
-    html=html.replace('</body>','<script src="presentation-fix-v89.js?v=90"></'+'script><script src="cart-fix-v91.js?v=94"></'+'script><script src="customer-orbit-premium-v96.js?v=96"></'+'script>'+hardClose+'</body>');
+    html=html.replace('</body>','<script src="presentation-fix-v89.js?v=90"></'+'script><script src="cart-fix-v91.js?v=94"></'+'script><script src="customer-orbit-premium-v96.js?v=97"></'+'script>'+hardClose+'</body>');
     document.open();document.write(html);document.close();
   }catch(e){document.getElementById('boot').textContent='Unable to load the menu.'}
 })();
