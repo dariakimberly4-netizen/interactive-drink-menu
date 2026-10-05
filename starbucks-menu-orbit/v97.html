@@ -12,4 +12,24 @@
  .n4{transform:translate(-50%,-50%) translate(-32vw,18.5vw)}
  .n5{transform:translate(-50%,-50%) translate(-32vw,-18.5vw)}
 }
+</style><style id="served-mobile-fix">
+@media screen and (max-width:699px){
+  main.stage{transform:none!important;transform-origin:center!important}
+  .ring{top:44%!important;width:72vw!important;max-width:310px!important}
+  section.hero{top:44%!important;width:31vw!important;max-width:138px!important;min-width:0!important;padding:7px!important;box-shadow:0 0 0 5px rgba(216,182,106,.10),0 0 35px rgba(0,168,98,.25)!important}
+  section.hero .emoji{font-size:27px!important}
+  section.hero h1{font-size:14px!important;line-height:1!important;margin:4px 0 2px!important}
+  section.hero p{font-size:7.5px!important;line-height:1.15!important;max-width:105px!important}
+  section.hero .price{font-size:10px!important;margin-top:3px!important}
+  section.hero .add{font-size:10px!important;min-height:27px!important;padding:0 8px!important;margin-top:4px!important}
+  button.node{top:44%!important;width:15vw!important;max-width:66px!important;min-width:0!important;padding:4px!important}
+  button.node span{font-size:21px!important}
+  button.node b{font-size:6.8px!important;line-height:1.05!important}
+  button.n0{transform:translate(-50%,-50%) translateY(-32vw)!important}
+  button.n1{transform:translate(-50%,-50%) translate(28vw,-16vw)!important}
+  button.n2{transform:translate(-50%,-50%) translate(28vw,16vw)!important}
+  button.n3{transform:translate(-50%,-50%) translateY(32vw)!important}
+  button.n4{transform:translate(-50%,-50%) translate(-28vw,16vw)!important}
+  button.n5{transform:translate(-50%,-50%) translate(-28vw,-16vw)!important}
+}
 </style></head><body><header class="top"><div class="logo">S</div><div><div class="title">Menu Orbit</div><div class="sub">STARBUCKS PHILIPPINES • PROTOTYPE</div></div><div class="actions"><button class="pill" id="hub">Customer Hub</button><button class="pill">My Order <span class="badge" id="count">0</span></button></div></header><main class="stage" id="orbit"><div class="ring"></div><button class="node n0 active" data-k="espresso"><span>☕</span><b>ESPRESSO</b></button><button class="node n1" data-k="frappuccino"><span>🥤</span><b>FRAPPUCCINO®</b></button><button class="node n2" data-k="refreshers"><span>🍓</span><b>REFRESHERS®</b></button><button class="node n3" data-k="teavana"><span>🍵</span><b>TEAVANA™</b></button><button class="node n4" data-k="food"><span>🥐</span><b>FOOD</b></button><button class="node n5" data-k="featured"><span>★</span><b>FEATURED</b></button><section class="hero"><div class="emoji" id="e">☕</div><h1 id="t">Caramel Macchiato</h1><p id="d">Espresso, vanilla and steamed milk with caramel drizzle.</p><div class="price" id="p">₱180 – ₱205</div><button class="add" id="add">Add to Order +</button></section></main><div class="hint">Tap a category • Swipe left/right • Customer Hub keeps your previous orbit</div><div class="panel" id="panel"><div class="sheet"><div class="sheethead">Previous Orbit — Customer Hub<button class="close" id="x">×</button></div><iframe class="frame" id="f" title="Previous Menu Orbit"></iframe></div></div><script>const C={espresso:['☕','Caramel Macchiato','Espresso, vanilla and steamed milk with caramel drizzle.','₱180 – ₱205'],frappuccino:['🥤','Caramel Frappuccino®','Blended coffee, milk, ice and caramel with whipped cream.','₱185 – ₱215'],refreshers:['🍓','Strawberry Refresher','Bright fruit flavor served chilled over ice.','₱160 – ₱190'],teavana:['🍵','Green Tea Latte','Smooth green tea with milk, served hot or iced.','₱170 – ₱200'],food:['🥐','Butter Croissant','Flaky, buttery pastry for pairing with your favorite drink.','₱125'],featured:['★','Featured Seasonal Drink','A rotating seasonal highlight.','₱190 – ₱220']};let key='espresso',cart=0;const nodes=[...document.querySelectorAll('.node')];function select(k){key=k;nodes.forEach(n=>n.classList.toggle('active',n.dataset.k===k));const v=C[k];e.textContent=v[0];t.textContent=v[1];d.textContent=v[2];p.textContent=v[3]}nodes.forEach(n=>n.onclick=()=>select(n.dataset.k));add.onclick=()=>{cart++;count.textContent=cart;add.textContent='Added ✓';setTimeout(()=>add.textContent='Add to Order +',800)};hub.onclick=()=>{if(!f.src)f.src='./v89.html?legacy=1#orbit';panel.classList.add('open')};x.onclick=()=>panel.classList.remove('open');panel.onclick=a=>{if(a.target===panel)panel.classList.remove('open')};let sx=0;orbit.addEventListener('touchstart',a=>sx=a.touches[0].clientX,{passive:true});orbit.addEventListener('touchend',a=>{let dx=a.changedTouches[0].clientX-sx;if(Math.abs(dx)<45)return;let i=nodes.findIndex(n=>n.dataset.k===key);i=(i+(dx<0?1:-1)+nodes.length)%nodes.length;select(nodes[i].dataset.k)},{passive:true});</script></body></html>
