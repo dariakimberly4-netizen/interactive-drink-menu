@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071c14">
+<title>Starbucks Menu Orbit — Choose Your Moment</title>
+<style>
+:root{
+  --bg:#04140e;--panel:#08261c;--green:#00754a;--green2:#00a862;
+  --cream:#f4efe6;--gold:#d4ad62;--text:#fff;--muted:#b8c9c0;
+  --line:rgba(255,255,255,.13);--shadow:0 24px 80px rgba(0,0,0,.38)
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body{overflow:hidden;background:radial-gradient(circle at 50% 24%,#155a41 0,#092a1e 28%,#04140e 68%,#020806 100%)}
+button{font:inherit}
+.shell{height:100dvh;display:grid;grid-template-columns:minmax(230px,18vw) minmax(0,1fr) minmax(245px,20vw);gap:14px;padding:14px}
+.panel{position:relative;z-index:5;border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(9,40,29,.94),rgba(4,22,16,.94));backdrop-filter:blur(18px);box-shadow:var(--shadow);overflow:hidden}
+.panel-inner{height:100%;padding:24px 20px;overflow:auto;scrollbar-width:none}.panel-inner::-webkit-scrollbar{display:none}
+.eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:#8fc9ad;margin-bottom:9px}
+h1,h2,p{margin-top:0}.panel h1,.panel h2{font-family:Georgia,serif;font-weight:700;line-height:.98}.panel h1{font-size:clamp(29px,3vw,44px);margin-bottom:10px}.panel h2{font-size:clamp(25px,2.2vw,34px);margin-bottom:9px}
+.intro{color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:18px}
+.moments{display:grid;gap:9px}.moment{width:100%;text-align:left;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.045);color:#fff;padding:14px 14px;transition:.22s ease;cursor:pointer}.moment:hover,.moment.active{transform:translateX(4px);background:var(--cream);color:#073624;border-color:var(--cream)}.moment strong{display:block;font-size:14px}.moment small{display:block;margin-top:4px;font-size:11px;opacity:.72;line-height:1.3}
+.center{position:relative;min-width:0;border-radius:28px;overflow:hidden;border:1px solid var(--line);background:#03130d;box-shadow:var(--shadow)}
+.center iframe{display:block;width:100%;height:100%;border:0;background:#04140e}
+.center-badge{position:absolute;z-index:4;left:16px;top:15px;pointer-events:none;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(2,18,12,.72);backdrop-filter:blur(10px);font-size:10px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:#dce8e1}
+.match-card{margin-top:19px;border:1px solid var(--line);border-radius:22px;padding:17px;background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025))}
+.match-name{font-family:Georgia,serif;font-size:24px;line-height:1.05;margin-bottom:6px}.match-reason{font-size:12px;line-height:1.5;color:var(--muted);margin-bottom:15px}
+.meters{display:grid;gap:10px;margin:14px 0 17px}.meter-row{display:grid;grid-template-columns:78px 1fr 36px;gap:9px;align-items:center;font-size:10px;color:#b9cbc2}.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}.fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--green2),#7ee0af);width:60%;transition:width .3s ease}.meter-row b{font-size:10px;color:#fff;text-align:right}
+.pair{padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px}.pair small{display:block;color:#89bba3;text-transform:uppercase;letter-spacing:.12em;font-size:9px;font-weight:900}.pair strong{display:block;margin-top:5px;font-size:14px}
+.cta{width:100%;min-height:50px;border:0;border-radius:16px;background:linear-gradient(135deg,var(--green2),var(--green));color:#fff;font-weight:900;cursor:pointer;box-shadow:0 12px 30px rgba(0,168,98,.2)}
+.note{margin-top:11px;color:#8ea79b;font-size:10px;line-height:1.45;text-align:center}
+.mobile-head{display:none}
+@media(max-width:980px){
+  body{overflow:auto}
+  .shell{height:auto;min-height:100dvh;grid-template-columns:1fr;grid-template-rows:auto minmax(68dvh,760px) auto;padding:10px;gap:10px}
+  .panel{border-radius:23px}.panel-inner{padding:17px}
+  .left .panel-inner{overflow:visible}.left h1{font-size:29px;margin-bottom:6px}.left .intro{margin-bottom:12px}
+  .moments{display:flex;gap:8px;overflow-x:auto;padding-bottom:3px;scroll-snap-type:x proximity}.moment{min-width:165px;scroll-snap-align:start}.moment:hover,.moment.active{transform:none}
+  .center{min-height:68dvh;border-radius:23px}
+  .right .panel-inner{overflow:visible}.right h2{font-size:29px}
+}
+@media(max-width:600px){
+  .shell{grid-template-rows:auto 72dvh auto;padding:7px;gap:7px}
+  .panel{border-radius:20px}.panel-inner{padding:15px}
+  .eyebrow{font-size:9px}.left h1{font-size:25px}.intro{font-size:12px}
+  .moment{min-width:148px;padding:12px}.moment strong{font-size:13px}.moment small{font-size:10px}
+  .center{border-radius:20px}.center-badge{left:10px;top:10px;font-size:8px;padding:7px 9px}
+}
+</style>
+</head>
+<body>
+<main class="shell">
+  <aside class="panel left">
+    <div class="panel-inner">
+      <div class="eyebrow">Coffee Concierge</div>
+      <h1>Choose Your Moment</h1>
+      <p class="intro">Tell us what kind of coffee moment you’re having. We’ll suggest a match while you explore the orbit.</p>
+      <div class="moments" id="moments"></div>
+    </div>
+  </aside>
+
+  <section class="center" aria-label="Starbucks drink orbit">
+    <div class="center-badge">Interactive Drink Orbit</div>
+    <iframe src="./v89.html?refresh=94#orbit" title="Starbucks Menu Orbit" loading="eager"></iframe>
+  </section>
+
+  <aside class="panel right">
+    <div class="panel-inner">
+      <div class="eyebrow">Personal Recommendation</div>
+      <h2>Your Match</h2>
+      <p class="intro" id="momentLabel">For your morning boost</p>
+      <div class="match-card">
+        <div class="match-name" id="drinkName">Caffè Americano</div>
+        <div class="match-reason" id="drinkReason">A clean, espresso-forward choice when you want energy without too much sweetness.</div>
+        <div class="meters">
+          <div class="meter-row"><span>Caffeine</span><div class="bar"><div class="fill" id="cafFill"></div></div><b id="cafText">High</b></div>
+          <div class="meter-row"><span>Sweetness</span><div class="bar"><div class="fill" id="sweetFill"></div></div><b id="sweetText">Low</b></div>
+        </div>
+        <div class="pair"><small>Suggested size</small><strong id="sizeText">Grande</strong></div>
+        <div class="pair"><small>Pair it with</small><strong id="pairText">Breakfast sandwich</strong></div>
+        <button class="cta" id="viewBtn">VIEW IN ORBIT</button>
+        <div class="note">The orbit stays untouched; this panel simply gives a personalized recommendation beside it.</div>
+      </div>
+    </div>
+  </aside>
+</main>
+<script>
+const data=[
+  {id:'morning',title:'Morning Boost',sub:'Start strong and focused',label:'For your morning boost',drink:'Caffè Americano',reason:'A clean, espresso-forward choice when you want energy without too much sweetness.',caf:92,cafT:'High',sweet:20,sweetT:'Low',size:'Grande',pair:'Breakfast sandwich'},
+  {id:'work',title:'Work Break',sub:'Reset between tasks',label:'For your work break',drink:'Caffè Latte',reason:'Smooth espresso and milk make this an easy, balanced pause before you get back to work.',caf:66,cafT:'Med',sweet:38,sweetT:'Low',size:'Grande',pair:'Butter croissant'},
+  {id:'study',title:'Study Session',sub:'Stay steady and alert',label:'For your study session',drink:'Flat White',reason:'Bold ristretto character with a velvety finish—focused, compact, and satisfying.',caf:82,cafT:'High',sweet:30,sweetT:'Low',size:'Tall',pair:'Banana loaf'},
+  {id:'friends',title:'Catch Up',sub:'Slow down and connect',label:'For catching up with friends',drink:'Caramel Macchiato',reason:'A familiar sweet-and-coffee balance that feels made for lingering conversations.',caf:58,cafT:'Med',sweet:78,sweetT:'High',size:'Grande',pair:'Chocolate cake'},
+  {id:'treat',title:'Treat Yourself',sub:'Make it extra special',label:'For your treat-yourself moment',drink:'Caffè Mocha',reason:'Rich chocolate and espresso turn an ordinary coffee stop into a small reward.',caf:56,cafT:'Med',sweet:86,sweetT:'High',size:'Grande',pair:'New York cheesecake'},
+  {id:'after',title:'After-Meal Coffee',sub:'A clean finish',label:'For after your meal',drink:'Espresso',reason:'Short, concentrated, and aromatic—the simplest finish when you want pure coffee character.',caf:48,cafT:'Med',sweet:8,sweetT:'Low',size:'Doppio',pair:'Butter cookie'}
+];
+const moments=document.getElementById('moments');
+const els={label:momentLabel,name:drinkName,reason:drinkReason,cafFill,sweetFill,cafText,sweetText,size:sizeText,pair:pairText};
+data.forEach((m,i)=>{
+  const b=document.createElement('button');b.className='moment'+(i===0?' active':'');b.dataset.id=m.id;
+  b.innerHTML=`<strong>${m.title}</strong><small>${m.sub}</small>`;
+  b.onclick=()=>selectMoment(m,b);moments.appendChild(b);
+});
+function selectMoment(m,b){
+  document.querySelectorAll('.moment').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  els.label.textContent=m.label;els.name.textContent=m.drink;els.reason.textContent=m.reason;
+  els.cafFill.style.width=m.caf+'%';els.cafText.textContent=m.cafT;
+  els.sweetFill.style.width=m.sweet+'%';els.sweetText.textContent=m.sweetT;
+  els.size.textContent=m.size;els.pair.textContent=m.pair;
+}
+viewBtn.onclick=()=>document.querySelector('.center').scrollIntoView({behavior:'smooth',block:'center'});
+</script>
+</body>
+</html>
