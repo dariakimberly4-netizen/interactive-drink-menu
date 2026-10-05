@@ -28,7 +28,7 @@
 </section>
 </main>
 <script>
-const roleData={cashier:{name:'Cashier',url:'cashier-orbit.html?v=2'},barista:{name:'Barista',url:'barista-orbit.html?v=2'},inventory:{name:'Inventory',url:'inventory-orbit.html?v=2'},manager:{name:'Manager',url:'manager-orbit.html?v=2'}};
+const roleData={cashier:{name:'Cashier',url:'cashier-orbit.html?v=3'},barista:{name:'Barista',url:'barista-orbit.html?v=3'},inventory:{name:'Inventory',url:'inventory-orbit.html?v=3'},manager:{name:'Manager',url:'manager-orbit.html?v=3'}};
 let selected='';const hero=document.getElementById('hero'),roles=document.getElementById('roles'),login=document.getElementById('login'),roleTitle=document.getElementById('roleTitle'),email=document.getElementById('email'),pass=document.getElementById('pass');
 document.querySelectorAll('[data-role]').forEach(btn=>btn.addEventListener('click',()=>{selected=btn.dataset.role;roleTitle.textContent=roleData[selected].name+' Login';email.value='';pass.value='';hero.classList.add('hide');roles.classList.add('hide');login.classList.add('show')}));
 function openRole(){if(!selected)return;sessionStorage.setItem('menuorbit_role',selected);location.href=roleData[selected].url}document.getElementById('signIn').onclick=()=>{if(email.value.trim()&&pass.value)openRole()};document.getElementById('demo').onclick=openRole;document.getElementById('back').onclick=()=>{selected='';login.classList.remove('show');hero.classList.remove('hide');roles.classList.remove('hide')};document.addEventListener('keydown',e=>{if(e.key==='Enter'&&login.classList.contains('show'))document.getElementById('signIn').click()});
