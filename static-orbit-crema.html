@@ -8,62 +8,81 @@
 <style>html,body{margin:0;background:#03271f;color:#fff;font-family:Arial,sans-serif}.loading{min-height:100vh;display:grid;place-items:center;text-align:center;padding:24px}.loading b{font:400 34px Georgia,serif}.loading span{display:block;margin-top:10px;color:#d9c49a}</style>
 </head>
 <body>
-<div class="loading"><div><b>Menu Orbit</b><span>Loading Coffee Crema theme…</span></div></div>
+<div class="loading"><div><b>Menu Orbit</b><span>Loading complete Dine-in experience…</span></div></div>
 <script>
 (async()=>{
   try{
-    const r=await fetch('./static-orbit-no-motion.html?source=crema-20261006g',{cache:'no-store'});
+    const r=await fetch('./static-orbit-no-motion.html?source=crema-20261006h',{cache:'no-store'});
     let h=await r.text();
     h=h.replace('orbit-menu-data.js?v=bdc8613','orbit-menu-data.js?v=04f748d');
     h=h.replace('orbit-product-images.js?v=bf7690f','orbit-product-images.js?v=475991e');
 
-    /* Orbit circles are image-first. */
+    /* Orbit circles: image first, details after tap. */
     h=h.replace(/<span class="label">\$\{x\.name\}<\/span>/g,'');
 
-    /* Put Order Type directly on Product Information, before Size and Quantity. */
+    /* Order Type is chosen early on Product Information. */
     h=h.replace(
       '<div class="notice">Availability, ingredients, actual pricing, and preparation may vary by store. This is a front-end prototype only.</div><div class="orderRow">',
-      '<div class="notice">Availability, ingredients, actual pricing, and preparation may vary by store. This is a front-end prototype only.</div><div class="productOrderType"><div class="productOrderTypeLabel"><span class="newFeatureBadge inlineNew">NEW</span> ORDER TYPE</div><div class="productOrderTypeRow"><button type="button" class="productTypeChoice active" data-product-type="Takeout">TAKEOUT</button><button type="button" class="productTypeChoice dineProductChoice" data-product-type="Dine-in">DINE-IN</button><button type="button" class="productTypeChoice" data-product-type="Pickup">PICKUP</button></div><div class="productOrderHint">Choose how you want to receive this order before selecting size and quantity.</div></div><div class="orderRow">'
+      '<div class="notice">Availability, ingredients, actual pricing, and preparation may vary by store. This is a front-end prototype only.</div><div class="productOrderType"><div class="productOrderTypeLabel">ORDER TYPE</div><div class="productOrderTypeRow"><button type="button" class="productTypeChoice active" data-product-type="Takeout">TAKEOUT</button><button type="button" class="productTypeChoice dineProductChoice" data-product-type="Dine-in">DINE-IN</button><button type="button" class="productTypeChoice" data-product-type="Pickup">PICKUP</button></div><div class="productOrderHint" id="productOrderHint">Choose how you want to receive this order.</div></div><div class="orderRow">'
     );
 
-    /* Visually flag Dine-in as a new feature at checkout too. */
-    h=h.replace('<button class="choice typeChoice" data-type="Dine-in">Dine-in</button>','<button class="choice typeChoice dineInChoice" data-type="Dine-in"><span class="newFeatureBadge">NEW</span>Dine-in</button>');
-
-    /* Add Dine-in-only service fields before Payment Method. */
+    /* Dine-in checkout fields. */
     h=h.replace(
       '<div class="field full"><label>Payment Method</label>',
-      '<div class="field full hidden dineInNew" id="dineInDetails"><div class="dineInTitle"><span class="newFeatureBadge inlineNew">NEW</span> DINE-IN DETAILS</div><div class="dineInGrid"><div class="field"><label>Table Number <span class="featureMark">NEW</span></label><input id="dineInTable" placeholder="Example: T12" inputmode="text"></div><div class="field"><label>Number of Guests <span class="featureMark">NEW</span></label><input id="dineInGuests" type="number" min="1" max="20" value="1"></div><div class="field"><label>Table Service <span class="featureMark">NEW</span></label><select id="dineInService"><option selected>Serve to Table</option><option>Collect at Counter</option></select></div><div class="field"><label>Dine-in Notes <span class="featureMark">NEW</span></label><input id="dineInNotes" placeholder="Extra napkins, no straw, etc."></div></div><div class="dineInHint"><b>NEW:</b> Staff can now see the table number, guest count, service choice and dine-in notes.</div></div><div class="field full"><label>Payment Method</label>'
+      '<div class="field full hidden dineInNew" id="dineInDetails"><div class="dineInTitle">DINE-IN DETAILS</div><div class="dineInGrid"><div class="field"><label>Table Number</label><input id="dineInTable" placeholder="Example: T12" inputmode="text"></div><div class="field"><label>Number of Guests</label><input id="dineInGuests" type="number" min="1" max="20" value="1"></div><div class="field"><label>Table Service</label><select id="dineInService"><option selected>Serve to Table</option><option>Collect at Counter</option></select></div><div class="field"><label>Dine-in Notes</label><input id="dineInNotes" placeholder="Extra napkins, no straw, etc."></div></div><div class="dineInHint">Table Number is required for Dine-in. These details will appear in confirmation, My Orders and the Staff Portal.</div></div><div class="field full"><label>Payment Method</label>'
     );
 
-    /* Remember the customer's earlier Order Type choice. */
+    /* Rich confirmation summary. */
+    h=h.replace(
+      '<div class="orderNo" id="confirmNo"></div><div class="statusRow">',
+      '<div class="orderNo" id="confirmNo"></div><div id="confirmDineInSummary" class="dineConfirmSummary hidden"></div><div id="confirmItems" class="confirmItems"></div><div class="statusRow">'
+    );
+
+    /* Remember customer Order Type and Dine-in draft. */
     h=h.replace(
       "try{availability=JSON.parse(localStorage.getItem('staticOrbitAvailability'))||{}}catch{}",
-      "try{availability=JSON.parse(localStorage.getItem('staticOrbitAvailability'))||{}}catch{}try{orderType=localStorage.getItem('staticOrbitOrderType')||orderType}catch{}"
+      "try{availability=JSON.parse(localStorage.getItem('staticOrbitAvailability'))||{}}catch{}try{orderType=localStorage.getItem('staticOrbitOrderType')||orderType}catch{}let dineDraft={table:'',guests:1,service:'Serve to Table',notes:''};try{dineDraft=JSON.parse(localStorage.getItem('staticOrbitDineInDraft'))||dineDraft}catch{}"
     );
 
-    /* Add one shared Order Type controller for Product Information and Checkout. */
+    /* Shared Order Type + Dine-in draft controller. */
     h=h.replace(
       'function openInfo(i){',
-      "function syncProductOrderType(){document.querySelectorAll('.productTypeChoice').forEach(b=>b.classList.toggle('active',b.dataset.productType===orderType));document.querySelectorAll('.typeChoice').forEach(b=>b.classList.toggle('active',b.dataset.type===orderType));const d=$('dineInDetails');if(d)d.classList.toggle('hidden',orderType!=='Dine-in')}function setOrderType(type){orderType=type;try{localStorage.setItem('staticOrbitOrderType',orderType)}catch{}syncProductOrderType()}function openInfo(i){"
+      "function syncProductOrderType(){document.querySelectorAll('.productTypeChoice').forEach(b=>b.classList.toggle('active',b.dataset.productType===orderType));document.querySelectorAll('.typeChoice').forEach(b=>b.classList.toggle('active',b.dataset.type===orderType));const d=$('dineInDetails');if(d)d.classList.toggle('hidden',orderType!=='Dine-in');const hint=$('productOrderHint');if(hint)hint.textContent=orderType==='Dine-in'?'Dine-in selected. Table details will be completed at Checkout.':'Choose how you want to receive this order.'}function setOrderType(type){orderType=type;try{localStorage.setItem('staticOrbitOrderType',orderType)}catch{}syncProductOrderType()}function saveDineDraft(){if(!$('dineInTable'))return;dineDraft={table:$('dineInTable').value.trim(),guests:Math.max(1,+$('dineInGuests').value||1),service:$('dineInService').value,notes:$('dineInNotes').value.trim()};try{localStorage.setItem('staticOrbitDineInDraft',JSON.stringify(dineDraft))}catch{}}function fillDineDraft(){if(!$('dineInTable'))return;$('dineInTable').value=dineDraft.table||'';$('dineInGuests').value=dineDraft.guests||1;$('dineInService').value=dineDraft.service||'Serve to Table';$('dineInNotes').value=dineDraft.notes||''}function openInfo(i){"
     );
     h=h.replace("open('info')}","open('info');syncProductOrderType()}");
 
-    /* Checkout stays synchronized with the earlier Product Information choice. */
+    /* Cart clearly shows selected service type. */
+    h=h.replace(/function renderCart\(\)\{[\s\S]*?\}\nfunction openCart\(\)\{renderCart\(\);open\('cart'\)\}/,
+`function renderCart(){if(!cart.length){$('cartList').innerHTML='<div class="cartItem">Your cart is empty.</div>';$('cartTotal').innerHTML='<b>DEMO TOTAL: ₱0</b>';$('checkoutBtn').disabled=true;return}$('checkoutBtn').disabled=false;$('cartList').innerHTML=cart.map((x,i)=>\`<div class="cartItem"><div><b>\${x.name}</b><small>\${x.category}\${x.g==='drinks'?' • '+x.size:''}<br>DEMO \${money(x.unitPrice)} each</small></div><div class="cartControls"><button data-a="minus" data-i="\${i}">−</button><b>\${x.qty}</b><button data-a="plus" data-i="\${i}">+</button><button data-a="remove" data-i="\${i}">×</button></div></div>\`).join('');$('cartTotal').innerHTML='<div class="cartTypeBanner"><b>ORDER TYPE:</b> '+orderType+(orderType==='Dine-in'?'<small>Table details will be completed at Checkout.</small>':'')+'</div><b>Items:</b> '+cart.reduce((s,x)=>s+x.qty,0)+'<br><b>DEMO TOTAL:</b> '+money(total())+'<br><small>Not an official Starbucks price.</small>';$('cartList').querySelectorAll('button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,a=b.dataset.a;if(a==='plus')cart[i].qty++;if(a==='minus'){cart[i].qty--;if(cart[i].qty<1)cart.splice(i,1)}if(a==='remove')cart.splice(i,1);saveCart();renderCart()})}
+function openCart(){renderCart();open('cart')}`
+    );
+
+    /* Checkout review + prefilling. */
+    h=h.replace(/function openCheckout\(\)\{[\s\S]*?open\('checkout'\)\}/,
+`function openCheckout(){if(!cart.length){toast('Your cart is empty');return}$('checkoutItems').innerHTML=cart.map(x=>\`<div class="cartItem"><div><b>\${x.name}</b><small>\${x.category}\${x.g==='drinks'?' • '+x.size:''} • Qty \${x.qty}</small></div><b>\${money(x.unitPrice*x.qty)}</b></div>\`).join('');$('checkoutTotal').innerHTML='<div class="cartTypeBanner"><b>ORDER TYPE:</b> '+orderType+'</div><b>DEMO TOTAL:</b> '+money(total())+'<br><small>Sample prototype amount only.</small>';if(profile.name)$('checkoutName').value=profile.name;fillDineDraft();syncProductOrderType();open('checkout')}`
+    );
+
+    /* Complete order creation + confirmation summary. */
+    h=h.replace(/function placeOrder\(\)\{[\s\S]*?open\('confirmation'\)\}/,
+`function placeOrder(){const name=$('checkoutName').value.trim()||profile.name||'Guest',store=$('checkoutStore').value.trim(),isDine=orderType==='Dine-in',table=isDine?$('dineInTable').value.trim():'',guests=isDine?Math.max(1,+$('dineInGuests').value||1):0,service=isDine?$('dineInService').value:'',dineNotes=isDine?$('dineInNotes').value.trim():'';if(!store){toast('Enter a store / branch');return}if(isDine&&!table){toast('Enter the table number');$('dineInTable').focus();return}if(!cart.length){toast('Your cart is empty');return}if(isDine)saveDineDraft();const no='DEMO #'+String(Date.now()).slice(-6),snapshot=cart.map(x=>({...x})),sum=total(),notes=$('checkoutNotes').value.trim();orders.unshift({no,name,store,type:orderType,payment,notes,table,guests,service,dineNotes,status:'Received',items:snapshot,total:sum,date:new Date().toLocaleString()});orders=orders.slice(0,30);saveOrders();$('confirmName').textContent=name;$('confirmNo').textContent=no+' • '+money(sum);$('confirmMeta').textContent=orderType+' • '+store+' • '+payment;const ds=$('confirmDineInSummary');if(ds){ds.classList.toggle('hidden',!isDine);ds.innerHTML=isDine?'<div class="confirmTitle">DINE-IN DETAILS</div><b>Table '+table+'</b> • '+guests+' guest'+(guests===1?'':'s')+'<br>'+service+(dineNotes?'<br><span>Dine-in note: '+dineNotes+'</span>':'')+(notes?'<br><span>Order note: '+notes+'</span>':''):''}const ci=$('confirmItems');if(ci)ci.innerHTML='<div class="confirmTitle">ORDER SUMMARY</div>'+snapshot.map(x=>'<div class="confirmLine"><span>'+x.qty+'× '+x.name+(x.g==='drinks'?' • '+x.size:'')+'</span><b>'+money(x.unitPrice*x.qty)+'</b></div>').join('')+'<div class="confirmLine confirmTotal"><span>DEMO TOTAL</span><b>'+money(sum)+'</b></div>';const sr=document.querySelector('#confirmation .statusRow');if(sr)sr.innerHTML=(isDine?['RECEIVED','PREPARING','READY','SERVED']:['RECEIVED','PREPARING','READY','COMPLETED']).map((s,i)=>'<div class="status '+(i===0?'active':'')+'">'+(i+1)+'. '+s+'</div>').join('');cart=[];saveCart();open('confirmation')}`
+    );
+
+    /* Rich My Orders, status tracking and Dine-in details. */
+    h=h.replace(/function renderAccount\(\)\{[\s\S]*?\}\nfunction openAccount\(\)\{renderAccount\(\);open\('account'\)\}function reorder\(i\)\{[\s\S]*?openCart\(\)\}/,
+`function orderTrack(o){const steps=o.type==='Dine-in'?['Received','Preparing','Ready','Served']:['Received','Preparing','Ready','Completed'],p=Math.max(0,steps.indexOf(o.status));return '<div class="miniTrack">'+steps.map((s,i)=>'<span class="'+(i<=p?'done':'')+'">'+s+'</span>').join('')+'</div>'}function renderAccount(){const all=allProducts();$('name').value=profile.name||'';$('email').value=profile.email||'';$('mobile').value=profile.mobile||'';updateCounts();const fs=all.filter(x=>favorites.includes(x.key));$('favoriteList').innerHTML=fs.length?fs.map((x,i)=>\`<div class="favoriteItem"><div><b>\${x.name}</b><small>\${groupLabel(x.g)} • \${x.category}</small></div><button class="itemAction" data-f="\${i}">Open</button></div>\`).join(''):'<div class="favoriteItem">No favorites yet.</div>';$('favoriteList').querySelectorAll('[data-f]').forEach((b,i)=>b.onclick=()=>{const x=fs[i];loadCategoryAndInfo(x.g,x.ci,x.ii)});$('orderList').innerHTML=orders.length?orders.slice(0,10).map((o,i)=>\`<div class="orderItem \${o.type==='Dine-in'?'dineOrderHistory':''}"><div><b>\${o.no}</b><small><strong>\${o.status}</strong> • \${o.type} • \${o.store}\${o.type==='Dine-in'?'<br>Table '+(o.table||'—')+' • '+(o.guests||1)+' guest'+((o.guests||1)===1?'':'s')+' • '+(o.service||'Serve to Table')+(o.dineNotes?'<br>Dine-in note: '+o.dineNotes:''):''}<br>\${o.items.map(x=>x.qty+'× '+x.name).join(' • ')}<br>DEMO \${money(o.total)} • \${o.date}</small>\${orderTrack(o)}</div><button class="itemAction" data-r="\${i}">Reorder</button></div>\`).join(''):'<div class="orderItem">No orders yet.</div>';$('orderList').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>reorder(+b.dataset.r))}
+function openAccount(){renderAccount();open('account')}function reorder(i){const o=orders[i];if(!o)return;setOrderType(o.type||'Takeout');if(o.type==='Dine-in'){dineDraft={table:o.table||'',guests:o.guests||1,service:o.service||'Serve to Table',notes:o.dineNotes||''};try{localStorage.setItem('staticOrbitDineInDraft',JSON.stringify(dineDraft))}catch{}}o.items.forEach(x=>{if(!isAvailable(x.key))return;const ex=cart.find(v=>v.id===x.id);if(ex)ex.qty+=x.qty;else cart.push({...x})});saveCart();toast('Available items added to Cart');openCart()}`
+    );
+
+    /* Staff sees complete Dine-in details and uses Served as final state. */
+    h=h.replace(/function renderStaffOrders\(\)\{[\s\S]*?\}\nfunction renderAvailability/,
+`function renderStaffOrders(){$('staffOrderList').innerHTML=orders.length?orders.map((o,i)=>\`<div class="staffItem \${o.type==='Dine-in'?'dineStaffNew':''}"><div><b>\${o.no} • \${o.status}</b><small>\${o.name} • \${o.type} • \${o.store}\${o.type==='Dine-in'?'<br><b>Table '+(o.table||'—')+'</b> • '+(o.guests||1)+' guest'+((o.guests||1)===1?'':'s')+' • '+(o.service||'Serve to Table')+(o.dineNotes?'<br>Dine-in note: '+o.dineNotes:''):''}\${o.notes?'<br>Order note: '+o.notes:''}<br>\${o.items.length} line item(s) • DEMO \${money(o.total)}</small></div><button class="itemAction" data-status="\${i}">Next Status</button></div>\`).join(''):'<div class="staffItem">No demo orders yet.</div>';$('staffOrderList').querySelectorAll('[data-status]').forEach(b=>b.onclick=()=>{const i=+b.dataset.status,steps=orders[i].type==='Dine-in'?['Received','Preparing','Ready','Served']:['Received','Preparing','Ready','Completed'];let p=steps.indexOf(orders[i].status);orders[i].status=steps[Math.min(steps.length-1,p+1)];saveOrders();renderStaffOrders();toast('Order status updated')})}
+function renderAvailability`
+    );
+
+    /* Product + checkout Order Type controls and Dine-in draft listeners. */
     h=h.replace(
       "document.querySelectorAll('.typeChoice').forEach(b=>b.onclick=()=>{orderType=b.dataset.type;document.querySelectorAll('.typeChoice').forEach(x=>x.classList.toggle('active',x===b))});",
-      "document.querySelectorAll('.typeChoice').forEach(b=>b.onclick=()=>setOrderType(b.dataset.type));document.querySelectorAll('.productTypeChoice').forEach(b=>b.onclick=()=>setOrderType(b.dataset.productType));syncProductOrderType();"
-    );
-
-    /* Store and validate Dine-in details; confirmation ends in SERVED. */
-    h=h.replace(
-      "function placeOrder(){const name=$('checkoutName').value.trim()||profile.name||'Guest',store=$('checkoutStore').value.trim();if(!store){toast('Enter a store / branch');return}if(!cart.length){toast('Your cart is empty');return}const no='DEMO #'+String(Date.now()).slice(-6),snapshot=cart.map(x=>({...x})),sum=total(),notes=$('checkoutNotes').value.trim();orders.unshift({no,name,store,type:orderType,payment,notes,status:'Received',items:snapshot,total:sum,date:new Date().toLocaleString()});orders=orders.slice(0,30);saveOrders();$('confirmName').textContent=name;$('confirmNo').textContent=no+' • '+money(sum);$('confirmMeta').textContent=orderType+' • '+store+' • '+payment+(notes?' • Note saved':'');cart=[];saveCart();open('confirmation')}",
-      "function placeOrder(){const name=$('checkoutName').value.trim()||profile.name||'Guest',store=$('checkoutStore').value.trim(),isDine=orderType==='Dine-in',table=isDine?$('dineInTable').value.trim():'',guests=isDine?Math.max(1,+$('dineInGuests').value||1):0,service=isDine?$('dineInService').value:'',dineNotes=isDine?$('dineInNotes').value.trim():'';if(!store){toast('Enter a store / branch');return}if(isDine&&!table){toast('Enter the table number');return}if(!cart.length){toast('Your cart is empty');return}const no='DEMO #'+String(Date.now()).slice(-6),snapshot=cart.map(x=>({...x})),sum=total(),notes=$('checkoutNotes').value.trim();orders.unshift({no,name,store,type:orderType,payment,notes,table,guests,service,dineNotes,status:'Received',items:snapshot,total:sum,date:new Date().toLocaleString()});orders=orders.slice(0,30);saveOrders();$('confirmName').textContent=name;$('confirmNo').textContent=no+' • '+money(sum);$('confirmMeta').textContent=orderType+' • '+store+(isDine?' • Table '+table+' • '+guests+' guest'+(guests===1?'':'s')+' • '+service:'')+' • '+payment+(dineNotes?' • Dine-in note saved':'')+(notes?' • Order note saved':'');const sr=document.querySelector('#confirmation .statusRow');if(sr)sr.innerHTML=(isDine?['RECEIVED','PREPARING','READY','SERVED']:['RECEIVED','PREPARING','READY','COMPLETED']).map((s,i)=>'<div class=\"status '+(i===0?'active':'')+(isDine&&s==='SERVED'?' servedNew':'')+'\">'+(i+1)+'. '+s+(isDine&&s==='SERVED'?' • NEW':'')+'</div>').join('');cart=[];saveCart();open('confirmation')}"
-    );
-
-    /* Staff queue shows table details and uses SERVED for Dine-in. */
-    h=h.replace(
-      "function renderStaffOrders(){$('staffOrderList').innerHTML=orders.length?orders.map((o,i)=>`<div class=\"staffItem\"><div><b>${o.no} • ${o.status}</b><small>${o.name} • ${o.type} • ${o.store}<br>${o.items.length} line item(s) • DEMO ${money(o.total)}</small></div><button class=\"itemAction\" data-status=\"${i}\">Next Status</button></div>`).join(''):'<div class=\"staffItem\">No demo orders yet.</div>';$('staffOrderList').querySelectorAll('[data-status]').forEach(b=>b.onclick=()=>{const i=+b.dataset.status,steps=['Received','Preparing','Ready','Completed'];let p=steps.indexOf(orders[i].status);orders[i].status=steps[Math.min(steps.length-1,p+1)];saveOrders();renderStaffOrders();toast('Order status updated')})}",
-      "function renderStaffOrders(){$('staffOrderList').innerHTML=orders.length?orders.map((o,i)=>`<div class=\"staffItem ${o.type==='Dine-in'?'dineStaffNew':''}\"><div><b>${o.no} • ${o.status}${o.type==='Dine-in'?' • NEW DINE-IN':''}</b><small>${o.name} • ${o.type} • ${o.store}${o.type==='Dine-in'?'<br><b>Table '+(o.table||'—')+'</b> • '+(o.guests||1)+' guest'+((o.guests||1)===1?'':'s')+' • '+(o.service||'Serve to Table')+(o.dineNotes?' • '+o.dineNotes:''):''}<br>${o.items.length} line item(s) • DEMO ${money(o.total)}</small></div><button class=\"itemAction\" data-status=\"${i}\">Next Status</button></div>`).join(''):'<div class=\"staffItem\">No demo orders yet.</div>';$('staffOrderList').querySelectorAll('[data-status]').forEach(b=>b.onclick=()=>{const i=+b.dataset.status,steps=orders[i].type==='Dine-in'?['Received','Preparing','Ready','Served']:['Received','Preparing','Ready','Completed'];let p=steps.indexOf(orders[i].status);orders[i].status=steps[Math.min(steps.length-1,p+1)];saveOrders();renderStaffOrders();toast('Order status updated')})}"
+      "document.querySelectorAll('.typeChoice').forEach(b=>b.onclick=()=>setOrderType(b.dataset.type));document.querySelectorAll('.productTypeChoice').forEach(b=>b.onclick=()=>setOrderType(b.dataset.productType));['dineInTable','dineInGuests','dineInService','dineInNotes'].forEach(id=>{const el=$(id);if(el){el.addEventListener('input',saveDineDraft);el.addEventListener('change',saveDineDraft)}});syncProductOrderType();"
     );
 
     const css=`
@@ -71,36 +90,31 @@
 body:has(.screen.open)>header,body:has(.screen.open)>.home{visibility:hidden!important}
 #categories.screen,#orbitScreen.screen,#info.screen,#cart.screen,#checkout.screen,#confirmation.screen,#account.screen,#staff.screen{background:rgba(0,24,17,.14)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;isolation:isolate}
 #categories .panel,#info .panel,#cart .panel,#checkout .panel,#confirmation .panel,#account .panel,#staff .panel{background:linear-gradient(180deg,rgba(4,64,46,.50),rgba(2,35,26,.56))!important;backdrop-filter:blur(4px)!important;-webkit-backdrop-filter:blur(4px)!important;box-shadow:0 24px 60px rgba(0,0,0,.30)!important}
-#categories .cat{background:linear-gradient(145deg,rgba(7,76,55,.42),rgba(3,43,32,.38))!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
-.orbitPanel{background:radial-gradient(circle at center,rgba(8,88,63,.28),rgba(0,25,18,.35) 74%)!important;backdrop-filter:blur(1px)!important;-webkit-backdrop-filter:blur(1px)!important}
+#categories .cat{background:linear-gradient(145deg,rgba(7,76,55,.42),rgba(3,43,32,.38))!important}
+.orbitPanel{background:radial-gradient(circle at center,rgba(8,88,63,.28),rgba(0,25,18,.35) 74%)!important}
 header{background:rgba(2,42,31,.82)!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important}
-.group{background:linear-gradient(145deg,rgba(7,76,55,.38),rgba(3,43,32,.34))!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
+.group{background:linear-gradient(145deg,rgba(7,76,55,.38),rgba(3,43,32,.34))!important}
 #orbitScreen .node .label{display:none!important}
 #orbitScreen .node{background:rgba(3,55,41,.82)!important;padding:0!important}
 #orbitScreen .node img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important}
 #orbitScreen .node .fallback{font-size:15px!important}
-#orbitScreen .node .soldTag{top:auto!important;bottom:6px!important;font-size:6px!important;padding:4px 6px!important}
 .productOrderType{margin:18px 0 2px;padding:15px;border:1px solid rgba(224,189,119,.52);border-radius:16px;background:linear-gradient(145deg,rgba(224,189,119,.09),rgba(5,58,43,.34))}
-.productOrderTypeLabel{display:flex;align-items:center;gap:6px;margin-bottom:10px;color:#ffe7ad;font-size:10px;font-weight:1000;letter-spacing:.12em}
+.productOrderTypeLabel,.dineInTitle,.confirmTitle{margin-bottom:10px;color:#ffe7ad;font-size:10px;font-weight:1000;letter-spacing:.12em}
 .productOrderTypeRow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.productTypeChoice{min-height:50px;border:1px solid rgba(224,189,119,.52);border-radius:14px;background:rgba(3,54,40,.78);color:#fff;font-size:11px;font-weight:1000;letter-spacing:.03em}
+.productTypeChoice{min-height:50px;border:1px solid rgba(224,189,119,.52);border-radius:14px;background:rgba(3,54,40,.78);color:#fff;font-size:11px;font-weight:1000}
 .productTypeChoice.active{background:#f5ead8!important;color:#063f2f!important;border-color:#f5ead8!important;box-shadow:0 8px 22px rgba(0,0,0,.18)}
 .productOrderHint{margin-top:9px;color:#c9d7d2;font-size:10px;line-height:1.4}
-.dineProductChoice{position:relative}
-.dineInChoice{position:relative!important;border-color:#f2d28f!important;box-shadow:0 0 0 2px rgba(242,210,143,.10),0 9px 22px rgba(0,0,0,.20)!important}
-.dineInChoice .newFeatureBadge{position:absolute;right:7px;top:5px}
-.newFeatureBadge{display:inline-flex;align-items:center;justify-content:center;padding:3px 7px;border-radius:999px;background:#f5ead8;color:#063f2f;font-size:7px;font-weight:1000;letter-spacing:.08em;line-height:1}
-.inlineNew{position:static;margin-right:3px;vertical-align:middle}
-#dineInDetails{margin-top:2px;padding:17px;border:2px solid rgba(244,210,143,.84);border-radius:16px;background:linear-gradient(145deg,rgba(224,189,119,.14),rgba(5,58,43,.46));box-shadow:0 0 0 3px rgba(224,189,119,.06),0 18px 36px rgba(0,0,0,.22)}
-.dineInTitle{color:#ffe7ad;font-size:11px;font-weight:1000;letter-spacing:.14em;margin-bottom:13px}
+#dineInDetails{margin-top:2px;padding:17px;border:2px solid rgba(244,210,143,.84);border-radius:16px;background:linear-gradient(145deg,rgba(224,189,119,.14),rgba(5,58,43,.46));box-shadow:0 18px 36px rgba(0,0,0,.22)}
 .dineInGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 #dineInDetails select{width:100%;height:44px;border-radius:12px;border:1px solid var(--line);background:#042d23;color:#fff;padding:0 10px}
-.featureMark{display:inline-block;margin-left:5px;padding:2px 5px;border-radius:999px;background:rgba(245,234,216,.96);color:#063f2f;font-size:7px;font-weight:1000;vertical-align:1px}
 .dineInHint{margin-top:11px;padding-top:10px;border-top:1px solid rgba(224,189,119,.28);color:#e5eee9;font-size:10px;line-height:1.45}
-.dineStaffNew{border-color:rgba(242,210,143,.68)!important;background:linear-gradient(145deg,rgba(224,189,119,.10),rgba(4,58,43,.44))!important}
-.servedNew{border-color:#f2d28f!important;color:#ffe7ad!important}
-@media(max-width:760px){#categories.screen,#orbitScreen.screen,#info.screen,#cart.screen,#checkout.screen,#confirmation.screen,#account.screen,#staff.screen{background:rgba(0,24,17,.10)!important}#categories .panel,#info .panel,#cart .panel,#checkout .panel,#confirmation .panel,#account .panel,#staff .panel{background:linear-gradient(180deg,rgba(4,64,46,.44),rgba(2,35,26,.50))!important}.dineInGrid{grid-template-columns:1fr}}
-@media(max-width:430px){.productOrderType{padding:13px}.productOrderTypeRow{gap:6px}.productTypeChoice{min-height:46px;font-size:10px}}
+.cartTypeBanner{margin-bottom:10px;padding:10px 12px;border:1px solid rgba(224,189,119,.35);border-radius:12px;background:rgba(224,189,119,.07);color:#ffe7ad}.cartTypeBanner small{display:block;margin-top:4px;color:#c9d7d2}
+.dineConfirmSummary,.confirmItems{margin:14px 0;padding:14px;border:1px solid rgba(224,189,119,.34);border-radius:14px;background:rgba(255,255,255,.035);line-height:1.5}.dineConfirmSummary b{color:#ffe7ad}.dineConfirmSummary span{color:#c9d7d2;font-size:11px}
+.confirmLine{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:11px}.confirmLine:last-child{border-bottom:0}.confirmTotal{margin-top:3px;color:#ffe7ad;font-weight:1000}
+.dineOrderHistory,.dineStaffNew{border-color:rgba(242,210,143,.62)!important;background:linear-gradient(145deg,rgba(224,189,119,.08),rgba(4,58,43,.38))!important}
+.miniTrack{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:9px}.miniTrack span{padding:5px 3px;border:1px solid rgba(255,255,255,.10);border-radius:999px;text-align:center;font-size:7px;color:#8ea49b}.miniTrack span.done{border-color:rgba(242,210,143,.50);color:#ffe7ad;background:rgba(224,189,119,.07)}
+@media(max-width:760px){#categories.screen,#orbitScreen.screen,#info.screen,#cart.screen,#checkout.screen,#confirmation.screen,#account.screen,#staff.screen{background:rgba(0,24,17,.10)!important}.dineInGrid{grid-template-columns:1fr}}
+@media(max-width:430px){.productOrderType{padding:13px}.productOrderTypeRow{gap:6px}.productTypeChoice{min-height:46px;font-size:10px}.miniTrack{grid-template-columns:1fr 1fr}.confirmLine{font-size:10px}}
 </style>`;
     h=h.replace('</head>',css+'</head>');
     document.open();document.write(h);document.close();
