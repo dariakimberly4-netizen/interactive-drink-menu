@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#063f2f">
+<title>Cashier Portal — Menu Orbit</title>
+<style>
+:root{--green:#063f2f;--green2:#0a5a43;--green3:#0d6b50;--cream:#f6efe2;--gold:#d9bd7a;--ink:#173c32;--muted:#6f817b;--line:#d9e2de;--card:#fff;--bg:#f4f7f5;--danger:#a34040;--shadow:0 16px 38px rgba(18,54,44,.10)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select{font:inherit}
+.hidden{display:none!important}.screen{min-height:100vh}.login{display:grid;place-items:center;padding:24px;background:linear-gradient(145deg,#032b21,#0b5d46)}
+.loginCard{width:min(440px,100%);background:#fff;border-radius:26px;padding:26px;box-shadow:0 30px 70px rgba(0,0,0,.28)}
+.logo{width:54px;height:54px;border-radius:16px;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:1000;font-size:20px;margin-bottom:18px}
+h1,h2,h3,p{margin-top:0}.loginCard h1{font:700 30px Georgia,serif;margin-bottom:7px}.sub{color:var(--muted);font-size:13px;line-height:1.5}
+.oneTap{width:100%;border:1px solid #d8c48e;background:#fff8e6;color:var(--green);border-radius:16px;padding:14px 16px;text-align:left;font-weight:900;margin:16px 0}.oneTap small{display:block;margin-top:4px;color:#7e7049;font-weight:700}
+.field{margin:12px 0}.field label{display:block;font-size:11px;font-weight:900;letter-spacing:.05em;margin-bottom:6px}.field input,.field select{width:100%;height:48px;border:1px solid var(--line);border-radius:13px;padding:0 13px;background:#fff;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:var(--green3);box-shadow:0 0 0 3px rgba(13,107,80,.10)}
+.primary{width:100%;height:50px;border:0;border-radius:14px;background:var(--green);color:#fff;font-weight:900}.demoNote{margin-top:13px;font-size:10px;color:#89958f;text-align:center;line-height:1.5}
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}.sidebar{background:var(--green);color:#fff;padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto}.sideBrand{padding:8px 10px 18px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px}.sideBrand b{font:700 21px Georgia,serif}.sideBrand small{display:block;color:#b9d0c8;margin-top:5px}.navBtn{width:100%;border:0;background:transparent;color:#dce9e4;padding:12px 13px;border-radius:12px;text-align:left;font-weight:800;margin:3px 0}.navBtn.active,.navBtn:hover{background:rgba(255,255,255,.12);color:#fff}.logout{margin-top:20px;border:1px solid rgba(255,255,255,.25)}
+.main{min-width:0}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 22px;position:sticky;top:0;z-index:10}.topbar h2{margin:0;font:700 23px Georgia,serif;flex:1}.badge{padding:7px 10px;border-radius:999px;background:#edf5f1;color:var(--green);font-size:10px;font-weight:900}.content{padding:22px;max-width:1450px;margin:auto}.page{display:none}.page.active{display:block}.eyebrow{font-size:10px;font-weight:1000;letter-spacing:.14em;color:var(--green3);margin-bottom:7px}.page h1{font:700 32px Georgia,serif;margin-bottom:6px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:var(--shadow)}.stat span{font-size:10px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.stat b{display:block;font-size:28px;margin-top:7px;color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:var(--shadow)}.card h3{font-size:15px;margin-bottom:10px}.subMenu{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.subBtn{border:1px solid var(--line);background:#f9fbfa;border-radius:12px;padding:11px;text-align:left;color:var(--ink);font-size:11px;font-weight:800}.subBtn:hover{border-color:#b4c9c1;background:#f1f7f4}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}.search{flex:1;min-width:220px;height:44px;border:1px solid var(--line);border-radius:12px;padding:0 13px}.filter{height:44px;border:1px solid var(--line);border-radius:12px;padding:0 10px;background:#fff}.orders{display:grid;gap:10px}.order{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;display:grid;grid-template-columns:1fr auto;gap:14px}.order b{color:var(--green)}.order small{display:block;color:var(--muted);line-height:1.55;margin-top:4px}.orderActions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.mini{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 10px;font-size:10px;font-weight:900;color:var(--ink)}.mini.primaryMini{background:var(--green);border-color:var(--green);color:#fff}.status{display:inline-flex;padding:5px 8px;border-radius:999px;background:#eef5f2;color:var(--green);font-size:9px;font-weight:900}.empty{padding:26px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:16px}
+.detailPanel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:14px}.detailGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.kv{padding:11px;border-radius:12px;background:#f8faf9}.kv small{display:block;color:var(--muted);font-size:9px;font-weight:800;margin-bottom:4px}.kv b{font-size:12px}.full{grid-column:1/-1}.mobileNav{display:none}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{display:none}.topbar{padding:0 14px}.content{padding:14px 14px 86px}.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.mobileNav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:30;padding:6px 6px calc(6px + env(safe-area-inset-bottom))}.mobileNav button{border:0;background:transparent;padding:9px 3px;font-size:9px;font-weight:900;color:var(--muted)}.mobileNav button.active{color:var(--green)}}
+@media(max-width:560px){.stats{grid-template-columns:1fr 1fr}.stat{padding:13px}.stat b{font-size:23px}.page h1{font-size:27px}.subMenu{grid-template-columns:1fr}.order{grid-template-columns:1fr}.detailGrid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<section id="login" class="screen login">
+  <div class="loginCard">
+    <div class="logo">C</div>
+    <h1>Cashier Portal</h1>
+    <p class="sub">Non-orbit staff workspace for receiving, checking and forwarding customer orders.</p>
+    <button class="oneTap" id="oneTap">ONE-TAP CASHIER LOGIN<small>Username: cashier &nbsp;•&nbsp; Password: 1111</small></button>
+    <div class="field"><label>USERNAME</label><input id="username" autocomplete="username" placeholder="cashier"></div>
+    <div class="field"><label>PASSWORD</label><input id="password" type="password" autocomplete="current-password" placeholder="1111"></div>
+    <button class="primary" id="loginBtn">LOGIN</button>
+    <div class="demoNote">Prototype login only. Credentials are stored in the page and are not secure production authentication.</div>
+  </div>
+</section>
+
+<section id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="sideBrand"><b>Cashier Portal</b><small>Menu Orbit Staff System</small></div>
+    <button class="navBtn active" data-page="dashboard">Dashboard</button>
+    <button class="navBtn" data-page="orders">Orders</button>
+    <button class="navBtn" data-page="verification">Order Verification</button>
+    <button class="navBtn" data-page="takeout">Takeout</button>
+    <button class="navBtn" data-page="dinein">Dine-in</button>
+    <button class="navBtn" data-page="pickup">Pickup</button>
+    <button class="navBtn" data-page="payment">Payment</button>
+    <button class="navBtn" data-page="lookup">Customer Lookup</button>
+    <button class="navBtn" data-page="recent">Recent Transactions</button>
+    <button class="navBtn" data-page="account">My Account</button>
+    <button class="navBtn logout" id="logoutBtn">Logout</button>
+  </aside>
+  <main class="main">
+    <header class="topbar"><h2 id="topTitle">Dashboard</h2><span class="badge">CASHIER</span><span class="badge" id="clock"></span></header>
+    <div class="content">
+      <section class="page active" id="dashboard">
+        <div class="eyebrow">CASHIER MAIN MENU</div><h1>Dashboard</h1><p class="sub">Receive, verify and route customer orders without preparation or inventory controls.</p>
+        <div class="stats"><div class="stat"><span>Total Orders</span><b id="sTotal">0</b></div><div class="stat"><span>Takeout</span><b id="sTake">0</b></div><div class="stat"><span>Dine-in</span><b id="sDine">0</b></div><div class="stat"><span>Pickup</span><b id="sPick">0</b></div></div>
+        <div class="grid">
+          <div class="card"><h3>Orders</h3><div class="subMenu"><button class="subBtn" data-go="orders">All Orders</button><button class="subBtn" data-go="orders" data-filter="Takeout">Takeout Orders</button><button class="subBtn" data-go="orders" data-filter="Dine-in">Dine-in Orders</button><button class="subBtn" data-go="orders" data-filter="Pickup">Pickup Orders</button></div></div>
+          <div class="card"><h3>Order Verification</h3><div class="subMenu"><button class="subBtn" data-go="verification">Customer & Store</button><button class="subBtn" data-go="verification">Items & Quantity</button><button class="subBtn" data-go="verification">Service Details</button><button class="subBtn" data-go="verification">Order Notes & Total</button></div></div>
+          <div class="card"><h3>Service Type</h3><div class="subMenu"><button class="subBtn" data-go="takeout">Takeout Details</button><button class="subBtn" data-go="dinein">Dine-in Details</button><button class="subBtn" data-go="pickup">Pickup / Claim Code</button><button class="subBtn" data-go="payment">Payment Check</button></div></div>
+          <div class="card"><h3>Customer & Transactions</h3><div class="subMenu"><button class="subBtn" data-go="lookup">Search Customer</button><button class="subBtn" data-go="lookup">Search Order Number</button><button class="subBtn" data-go="recent">Recent Transactions</button><button class="subBtn" data-go="account">My Account</button></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="orders"><div class="eyebrow">MAIN MENU</div><h1>Orders</h1><p class="sub">All customer orders created on this device/browser.</p><div class="toolbar"><input id="orderSearch" class="search" placeholder="Search order no., customer, store or claim code"><select id="orderFilter" class="filter"><option>All</option><option>Takeout</option><option>Dine-in</option><option>Pickup</option></select></div><div id="orderList" class="orders"></div></section>
+      <section class="page" id="verification"><div class="eyebrow">MAIN MENU</div><h1>Order Verification</h1><p class="sub">Check the customer, branch, item details, service type and total before sending the order forward.</p><div id="verifyList" class="orders"></div></section>
+      <section class="page" id="takeout"><div class="eyebrow">SERVICE MENU</div><h1>Takeout</h1><p class="sub">Pickup name • contact number • estimated pickup time • special instructions.</p><div id="takeoutList" class="orders"></div></section>
+      <section class="page" id="dinein"><div class="eyebrow">SERVICE MENU</div><h1>Dine-in</h1><p class="sub">Table number • guests • service choice • dine-in notes.</p><div id="dineinList" class="orders"></div></section>
+      <section class="page" id="pickup"><div class="eyebrow">SERVICE MENU</div><h1>Pickup</h1><p class="sub">Pickup name • mobile • date/time • claim code • instructions.</p><div id="pickupList" class="orders"></div></section>
+      <section class="page" id="payment"><div class="eyebrow">MAIN MENU</div><h1>Payment</h1><p class="sub">Front-end prototype payment verification only.</p><div id="paymentList" class="orders"></div></section>
+      <section class="page" id="lookup"><div class="eyebrow">MAIN MENU</div><h1>Customer Lookup</h1><p class="sub">Search by customer, mobile, order number or pickup claim code.</p><div class="toolbar"><input id="lookupSearch" class="search" placeholder="Type name, mobile, order no. or claim code"></div><div id="lookupList" class="orders"></div></section>
+      <section class="page" id="recent"><div class="eyebrow">MAIN MENU</div><h1>Recent Transactions</h1><p class="sub">Most recent cashier-visible orders and actions.</p><div id="recentList" class="orders"></div></section>
+      <section class="page" id="account"><div class="eyebrow">MAIN MENU</div><h1>My Account</h1><div class="detailPanel"><div class="detailGrid"><div class="kv"><small>USERNAME</small><b>cashier</b></div><div class="kv"><small>ROLE</small><b>Cashier</b></div><div class="kv"><small>LOGIN MODE</small><b>One-tap / Username + Password</b></div><div class="kv"><small>PERMISSIONS</small><b>Orders • Verification • Payment • Customer Lookup</b></div><div class="kv full"><small>RESTRICTED</small><b>Product Availability • Staff Accounts • Manager Reports • Inventory • System Settings</b></div></div></div></section>
+    </div>
+  </main>
+  <nav class="mobileNav"><button class="active" data-page="dashboard">Home</button><button data-page="orders">Orders</button><button data-page="verification">Verify</button><button data-page="payment">Payment</button><button data-page="account">Account</button></nav>
+</section>
+
+<script>
+const $=id=>document.getElementById(id);let orders=[],paymentState={};
+function load(){try{orders=JSON.parse(localStorage.getItem('staticOrbitOrders'))||[]}catch{orders=[]}try{paymentState=JSON.parse(localStorage.getItem('cashierPaymentStatus'))||{}}catch{paymentState={}}}
+function saveOrders(){localStorage.setItem('staticOrbitOrders',JSON.stringify(orders))}function savePayments(){localStorage.setItem('cashierPaymentStatus',JSON.stringify(paymentState))}
+function money(n){return '₱'+Number(n||0).toLocaleString('en-PH')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function info(o){if(o.type==='Dine-in')return `Table ${esc(o.table||'—')} • ${esc(o.guests||1)} guest(s) • ${esc(o.service||'Serve to Table')}${o.dineNotes?'<br>'+esc(o.dineNotes):''}`;if(o.type==='Takeout')return `Pickup: ${esc(o.pickupName||o.name||'—')} • ${esc(o.pickupTime||'ASAP')}${o.pickupContact?'<br>'+esc(o.pickupContact):''}${o.takeoutNotes?'<br>'+esc(o.takeoutNotes):''}`;if(o.type==='Pickup')return `Claim: <b>${esc(o.claimCode||'—')}</b> • ${esc(o.scheduledPickupName||o.name||'—')}${o.pickupDate?'<br>'+esc(o.pickupDate)+' '+esc(o.scheduledPickupTime||''):''}${o.scheduledPickupMobile?'<br>'+esc(o.scheduledPickupMobile):''}`;return ''}
+function orderCard(o,i,mode='normal'){const pay=paymentState[o.no]||'Unverified';return `<div class="order"><div><div><span class="status">${esc(o.status||'Received')}</span> <span class="status">${esc(o.type||'Order')}</span></div><b>${esc(o.no||'DEMO ORDER')} • ${esc(o.name||'Guest')}</b><small>${esc(o.store||'No store')}<br>${info(o)}<br>${(o.items||[]).map(x=>esc(x.qty)+'× '+esc(x.name)+(x.size?' • '+esc(x.size):'')).join(' • ')||'No item details'}<br><b>DEMO ${money(o.total)}</b> • Payment: ${esc(pay)}</small></div><div class="orderActions">${mode==='verify'?`<button class="mini primaryMini" data-receive="${i}">MARK RECEIVED</button>`:''}${mode==='payment'?`<button class="mini ${pay==='Verified'?'primaryMini':''}" data-pay="${i}">${pay==='Verified'?'PAYMENT VERIFIED':'VERIFY PAYMENT'}</button>`:''}<button class="mini" data-view="${i}">VIEW</button></div></div>`}
+function renderList(el,list,mode='normal'){el.innerHTML=list.length?list.map(x=>orderCard(x.o,x.i,mode)).join(''):'<div class="empty">No matching orders.</div>';el.querySelectorAll('[data-receive]').forEach(b=>b.onclick=()=>{const i=+b.dataset.receive;if(orders[i]){orders[i].status='Received';saveOrders();renderAll();alert('Order marked Received and ready to send to Preparation.')}});el.querySelectorAll('[data-pay]').forEach(b=>b.onclick=()=>{const i=+b.dataset.pay,o=orders[i];if(!o)return;paymentState[o.no]='Verified';savePayments();renderAll()});el.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>showDetail(+b.dataset.view))}
+function pairs(filterFn=()=>true){return orders.map((o,i)=>({o,i})).filter(x=>filterFn(x.o))}
+function renderAll(){load();$('sTotal').textContent=orders.length;$('sTake').textContent=orders.filter(o=>o.type==='Takeout').length;$('sDine').textContent=orders.filter(o=>o.type==='Dine-in').length;$('sPick').textContent=orders.filter(o=>o.type==='Pickup').length;renderOrders();renderList($('verifyList'),pairs(),'verify');renderList($('takeoutList'),pairs(o=>o.type==='Takeout'));renderList($('dineinList'),pairs(o=>o.type==='Dine-in'));renderList($('pickupList'),pairs(o=>o.type==='Pickup'));renderList($('paymentList'),pairs(),'payment');renderLookup();renderList($('recentList'),pairs().slice(0,10))}
+function renderOrders(){const q=$('orderSearch').value.toLowerCase().trim(),f=$('orderFilter').value;const list=pairs(o=>(f==='All'||o.type===f)&&(!q||JSON.stringify(o).toLowerCase().includes(q)));renderList($('orderList'),list)}
+function renderLookup(){const q=$('lookupSearch').value.toLowerCase().trim();const list=q?pairs(o=>JSON.stringify(o).toLowerCase().includes(q)):pairs().slice(0,8);renderList($('lookupList'),list)}
+function showDetail(i){const o=orders[i];if(!o)return;alert(`${o.no||'Order'}\n${o.name||'Guest'}\n${o.type||''}\n${o.store||''}\n${(o.items||[]).map(x=>x.qty+'× '+x.name).join('\n')}\nDemo Total: ${money(o.total)}`)}
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('topTitle').textContent=({dashboard:'Dashboard',orders:'Orders',verification:'Order Verification',takeout:'Takeout',dinein:'Dine-in',pickup:'Pickup',payment:'Payment',lookup:'Customer Lookup',recent:'Recent Transactions',account:'My Account'})[page]||'Cashier Portal';renderAll();window.scrollTo({top:0,behavior:'smooth'})}
+function login(){if($('username').value.trim().toLowerCase()==='cashier'&&$('password').value==='1111'){$('login').classList.add('hidden');$('app').classList.remove('hidden');sessionStorage.setItem('cashierLoggedIn','1');renderAll()}else alert('Incorrect demo username or password.')}
+$('oneTap').onclick=()=>{$('username').value='cashier';$('password').value='1111';login()};$('loginBtn').onclick=login;$('password').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>go(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{if(b.dataset.filter)$('orderFilter').value=b.dataset.filter;go(b.dataset.go)});$('logoutBtn').onclick=()=>{sessionStorage.removeItem('cashierLoggedIn');location.reload()};$('orderSearch').oninput=renderOrders;$('orderFilter').onchange=renderOrders;$('lookupSearch').oninput=renderLookup;
+setInterval(()=>{$('clock').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})},1000);if(sessionStorage.getItem('cashierLoggedIn')==='1'){$('login').classList.add('hidden');$('app').classList.remove('hidden');renderAll()}
+</script>
+</body>
+</html>
