@@ -12,7 +12,7 @@
 <script>
 (async()=>{
   try{
-    const r=await fetch('./static-orbit-no-motion.html?source=crema-20261006f',{cache:'no-store'});
+    const r=await fetch('./static-orbit-no-motion.html?source=crema-20261006g',{cache:'no-store'});
     let h=await r.text();
     h=h.replace('orbit-menu-data.js?v=bdc8613','orbit-menu-data.js?v=04f748d');
     h=h.replace('orbit-product-images.js?v=bf7690f','orbit-product-images.js?v=475991e');
@@ -20,7 +20,13 @@
     /* Orbit circles are image-first. */
     h=h.replace(/<span class="label">\$\{x\.name\}<\/span>/g,'');
 
-    /* Visually flag Dine-in as a new feature. */
+    /* Put Order Type directly on Product Information, before Size and Quantity. */
+    h=h.replace(
+      '<div class="notice">Availability, ingredients, actual pricing, and preparation may vary by store. This is a front-end prototype only.</div><div class="orderRow">',
+      '<div class="notice">Availability, ingredients, actual pricing, and preparation may vary by store. This is a front-end prototype only.</div><div class="productOrderType"><div class="productOrderTypeLabel"><span class="newFeatureBadge inlineNew">NEW</span> ORDER TYPE</div><div class="productOrderTypeRow"><button type="button" class="productTypeChoice active" data-product-type="Takeout">TAKEOUT</button><button type="button" class="productTypeChoice dineProductChoice" data-product-type="Dine-in">DINE-IN</button><button type="button" class="productTypeChoice" data-product-type="Pickup">PICKUP</button></div><div class="productOrderHint">Choose how you want to receive this order before selecting size and quantity.</div></div><div class="orderRow">'
+    );
+
+    /* Visually flag Dine-in as a new feature at checkout too. */
     h=h.replace('<button class="choice typeChoice" data-type="Dine-in">Dine-in</button>','<button class="choice typeChoice dineInChoice" data-type="Dine-in"><span class="newFeatureBadge">NEW</span>Dine-in</button>');
 
     /* Add Dine-in-only service fields before Payment Method. */
@@ -29,10 +35,23 @@
       '<div class="field full hidden dineInNew" id="dineInDetails"><div class="dineInTitle"><span class="newFeatureBadge inlineNew">NEW</span> DINE-IN DETAILS</div><div class="dineInGrid"><div class="field"><label>Table Number <span class="featureMark">NEW</span></label><input id="dineInTable" placeholder="Example: T12" inputmode="text"></div><div class="field"><label>Number of Guests <span class="featureMark">NEW</span></label><input id="dineInGuests" type="number" min="1" max="20" value="1"></div><div class="field"><label>Table Service <span class="featureMark">NEW</span></label><select id="dineInService"><option selected>Serve to Table</option><option>Collect at Counter</option></select></div><div class="field"><label>Dine-in Notes <span class="featureMark">NEW</span></label><input id="dineInNotes" placeholder="Extra napkins, no straw, etc."></div></div><div class="dineInHint"><b>NEW:</b> Staff can now see the table number, guest count, service choice and dine-in notes.</div></div><div class="field full"><label>Payment Method</label>'
     );
 
-    /* Make checkout react when Dine-in is selected. */
+    /* Remember the customer's earlier Order Type choice. */
+    h=h.replace(
+      "try{availability=JSON.parse(localStorage.getItem('staticOrbitAvailability'))||{}}catch{}",
+      "try{availability=JSON.parse(localStorage.getItem('staticOrbitAvailability'))||{}}catch{}try{orderType=localStorage.getItem('staticOrbitOrderType')||orderType}catch{}"
+    );
+
+    /* Add one shared Order Type controller for Product Information and Checkout. */
+    h=h.replace(
+      'function openInfo(i){',
+      "function syncProductOrderType(){document.querySelectorAll('.productTypeChoice').forEach(b=>b.classList.toggle('active',b.dataset.productType===orderType));document.querySelectorAll('.typeChoice').forEach(b=>b.classList.toggle('active',b.dataset.type===orderType));const d=$('dineInDetails');if(d)d.classList.toggle('hidden',orderType!=='Dine-in')}function setOrderType(type){orderType=type;try{localStorage.setItem('staticOrbitOrderType',orderType)}catch{}syncProductOrderType()}function openInfo(i){"
+    );
+    h=h.replace("open('info')}","open('info');syncProductOrderType()}");
+
+    /* Checkout stays synchronized with the earlier Product Information choice. */
     h=h.replace(
       "document.querySelectorAll('.typeChoice').forEach(b=>b.onclick=()=>{orderType=b.dataset.type;document.querySelectorAll('.typeChoice').forEach(x=>x.classList.toggle('active',x===b))});",
-      "function syncDineInFields(){const d=$('dineInDetails');if(d)d.classList.toggle('hidden',orderType!=='Dine-in')}document.querySelectorAll('.typeChoice').forEach(b=>b.onclick=()=>{orderType=b.dataset.type;document.querySelectorAll('.typeChoice').forEach(x=>x.classList.toggle('active',x===b));syncDineInFields()});syncDineInFields();"
+      "document.querySelectorAll('.typeChoice').forEach(b=>b.onclick=()=>setOrderType(b.dataset.type));document.querySelectorAll('.productTypeChoice').forEach(b=>b.onclick=()=>setOrderType(b.dataset.productType));syncProductOrderType();"
     );
 
     /* Store and validate Dine-in details; confirmation ends in SERVED. */
@@ -61,10 +80,17 @@ header{background:rgba(2,42,31,.82)!important;backdrop-filter:blur(8px)!importan
 #orbitScreen .node img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important}
 #orbitScreen .node .fallback{font-size:15px!important}
 #orbitScreen .node .soldTag{top:auto!important;bottom:6px!important;font-size:6px!important;padding:4px 6px!important}
+.productOrderType{margin:18px 0 2px;padding:15px;border:1px solid rgba(224,189,119,.52);border-radius:16px;background:linear-gradient(145deg,rgba(224,189,119,.09),rgba(5,58,43,.34))}
+.productOrderTypeLabel{display:flex;align-items:center;gap:6px;margin-bottom:10px;color:#ffe7ad;font-size:10px;font-weight:1000;letter-spacing:.12em}
+.productOrderTypeRow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.productTypeChoice{min-height:50px;border:1px solid rgba(224,189,119,.52);border-radius:14px;background:rgba(3,54,40,.78);color:#fff;font-size:11px;font-weight:1000;letter-spacing:.03em}
+.productTypeChoice.active{background:#f5ead8!important;color:#063f2f!important;border-color:#f5ead8!important;box-shadow:0 8px 22px rgba(0,0,0,.18)}
+.productOrderHint{margin-top:9px;color:#c9d7d2;font-size:10px;line-height:1.4}
+.dineProductChoice{position:relative}
 .dineInChoice{position:relative!important;border-color:#f2d28f!important;box-shadow:0 0 0 2px rgba(242,210,143,.10),0 9px 22px rgba(0,0,0,.20)!important}
 .dineInChoice .newFeatureBadge{position:absolute;right:7px;top:5px}
 .newFeatureBadge{display:inline-flex;align-items:center;justify-content:center;padding:3px 7px;border-radius:999px;background:#f5ead8;color:#063f2f;font-size:7px;font-weight:1000;letter-spacing:.08em;line-height:1}
-.inlineNew{position:static;margin-right:6px;vertical-align:middle}
+.inlineNew{position:static;margin-right:3px;vertical-align:middle}
 #dineInDetails{margin-top:2px;padding:17px;border:2px solid rgba(244,210,143,.84);border-radius:16px;background:linear-gradient(145deg,rgba(224,189,119,.14),rgba(5,58,43,.46));box-shadow:0 0 0 3px rgba(224,189,119,.06),0 18px 36px rgba(0,0,0,.22)}
 .dineInTitle{color:#ffe7ad;font-size:11px;font-weight:1000;letter-spacing:.14em;margin-bottom:13px}
 .dineInGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -74,6 +100,7 @@ header{background:rgba(2,42,31,.82)!important;backdrop-filter:blur(8px)!importan
 .dineStaffNew{border-color:rgba(242,210,143,.68)!important;background:linear-gradient(145deg,rgba(224,189,119,.10),rgba(4,58,43,.44))!important}
 .servedNew{border-color:#f2d28f!important;color:#ffe7ad!important}
 @media(max-width:760px){#categories.screen,#orbitScreen.screen,#info.screen,#cart.screen,#checkout.screen,#confirmation.screen,#account.screen,#staff.screen{background:rgba(0,24,17,.10)!important}#categories .panel,#info .panel,#cart .panel,#checkout .panel,#confirmation .panel,#account .panel,#staff .panel{background:linear-gradient(180deg,rgba(4,64,46,.44),rgba(2,35,26,.50))!important}.dineInGrid{grid-template-columns:1fr}}
+@media(max-width:430px){.productOrderType{padding:13px}.productOrderTypeRow{gap:6px}.productTypeChoice{min-height:46px;font-size:10px}}
 </style>`;
     h=h.replace('</head>',css+'</head>');
     document.open();document.write(h);document.close();
