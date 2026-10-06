@@ -28,7 +28,6 @@
   `;
   const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
 
-  // Keep the legacy handler in menu-orbit-pro.js safe without showing Hub in the UI.
   if(!document.getElementById('hub')){
     const stub=document.createElement('button');stub.id='hub';stub.className='visuallyHidden';stub.tabIndex=-1;stub.setAttribute('aria-hidden','true');document.body.appendChild(stub);
   }
@@ -47,7 +46,6 @@
   orderDrop.parentNode.insertBefore(wrap,orderDrop);
   const btn=document.getElementById('storeBtn'),panel=document.getElementById('storePanel'),list=document.getElementById('storeList');
 
-  // Keep the newest customer-facing features visibly highlighted in the header.
   ['quickAccessBtn','storeBtn','orderPreviewBtn'].forEach(id=>document.getElementById(id)?.classList.add('newFeatureHighlight'));
 
   function renderStores(){
@@ -98,4 +96,13 @@
   const results=document.getElementById('results');if(results)new MutationObserver(()=>setTimeout(patchResults,0)).observe(results,{childList:true,subtree:true});
   document.getElementById('checkoutBtn')?.addEventListener('click',()=>setTimeout(syncPickup,0));
   refresh();
+
+  const loadFinish=()=>{
+    if(document.querySelector('script[data-menu-finish]'))return;
+    const s=document.createElement('script');
+    s.src='./menu-orbit-pro-finish.js?v=427b5aa';
+    s.dataset.menuFinish='1';
+    document.body.appendChild(s);
+  };
+  if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',loadFinish,{once:true});else loadFinish();
 })();
