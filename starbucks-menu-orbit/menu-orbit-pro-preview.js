@@ -133,3 +133,11 @@ window.addEventListener('load',()=>{
   s.dataset.menuOrbitLoyalty='1';
   document.body.appendChild(s);
 });
+
+window.addEventListener('load',()=>{
+  if(document.querySelector('script[data-menu-orbit-status]'))return;
+  const s=document.createElement('script');
+  s.src='./menu-orbit-pro-status.js';
+  s.dataset.menuOrbitStatus='1';
+  document.body.appendChild(s);
+});
