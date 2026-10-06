@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#063f2f">
+<title>Menu Orbit — Simple</title>
+<link rel="stylesheet" href="./menu-orbit-pro.css">
+<style>
+body{padding:0!important}
+.top{position:sticky;top:0;z-index:260;min-height:68px;padding:10px 16px!important;margin:0!important;background:#032f24!important;border-bottom:1px solid rgba(224,189,119,.28);overflow:visible!important}
+.mark{width:44px!important;height:44px!important;font-size:23px!important}
+.brand strong{font-size:18px!important}.brand span{font-size:8px!important;letter-spacing:.12em!important;color:#d7e3de!important}
+.actions{gap:8px!important;align-items:center!important;position:relative}.pill{min-height:42px!important;padding:0 14px!important;border:1px solid rgba(224,189,119,.46)!important;background:rgba(255,255,255,.045)!important;color:#fff!important;font-size:11px!important;font-weight:900!important}.pill:hover,.pill:focus-visible{background:rgba(224,189,119,.12)!important;border-color:#f0cf91!important;outline:none!important}.count{min-width:24px!important;height:24px!important;display:inline-grid!important;place-items:center!important;border-radius:999px!important;background:#d9b66f!important;color:#173127!important;font-size:10px!important;font-weight:900!important}
+.simpleDrop{position:relative}.simplePanel{position:absolute;top:calc(100% + 10px);right:0;z-index:300;width:320px;max-width:calc(100vw - 24px);padding:16px;border:1px solid rgba(224,189,119,.48);border-radius:18px;background:linear-gradient(180deg,rgba(2,35,27,.99),rgba(3,48,37,.98));box-shadow:0 24px 60px rgba(0,0,0,.42);opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s}.simplePanel.open{opacity:1;visibility:visible;transform:none}.simplePanel h3{margin:0 0 11px;font:400 24px Georgia,serif;color:#fff}.simplePanel .eyebrow{margin-bottom:5px;color:#f0cf91;font-size:9px;font-weight:900;letter-spacing:.16em}.storeList{display:grid;gap:8px}.storeChoice{min-height:54px;padding:10px 12px;border:1px solid rgba(224,189,119,.3);border-radius:12px;background:rgba(255,255,255,.05);color:#fff;text-align:left;font-size:12px;font-weight:850}.storeChoice small{display:block;margin-top:3px;color:#b7c6c0;font-size:9px;font-weight:600}.storeChoice.active{border-color:#f0cf91;background:rgba(224,189,119,.13)}
+.intro{padding-top:20px!important}.intro h1{margin-top:6px!important;margin-bottom:5px!important}.intro p{max-width:520px;margin-inline:auto}.simpleHint{width:min(760px,92%);margin:8px auto 0;text-align:center;color:#b8c8c2;font-size:10px;line-height:1.5}.world{margin:0 auto!important}.experienceShell{width:100%;margin:0 auto}.caption{font-size:10px!important}.source{font-size:9px!important}
+.orderHost{width:410px;max-width:calc(100vw - 24px);max-height:72vh;overflow:auto}.previewHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid rgba(224,189,119,.3)}.previewHead span{display:block;color:#f0cf91;font-size:9px;font-weight:900;letter-spacing:.16em}.previewHead strong{display:block;margin-top:4px;font:400 26px Georgia,serif;color:#fff}.previewBadge{min-width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:#d9b66f;color:#173127;font-size:13px;font-weight:900}.previewItems{display:grid;gap:9px;margin:13px 0}.previewEmpty{padding:20px 6px;text-align:center;color:#c5d2cd;font-size:11px;line-height:1.55}.previewItem{padding:11px;border:1px solid rgba(255,255,255,.12);border-radius:11px;background:rgba(255,255,255,.05)}.previewItem b{display:block;color:#fff;font-size:12px;line-height:1.35}.previewItem small{display:block;margin-top:4px;color:#aebfb8;font-size:9px;line-height:1.45}.previewLine{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:#f0cf91;font-size:10px}.previewTotal{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid rgba(224,189,119,.3);color:#fff;font-size:13px;font-weight:900}.previewBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.previewBtn{min-height:44px;border-radius:999px;font-size:11px;font-weight:900}.previewBtn.secondary{border:1px solid rgba(224,189,119,.56);background:transparent;color:#fff}.previewBtn.primary{border:0;background:var(--cream);color:#063f2f}
+.visuallyHidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media(max-width:700px){.top{padding:8px 9px!important}.brand span{display:none}.mark{width:38px!important;height:38px!important}.brand strong{font-size:14px!important}.actions{gap:4px!important}.pill{min-height:36px!important;padding:0 8px!important;font-size:9.5px!important}.simplePanel,.orderHost{position:fixed;left:3%;right:3%;top:64px;width:auto}.intro{padding-top:16px!important}.simpleHint{font-size:9.5px}.previewBtns{grid-template-columns:1fr}}
+@media(max-width:470px){.top{grid-template-columns:auto minmax(0,1fr) auto}.actions{gap:3px!important}.pill{padding:0 6px!important;font-size:9px!important}.storeFull,.orderFull{display:none}.storeShort,.orderShort{display:inline}.caption{width:94%!important}.source{font-size:8.5px!important}}
+@media(min-width:471px){.storeShort,.orderShort{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="mark">S</div>
+  <div class="brand"><strong>Menu Orbit</strong><span>SIMPLE EDITION • PROTOTYPE</span></div>
+  <div class="actions">
+    <button class="pill" id="findBtn">Find</button>
+    <div class="simpleDrop">
+      <button class="pill" id="simpleStoreBtn" aria-expanded="false"><span class="storeFull">Store</span><span class="storeShort">Store</span></button>
+      <div class="simplePanel" id="simpleStorePanel">
+        <div class="eyebrow">PICKUP LOCATION</div><h3>Choose Store</h3>
+        <div class="storeList" id="simpleStoreList"></div>
+      </div>
+    </div>
+    <div class="simpleDrop">
+      <button class="pill" id="orderPreviewBtn" aria-expanded="false"><span class="orderFull">Order</span><span class="orderShort">Order</span> <span class="count" id="previewHeaderCount">0</span></button>
+      <div class="simplePanel orderHost" id="orderPreviewHost"></div>
+    </div>
+    <button class="visuallyHidden" id="order" aria-hidden="true" tabindex="-1">My Order <span class="count" id="count">0</span></button>
+    <button class="visuallyHidden" id="hub" aria-hidden="true" tabindex="-1">Hub</button>
+  </div>
+</header>
+
+<section class="intro">
+  <div class="kicker">SIMPLE MENU EXPERIENCE</div>
+  <h1>Choose.<br>Customize. Order.</h1>
+  <p>Only the essentials: find a product, choose a store, customize, review your order and checkout.</p>
+</section>
+<div class="simpleHint">No feature strip, no history, no tracking, no demo tools — just the main ordering flow.</div>
+
+<div class="experienceShell">
+<main class="world" id="world">
+  <div class="orbit"></div>
+  <button class="node n0" data-key="espresso"><span class="fallback">☕</span><img src="https://starbuckscard.ph/sbcard-admin/storage/app/public/menu/365/3vprLT3U4XtyBsdGlmHtuj6y9TUu6M8EvoMz2pr4.jpeg" alt="Iced Caramel Macchiato"><b>ESPRESSO</b></button>
+  <button class="node n1" data-key="frappuccino"><span class="fallback">🥤</span><img src="https://starbucks.ph/seed_data/FRAPCOF_DarkCaramelCoffeeFrappuccino.jpg" alt="Dark Caramel Coffee Frappuccino"><b>FRAPPUCCINO®</b></button>
+  <button class="node n2" data-key="refreshers"><span class="fallback">🍓</span><b>REFRESHERS®</b></button>
+  <button class="node n3" data-key="teavana"><span class="fallback">🍵</span><b>TEAVANA™</b></button>
+  <button class="node n4" data-key="food"><span class="fallback">🥐</span><b>FOOD</b></button>
+  <button class="node n5" data-key="featured"><span class="fallback">★</span><img src="https://starbucks.ph/seed_data/FRAPCOF_TripleMochaFrappuccino.jpg" alt="Triple Mocha Frappuccino"><b>FEATURED</b></button>
+  <section class="hero"><div class="heroPhoto"><img id="heroImg" src="https://starbuckscard.ph/sbcard-admin/storage/app/public/menu/365/3vprLT3U4XtyBsdGlmHtuj6y9TUu6M8EvoMz2pr4.jpeg" alt="Iced Caramel Macchiato"><div class="heroText"><h2 id="title">Iced Caramel Macchiato</h2><p id="desc">Espresso, milk, vanilla and caramel.</p><div class="price" id="price">From ₱190 • sample price</div></div></div><button class="add" id="add">Customize + Add</button></section>
+</main>
+</div>
+<div class="caption">Find • Store • Customize • Order • Checkout</div>
+<div class="source">Prototype only. Sample prices may differ by size, store and current Starbucks pricing. This does not place a real Starbucks order.</div>
+<div class="toast" id="toast"></div>
+
+<div class="layer cinema" id="cinema"><section class="cinemaPanel"><div class="cinemaHead"><div><div class="cinemaEyebrow">MENU ORBIT • SIMPLE</div><h2 class="cinemaTitle" id="cinemaTitle">Espresso</h2></div><button class="cinemaClose" id="cinemaClose">×</button></div><div class="viewport"><div class="track" id="track"></div></div><button class="arrow prev" id="prev">‹</button><button class="arrow next" id="next">›</button><div class="dots" id="dots"></div></section></div>
+<div class="layer" id="searchLayer"><div class="panel"><div class="searchTop"><input id="searchInput" placeholder="Search drinks, tea, food…"><button class="xbtn" id="searchClose">×</button></div><div class="filters" id="filters"><button class="filterBtn active" data-filter="all">All</button><button class="filterBtn" data-filter="coffee">Coffee</button><button class="filterBtn" data-filter="refreshers">Refreshers</button><button class="filterBtn" data-filter="tea">Tea</button><button class="filterBtn" data-filter="food">Food</button></div><div class="results" id="results"></div></div></div>
+<div class="layer cartLayer" id="cartLayer"><aside class="cartSheet"><div class="cartHead"><h2>My Order</h2><button class="xbtn" id="cartClose">×</button></div><div class="cartItems" id="cartItems"></div><div class="total"><span>Estimated subtotal</span><span id="subtotal">₱0</span></div><button class="full checkoutBtn" id="checkoutBtn">Continue to Checkout</button><button class="full clear" id="clearCart">Clear Order</button></aside></div>
+<div class="layer" id="checkoutLayer"><div class="checkoutSheet"><div id="checkoutFormWrap"><div class="checkoutHead"><h2>Checkout</h2><button class="xbtn" id="checkoutClose">×</button></div><div class="formGrid"><div class="formField"><label>Customer name</label><input id="customerName" placeholder="Your name"></div><div class="formField"><label>Order type</label><select id="orderType"><option>Pickup</option><option>Dine-in</option><option>Takeaway</option></select></div><div class="formField"><label>Pickup location</label><input id="pickupLocation" placeholder="Choose store"></div><div class="formField"><label>Payment</label><select id="payment"><option>Pay at store</option><option>Card — prototype</option><option>E-wallet — prototype</option></select></div></div><div class="orderSummary" id="checkoutSummary"></div><button class="full checkoutBtn" id="confirmOrder">Place Prototype Order</button><div class="smallNote">Prototype only. No payment is processed and no order is sent to Starbucks.</div></div><div class="success" id="success"><div>ORDER PROTOTYPE CONFIRMED</div><div class="code" id="orderCode"></div><p>Your sample order has been saved locally on this device.</p><button class="full checkoutBtn" id="doneBtn">Done</button></div></div></div>
+
+<script src="./menu-orbit-pro.js"></script>
+<script>
+(()=>{
+  const $=id=>document.getElementById(id);
+  const stores=[
+    {id:'bacoor-demo',name:'Bacoor Demo Store'},
+    {id:'imus-demo',name:'Imus Demo Store'},
+    {id:'qc-demo',name:'Quezon City Demo Store'}
+  ];
+  let current=stores.find(s=>s.id===localStorage.getItem('menuOrbitSimpleStore'))||stores[0];
+  const storeBtn=$('simpleStoreBtn'),storePanel=$('simpleStorePanel'),storeList=$('simpleStoreList'),orderBtn=$('orderPreviewBtn'),orderPanel=$('orderPreviewHost');
+  const closeDrops=()=>{storePanel.classList.remove('open');orderPanel.classList.remove('open');storeBtn.setAttribute('aria-expanded','false');orderBtn.setAttribute('aria-expanded','false')};
+  function renderStores(){storeList.innerHTML=stores.map(s=>`<button class="storeChoice${s.id===current.id?' active':''}" data-store="${s.id}">${s.name}<small>Prototype pickup location</small></button>`).join('');storeList.querySelectorAll('[data-store]').forEach(b=>b.onclick=()=>{current=stores.find(s=>s.id===b.dataset.store)||stores[0];localStorage.setItem('menuOrbitSimpleStore',current.id);$('pickupLocation').value=current.name;renderStores();closeDrops();const t=$('toast');t.textContent='Store set to '+current.name;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1300)})}
+  storeBtn.onclick=e=>{e.stopPropagation();const open=!storePanel.classList.contains('open');closeDrops();if(open){storePanel.classList.add('open');storeBtn.setAttribute('aria-expanded','true')}};
+  orderBtn.onclick=e=>{e.stopPropagation();const open=!orderPanel.classList.contains('open');closeDrops();if(open){renderPreview();orderPanel.classList.add('open');orderBtn.setAttribute('aria-expanded','true')}};
+  storePanel.onclick=e=>e.stopPropagation();orderPanel.onclick=e=>e.stopPropagation();document.addEventListener('click',closeDrops);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrops()});
+  $('pickupLocation').value=current.name;renderStores();
+
+  const money=n=>'₱'+Number(n||0).toLocaleString('en-PH');
+  const getCart=()=>{try{return JSON.parse(localStorage.getItem('menuOrbitCart'))||[]}catch{return []}};
+  function renderPreview(){
+    const cart=getCart(),count=cart.reduce((s,i)=>s+(Number(i.qty)||1),0),total=cart.reduce((s,i)=>s+(Number(i.amount)||0)*(Number(i.qty)||1),0);
+    $('previewHeaderCount').textContent=count;
+    orderPanel.innerHTML=`<div class="previewHead"><div><span>YOUR ORDER</span><strong>Order Preview</strong></div><div class="previewBadge">${count}</div></div><div class="previewItems">${cart.length?cart.slice(0,5).map(i=>`<div class="previewItem"><b>${i.name}</b><small>${[i.size,i.milk&&i.milk!=='—'?i.milk:'',i.shot&&i.shot!=='—'&&i.shot!=='Standard'?i.shot:''].filter(Boolean).join(' • ')}</small><div class="previewLine"><span>${i.qty||1} ×</span><strong>${money((Number(i.amount)||0)*(Number(i.qty)||1))}</strong></div></div>`).join(''):'<div class="previewEmpty">Your order is empty.<br>Choose a product and customize it to begin.</div>'}</div><div class="previewTotal"><span>Subtotal</span><span>${money(total)}</span></div><div class="previewBtns"><button class="previewBtn secondary" id="simpleEdit">Edit Order</button><button class="previewBtn primary" id="simpleCheckout" ${cart.length?'':'disabled'}>Checkout</button></div>`;
+    $('simpleEdit').onclick=()=>{$('order').click();closeDrops()};
+    $('simpleCheckout').onclick=()=>{$('order').click();closeDrops();setTimeout(()=>{const c=$('checkoutBtn');if(c&&!c.disabled)c.click()},100)};
+  }
+  const cartItems=$('cartItems');if(cartItems)new MutationObserver(renderPreview).observe(cartItems,{childList:true,subtree:true,characterData:true});
+  document.addEventListener('click',()=>setTimeout(renderPreview,0));
+  renderPreview();
+
+  // Keep the simple search limited to the five essential filters.
+  const filterObserver=new MutationObserver(()=>{document.querySelectorAll('#filters [data-filter="favorites"],#filters [data-filter="recent"]').forEach(x=>x.remove())});
+  filterObserver.observe($('filters'),{childList:true,subtree:true});
+})();
+</script>
+</body>
+</html>
