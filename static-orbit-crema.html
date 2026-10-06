@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#063f2f">
+<title>Menu Orbit — Coffee Crema</title>
+<style>html,body{margin:0;background:#03271f;color:#fff;font-family:Arial,sans-serif}.loading{min-height:100vh;display:grid;place-items:center;text-align:center;padding:24px}.loading b{font:400 34px Georgia,serif}.loading span{display:block;margin-top:10px;color:#d9c49a}</style>
+</head>
+<body>
+<div class="loading"><div><b>Menu Orbit</b><span>Loading Coffee Crema theme…</span></div></div>
+<script>
+(async()=>{
+  try{
+    const r=await fetch('./static-orbit-no-motion.html?source=crema-20261006',{cache:'no-store'});
+    let h=await r.text();
+    h=h.replace('orbit-menu-data.js?v=bdc8613','orbit-menu-data.js?v=04f748d');
+    h=h.replace('orbit-product-images.js?v=bf7690f','orbit-product-images.js?v=475991e');
+    const css=`
+<style id="crema-visibility-fix">
+#categories.screen,#orbitScreen.screen,#info.screen,#cart.screen,#checkout.screen,#confirmation.screen,#account.screen,#staff.screen{background:rgba(0,24,17,.24)!important;backdrop-filter:blur(1.5px)!important;-webkit-backdrop-filter:blur(1.5px)!important}
+#categories .panel,#info .panel,#cart .panel,#checkout .panel,#confirmation .panel,#account .panel,#staff .panel{background:linear-gradient(180deg,rgba(4,64,46,.46),rgba(2,35,26,.50))!important;backdrop-filter:blur(5px)!important;-webkit-backdrop-filter:blur(5px)!important;box-shadow:0 24px 60px rgba(0,0,0,.28)!important}
+#categories .cat{background:linear-gradient(145deg,rgba(7,76,55,.38),rgba(3,43,32,.34))!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
+.orbitPanel{background:radial-gradient(circle at center,rgba(8,88,63,.34),rgba(0,25,18,.40) 74%)!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
+header{background:rgba(2,42,31,.80)!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important}
+.group{background:linear-gradient(145deg,rgba(7,76,55,.36),rgba(3,43,32,.32))!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
+@media(max-width:760px){#categories.screen,#orbitScreen.screen,#info.screen,#cart.screen,#checkout.screen,#confirmation.screen,#account.screen,#staff.screen{background:rgba(0,24,17,.18)!important}#categories .panel,#info .panel,#cart .panel,#checkout .panel,#confirmation .panel,#account .panel,#staff .panel{background:linear-gradient(180deg,rgba(4,64,46,.38),rgba(2,35,26,.44))!important}}
+</style>`;
+    h=h.replace('</head>',css+'</head>');
+    document.open();document.write(h);document.close();
+  }catch(e){document.body.innerHTML='<div class="loading"><div><b>Menu Orbit</b><span>Please refresh once.</span></div></div>'}
+})();
+</script>
+</body>
+</html>
