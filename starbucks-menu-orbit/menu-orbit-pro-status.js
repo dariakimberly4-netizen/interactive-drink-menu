@@ -22,40 +22,26 @@
   .statusNow{padding:15px;border-radius:14px;background:linear-gradient(180deg,rgba(240,207,145,.11),rgba(255,255,255,.05));border:1px solid rgba(240,207,145,.45);color:#dbe5e1;font-size:11px;line-height:1.6;box-shadow:0 0 24px rgba(224,189,119,.08)}.statusNow b{color:#f5d995;font-size:12px}
   .statusDemo{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.035);text-align:center;color:#aebdb7;font-size:9px;line-height:1.55}.statusDemo strong{color:#f0cf91;font-size:10px}
   .quickAction.statusNew{border-color:rgba(240,207,145,.76)!important;background:rgba(224,189,119,.11)!important;box-shadow:0 0 18px rgba(224,189,119,.12)!important}
-  #featureStatus{border-color:#f0cf91!important;background:rgba(224,189,119,.14)!important;box-shadow:0 0 0 1px rgba(240,207,145,.28),0 0 22px rgba(240,207,145,.25)!important;color:#fff!important;animation:featureStatusGlow 2s ease-in-out infinite}
-  #featureStatus b{color:#fff4d9!important}
-  @keyframes featureStatusGlow{0%,100%{box-shadow:0 0 0 1px rgba(240,207,145,.22),0 0 15px rgba(240,207,145,.18)}50%{box-shadow:0 0 0 2px rgba(240,207,145,.5),0 0 30px rgba(240,207,145,.4)}}
+  #featureStatus{border-color:#f0cf91!important;background:rgba(224,189,119,.18)!important;box-shadow:0 0 0 1px rgba(240,207,145,.38),0 0 28px rgba(240,207,145,.34)!important;color:#fff!important;animation:featureStatusGlow 2s ease-in-out infinite;min-width:310px!important}
+  #featureStatus b{color:#fff4d9!important;font-size:9px!important}
+  @keyframes featureStatusGlow{0%,100%{box-shadow:0 0 0 1px rgba(240,207,145,.28),0 0 18px rgba(240,207,145,.22)}50%{box-shadow:0 0 0 2px rgba(240,207,145,.62),0 0 36px rgba(240,207,145,.5)}}
   @media(prefers-reduced-motion:reduce){.statusStep.active,#featureStatus{animation:none!important}}
-  @media(max-width:560px){.statusSheet{padding:16px;border-radius:20px}.statusHead h2{font-size:24px}.statusSteps{grid-template-columns:1fr;gap:14px}.statusStep{text-align:left;display:grid;grid-template-columns:46px 1fr;align-items:center;column-gap:10px;padding:14px}.statusStep.active{transform:none}.statusDot{margin:0}.statusStep small{margin-top:2px}.statusCurrent{left:auto;right:10px;transform:none}.statusOrder{display:block}.statusCode{display:block;margin-top:8px}}
+  @media(max-width:560px){.statusSheet{padding:16px;border-radius:20px}.statusHead h2{font-size:24px}.statusSteps{grid-template-columns:1fr;gap:14px}.statusStep{text-align:left;display:grid;grid-template-columns:46px 1fr;align-items:center;column-gap:10px;padding:14px}.statusStep.active{transform:none}.statusDot{margin:0}.statusStep small{margin-top:2px}.statusCurrent{left:auto;right:10px;transform:none}.statusOrder{display:block}.statusCode{display:block;margin-top:8px}#featureStatus{min-width:100%!important}}
   `;
   const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
   const $=id=>document.getElementById(id);
   const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}};
-  const toast=t=>{const el=$('toast');if(!el)return;el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1500)};
 
   const layer=document.createElement('div');layer.className='layer statusLayer';layer.id='statusLayer';
   layer.innerHTML=`<section class="statusSheet" role="dialog" aria-modal="true" aria-labelledby="statusTitle"><div class="statusHead"><div><div class="statusEyebrow">PROTOTYPE TRACKING</div><h2 id="statusTitle">Order Status</h2></div><button class="statusClose" id="statusClose" aria-label="Close">×</button></div><div id="statusBody"></div></section>`;
   document.body.appendChild(layer);
 
-  function currentOrder(){
-    const receipt=read('menuOrbitLastReceipt',null),last=read('menuOrbitLastOrder',null);
-    return receipt||last;
-  }
-  function stageFor(o){
-    if(!o?.date)return 0;
-    const seconds=Math.max(0,(Date.now()-new Date(o.date).getTime())/1000);
-    if(seconds<30)return 0;
-    if(seconds<90)return 1;
-    return 2;
-  }
+  function currentOrder(){const receipt=read('menuOrbitLastReceipt',null),last=read('menuOrbitLastOrder',null);return receipt||last}
+  function stageFor(o){if(!o?.date)return 0;const seconds=Math.max(0,(Date.now()-new Date(o.date).getTime())/1000);if(seconds<30)return 0;if(seconds<90)return 1;return 2}
   function render(){
-    const o=currentOrder();
-    const body=$('statusBody');if(!body)return;
+    const o=currentOrder(),body=$('statusBody');if(!body)return;
     if(!o){body.innerHTML='<div class="statusNow"><b>No completed prototype order yet.</b><br>Complete checkout first, then return here to track its demo status.</div>';return}
-    const stage=stageFor(o);
-    const labels=[['Received','Order accepted'],['Preparing','Your items are being prepared'],['Ready for Pickup','Your order is ready']];
-    const store=o.store||$('pickupLocation')?.value||'Selected Demo Store';
-    const stageText=stage===0?'Your prototype order has been received.':stage===1?'Your prototype order is being prepared.':'Your prototype order is ready for pickup.';
+    const stage=stageFor(o),labels=[['Received','Order accepted'],['Preparing','Your items are being prepared'],['Ready for Pickup','Your order is ready']],store=o.store||$('pickupLocation')?.value||'Selected Demo Store',stageText=stage===0?'Your prototype order has been received.':stage===1?'Your prototype order is being prepared.':'Your prototype order is ready for pickup.';
     body.innerHTML=`<div class="statusOrder"><div><strong>${o.name||'Guest'}</strong><small>${store}</small></div><span class="statusCode">${o.code||'PROTOTYPE'}</span></div><div class="statusSteps">${labels.map((x,i)=>`<div class="statusStep ${i<stage?'done':i===stage?'active':''}">${i===stage?'<span class="statusCurrent">CURRENT</span>':''}<div class="statusDot">${i<stage?'✓':i+1}</div><div><strong>${x[0]}</strong><small>${x[1]}</small></div></div>`).join('')}</div><div class="statusNow"><b>Current status: ${labels[stage][0]}</b><br>${stageText}</div><div class="statusDemo"><strong>Received → Preparing → Ready for Pickup</strong><br>Demo timing only. This is not connected to Starbucks store systems.</div>`;
   }
   function openStatus(){render();layer.classList.add('open');document.body.classList.add('lock')}
@@ -64,25 +50,15 @@
 
   const myOrderGroup=[...document.querySelectorAll('.quickGroup')].find(g=>g.querySelector('.quickGroupLabel')?.textContent.trim().toLowerCase()==='my order');
   const grid=myOrderGroup?.querySelector('.quickGrid');
-  if(grid&&!$('sideStatus')){
-    const checkout=$('sideCheckout');
-    const b=document.createElement('button');b.className='quickAction statusNew';b.id='sideStatus';b.innerHTML='<span class="ico">●</span><span>Order Status</span>';
-    if(checkout)grid.insertBefore(b,checkout);else grid.appendChild(b);
-    b.onclick=()=>{document.getElementById('quickAccessPanel')?.classList.remove('open');openStatus()};
-  }
+  if(grid&&!$('sideStatus')){const checkout=$('sideCheckout'),b=document.createElement('button');b.className='quickAction statusNew';b.id='sideStatus';b.innerHTML='<span class="ico">●</span><span>Order Status</span>';if(checkout)grid.insertBefore(b,checkout);else grid.appendChild(b);b.onclick=()=>{document.getElementById('quickAccessPanel')?.classList.remove('open');openStatus()}}
 
   const bar=document.querySelector('.newFeaturesBar');
-  if(bar&&!$('featureStatus')){
-    const b=document.createElement('button');b.className='newFeatureChip';b.id='featureStatus';b.innerHTML='<b>Order Status</b> • Received → Preparing → Ready for Pickup';bar.appendChild(b);b.onclick=openStatus;
-  }
+  let feature=$('featureStatus');
+  if(bar&&!feature){feature=document.createElement('button');feature.className='newFeatureChip';feature.id='featureStatus';feature.innerHTML='<b>Order Status</b> • Received → Preparing → Ready for Pickup';bar.appendChild(feature)}
+  if(feature)feature.onclick=openStatus;
 
   const success=$('success');
-  if(success&&!$('trackOrderBtn')){
-    const done=$('doneBtn');
-    const b=document.createElement('button');b.className='full checkoutBtn';b.id='trackOrderBtn';b.textContent='Track Order';
-    if(done)success.insertBefore(b,done);else success.appendChild(b);
-    b.onclick=openStatus;
-  }
+  if(success&&!$('trackOrderBtn')){const done=$('doneBtn'),b=document.createElement('button');b.className='full checkoutBtn';b.id='trackOrderBtn';b.textContent='Track Order';if(done)success.insertBefore(b,done);else success.appendChild(b);b.onclick=openStatus}
 
   setInterval(()=>{if(layer.classList.contains('open'))render()},5000);
   window.menuOrbitOpenStatus=openStatus;
