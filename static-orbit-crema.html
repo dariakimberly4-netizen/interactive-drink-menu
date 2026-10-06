@@ -12,12 +12,38 @@
 <script>
 (async()=>{
   try{
-    const r=await fetch('./static-orbit-no-motion.html?source=crema-20261006d',{cache:'no-store'});
+    const r=await fetch('./static-orbit-no-motion.html?source=crema-20261006e',{cache:'no-store'});
     let h=await r.text();
     h=h.replace('orbit-menu-data.js?v=bdc8613','orbit-menu-data.js?v=04f748d');
     h=h.replace('orbit-product-images.js?v=bf7690f','orbit-product-images.js?v=475991e');
-    /* Remove the product-name label from the actual orbit-node HTML, not just visually hide it. */
+
+    /* Orbit circles are image-first. */
     h=h.replace(/<span class="label">\$\{x\.name\}<\/span>/g,'');
+
+    /* Add Dine-in-only service fields before Payment Method. */
+    h=h.replace(
+      '<div class="field full"><label>Payment Method</label>',
+      '<div class="field full hidden" id="dineInDetails"><div class="dineInTitle">DINE-IN DETAILS</div><div class="dineInGrid"><div class="field"><label>Table Number</label><input id="dineInTable" placeholder="Example: T12" inputmode="text"></div><div class="field"><label>Number of Guests</label><input id="dineInGuests" type="number" min="1" max="20" value="1"></div><div class="field"><label>Table Service</label><select id="dineInService"><option selected>Serve to Table</option><option>Collect at Counter</option></select></div><div class="field"><label>Dine-in Notes</label><input id="dineInNotes" placeholder="Extra napkins, no straw, etc."></div></div><div class="dineInHint">For dine-in orders, staff will see the table number, guest count and service preference.</div></div><div class="field full"><label>Payment Method</label>'
+    );
+
+    /* Make checkout react when Dine-in is selected. */
+    h=h.replace(
+      "document.querySelectorAll('.typeChoice').forEach(b=>b.onclick=()=>{orderType=b.dataset.type;document.querySelectorAll('.typeChoice').forEach(x=>x.classList.toggle('active',x===b))});",
+      "function syncDineInFields(){const d=$('dineInDetails');if(d)d.classList.toggle('hidden',orderType!=='Dine-in')}document.querySelectorAll('.typeChoice').forEach(b=>b.onclick=()=>{orderType=b.dataset.type;document.querySelectorAll('.typeChoice').forEach(x=>x.classList.toggle('active',x===b));syncDineInFields()});syncDineInFields();"
+    );
+
+    /* Store and validate Dine-in details; confirmation ends in SERVED. */
+    h=h.replace(
+      "function placeOrder(){const name=$('checkoutName').value.trim()||profile.name||'Guest',store=$('checkoutStore').value.trim();if(!store){toast('Enter a store / branch');return}if(!cart.length){toast('Your cart is empty');return}const no='DEMO #'+String(Date.now()).slice(-6),snapshot=cart.map(x=>({...x})),sum=total(),notes=$('checkoutNotes').value.trim();orders.unshift({no,name,store,type:orderType,payment,notes,status:'Received',items:snapshot,total:sum,date:new Date().toLocaleString()});orders=orders.slice(0,30);saveOrders();$('confirmName').textContent=name;$('confirmNo').textContent=no+' • '+money(sum);$('confirmMeta').textContent=orderType+' • '+store+' • '+payment+(notes?' • Note saved':'');cart=[];saveCart();open('confirmation')}",
+      "function placeOrder(){const name=$('checkoutName').value.trim()||profile.name||'Guest',store=$('checkoutStore').value.trim(),isDine=orderType==='Dine-in',table=isDine?$('dineInTable').value.trim():'',guests=isDine?Math.max(1,+$('dineInGuests').value||1):0,service=isDine?$('dineInService').value:'',dineNotes=isDine?$('dineInNotes').value.trim():'';if(!store){toast('Enter a store / branch');return}if(isDine&&!table){toast('Enter the table number');return}if(!cart.length){toast('Your cart is empty');return}const no='DEMO #'+String(Date.now()).slice(-6),snapshot=cart.map(x=>({...x})),sum=total(),notes=$('checkoutNotes').value.trim();orders.unshift({no,name,store,type:orderType,payment,notes,table,guests,service,dineNotes,status:'Received',items:snapshot,total:sum,date:new Date().toLocaleString()});orders=orders.slice(0,30);saveOrders();$('confirmName').textContent=name;$('confirmNo').textContent=no+' • '+money(sum);$('confirmMeta').textContent=orderType+' • '+store+(isDine?' • Table '+table+' • '+guests+' guest'+(guests===1?'':'s')+' • '+service:'')+' • '+payment+(dineNotes?' • Dine-in note saved':'')+(notes?' • Order note saved':'');const sr=document.querySelector('#confirmation .statusRow');if(sr)sr.innerHTML=(isDine?['RECEIVED','PREPARING','READY','SERVED']:['RECEIVED','PREPARING','READY','COMPLETED']).map((s,i)=>'<div class=\"status '+(i===0?'active':'')+'\">'+(i+1)+'. '+s+'</div>').join('');cart=[];saveCart();open('confirmation')}"
+    );
+
+    /* Staff queue shows table details and uses SERVED for Dine-in. */
+    h=h.replace(
+      "function renderStaffOrders(){$('staffOrderList').innerHTML=orders.length?orders.map((o,i)=>`<div class=\"staffItem\"><div><b>${o.no} • ${o.status}</b><small>${o.name} • ${o.type} • ${o.store}<br>${o.items.length} line item(s) • DEMO ${money(o.total)}</small></div><button class=\"itemAction\" data-status=\"${i}\">Next Status</button></div>`).join(''):'<div class=\"staffItem\">No demo orders yet.</div>';$('staffOrderList').querySelectorAll('[data-status]').forEach(b=>b.onclick=()=>{const i=+b.dataset.status,steps=['Received','Preparing','Ready','Completed'];let p=steps.indexOf(orders[i].status);orders[i].status=steps[Math.min(steps.length-1,p+1)];saveOrders();renderStaffOrders();toast('Order status updated')})}",
+      "function renderStaffOrders(){$('staffOrderList').innerHTML=orders.length?orders.map((o,i)=>`<div class=\"staffItem\"><div><b>${o.no} • ${o.status}</b><small>${o.name} • ${o.type} • ${o.store}${o.type==='Dine-in'?'<br><b>Table '+(o.table||'—')+'</b> • '+(o.guests||1)+' guest'+((o.guests||1)===1?'':'s')+' • '+(o.service||'Serve to Table')+(o.dineNotes?' • '+o.dineNotes:''):''}<br>${o.items.length} line item(s) • DEMO ${money(o.total)}</small></div><button class=\"itemAction\" data-status=\"${i}\">Next Status</button></div>`).join(''):'<div class=\"staffItem\">No demo orders yet.</div>';$('staffOrderList').querySelectorAll('[data-status]').forEach(b=>b.onclick=()=>{const i=+b.dataset.status,steps=orders[i].type==='Dine-in'?['Received','Preparing','Ready','Served']:['Received','Preparing','Ready','Completed'];let p=steps.indexOf(orders[i].status);orders[i].status=steps[Math.min(steps.length-1,p+1)];saveOrders();renderStaffOrders();toast('Order status updated')})}"
+    );
+
     const css=`
 <style id="crema-visibility-fix">
 body:has(.screen.open)>header,body:has(.screen.open)>.home{visibility:hidden!important}
@@ -27,13 +53,17 @@ body:has(.screen.open)>header,body:has(.screen.open)>.home{visibility:hidden!imp
 .orbitPanel{background:radial-gradient(circle at center,rgba(8,88,63,.28),rgba(0,25,18,.35) 74%)!important;backdrop-filter:blur(1px)!important;-webkit-backdrop-filter:blur(1px)!important}
 header{background:rgba(2,42,31,.82)!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important}
 .group{background:linear-gradient(145deg,rgba(7,76,55,.38),rgba(3,43,32,.34))!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
-/* Orbit circles are image-only. Full name/details stay on Product Information after tap. */
 #orbitScreen .node .label{display:none!important}
 #orbitScreen .node{background:rgba(3,55,41,.82)!important;padding:0!important}
 #orbitScreen .node img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important}
 #orbitScreen .node .fallback{font-size:15px!important}
 #orbitScreen .node .soldTag{top:auto!important;bottom:6px!important;font-size:6px!important;padding:4px 6px!important}
-@media(max-width:760px){#categories.screen,#orbitScreen.screen,#info.screen,#cart.screen,#checkout.screen,#confirmation.screen,#account.screen,#staff.screen{background:rgba(0,24,17,.10)!important}#categories .panel,#info .panel,#cart .panel,#checkout .panel,#confirmation .panel,#account .panel,#staff .panel{background:linear-gradient(180deg,rgba(4,64,46,.44),rgba(2,35,26,.50))!important}}
+#dineInDetails{margin-top:2px;padding:16px;border:1px solid rgba(224,189,119,.42);border-radius:16px;background:rgba(224,189,119,.07)}
+.dineInTitle{color:#f3d393;font-size:10px;font-weight:1000;letter-spacing:.14em;margin-bottom:11px}
+.dineInGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#dineInDetails select{width:100%;height:44px;border-radius:12px;border:1px solid var(--line);background:#042d23;color:#fff;padding:0 10px}
+.dineInHint{margin-top:10px;color:#c9d7d2;font-size:10px;line-height:1.45}
+@media(max-width:760px){#categories.screen,#orbitScreen.screen,#info.screen,#cart.screen,#checkout.screen,#confirmation.screen,#account.screen,#staff.screen{background:rgba(0,24,17,.10)!important}#categories .panel,#info .panel,#cart .panel,#checkout .panel,#confirmation .panel,#account .panel,#staff .panel{background:linear-gradient(180deg,rgba(4,64,46,.44),rgba(2,35,26,.50))!important}.dineInGrid{grid-template-columns:1fr}}
 </style>`;
     h=h.replace('</head>',css+'</head>');
     document.open();document.write(h);document.close();
