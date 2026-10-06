@@ -1,8 +1,10 @@
 (()=>{
   const css=`
-  .nutritionBlock{margin-top:12px;padding:11px 12px;border:1px solid rgba(201,168,106,.28);border-radius:13px;background:rgba(255,255,255,.045)}
-  .nutritionToggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:0;background:transparent;color:#f4ead8;padding:0;font-size:10px;font-weight:900;text-align:left;cursor:pointer}
-  .nutritionToggle:after{content:'+';width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:rgba(224,189,119,.13);color:#e0bd77;font-size:14px;flex:0 0 22px}
+  .nutritionBlock{position:relative;margin-top:14px;padding:13px 13px 12px;border:1.5px solid rgba(224,189,119,.78);border-radius:14px;background:linear-gradient(180deg,rgba(224,189,119,.10),rgba(255,255,255,.045));box-shadow:0 0 0 1px rgba(224,189,119,.16),0 0 20px rgba(224,189,119,.12)}
+  .nutritionBlock:before{content:'NEW';position:absolute;top:-9px;right:12px;padding:3px 7px;border-radius:999px;background:#e0bd77;color:#063f2f;font-size:7px;font-weight:1000;letter-spacing:.08em;line-height:1;box-shadow:0 4px 12px rgba(0,0,0,.28)}
+  .nutritionToggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:0;background:transparent;color:#fff;padding:0;font-size:11px;font-weight:950;text-align:left;cursor:pointer}
+  .nutritionToggle .featurePill{display:inline-flex;align-items:center;margin-left:auto;margin-right:4px;padding:3px 7px;border-radius:999px;background:rgba(224,189,119,.14);border:1px solid rgba(224,189,119,.36);color:#f0cf91;font-size:7px;font-weight:1000;letter-spacing:.08em}
+  .nutritionToggle:after{content:'+';width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:rgba(224,189,119,.18);color:#f0cf91;font-size:15px;flex:0 0 24px}
   .nutritionBlock.open .nutritionToggle:after{content:'−'}
   .nutritionDetails{display:none;padding-top:10px;margin-top:10px;border-top:1px solid rgba(201,168,106,.18);color:#c1cec9;font-size:9px;line-height:1.55}
   .nutritionBlock.open .nutritionDetails{display:block}
@@ -10,7 +12,8 @@
   .nutritionDetails p{margin:0 0 7px}.nutritionDetails p:last-child{margin-bottom:0}
   .nutritionCaution{color:#9fb1aa!important;font-size:8px!important}
   .reviewLayer{z-index:360!important}
-  .reviewSheet{width:min(720px,94vw);max-height:88vh;overflow:auto;margin:auto;padding:22px;border:1px solid rgba(201,168,106,.42);border-radius:24px;background:linear-gradient(180deg,#062d23,#03251d);box-shadow:0 28px 80px rgba(0,0,0,.5)}
+  .reviewSheet{position:relative;width:min(720px,94vw);max-height:88vh;overflow:auto;margin:auto;padding:24px 22px 22px;border:1.5px solid rgba(224,189,119,.82);border-radius:24px;background:linear-gradient(180deg,#062d23,#03251d);box-shadow:0 0 0 1px rgba(224,189,119,.16),0 0 34px rgba(224,189,119,.16),0 28px 80px rgba(0,0,0,.5)}
+  .reviewNew{display:inline-flex;align-items:center;margin-left:8px;padding:4px 8px;border-radius:999px;background:#e0bd77;color:#063f2f;font-size:7px;font-weight:1000;letter-spacing:.09em;vertical-align:middle;box-shadow:0 4px 12px rgba(0,0,0,.28)}
   .reviewHead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding-bottom:15px;border-bottom:1px solid rgba(201,168,106,.25)}
   .reviewEyebrow{color:#e0bd77;font-size:8px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
   .reviewHead h2{margin:5px 0 0;font:400 30px Georgia,serif;color:#fff}
@@ -25,9 +28,9 @@
   .reviewActions{display:grid;grid-template-columns:1fr 1.35fr;gap:9px}
   .reviewBtn{min-height:46px;border-radius:999px;font-size:10.5px;font-weight:900;cursor:pointer}
   .reviewBtn.secondary{background:transparent;color:#fff;border:1px solid rgba(201,168,106,.48)}
-  .reviewBtn.primary{background:var(--cream);color:#063f2f;border:0}
+  .reviewBtn.primary{background:var(--cream);color:#063f2f;border:0;box-shadow:0 0 20px rgba(224,189,119,.16)}
   .reviewNote{margin-top:10px;text-align:center;color:#91a59d;font-size:8px;line-height:1.5}
-  @media(max-width:560px){.reviewSheet{padding:16px;border-radius:20px}.reviewHead h2{font-size:24px}.reviewActions{grid-template-columns:1fr}.reviewItem{grid-template-columns:1fr}.reviewItemPrice{justify-self:start}.nutritionDetails{font-size:9.5px}}
+  @media(max-width:560px){.reviewSheet{padding:18px 16px 16px;border-radius:20px}.reviewHead h2{font-size:24px}.reviewActions{grid-template-columns:1fr}.reviewItem{grid-template-columns:1fr}.reviewItemPrice{justify-self:start}.nutritionDetails{font-size:9.5px}.nutritionToggle{font-size:10px}.nutritionBlock:before{right:10px}}
   `;
   const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
 
@@ -64,7 +67,7 @@
       if(!name||!copy)return;
       const g=guidanceFor(name);
       const block=document.createElement('div');block.className='nutritionBlock';
-      block.innerHTML=`<button class="nutritionToggle" type="button">Nutrition + Allergens <span>Prototype guide</span></button><div class="nutritionDetails"><p><b>Nutrition:</b> ${g.nutrition}</p><p><b>Allergens:</b> ${g.allergen}</p><p class="nutritionCaution">Prototype guidance only — not an official Starbucks allergen declaration. Confirm current ingredients and allergen information with the store before ordering.</p></div>`;
+      block.innerHTML=`<button class="nutritionToggle" type="button"><span>Nutrition + Allergens</span><span class="featurePill">NEW FEATURE</span></button><div class="nutritionDetails"><p><b>Nutrition:</b> ${g.nutrition}</p><p><b>Allergens:</b> ${g.allergen}</p><p class="nutritionCaution">Prototype guidance only — not an official Starbucks allergen declaration. Confirm current ingredients and allergen information with the store before ordering.</p></div>`;
       block.querySelector('.nutritionToggle').onclick=e=>{e.stopPropagation();block.classList.toggle('open')};
       if(actions)copy.insertBefore(block,actions);else copy.appendChild(block);
     });
@@ -74,7 +77,7 @@
   patchNutrition();
 
   const review=document.createElement('div');review.className='layer reviewLayer';review.id='reviewLayer';
-  review.innerHTML=`<section class="reviewSheet" role="dialog" aria-modal="true" aria-labelledby="reviewTitle"><div class="reviewHead"><div><div class="reviewEyebrow">FINAL CHECK</div><h2 id="reviewTitle">Review Order</h2></div><button class="reviewClose" id="reviewClose" aria-label="Close review">×</button></div><div class="reviewStore" id="reviewStore"></div><div class="reviewItems" id="reviewItems"></div><div class="reviewTotal"><span>Estimated subtotal</span><span id="reviewTotal">₱0</span></div><div class="reviewActions"><button class="reviewBtn secondary" id="reviewEdit">Edit Order</button><button class="reviewBtn primary" id="reviewContinue">Continue to Checkout</button></div><div class="reviewNote">Prototype only. Final prices, ingredients and availability may differ by store.</div></section>`;
+  review.innerHTML=`<section class="reviewSheet" role="dialog" aria-modal="true" aria-labelledby="reviewTitle"><div class="reviewHead"><div><div class="reviewEyebrow">FINAL CHECK <span class="reviewNew">NEW FEATURE</span></div><h2 id="reviewTitle">Review Order</h2></div><button class="reviewClose" id="reviewClose" aria-label="Close review">×</button></div><div class="reviewStore" id="reviewStore"></div><div class="reviewItems" id="reviewItems"></div><div class="reviewTotal"><span>Estimated subtotal</span><span id="reviewTotal">₱0</span></div><div class="reviewActions"><button class="reviewBtn secondary" id="reviewEdit">Edit Order</button><button class="reviewBtn primary" id="reviewContinue">Continue to Checkout</button></div><div class="reviewNote">Prototype only. Final prices, ingredients and availability may differ by store.</div></section>`;
   document.body.appendChild(review);
 
   const money=n=>'₱'+Number(n||0).toLocaleString('en-PH');
