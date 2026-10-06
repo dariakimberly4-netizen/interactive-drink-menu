@@ -149,3 +149,11 @@ window.addEventListener('load',()=>{
   s.dataset.menuOrbitDemoTools='1';
   document.body.appendChild(s);
 });
+
+window.addEventListener('load',()=>{
+  if(document.querySelector('script[data-menu-orbit-order-controls]'))return;
+  const s=document.createElement('script');
+  s.src='./menu-orbit-pro-order-controls.js?v=439be94';
+  s.dataset.menuOrbitOrderControls='1';
+  document.body.appendChild(s);
+});
