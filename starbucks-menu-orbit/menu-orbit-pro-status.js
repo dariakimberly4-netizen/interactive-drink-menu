@@ -21,6 +21,10 @@
   .statusStep small{display:block;margin-top:5px;color:#aebfb8;font-size:9px;line-height:1.4}.statusStep.active small{color:#e5ece9}
   .statusNow{padding:15px;border-radius:14px;background:linear-gradient(180deg,rgba(240,207,145,.11),rgba(255,255,255,.05));border:1px solid rgba(240,207,145,.45);color:#dbe5e1;font-size:11px;line-height:1.6;box-shadow:0 0 24px rgba(224,189,119,.08)}.statusNow b{color:#f5d995;font-size:12px}
   .statusDemo{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.035);text-align:center;color:#aebdb7;font-size:9px;line-height:1.55}.statusDemo strong{color:#f0cf91;font-size:10px}
+  .statusExample{margin-top:13px;padding:16px;border:1px solid rgba(240,207,145,.42);border-radius:14px;background:rgba(240,207,145,.08);text-align:center}
+  .statusExample strong{display:block;color:#fff4d9;font-size:13px}.statusExample p{margin:6px 0 12px;color:#c7d4cf;font-size:10px;line-height:1.55}
+  .statusExampleBtn{min-height:44px;padding:0 18px;border:0;border-radius:999px;background:#f4ead8;color:#063f2f;font-size:11px;font-weight:1000;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.2)}
+  .statusExampleBtn:hover,.statusExampleBtn:focus-visible{outline:2px solid #f0cf91;outline-offset:2px}
   .quickAction.statusNew{border-color:rgba(240,207,145,.76)!important;background:rgba(224,189,119,.11)!important;box-shadow:0 0 18px rgba(224,189,119,.12)!important}
   #featureStatus{border-color:#f0cf91!important;background:rgba(224,189,119,.18)!important;box-shadow:0 0 0 1px rgba(240,207,145,.38),0 0 28px rgba(240,207,145,.34)!important;color:#fff!important;animation:featureStatusGlow 2s ease-in-out infinite;min-width:310px!important}
   #featureStatus b{color:#fff4d9!important;font-size:9px!important}
@@ -31,6 +35,7 @@
   const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
   const $=id=>document.getElementById(id);
   const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}};
+  const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 
   const layer=document.createElement('div');layer.className='layer statusLayer';layer.id='statusLayer';
   layer.innerHTML=`<section class="statusSheet" role="dialog" aria-modal="true" aria-labelledby="statusTitle"><div class="statusHead"><div><div class="statusEyebrow">PROTOTYPE TRACKING</div><h2 id="statusTitle">Order Status</h2></div><button class="statusClose" id="statusClose" aria-label="Close">×</button></div><div id="statusBody"></div></section>`;
@@ -38,9 +43,13 @@
 
   function currentOrder(){const receipt=read('menuOrbitLastReceipt',null),last=read('menuOrbitLastOrder',null);return receipt||last}
   function stageFor(o){if(!o?.date)return 0;const seconds=Math.max(0,(Date.now()-new Date(o.date).getTime())/1000);if(seconds<30)return 0;if(seconds<90)return 1;return 2}
+  function loadExample(){
+    const example={code:'MO-DEMO7',name:'Kimberly',store:'Bacoor Demo Store',orderType:'Pickup',payment:'Pay at store',total:190,date:new Date(Date.now()-45000).toISOString(),items:[{key:'espresso',index:0,name:'Iced Caramel Macchiato',size:'Tall',milk:'Regular',sweet:'Regular',ice:'Regular',shot:'Standard',amount:190,qty:1}]};
+    write('menuOrbitLastOrder',example);write('menuOrbitLastReceipt',example);render();
+  }
   function render(){
     const o=currentOrder(),body=$('statusBody');if(!body)return;
-    if(!o){body.innerHTML='<div class="statusNow"><b>No completed prototype order yet.</b><br>Complete checkout first, then return here to track its demo status.</div>';return}
+    if(!o){body.innerHTML='<div class="statusNow"><b>No completed prototype order yet.</b><br>Complete checkout first, or load the sample below to see how tracking works.</div><div class="statusExample"><strong>See a sample order in the system</strong><p>Loads a demo Iced Caramel Macchiato order with <b>Preparing</b> highlighted as the current stage.</p><button class="statusExampleBtn" id="loadStatusExample">Load Example Order</button></div>';$('loadStatusExample').onclick=loadExample;return}
     const stage=stageFor(o),labels=[['Received','Order accepted'],['Preparing','Your items are being prepared'],['Ready for Pickup','Your order is ready']],store=o.store||$('pickupLocation')?.value||'Selected Demo Store',stageText=stage===0?'Your prototype order has been received.':stage===1?'Your prototype order is being prepared.':'Your prototype order is ready for pickup.';
     body.innerHTML=`<div class="statusOrder"><div><strong>${o.name||'Guest'}</strong><small>${store}</small></div><span class="statusCode">${o.code||'PROTOTYPE'}</span></div><div class="statusSteps">${labels.map((x,i)=>`<div class="statusStep ${i<stage?'done':i===stage?'active':''}">${i===stage?'<span class="statusCurrent">CURRENT</span>':''}<div class="statusDot">${i<stage?'✓':i+1}</div><div><strong>${x[0]}</strong><small>${x[1]}</small></div></div>`).join('')}</div><div class="statusNow"><b>Current status: ${labels[stage][0]}</b><br>${stageText}</div><div class="statusDemo"><strong>Received → Preparing → Ready for Pickup</strong><br>Demo timing only. This is not connected to Starbucks store systems.</div>`;
   }
