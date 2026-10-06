@@ -5,106 +5,101 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#063f2f">
 <title>Menu Orbit — Simple</title>
-<link rel="stylesheet" href="./menu-orbit-pro.css">
 <style>
-body{padding:0!important}
-.top{position:sticky;top:0;z-index:260;min-height:68px;padding:10px 16px!important;margin:0!important;background:#032f24!important;border-bottom:1px solid rgba(224,189,119,.28);overflow:visible!important}
-.mark{width:44px!important;height:44px!important;font-size:23px!important}
-.brand strong{font-size:18px!important}.brand span{font-size:8px!important;letter-spacing:.12em!important;color:#d7e3de!important}
-.actions{gap:8px!important;align-items:center!important;position:relative}.pill{min-height:42px!important;padding:0 14px!important;border:1px solid rgba(224,189,119,.46)!important;background:rgba(255,255,255,.045)!important;color:#fff!important;font-size:11px!important;font-weight:900!important}.pill:hover,.pill:focus-visible{background:rgba(224,189,119,.12)!important;border-color:#f0cf91!important;outline:none!important}.count{min-width:24px!important;height:24px!important;display:inline-grid!important;place-items:center!important;border-radius:999px!important;background:#d9b66f!important;color:#173127!important;font-size:10px!important;font-weight:900!important}
-.simpleDrop{position:relative}.simplePanel{position:absolute;top:calc(100% + 10px);right:0;z-index:300;width:320px;max-width:calc(100vw - 24px);padding:16px;border:1px solid rgba(224,189,119,.48);border-radius:18px;background:linear-gradient(180deg,rgba(2,35,27,.99),rgba(3,48,37,.98));box-shadow:0 24px 60px rgba(0,0,0,.42);opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s}.simplePanel.open{opacity:1;visibility:visible;transform:none}.simplePanel h3{margin:0 0 11px;font:400 24px Georgia,serif;color:#fff}.simplePanel .eyebrow{margin-bottom:5px;color:#f0cf91;font-size:9px;font-weight:900;letter-spacing:.16em}.storeList{display:grid;gap:8px}.storeChoice{min-height:54px;padding:10px 12px;border:1px solid rgba(224,189,119,.3);border-radius:12px;background:rgba(255,255,255,.05);color:#fff;text-align:left;font-size:12px;font-weight:850}.storeChoice small{display:block;margin-top:3px;color:#b7c6c0;font-size:9px;font-weight:600}.storeChoice.active{border-color:#f0cf91;background:rgba(224,189,119,.13)}
-.intro{padding-top:20px!important}.intro h1{margin-top:6px!important;margin-bottom:5px!important}.intro p{max-width:520px;margin-inline:auto}.simpleHint{width:min(760px,92%);margin:8px auto 0;text-align:center;color:#b8c8c2;font-size:10px;line-height:1.5}.world{margin:0 auto!important}.experienceShell{width:100%;margin:0 auto}.caption{font-size:10px!important}.source{font-size:9px!important}
-.orderHost{width:410px;max-width:calc(100vw - 24px);max-height:72vh;overflow:auto}.previewHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid rgba(224,189,119,.3)}.previewHead span{display:block;color:#f0cf91;font-size:9px;font-weight:900;letter-spacing:.16em}.previewHead strong{display:block;margin-top:4px;font:400 26px Georgia,serif;color:#fff}.previewBadge{min-width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:#d9b66f;color:#173127;font-size:13px;font-weight:900}.previewItems{display:grid;gap:9px;margin:13px 0}.previewEmpty{padding:20px 6px;text-align:center;color:#c5d2cd;font-size:11px;line-height:1.55}.previewItem{padding:11px;border:1px solid rgba(255,255,255,.12);border-radius:11px;background:rgba(255,255,255,.05)}.previewItem b{display:block;color:#fff;font-size:12px;line-height:1.35}.previewItem small{display:block;margin-top:4px;color:#aebfb8;font-size:9px;line-height:1.45}.previewLine{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:#f0cf91;font-size:10px}.previewTotal{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid rgba(224,189,119,.3);color:#fff;font-size:13px;font-weight:900}.previewBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.previewBtn{min-height:44px;border-radius:999px;font-size:11px;font-weight:900}.previewBtn.secondary{border:1px solid rgba(224,189,119,.56);background:transparent;color:#fff}.previewBtn.primary{border:0;background:var(--cream);color:#063f2f}
-.visuallyHidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-@media(max-width:700px){.top{padding:8px 9px!important}.brand span{display:none}.mark{width:38px!important;height:38px!important}.brand strong{font-size:14px!important}.actions{gap:4px!important}.pill{min-height:36px!important;padding:0 8px!important;font-size:9.5px!important}.simplePanel,.orderHost{position:fixed;left:3%;right:3%;top:64px;width:auto}.intro{padding-top:16px!important}.simpleHint{font-size:9.5px}.previewBtns{grid-template-columns:1fr}}
-@media(max-width:470px){.top{grid-template-columns:auto minmax(0,1fr) auto}.actions{gap:3px!important}.pill{padding:0 6px!important;font-size:9px!important}.storeFull,.orderFull{display:none}.storeShort,.orderShort{display:inline}.caption{width:94%!important}.source{font-size:8.5px!important}}
-@media(min-width:471px){.storeShort,.orderShort{display:none}}
+:root{--green:#063f2f;--deep:#03291f;--cream:#f4ead8;--gold:#d9b66f;--line:rgba(240,207,145,.45);--text:#fff;--muted:#b9cbc4}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% 38%,#0b5841 0,#063f2f 38%,#03291f 72%,#021c16 100%);color:var(--text);font-family:Arial,Helvetica,sans-serif}body{overflow-x:hidden}
+header{height:68px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(240,207,145,.25);background:rgba(2,39,30,.9);backdrop-filter:blur(14px);position:sticky;top:0;z-index:30}.brand{display:flex;align-items:center;gap:11px}.mark{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--gold);background:#0b513d;color:var(--cream);font:700 22px Georgia,serif}.brandText strong{display:block;font:400 18px Georgia,serif}.brandText small{display:block;margin-top:2px;color:#d9e5e0;font-size:8px;letter-spacing:.16em}.orderBtn{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;font-size:11px;font-weight:900;cursor:pointer}.count{display:inline-grid;place-items:center;min-width:23px;height:23px;margin-left:5px;padding:0 6px;border-radius:999px;background:var(--gold);color:#173127;font-size:10px}
+.intro{text-align:center;padding:28px 16px 5px}.intro .kicker{color:#e9ca8d;font-size:9px;font-weight:900;letter-spacing:.18em}.intro h1{margin:8px 0 5px;font:400 clamp(34px,5vw,58px)/.95 Georgia,serif}.intro p{margin:0 auto;max-width:560px;color:#c8d6d1;font-size:12px;line-height:1.5}.hint{margin-top:7px;color:#f0cf91;font-size:10px;font-weight:800}
+.orbitWrap{position:relative;width:min(760px,96vw);height:min(670px,77vh);min-height:520px;margin:0 auto}.ring{position:absolute;left:50%;top:50%;width:min(540px,72vw);aspect-ratio:1;border:1px solid rgba(240,207,145,.38);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 18px rgba(255,255,255,.012),inset 0 0 55px rgba(0,0,0,.18)}.ring:before,.ring:after{content:"";position:absolute;inset:13%;border:1px solid rgba(255,255,255,.06);border-radius:50%}.ring:after{inset:27%;border-color:rgba(240,207,145,.08)}
+.center{position:absolute;left:50%;top:50%;width:min(250px,48vw);aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);display:grid;place-items:center;text-align:center;padding:28px;border:1px solid rgba(240,207,145,.5);background:radial-gradient(circle at 40% 30%,rgba(255,255,255,.1),rgba(255,255,255,.025) 45%,rgba(0,0,0,.14));box-shadow:0 20px 50px rgba(0,0,0,.28),0 0 36px rgba(217,182,111,.08)}.center strong{display:block;font:400 clamp(23px,4vw,36px)/1 Georgia,serif}.center span{display:block;margin-top:9px;color:#c7d5d0;font-size:10px;line-height:1.45}.center em{display:block;margin-top:10px;color:#f0cf91;font-size:9px;font-style:normal;font-weight:900;letter-spacing:.12em}
+.productNode{position:absolute;width:118px;height:118px;border-radius:50%;padding:0;border:2px solid rgba(240,207,145,.75);background:#063f2f;overflow:hidden;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.38),0 0 20px rgba(217,182,111,.14);transition:transform .18s,border-color .18s,box-shadow .18s;z-index:3}.productNode:hover,.productNode:focus-visible{outline:none;border-color:#fff4d9;box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 34px rgba(240,207,145,.38)}.productNode img{width:100%;height:100%;object-fit:cover;display:block}.productNode .label{position:absolute;left:7px;right:7px;bottom:7px;padding:5px 6px;border-radius:999px;background:rgba(1,29,23,.8);backdrop-filter:blur(5px);color:#fff;font-size:8px;font-weight:900;text-align:center;line-height:1.1}
+.footer{width:min(800px,92%);margin:2px auto 24px;text-align:center;color:#93a9a1;font-size:8.5px;line-height:1.5}.footer a{color:#d9b66f}
+.layer{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:18px;background:rgba(0,18,14,.72);backdrop-filter:blur(12px);opacity:0;visibility:hidden;transition:.2s}.layer.open{opacity:1;visibility:visible}.sheet{width:min(760px,94vw);max-height:88vh;overflow:auto;border:1px solid rgba(240,207,145,.55);border-radius:26px;background:linear-gradient(180deg,#063f2f,#03291f);box-shadow:0 28px 80px rgba(0,0,0,.55)}.infoGrid{display:grid;grid-template-columns:1fr 1.1fr;min-height:430px}.infoVisual{min-height:350px;background:#0a4b39}.infoVisual img{width:100%;height:100%;object-fit:cover;display:block}.infoCopy{padding:30px;display:flex;flex-direction:column;justify-content:center}.eyebrow{color:#f0cf91;font-size:9px;font-weight:900;letter-spacing:.18em}.infoCopy h2{margin:8px 0 10px;font:400 clamp(28px,4vw,42px)/1 Georgia,serif}.infoCopy p{margin:0;color:#c5d3ce;font-size:12px;line-height:1.65}.price{margin-top:16px;color:#f5d995;font-size:15px;font-weight:900}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.btn{min-height:44px;padding:0 17px;border-radius:999px;font-size:11px;font-weight:900;cursor:pointer}.btn.primary{border:0;background:var(--cream);color:#063f2f}.btn.secondary{border:1px solid var(--line);background:transparent;color:#fff}.closeX{position:absolute;top:18px;right:18px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(240,207,145,.45);background:rgba(2,39,30,.8);color:#fff;font-size:22px;cursor:pointer}.infoBox{position:relative}
+.orderSheet{width:min(560px,94vw);padding:22px}.orderHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:13px;border-bottom:1px solid rgba(240,207,145,.26)}.orderHead h2{margin:0;font:400 30px Georgia,serif}.orderClose{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;color:#fff;font-size:22px;cursor:pointer}.orderItems{display:grid;gap:9px;margin:14px 0}.orderItem{padding:12px;border:1px solid rgba(255,255,255,.11);border-radius:13px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:space-between;gap:12px}.orderItem strong{display:block;font-size:12px}.orderItem small{display:block;margin-top:3px;color:#aebfb8;font-size:9px}.remove{border:1px solid rgba(255,170,160,.35);background:transparent;color:#ffb2a9;border-radius:999px;padding:7px 10px;font-size:8px;font-weight:900;cursor:pointer}.orderTotal{display:flex;justify-content:space-between;gap:12px;padding-top:13px;border-top:1px solid rgba(240,207,145,.26);font-size:14px;font-weight:900}.empty{text-align:center;padding:24px 8px;color:#b8c8c2;font-size:11px}.toast{position:fixed;left:50%;bottom:24px;z-index:100;transform:translate(-50%,15px);padding:10px 15px;border:1px solid rgba(240,207,145,.48);border-radius:999px;background:#082f25;color:#fff;font-size:10px;font-weight:900;opacity:0;pointer-events:none;transition:.18s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:700px){header{height:62px;padding:0 10px}.mark{width:38px;height:38px}.brandText strong{font-size:15px}.brandText small{display:none}.orderBtn{min-height:36px;padding:0 10px;font-size:9.5px}.intro{padding-top:22px}.orbitWrap{height:570px;min-height:500px}.productNode{width:96px;height:96px}.ring{width:min(430px,76vw)}.center{width:min(210px,46vw);padding:22px}.infoGrid{grid-template-columns:1fr}.infoVisual{min-height:230px;max-height:280px}.infoCopy{padding:22px}.sheet{border-radius:20px}}
+@media(max-width:430px){.orbitWrap{height:520px;min-height:470px}.productNode{width:84px;height:84px}.productNode .label{font-size:7px;bottom:5px}.ring{width:76vw}.center{width:46vw;padding:15px}.center strong{font-size:22px}.center span{font-size:9px}.infoVisual{min-height:210px}.infoCopy{padding:18px}}
+@media(prefers-reduced-motion:reduce){.productNode{transition:none}}
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="mark">S</div>
-  <div class="brand"><strong>Menu Orbit</strong><span>SIMPLE EDITION • PROTOTYPE</span></div>
-  <div class="actions">
-    <button class="pill" id="findBtn">Find</button>
-    <div class="simpleDrop">
-      <button class="pill" id="simpleStoreBtn" aria-expanded="false"><span class="storeFull">Store</span><span class="storeShort">Store</span></button>
-      <div class="simplePanel" id="simpleStorePanel">
-        <div class="eyebrow">PICKUP LOCATION</div><h3>Choose Store</h3>
-        <div class="storeList" id="simpleStoreList"></div>
-      </div>
-    </div>
-    <div class="simpleDrop">
-      <button class="pill" id="orderPreviewBtn" aria-expanded="false"><span class="orderFull">Order</span><span class="orderShort">Order</span> <span class="count" id="previewHeaderCount">0</span></button>
-      <div class="simplePanel orderHost" id="orderPreviewHost"></div>
-    </div>
-    <button class="visuallyHidden" id="order" aria-hidden="true" tabindex="-1">My Order <span class="count" id="count">0</span></button>
-    <button class="visuallyHidden" id="hub" aria-hidden="true" tabindex="-1">Hub</button>
-  </div>
+<header>
+  <div class="brand"><div class="mark">S</div><div class="brandText"><strong>Menu Orbit</strong><small>SIMPLE EDITION • PROTOTYPE</small></div></div>
+  <button class="orderBtn" id="orderBtn">My Order <span class="count" id="count">0</span></button>
 </header>
 
 <section class="intro">
-  <div class="kicker">SIMPLE MENU EXPERIENCE</div>
-  <h1>Choose.<br>Customize. Order.</h1>
-  <p>Only the essentials: find a product, choose a store, customize, review your order and checkout.</p>
+  <div class="kicker">SIMPLE MENU ORBIT</div>
+  <h1>Tap a moving drink.</h1>
+  <p>The pictures move around the orbit. Tap any drink to open its information.</p>
+  <div class="hint">MOVING PICTURE → TAP → INFORMATION</div>
 </section>
-<div class="simpleHint">No feature strip, no history, no tracking, no demo tools — just the main ordering flow.</div>
 
-<div class="experienceShell">
-<main class="world" id="world">
-  <div class="orbit"></div>
-  <button class="node n0" data-key="espresso"><span class="fallback">☕</span><img src="https://starbuckscard.ph/sbcard-admin/storage/app/public/menu/365/3vprLT3U4XtyBsdGlmHtuj6y9TUu6M8EvoMz2pr4.jpeg" alt="Iced Caramel Macchiato"><b>ESPRESSO</b></button>
-  <button class="node n1" data-key="frappuccino"><span class="fallback">🥤</span><img src="https://starbucks.ph/seed_data/FRAPCOF_DarkCaramelCoffeeFrappuccino.jpg" alt="Dark Caramel Coffee Frappuccino"><b>FRAPPUCCINO®</b></button>
-  <button class="node n2" data-key="refreshers"><span class="fallback">🍓</span><b>REFRESHERS®</b></button>
-  <button class="node n3" data-key="teavana"><span class="fallback">🍵</span><b>TEAVANA™</b></button>
-  <button class="node n4" data-key="food"><span class="fallback">🥐</span><b>FOOD</b></button>
-  <button class="node n5" data-key="featured"><span class="fallback">★</span><img src="https://starbucks.ph/seed_data/FRAPCOF_TripleMochaFrappuccino.jpg" alt="Triple Mocha Frappuccino"><b>FEATURED</b></button>
-  <section class="hero"><div class="heroPhoto"><img id="heroImg" src="https://starbuckscard.ph/sbcard-admin/storage/app/public/menu/365/3vprLT3U4XtyBsdGlmHtuj6y9TUu6M8EvoMz2pr4.jpeg" alt="Iced Caramel Macchiato"><div class="heroText"><h2 id="title">Iced Caramel Macchiato</h2><p id="desc">Espresso, milk, vanilla and caramel.</p><div class="price" id="price">From ₱190 • sample price</div></div></div><button class="add" id="add">Customize + Add</button></section>
+<main class="orbitWrap" id="orbitWrap" aria-label="Moving drink orbit">
+  <div class="ring"></div>
+  <div class="center"><div><strong>Choose your drink.</strong><span>Watch the products move around the orbit, then tap one.</span><em>TAP A PICTURE</em></div></div>
+  <button class="productNode" data-product="0" aria-label="Iced Caramel Macchiato"><img src="https://starbuckscard.ph/sbcard-admin/storage/app/public/menu/365/3vprLT3U4XtyBsdGlmHtuj6y9TUu6M8EvoMz2pr4.jpeg" alt="Iced Caramel Macchiato"><span class="label">ICED CARAMEL MACCHIATO</span></button>
+  <button class="productNode" data-product="1" aria-label="Dark Caramel Coffee Frappuccino"><img src="https://starbucks.ph/seed_data/FRAPCOF_DarkCaramelCoffeeFrappuccino.jpg" alt="Dark Caramel Coffee Frappuccino"><span class="label">DARK CARAMEL FRAPPUCCINO®</span></button>
+  <button class="productNode" data-product="2" aria-label="Triple Mocha Frappuccino"><img src="https://starbucks.ph/seed_data/FRAPCOF_TripleMochaFrappuccino.jpg" alt="Triple Mocha Frappuccino"><span class="label">TRIPLE MOCHA FRAPPUCCINO®</span></button>
 </main>
+
+<div class="footer">Sample prices are prototype amounts and may differ from current Starbucks pricing. This is not an official Starbucks ordering site. Photography references the <a href="https://starbucks.ph/menu" target="_blank" rel="noopener">Starbucks Philippines Menu</a>.</div>
+
+<div class="layer" id="infoLayer">
+  <section class="sheet infoBox" role="dialog" aria-modal="true" aria-labelledby="productTitle">
+    <button class="closeX" id="infoClose" aria-label="Close">×</button>
+    <div class="infoGrid"><div class="infoVisual"><img id="infoImg" alt=""></div><div class="infoCopy"><div class="eyebrow">PRODUCT INFORMATION</div><h2 id="productTitle"></h2><p id="productDesc"></p><div class="price" id="productPrice"></div><div class="buttons"><button class="btn primary" id="addBtn">Add to Order</button><button class="btn secondary" id="backBtn">Back to Orbit</button></div></div></div>
+  </section>
 </div>
-<div class="caption">Find • Store • Customize • Order • Checkout</div>
-<div class="source">Prototype only. Sample prices may differ by size, store and current Starbucks pricing. This does not place a real Starbucks order.</div>
+
+<div class="layer" id="orderLayer">
+  <section class="sheet orderSheet" role="dialog" aria-modal="true" aria-labelledby="orderTitle"><div class="orderHead"><h2 id="orderTitle">My Order</h2><button class="orderClose" id="orderClose" aria-label="Close">×</button></div><div class="orderItems" id="orderItems"></div><div class="orderTotal"><span>Estimated total</span><span id="orderTotal">₱0</span></div><div class="buttons"><button class="btn secondary" id="clearBtn">Clear Order</button></div></section>
+</div>
 <div class="toast" id="toast"></div>
 
-<div class="layer cinema" id="cinema"><section class="cinemaPanel"><div class="cinemaHead"><div><div class="cinemaEyebrow">MENU ORBIT • SIMPLE</div><h2 class="cinemaTitle" id="cinemaTitle">Espresso</h2></div><button class="cinemaClose" id="cinemaClose">×</button></div><div class="viewport"><div class="track" id="track"></div></div><button class="arrow prev" id="prev">‹</button><button class="arrow next" id="next">›</button><div class="dots" id="dots"></div></section></div>
-<div class="layer" id="searchLayer"><div class="panel"><div class="searchTop"><input id="searchInput" placeholder="Search drinks, tea, food…"><button class="xbtn" id="searchClose">×</button></div><div class="filters" id="filters"><button class="filterBtn active" data-filter="all">All</button><button class="filterBtn" data-filter="coffee">Coffee</button><button class="filterBtn" data-filter="refreshers">Refreshers</button><button class="filterBtn" data-filter="tea">Tea</button><button class="filterBtn" data-filter="food">Food</button></div><div class="results" id="results"></div></div></div>
-<div class="layer cartLayer" id="cartLayer"><aside class="cartSheet"><div class="cartHead"><h2>My Order</h2><button class="xbtn" id="cartClose">×</button></div><div class="cartItems" id="cartItems"></div><div class="total"><span>Estimated subtotal</span><span id="subtotal">₱0</span></div><button class="full checkoutBtn" id="checkoutBtn">Continue to Checkout</button><button class="full clear" id="clearCart">Clear Order</button></aside></div>
-<div class="layer" id="checkoutLayer"><div class="checkoutSheet"><div id="checkoutFormWrap"><div class="checkoutHead"><h2>Checkout</h2><button class="xbtn" id="checkoutClose">×</button></div><div class="formGrid"><div class="formField"><label>Customer name</label><input id="customerName" placeholder="Your name"></div><div class="formField"><label>Order type</label><select id="orderType"><option>Pickup</option><option>Dine-in</option><option>Takeaway</option></select></div><div class="formField"><label>Pickup location</label><input id="pickupLocation" placeholder="Choose store"></div><div class="formField"><label>Payment</label><select id="payment"><option>Pay at store</option><option>Card — prototype</option><option>E-wallet — prototype</option></select></div></div><div class="orderSummary" id="checkoutSummary"></div><button class="full checkoutBtn" id="confirmOrder">Place Prototype Order</button><div class="smallNote">Prototype only. No payment is processed and no order is sent to Starbucks.</div></div><div class="success" id="success"><div>ORDER PROTOTYPE CONFIRMED</div><div class="code" id="orderCode"></div><p>Your sample order has been saved locally on this device.</p><button class="full checkoutBtn" id="doneBtn">Done</button></div></div></div>
-
-<script src="./menu-orbit-pro.js"></script>
 <script>
 (()=>{
-  const $=id=>document.getElementById(id);
-  const stores=[
-    {id:'bacoor-demo',name:'Bacoor Demo Store'},
-    {id:'imus-demo',name:'Imus Demo Store'},
-    {id:'qc-demo',name:'Quezon City Demo Store'}
+  const products=[
+    {name:'Iced Caramel Macchiato',desc:'Espresso, milk, vanilla and caramel served over ice in a layered Starbucks classic.',price:190,img:'https://starbuckscard.ph/sbcard-admin/storage/app/public/menu/365/3vprLT3U4XtyBsdGlmHtuj6y9TUu6M8EvoMz2pr4.jpeg'},
+    {name:'Dark Caramel Coffee Frappuccino®',desc:'A rich blended coffee beverage with dark caramel flavor and a creamy frozen texture.',price:205,img:'https://starbucks.ph/seed_data/FRAPCOF_DarkCaramelCoffeeFrappuccino.jpg'},
+    {name:'Triple Mocha Frappuccino®',desc:'A mocha-forward blended coffee beverage with layers of chocolate flavor.',price:210,img:'https://starbucks.ph/seed_data/FRAPCOF_TripleMochaFrappuccino.jpg'}
   ];
-  let current=stores.find(s=>s.id===localStorage.getItem('menuOrbitSimpleStore'))||stores[0];
-  const storeBtn=$('simpleStoreBtn'),storePanel=$('simpleStorePanel'),storeList=$('simpleStoreList'),orderBtn=$('orderPreviewBtn'),orderPanel=$('orderPreviewHost');
-  const closeDrops=()=>{storePanel.classList.remove('open');orderPanel.classList.remove('open');storeBtn.setAttribute('aria-expanded','false');orderBtn.setAttribute('aria-expanded','false')};
-  function renderStores(){storeList.innerHTML=stores.map(s=>`<button class="storeChoice${s.id===current.id?' active':''}" data-store="${s.id}">${s.name}<small>Prototype pickup location</small></button>`).join('');storeList.querySelectorAll('[data-store]').forEach(b=>b.onclick=()=>{current=stores.find(s=>s.id===b.dataset.store)||stores[0];localStorage.setItem('menuOrbitSimpleStore',current.id);$('pickupLocation').value=current.name;renderStores();closeDrops();const t=$('toast');t.textContent='Store set to '+current.name;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1300)})}
-  storeBtn.onclick=e=>{e.stopPropagation();const open=!storePanel.classList.contains('open');closeDrops();if(open){storePanel.classList.add('open');storeBtn.setAttribute('aria-expanded','true')}};
-  orderBtn.onclick=e=>{e.stopPropagation();const open=!orderPanel.classList.contains('open');closeDrops();if(open){renderPreview();orderPanel.classList.add('open');orderBtn.setAttribute('aria-expanded','true')}};
-  storePanel.onclick=e=>e.stopPropagation();orderPanel.onclick=e=>e.stopPropagation();document.addEventListener('click',closeDrops);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrops()});
-  $('pickupLocation').value=current.name;renderStores();
-
+  const $=id=>document.getElementById(id),nodes=[...document.querySelectorAll('.productNode')],wrap=$('orbitWrap');
+  let selected=0,paused=false,start=performance.now();
+  let cart=[];try{cart=JSON.parse(localStorage.getItem('simpleOrbitCart'))||[]}catch{}
   const money=n=>'₱'+Number(n||0).toLocaleString('en-PH');
-  const getCart=()=>{try{return JSON.parse(localStorage.getItem('menuOrbitCart'))||[]}catch{return []}};
-  function renderPreview(){
-    const cart=getCart(),count=cart.reduce((s,i)=>s+(Number(i.qty)||1),0),total=cart.reduce((s,i)=>s+(Number(i.amount)||0)*(Number(i.qty)||1),0);
-    $('previewHeaderCount').textContent=count;
-    orderPanel.innerHTML=`<div class="previewHead"><div><span>YOUR ORDER</span><strong>Order Preview</strong></div><div class="previewBadge">${count}</div></div><div class="previewItems">${cart.length?cart.slice(0,5).map(i=>`<div class="previewItem"><b>${i.name}</b><small>${[i.size,i.milk&&i.milk!=='—'?i.milk:'',i.shot&&i.shot!=='—'&&i.shot!=='Standard'?i.shot:''].filter(Boolean).join(' • ')}</small><div class="previewLine"><span>${i.qty||1} ×</span><strong>${money((Number(i.amount)||0)*(Number(i.qty)||1))}</strong></div></div>`).join(''):'<div class="previewEmpty">Your order is empty.<br>Choose a product and customize it to begin.</div>'}</div><div class="previewTotal"><span>Subtotal</span><span>${money(total)}</span></div><div class="previewBtns"><button class="previewBtn secondary" id="simpleEdit">Edit Order</button><button class="previewBtn primary" id="simpleCheckout" ${cart.length?'':'disabled'}>Checkout</button></div>`;
-    $('simpleEdit').onclick=()=>{$('order').click();closeDrops()};
-    $('simpleCheckout').onclick=()=>{$('order').click();closeDrops();setTimeout(()=>{const c=$('checkoutBtn');if(c&&!c.disabled)c.click()},100)};
+  function showToast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>el.classList.remove('show'),1300)}
+  function orbitFrame(now){
+    const rect=wrap.getBoundingClientRect();
+    const cx=rect.width/2,cy=rect.height/2;
+    const radius=Math.min(rect.width*.36,rect.height*.34);
+    const speed=0.00022;
+    const base=(now-start)*speed;
+    nodes.forEach((node,i)=>{
+      const a=base+i*(Math.PI*2/nodes.length)-Math.PI/2;
+      const r=node.offsetWidth/2;
+      node.style.left=(cx+Math.cos(a)*radius-r)+'px';
+      node.style.top=(cy+Math.sin(a)*radius-r)+'px';
+    });
+    if(!paused)requestAnimationFrame(orbitFrame);
   }
-  const cartItems=$('cartItems');if(cartItems)new MutationObserver(renderPreview).observe(cartItems,{childList:true,subtree:true,characterData:true});
-  document.addEventListener('click',()=>setTimeout(renderPreview,0));
-  renderPreview();
-
-  // Keep the simple search limited to the five essential filters.
-  const filterObserver=new MutationObserver(()=>{document.querySelectorAll('#filters [data-filter="favorites"],#filters [data-filter="recent"]').forEach(x=>x.remove())});
-  filterObserver.observe($('filters'),{childList:true,subtree:true});
+  requestAnimationFrame(orbitFrame);
+  function resumeOrbit(){if(!paused)return;paused=false;start=performance.now();requestAnimationFrame(orbitFrame)}
+  function openInfo(i){selected=i;const p=products[i];$('infoImg').src=p.img;$('infoImg').alt=p.name;$('productTitle').textContent=p.name;$('productDesc').textContent=p.desc;$('productPrice').textContent='From '+money(p.price)+' • sample price';paused=true;$('infoLayer').classList.add('open');document.body.style.overflow='hidden'}
+  function closeInfo(){ $('infoLayer').classList.remove('open');document.body.style.overflow='';resumeOrbit() }
+  nodes.forEach(n=>n.onclick=()=>openInfo(+n.dataset.product));$('infoClose').onclick=closeInfo;$('backBtn').onclick=closeInfo;$('infoLayer').onclick=e=>{if(e.target===$('infoLayer'))closeInfo()};
+  function save(){localStorage.setItem('simpleOrbitCart',JSON.stringify(cart));renderOrder()}
+  function renderOrder(){
+    $('count').textContent=cart.length;
+    $('orderItems').innerHTML=cart.length?cart.map((x,i)=>`<div class="orderItem"><div><strong>${x.name}</strong><small>${money(x.price)}</small></div><button class="remove" data-remove="${i}">REMOVE</button></div>`).join(''):'<div class="empty">Your order is empty.</div>';
+    $('orderTotal').textContent=money(cart.reduce((s,x)=>s+Number(x.price||0),0));
+    document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.remove,1);save()});
+  }
+  $('addBtn').onclick=()=>{const p=products[selected];cart.push({name:p.name,price:p.price});save();showToast(p.name+' added');closeInfo()};
+  function openOrder(){renderOrder();paused=true;$('orderLayer').classList.add('open');document.body.style.overflow='hidden'}
+  function closeOrder(){ $('orderLayer').classList.remove('open');document.body.style.overflow='';resumeOrbit() }
+  $('orderBtn').onclick=openOrder;$('orderClose').onclick=closeOrder;$('orderLayer').onclick=e=>{if(e.target===$('orderLayer'))closeOrder()};$('clearBtn').onclick=()=>{cart=[];save();showToast('Order cleared')};
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('infoLayer').classList.contains('open'))closeInfo();if($('orderLayer').classList.contains('open'))closeOrder()}});
+  renderOrder();
 })();
 </script>
 </body>
