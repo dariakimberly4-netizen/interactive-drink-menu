@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#063f2f">
+<title>Orbit → Picture → Information</title>
+<style>
+:root{--g:#063f2f;--d:#021f18;--cream:#f4ead8;--gold:#d9b66f;--line:rgba(240,207,145,.48)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% 42%,#0a5a42,#063f2f 42%,#021f18 88%);color:#fff;font-family:Arial,Helvetica,sans-serif}body{overflow-x:hidden}
+header{height:62px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(240,207,145,.25);background:rgba(1,27,21,.78);backdrop-filter:blur(10px);position:sticky;top:0;z-index:20}.brand{font:400 20px Georgia,serif}.brand small{display:block;margin-top:2px;font:700 8px Arial,sans-serif;letter-spacing:.18em;color:#dcc18a}
+.hero{text-align:center;padding:24px 14px 4px}.hero h1{margin:0;font:400 clamp(34px,5vw,62px)/.95 Georgia,serif}.hero p{margin:10px auto 0;color:#c6d5cf;font-size:11px}.flow{margin-top:8px;color:#f0cf91;font-size:9px;font-weight:900;letter-spacing:.12em}
+.orbit{position:relative;width:min(760px,96vw);height:600px;margin:0 auto}.ring{position:absolute;left:50%;top:50%;width:min(520px,72vw);aspect-ratio:1;border:1px solid rgba(240,207,145,.4);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 50px rgba(217,182,111,.07)}.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:210px;height:210px;border-radius:50%;display:grid;place-items:center;text-align:center;padding:24px;border:1px solid var(--line);background:rgba(255,255,255,.045)}.center strong{font:400 30px Georgia,serif}.center span{display:block;margin-top:8px;color:#c8d6d1;font-size:10px;line-height:1.5}
+.node{position:absolute;width:118px;height:118px;border-radius:50%;overflow:hidden;border:2px solid rgba(240,207,145,.75);padding:0;background:#073f31;cursor:pointer;box-shadow:0 14px 35px rgba(0,0,0,.42);transition:.2s}.node:hover,.node:focus-visible{outline:none;border-color:#fff4d9;transform:scale(1.06)}.node img{width:100%;height:100%;object-fit:cover}.node b{position:absolute;left:7px;right:7px;bottom:7px;padding:5px 7px;border-radius:999px;background:rgba(0,28,21,.82);font-size:7.5px;line-height:1.1;color:#fff}
+.layer{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:rgba(0,16,12,.86);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:.2s}.layer.open{opacity:1;visibility:visible}
+.stage{position:relative;width:min(980px,96vw);height:min(82vh,760px);border:1px solid var(--line);border-radius:28px;overflow:hidden;background:radial-gradient(circle at 50% 45%,#0e684d 0,#073d30 42%,#031f18 85%);box-shadow:0 28px 90px rgba(0,0,0,.55);display:grid;place-items:center}.close{position:absolute;top:16px;right:16px;z-index:5;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(0,0,0,.2);color:#fff;font-size:22px;cursor:pointer}
+.pictureButton{width:min(650px,78vw);height:min(620px,68vh);border:0;background:transparent;padding:0;cursor:pointer;display:grid;place-items:center;animation:float 4s ease-in-out infinite}.pictureButton img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 32px 36px rgba(0,0,0,.42))}@keyframes float{50%{transform:translateY(-10px)}}
+.tapLabel{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);padding:8px 13px;border:1px solid var(--line);border-radius:999px;background:rgba(0,28,21,.66);color:#f3d89e;font-size:9px;font-weight:900;letter-spacing:.12em;pointer-events:none;white-space:nowrap}
+.infoCard{position:relative;width:min(860px,95vw);max-height:88vh;overflow:auto;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:26px;background:linear-gradient(180deg,#063f2f,#03291f);box-shadow:0 28px 80px rgba(0,0,0,.55)}.infoPhoto{min-height:420px;background:#0b503c}.infoPhoto img{width:100%;height:100%;object-fit:cover}.infoText{padding:34px;display:flex;flex-direction:column;justify-content:center}.eyebrow{color:#f0cf91;font-size:9px;font-weight:900;letter-spacing:.18em}.infoText h2{margin:8px 0 12px;font:400 clamp(30px,4vw,48px)/1 Georgia,serif}.infoText p{margin:0;color:#c8d6d1;font-size:12px;line-height:1.7}.price{margin-top:16px;color:#f4d89d;font-size:16px;font-weight:900}.back{margin-top:22px;align-self:flex-start;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:transparent;color:#fff;font-size:10px;font-weight:900;cursor:pointer}
+.footer{text-align:center;padding:4px 14px 22px;color:#8fa39b;font-size:8.5px}
+@media(max-width:700px){.orbit{height:540px}.node{width:92px;height:92px}.ring{width:76vw}.center{width:180px;height:180px}.center strong{font-size:24px}.stage{height:76vh;border-radius:20px}.pictureButton{width:86vw;height:62vh}.infoCard{grid-template-columns:1fr}.infoPhoto{min-height:260px;max-height:300px}.infoText{padding:22px}}
+@media(max-width:430px){.orbit{height:500px}.node{width:80px;height:80px}.center{width:155px;height:155px;padding:16px}.center strong{font-size:21px}.node b{font-size:6.5px}.tapLabel{bottom:18px}}
+@media(prefers-reduced-motion:reduce){.pictureButton{animation:none}}
+</style>
+</head>
+<body>
+<header><div class="brand">Menu Orbit<small>ORBIT → PICTURE → INFORMATION</small></div></header>
+<section class="hero"><h1>Choose from the orbit.</h1><p>Tap a product in the orbit. Then tap the large cinematic picture to see the information.</p><div class="flow">ORBIT → CINEMATIC PICTURE → TAP PICTURE → INFORMATION</div></section>
+<main class="orbit" id="orbit">
+  <div class="ring"></div>
+  <div class="center"><div><strong>Menu Orbit</strong><span>Tap one moving product.</span></div></div>
+  <button class="node" data-i="0"><img src="https://starbuckscard.ph/sbcard-admin/storage/app/public/menu/365/3vprLT3U4XtyBsdGlmHtuj6y9TUu6M8EvoMz2pr4.jpeg" alt="Iced Caramel Macchiato"><b>ICED CARAMEL MACCHIATO</b></button>
+  <button class="node" data-i="1"><img src="https://starbucks.ph/seed_data/FRAPCOF_DarkCaramelCoffeeFrappuccino.jpg" alt="Dark Caramel Coffee Frappuccino"><b>DARK CARAMEL FRAPPUCCINO®</b></button>
+  <button class="node" data-i="2"><img src="https://starbucks.ph/seed_data/FRAPCOF_TripleMochaFrappuccino.jpg" alt="Triple Mocha Frappuccino"><b>TRIPLE MOCHA FRAPPUCCINO®</b></button>
+</main>
+<div class="footer">Prototype only. Sample prices may differ from current Starbucks pricing.</div>
+
+<div class="layer" id="pictureLayer">
+  <section class="stage" role="dialog" aria-modal="true">
+    <button class="close" id="pictureClose">×</button>
+    <button class="pictureButton" id="pictureButton" aria-label="Tap picture for information"><img id="bigImg" alt=""></button>
+    <div class="tapLabel">TAP THE PICTURE FOR INFORMATION</div>
+  </section>
+</div>
+
+<div class="layer" id="infoLayer">
+  <section class="infoCard" role="dialog" aria-modal="true">
+    <button class="close" id="infoClose">×</button>
+    <div class="infoPhoto"><img id="infoImg" alt=""></div>
+    <div class="infoText"><div class="eyebrow">PRODUCT INFORMATION</div><h2 id="infoTitle"></h2><p id="infoDesc"></p><div class="price" id="infoPrice"></div><button class="back" id="backPicture">Back to Cinematic Picture</button></div>
+  </section>
+</div>
+
+<script>
+(()=>{
+const products=[
+{name:'Iced Caramel Macchiato',desc:'Espresso, milk, vanilla and caramel served over ice in a layered coffee classic.',price:190,img:'https://starbuckscard.ph/sbcard-admin/storage/app/public/menu/365/3vprLT3U4XtyBsdGlmHtuj6y9TUu6M8EvoMz2pr4.jpeg'},
+{name:'Dark Caramel Coffee Frappuccino®',desc:'A rich blended coffee beverage with dark caramel flavor and a creamy frozen texture.',price:205,img:'https://starbucks.ph/seed_data/FRAPCOF_DarkCaramelCoffeeFrappuccino.jpg'},
+{name:'Triple Mocha Frappuccino®',desc:'A mocha-forward blended coffee beverage with layers of chocolate flavor.',price:210,img:'https://starbucks.ph/seed_data/FRAPCOF_TripleMochaFrappuccino.jpg'}
+];
+const $=id=>document.getElementById(id),orbit=$('orbit'),nodes=[...document.querySelectorAll('.node')];
+let selected=0,start=performance.now(),paused=false;
+function frame(now){const r=orbit.getBoundingClientRect(),cx=r.width/2,cy=r.height/2,rad=Math.min(r.width*.36,r.height*.35),base=(now-start)*.0002;nodes.forEach((n,i)=>{const a=base+i*Math.PI*2/nodes.length-Math.PI/2,s=n.offsetWidth/2;n.style.left=(cx+Math.cos(a)*rad-s)+'px';n.style.top=(cy+Math.sin(a)*rad-s)+'px'});if(!paused)requestAnimationFrame(frame)}requestAnimationFrame(frame);
+function fill(i){selected=i;const p=products[i];$('bigImg').src=p.img;$('bigImg').alt=p.name;$('infoImg').src=p.img;$('infoImg').alt=p.name;$('infoTitle').textContent=p.name;$('infoDesc').textContent=p.desc;$('infoPrice').textContent='From ₱'+p.price+' • sample price'}
+function openPicture(i){fill(i);paused=true;$('pictureLayer').classList.add('open');document.body.style.overflow='hidden'}
+function closePicture(){$('pictureLayer').classList.remove('open');paused=false;start=performance.now();document.body.style.overflow='';requestAnimationFrame(frame)}
+function openInfo(){$('pictureLayer').classList.remove('open');$('infoLayer').classList.add('open')}
+function closeInfoToOrbit(){$('infoLayer').classList.remove('open');paused=false;start=performance.now();document.body.style.overflow='';requestAnimationFrame(frame)}
+function backToPicture(){$('infoLayer').classList.remove('open');$('pictureLayer').classList.add('open')}
+nodes.forEach(n=>n.onclick=()=>openPicture(+n.dataset.i));$('pictureButton').onclick=openInfo;$('pictureClose').onclick=closePicture;$('infoClose').onclick=closeInfoToOrbit;$('backPicture').onclick=backToPicture;
+$('pictureLayer').onclick=e=>{if(e.target===$('pictureLayer'))closePicture()};$('infoLayer').onclick=e=>{if(e.target===$('infoLayer'))closeInfoToOrbit()};
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if($('infoLayer').classList.contains('open'))backToPicture();else if($('pictureLayer').classList.contains('open'))closePicture()});
+})();
+</script>
+</body>
+</html>
