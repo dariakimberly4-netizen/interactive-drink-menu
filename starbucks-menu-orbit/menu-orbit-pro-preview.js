@@ -1,25 +1,58 @@
 (()=>{
   const css=`
-  .orderHost{width:340px;max-height:min(620px,76vh);overflow:auto}
-  .orderPreviewHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 2px 12px;border-bottom:1px solid rgba(201,168,106,.26)}
-  .orderPreviewHead span{display:block;font-size:8px;letter-spacing:.2em;color:#e0bd77;font-weight:900}
-  .orderPreviewHead strong{display:block;margin-top:4px;font:400 22px Georgia,serif;line-height:1.05}
-  .orderBadge{min-width:30px;height:30px;padding:0 8px;display:grid;place-items:center;border-radius:99px;background:#c9a86a;color:#173127;font-size:11px;font-weight:900}
-  .orderPreviewItems{display:grid;gap:7px;margin:11px 0}
-  .orderPreviewEmpty{padding:18px 5px;text-align:center;color:#b5c4be;font-size:10px;line-height:1.5}
-  .orderPreviewItem{padding:10px;border:1px solid rgba(255,255,255,.11);border-radius:11px;background:rgba(255,255,255,.045)}
-  .orderPreviewItem b{display:block;font-size:10px;line-height:1.3}
-  .orderPreviewItem small{display:block;margin-top:4px;color:#b0c0ba;font-size:8.5px;line-height:1.4}
-  .orderPreviewLine{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:9px;color:#e5c783}
-  .orderPreviewLine strong{font-size:10px}
-  .orderPreviewTotal{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid rgba(201,168,106,.26);font-size:12px;font-weight:900}
-  .orderPreviewBtns{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-  .orderPreviewBtn{width:100%;min-height:39px;border-radius:999px;font-size:9.5px;font-weight:900}
+  /* Header readability */
+  .top{min-height:70px!important;padding:9px 16px!important;background:#032f24!important;border-bottom:1px solid rgba(201,168,106,.34)!important}
+  .mark{width:44px!important;height:44px!important;font-size:24px!important}
+  .brand strong{font-size:18px!important;line-height:1.1!important;letter-spacing:.01em!important}
+  .brand span{font-size:8.5px!important;line-height:1.25!important;letter-spacing:.12em!important;color:#d9e5e0!important}
+  .actions{gap:8px!important}
+  .pill{min-height:42px!important;padding:0 14px!important;font-size:11.5px!important;line-height:1!important;font-weight:900!important;border-width:1.5px!important;color:#fff!important;background:rgba(255,255,255,.045)!important}
+  .pill:hover,.pill:focus-visible{background:rgba(255,255,255,.1)!important;border-color:#e0bd77!important;outline:none!important}
+  #orderPreviewBtn{background:rgba(201,168,106,.10)!important;border-color:rgba(224,189,119,.72)!important}
+  .count,#previewHeaderCount{min-width:24px!important;height:24px!important;padding:0 7px!important;font-size:11px!important;font-weight:900!important;display:inline-grid!important;place-items:center!important;border-radius:999px!important;background:#d9b66f!important;color:#173127!important}
+
+  /* Order preview readability */
+  .orderHost{width:390px;max-height:min(680px,78vh);overflow:auto;padding:16px!important}
+  .orderPreviewHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:3px 3px 14px;border-bottom:1px solid rgba(201,168,106,.34)}
+  .orderPreviewHead span{display:block;font-size:10px;letter-spacing:.18em;color:#f0cf91;font-weight:900}
+  .orderPreviewHead strong{display:block;margin-top:5px;font:400 28px Georgia,serif;line-height:1.05;color:#fff}
+  .orderBadge{min-width:36px;height:36px;padding:0 10px;display:grid;place-items:center;border-radius:99px;background:#d9b66f;color:#173127;font-size:13px;font-weight:900}
+  .orderPreviewItems{display:grid;gap:9px;margin:13px 0}
+  .orderPreviewEmpty{padding:20px 7px;text-align:center;color:#d5e0dc;font-size:12px;line-height:1.55}
+  .orderPreviewItem{padding:12px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:rgba(255,255,255,.06)}
+  .orderPreviewItem b{display:block;font-size:12.5px;line-height:1.35;color:#fff}
+  .orderPreviewItem small{display:block;margin-top:5px;color:#c5d2cd;font-size:10.5px;line-height:1.45}
+  .orderPreviewLine{display:flex;justify-content:space-between;gap:8px;margin-top:8px;font-size:11px;color:#f0cf91}
+  .orderPreviewLine strong{font-size:12px;color:#f5d995}
+  .orderPreviewTotal{display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-top:1px solid rgba(201,168,106,.34);font-size:14px;font-weight:900;color:#fff}
+  .orderPreviewBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .orderPreviewBtn{width:100%;min-height:44px;border-radius:999px;font-size:11.5px;font-weight:900}
   .orderPreviewBtn.primary{border:0;background:var(--cream);color:#063f2f}
-  .orderPreviewBtn.secondary{border:1px solid rgba(201,168,106,.5);background:transparent;color:#fff}
-  .orderPreviewNote{margin-top:8px;text-align:center;color:#9aada5;font-size:7.5px;line-height:1.45}
-  @media(max-width:700px){.orderHost{max-height:72vh}.orderPreviewHead strong{font-size:20px}}
-  @media(max-width:470px){.orderPreviewBtns{grid-template-columns:1fr}.orderPreviewItem{padding:9px}}
+  .orderPreviewBtn.secondary{border:1px solid rgba(224,189,119,.72);background:transparent;color:#fff}
+  .orderPreviewNote{margin-top:10px;text-align:center;color:#b7c7c1;font-size:9px;line-height:1.5}
+
+  @media(max-width:700px){
+    .top{min-height:64px!important;padding:8px 10px!important}
+    .mark{width:40px!important;height:40px!important;font-size:21px!important}
+    .brand strong{font-size:15.5px!important}
+    .brand span{font-size:7px!important}
+    .actions{gap:5px!important}
+    .pill{min-height:38px!important;padding:0 9px!important;font-size:10px!important}
+    .count,#previewHeaderCount{min-width:22px!important;height:22px!important;font-size:10px!important}
+    .orderHost{max-height:74vh;padding:14px!important}
+    .orderPreviewHead strong{font-size:24px}
+  }
+  @media(max-width:470px){
+    .top{padding:7px 7px!important}
+    .mark{width:36px!important;height:36px!important;font-size:19px!important}
+    .brand strong{font-size:14px!important}
+    .actions{gap:3px!important}
+    .pill{min-height:36px!important;padding:0 7px!important;font-size:9.5px!important}
+    .orderPreviewBtns{grid-template-columns:1fr}
+    .orderPreviewItem{padding:11px}
+    .orderPreviewHead strong{font-size:22px}
+    .orderPreviewHead span{font-size:9px}
+  }
   `;
   const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
   const host=document.getElementById('orderPreviewHost');
