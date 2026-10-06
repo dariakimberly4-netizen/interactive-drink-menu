@@ -79,3 +79,11 @@
   document.addEventListener('click',()=>setTimeout(render,0));
   render();
 })();
+
+(()=>{
+  if(document.querySelector('script[data-menu-orbit-finish]'))return;
+  const s=document.createElement('script');
+  s.src='./menu-orbit-pro-finish.js';
+  s.dataset.menuOrbitFinish='1';
+  document.body.appendChild(s);
+})();
