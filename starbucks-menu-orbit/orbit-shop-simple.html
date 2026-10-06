@@ -20,6 +20,32 @@ header{min-height:68px;padding:10px 18px;display:flex;align-items:center;justify
 @media(max-width:900px){header{flex-wrap:wrap}.searchHead{order:3;max-width:none;width:100%}.home{min-height:calc(100vh - 118px)}.infoCard{grid-template-columns:1fr 1.1fr}.infoImage{min-height:520px}.infoText{padding:34px}.infoText h2{font-size:clamp(36px,5.5vw,52px)}}
 @media(max-width:760px){.mainChoices{grid-template-columns:1fr;max-width:520px}.mainChoice{min-height:150px}.mainIcon{width:58px;height:58px;margin-bottom:9px}.categoryGrid{grid-template-columns:repeat(2,1fr)}.orbitWrap{height:80vh}.prodNode{width:88px;height:88px}.ring{width:76vw}.orbitCenter{width:43vw}.infoCard{width:min(680px,95vw);grid-template-columns:1fr;max-height:none}.infoImage{min-height:320px}.infoImage img{padding:24px}.infoText{padding:28px}.infoText h2{font-size:clamp(34px,8vw,48px)}.infoText p{font-size:15px}.orderRow{grid-template-columns:1fr}.typeChoices{grid-template-columns:1fr}.screen{align-items:start;padding-top:74px;padding-bottom:28px}}
 @media(max-width:430px){header{padding:10px}.brand{font-size:17px}.headActions{gap:5px}.headerBtn{min-height:36px;padding:0 9px;font-size:10px}.hideMobile{display:none}.searchHead{height:40px}.home{justify-content:flex-start;padding-top:28px}.home h1{font-size:40px}.mainChoices{margin-top:23px}.mainChoice{min-height:135px;padding:18px}.categoryPanel{padding:18px}.categoryGrid{grid-template-columns:1fr}.catImage{height:86px}.orbit{inset:74px 0 58px}.prodNode{width:76px;height:76px}.nodeLabel{font-size:5.8px}.orbitCenter{width:42vw;padding:12px}.orbitCenter strong{font-size:22px}.orbitStatus{right:60px;top:14px;font-size:7px;padding:6px 8px}.backTop{left:10px;top:12px}.close{right:10px;top:12px}.infoCard{width:96vw}.infoImage{min-height:270px}.infoText{padding:23px 19px}.infoText h2{font-size:clamp(32px,10vw,42px)}.infoText p{font-size:15px}.shopActions{grid-template-columns:1fr}.infoBtns{display:grid;grid-template-columns:1fr}.favBtn,.backBtn,.officialBtn{width:100%;justify-content:center}.panel{padding:20px}.panel h2{font-size:32px}.cartItem{grid-template-columns:1fr}.cartTools{justify-content:flex-start}.statusSteps{grid-template-columns:1fr}}
+/* PROPORTIONAL PRODUCT INFO */
+#info{padding:24px;align-items:center}
+#info .infoCard{width:min(1040px,92vw);max-height:calc(100vh - 48px);grid-template-columns:minmax(340px,.88fr) minmax(0,1.12fr);border-radius:26px}
+#info .infoImage{min-height:0;display:flex;align-items:center;justify-content:center;padding:18px}
+#info .infoImage img{width:100%;height:auto;max-width:82%;max-height:58vh;object-fit:contain;padding:0}
+#info .infoText{padding:28px 34px;max-height:calc(100vh - 48px);overflow:auto;justify-content:center}
+#info .infoLabel{font-size:10px;padding:7px 10px;margin-bottom:10px}
+#info .infoText small{font-size:10px}
+#info .infoText h2{font-size:clamp(34px,3.2vw,50px);line-height:1.02;margin:8px 0 10px}
+#info .categoryLine{font-size:12px;margin-bottom:10px}
+#info .infoText p{font-size:14px;line-height:1.55}
+#info .notice{font-size:11px;line-height:1.45;margin-top:12px;padding:10px 12px}
+#info .orderBox{margin-top:12px;padding:14px}
+#info .orderBox h3{font-size:21px;margin-bottom:10px}
+#info .field label{font-size:10px}
+#info .field select{min-height:42px;font-size:13px}
+#info .qtyControl button,#info .qtyValue{height:42px}
+#info .qtyControl button{width:42px}
+#info .shopActions{margin-top:10px}
+#info .addOrderBtn,#info .buyNowBtn{min-height:46px;font-size:13px}
+#info .infoBtns{margin-top:12px;gap:7px}
+#info .favBtn,#info .backBtn,#info .officialBtn{min-height:42px;padding:0 14px;font-size:11px}
+@media(min-width:901px) and (max-height:800px){#info .infoCard{width:min(980px,90vw)}#info .infoImage img{max-height:52vh;max-width:76%}#info .infoText{padding:22px 28px}#info .infoText h2{font-size:clamp(30px,2.8vw,42px)}#info .infoText p{font-size:13px}#info .notice{font-size:10px}#info .orderBox{padding:12px}#info .orderBox h3{font-size:19px}#info .favBtn,#info .backBtn,#info .officialBtn{min-height:38px}}
+@media(max-width:900px){#info .infoCard{width:min(860px,94vw);grid-template-columns:.9fr 1.1fr}#info .infoImage{padding:14px}#info .infoImage img{max-height:46vh;max-width:84%}#info .infoText{padding:24px}#info .infoText h2{font-size:clamp(30px,4.5vw,44px)}}
+@media(max-width:760px){#info{padding:70px 12px 24px;align-items:start}#info .infoCard{width:min(620px,96vw);max-height:none;grid-template-columns:1fr;border-radius:22px}#info .infoImage{min-height:230px;max-height:280px;padding:14px}#info .infoImage img{max-height:250px;max-width:88%}#info .infoText{max-height:none;overflow:visible;padding:22px}#info .infoText h2{font-size:clamp(30px,8vw,42px)}#info .infoText p{font-size:14px}#info .orderRow{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){#info .infoCard{width:96vw}#info .infoImage{min-height:210px;max-height:250px}#info .infoImage img{max-height:220px}#info .infoText{padding:20px 17px}#info .infoText h2{font-size:clamp(28px,9vw,38px)}#info .infoText p{font-size:14px}#info .orderRow{grid-template-columns:1fr}#info .shopActions{grid-template-columns:1fr}#info .infoBtns{display:grid;grid-template-columns:1fr}#info .favBtn,#info .backBtn,#info .officialBtn{width:100%;justify-content:center}}
 </style>
 </head>
 <body>
