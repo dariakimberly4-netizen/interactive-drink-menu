@@ -83,5 +83,6 @@
 <script>
 (()=>{const $=id=>document.getElementById(id);const openFilter=filter=>{const find=$('findBtn');if(find)find.click();setTimeout(()=>{const b=document.querySelector(`#filters [data-filter="${filter}"]`);if(b)b.click()},70)};$('sideRecent').onclick=()=>openFilter('recent');$('sideFavorites').onclick=()=>openFilter('favorites');$('sideSeasonal').onclick=()=>{const f=document.querySelector('.node[data-key="featured"]');if(f)f.click()};$('sideCustomize').onclick=()=>{$('add').click()};$('sideCart').onclick=()=>{$('order').click()};$('sideCheckout').onclick=()=>{$('order').click();setTimeout(()=>{const c=$('checkoutBtn');if(c&&!c.disabled)c.click()},100)};})();
 </script>
+<script src="./menu-orbit-pro-preview.js"></script>
 </body>
 </html>
