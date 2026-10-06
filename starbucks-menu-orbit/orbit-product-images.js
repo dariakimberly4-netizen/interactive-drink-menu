@@ -41,3 +41,18 @@ window.MENU_PRODUCT_IMAGE_PATHS={"drinks":[["c:802/TpIIovhBCpmvi9It7A9mm9NENwwCM
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watch);else watch();
 })();
+
+(()=>{
+  if(!/\/static-orbit-no-motion\.html$/.test(location.pathname)) return;
+  const style=document.createElement('style');
+  style.id='coffee-crema-visibility-fix';
+  style.textContent=`
+    html body .screen{background:rgba(0,20,14,.30)!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
+    html body #categories.screen{background:linear-gradient(rgba(1,30,22,.18),rgba(1,20,15,.28))!important;backdrop-filter:blur(1px)!important;-webkit-backdrop-filter:blur(1px)!important}
+    html body #categories .panel{background:linear-gradient(180deg,rgba(4,66,48,.50),rgba(2,39,29,.54))!important;backdrop-filter:blur(4px)!important;-webkit-backdrop-filter:blur(4px)!important;box-shadow:0 26px 72px rgba(0,0,0,.28)!important}
+    html body #categories .cat{background:linear-gradient(145deg,rgba(8,83,60,.30),rgba(3,49,37,.26))!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important;border-color:rgba(224,189,119,.46)!important;box-shadow:0 12px 28px rgba(0,0,0,.14)!important}
+    html body .group{background:linear-gradient(145deg,rgba(7,78,57,.35),rgba(2,43,33,.30))!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
+    html body .close,html body .back{background:rgba(4,62,46,.66)!important;backdrop-filter:blur(6px)!important;-webkit-backdrop-filter:blur(6px)!important}
+  `;
+  document.head.appendChild(style);
+})();
