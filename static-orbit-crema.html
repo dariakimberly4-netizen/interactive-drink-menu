@@ -12,7 +12,7 @@
 <script>
 (async()=>{
   try{
-    const r=await fetch('./static-orbit-no-motion.html?source=crema-20261006b',{cache:'no-store'});
+    const r=await fetch('./static-orbit-no-motion.html?source=crema-20261006c',{cache:'no-store'});
     let h=await r.text();
     h=h.replace('orbit-menu-data.js?v=bdc8613','orbit-menu-data.js?v=04f748d');
     h=h.replace('orbit-product-images.js?v=bf7690f','orbit-product-images.js?v=475991e');
@@ -26,6 +26,11 @@ body:has(.screen.open)>header,body:has(.screen.open)>.home{visibility:hidden!imp
 .orbitPanel{background:radial-gradient(circle at center,rgba(8,88,63,.28),rgba(0,25,18,.35) 74%)!important;backdrop-filter:blur(1px)!important;-webkit-backdrop-filter:blur(1px)!important}
 header{background:rgba(2,42,31,.82)!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important}
 .group{background:linear-gradient(145deg,rgba(7,76,55,.38),rgba(3,43,32,.34))!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
+/* Product orbit: picture first. Product name and full details appear only after tapping. */
+#orbitScreen .node .label{display:none!important}
+#orbitScreen .node img{inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important}
+#orbitScreen .node{background:rgba(3,55,41,.82)!important}
+#orbitScreen .node .soldTag{top:auto!important;bottom:6px!important;font-size:6px!important;padding:4px 6px!important}
 @media(max-width:760px){#categories.screen,#orbitScreen.screen,#info.screen,#cart.screen,#checkout.screen,#confirmation.screen,#account.screen,#staff.screen{background:rgba(0,24,17,.10)!important}#categories .panel,#info .panel,#cart .panel,#checkout .panel,#confirmation .panel,#account .panel,#staff .panel{background:linear-gradient(180deg,rgba(4,64,46,.44),rgba(2,35,26,.50))!important}}
 </style>`;
     h=h.replace('</head>',css+'</head>');
