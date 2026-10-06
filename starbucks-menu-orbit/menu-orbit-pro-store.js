@@ -20,7 +20,11 @@
   .demoAvail{display:inline-flex!important;align-items:center;justify-content:center;margin-left:8px;padding:4px 7px;border-radius:999px;font-size:7px!important;font-weight:900!important;letter-spacing:.06em;border:1px solid rgba(255,255,255,.14)}
   .demoAvail.available{color:#8ee3b7}.demoAvail.low{color:#f1cf83}.demoAvail.sold{color:#ff9c91}.demoAvail.seasonal{color:#e7c37b}
   .storeShort{display:none}
-  @media(max-width:850px){.storeFull{display:none}.storeShort{display:inline}.storePanel{position:fixed!important;left:3%!important;right:3%!important;top:68px!important;width:auto!important}}
+  .newFeatureHighlight{position:relative!important;border-color:#e0bd77!important;background:linear-gradient(180deg,rgba(224,189,119,.18),rgba(255,255,255,.055))!important;box-shadow:0 0 0 1px rgba(224,189,119,.48),0 0 22px rgba(224,189,119,.32),0 8px 22px rgba(0,0,0,.22)!important;animation:newFeatureGlow 2.1s ease-in-out infinite}
+  .newFeatureHighlight:after{content:'NEW';position:absolute;top:-10px;right:-8px;z-index:6;padding:3px 6px;border-radius:999px;background:#e0bd77;color:#063f2f;font-size:7px;font-weight:1000;letter-spacing:.08em;line-height:1;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+  @keyframes newFeatureGlow{0%,100%{box-shadow:0 0 0 1px rgba(224,189,119,.4),0 0 14px rgba(224,189,119,.22),0 8px 22px rgba(0,0,0,.22)}50%{box-shadow:0 0 0 2px rgba(240,207,145,.78),0 0 30px rgba(240,207,145,.5),0 8px 22px rgba(0,0,0,.22)}}
+  @media(prefers-reduced-motion:reduce){.newFeatureHighlight{animation:none}}
+  @media(max-width:850px){.storeFull{display:none}.storeShort{display:inline}.storePanel{position:fixed!important;left:3%!important;right:3%!important;top:68px!important;width:auto!important}.newFeatureHighlight:after{top:-8px;right:-5px;font-size:6px;padding:3px 5px}}
   `;
   const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
 
@@ -42,6 +46,19 @@
   wrap.innerHTML=`<button class="pill" id="storeBtn" aria-expanded="false"><span class="storeFull">Choose Store</span><span class="storeShort">Store</span></button><div class="headerPopover storePanel" id="storePanel"><div class="storeTitle"><span>PICKUP LOCATION</span><strong>Choose Store</strong></div><div class="storeList" id="storeList"></div><div class="storeNote">Demo locations and availability only. This prototype is not connected to live Starbucks store inventory.</div></div>`;
   orderDrop.parentNode.insertBefore(wrap,orderDrop);
   const btn=document.getElementById('storeBtn'),panel=document.getElementById('storePanel'),list=document.getElementById('storeList');
+
+  // Highlight the newest customer-facing features until each one is opened once.
+  const featureVersion='oct-2026-pro-v2';
+  function highlightFeature(id,key){
+    const el=document.getElementById(id);if(!el)return;
+    const seenKey=`menuOrbitFeatureSeen:${featureVersion}:${key}`;
+    if(localStorage.getItem(seenKey)==='1')return;
+    el.classList.add('newFeatureHighlight');
+    el.addEventListener('click',()=>{localStorage.setItem(seenKey,'1');el.classList.remove('newFeatureHighlight')},{once:true});
+  }
+  highlightFeature('quickAccessBtn','quick-access');
+  highlightFeature('storeBtn','choose-store');
+  highlightFeature('orderPreviewBtn','order-preview');
 
   function renderStores(){
     list.innerHTML=stores.map(s=>`<button class="storeChoice${s.id===current.id?' active':''}" data-store="${s.id}"><span><b>${s.name}</b><small>${s.area}</small></span><span class="storeCheck">${s.id===current.id?'✓':'›'}</span></button>`).join('');
