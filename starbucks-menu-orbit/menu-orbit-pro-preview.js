@@ -80,10 +80,10 @@
   render();
 })();
 
-(()=>{
-  if(document.querySelector('script[data-menu-orbit-finish]'))return;
+window.addEventListener('load',()=>{
+  if(document.querySelector('script[data-menu-orbit-loyalty]'))return;
   const s=document.createElement('script');
-  s.src='./menu-orbit-pro-finish.js';
-  s.dataset.menuOrbitFinish='1';
+  s.src='./menu-orbit-pro-loyalty.js';
+  s.dataset.menuOrbitLoyalty='1';
   document.body.appendChild(s);
-})();
+});
