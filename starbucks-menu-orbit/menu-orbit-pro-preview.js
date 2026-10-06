@@ -11,6 +11,23 @@
   #orderPreviewBtn{background:rgba(201,168,106,.10)!important;border-color:rgba(224,189,119,.72)!important}
   .count,#previewHeaderCount{min-width:24px!important;height:24px!important;padding:0 7px!important;font-size:11px!important;font-weight:900!important;display:inline-grid!important;place-items:center!important;border-radius:999px!important;background:#d9b66f!important;color:#173127!important}
 
+  /* Quick Access readability */
+  .quickPanel{width:410px!important;max-width:calc(100vw - 24px)!important;max-height:min(690px,76vh)!important;overflow:auto!important;padding:18px!important;border-color:rgba(224,189,119,.56)!important;background:linear-gradient(180deg,rgba(2,35,27,.995),rgba(3,48,37,.99))!important;box-shadow:0 28px 70px rgba(0,0,0,.48)!important}
+  .quickTitle{padding:3px 4px 14px!important;border-bottom:1px solid rgba(224,189,119,.34)!important}
+  .quickTitle span{font-size:9.5px!important;line-height:1.2!important;letter-spacing:.18em!important;color:#f0cf91!important;font-weight:1000!important}
+  .quickTitle strong{margin-top:5px!important;font:400 28px/1.08 Georgia,serif!important;color:#fff!important}
+  .quickGroup{margin-top:16px!important}
+  .quickGroupLabel{margin:0 0 9px!important;color:#c6d4cf!important;font-size:9px!important;line-height:1.2!important;font-weight:1000!important;letter-spacing:.15em!important}
+  .quickGrid{gap:10px!important}
+  .quickAction{min-height:54px!important;padding:0 13px!important;gap:10px!important;border-width:1.25px!important;border-color:rgba(224,189,119,.38)!important;border-radius:13px!important;background:rgba(255,255,255,.065)!important;color:#fff!important;font-size:12.5px!important;line-height:1.2!important;font-weight:900!important}
+  .quickAction span:last-child{font-size:12.5px!important;line-height:1.2!important;color:#fff!important}
+  .quickAction:hover,.quickAction:focus-visible{border-color:#f0cf91!important;background:rgba(224,189,119,.13)!important;box-shadow:0 0 0 2px rgba(240,207,145,.12)!important}
+  .quickAction .ico{width:32px!important;height:32px!important;flex:0 0 32px!important;background:rgba(224,189,119,.18)!important;color:#f5d995!important;font-size:15px!important;font-weight:900!important}
+  .quickAction.seasonal{border-color:rgba(240,207,145,.7)!important}
+  .quickAction.checkout{min-height:54px!important;background:#f4ead8!important;color:#063f2f!important;font-size:13px!important}
+  .quickAction.checkout span:last-child{color:#063f2f!important;font-size:13px!important}
+  .quickAction.checkout .ico{background:rgba(0,98,65,.12)!important;color:#006241!important}
+
   /* Order preview readability */
   .orderHost{width:390px;max-height:min(680px,78vh);overflow:auto;padding:16px!important}
   .orderPreviewHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:3px 3px 14px;border-bottom:1px solid rgba(201,168,106,.34)}
@@ -39,8 +56,16 @@
     .actions{gap:5px!important}
     .pill{min-height:38px!important;padding:0 9px!important;font-size:10px!important}
     .count,#previewHeaderCount{min-width:22px!important;height:22px!important;font-size:10px!important}
+    .quickPanel{padding:15px!important;max-height:76vh!important}
+    .quickTitle strong{font-size:25px!important}
+    .quickAction{min-height:52px!important;font-size:12px!important}
+    .quickAction span:last-child{font-size:12px!important}
     .orderHost{max-height:74vh;padding:14px!important}
     .orderPreviewHead strong{font-size:24px}
+  }
+  @media(max-width:620px){
+    .quickGrid{grid-template-columns:1fr!important}
+    .quickAction.checkout{grid-column:auto!important}
   }
   @media(max-width:470px){
     .top{padding:7px 7px!important}
@@ -48,6 +73,11 @@
     .brand strong{font-size:14px!important}
     .actions{gap:3px!important}
     .pill{min-height:36px!important;padding:0 7px!important;font-size:9.5px!important}
+    .quickPanel{left:2%!important;right:2%!important;width:auto!important;padding:14px!important}
+    .quickTitle strong{font-size:23px!important}
+    .quickGroupLabel{font-size:9px!important}
+    .quickAction{min-height:52px!important;font-size:12.5px!important}
+    .quickAction span:last-child{font-size:12.5px!important}
     .orderPreviewBtns{grid-template-columns:1fr}
     .orderPreviewItem{padding:11px}
     .orderPreviewHead strong{font-size:22px}
