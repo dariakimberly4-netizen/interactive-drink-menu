@@ -141,3 +141,11 @@ window.addEventListener('load',()=>{
   s.dataset.menuOrbitStatus='1';
   document.body.appendChild(s);
 });
+
+window.addEventListener('load',()=>{
+  if(document.querySelector('script[data-menu-orbit-demo-tools]'))return;
+  const s=document.createElement('script');
+  s.src='./menu-orbit-pro-demo-tools.js?v=e3f94dd';
+  s.dataset.menuOrbitDemoTools='1';
+  document.body.appendChild(s);
+});
