@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#03281f"><title>Menu Orbit — Static (Layout Fixed)</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#03281f}iframe{border:0;display:block;width:100%;height:100%;height:100dvh}</style></head>
+<body><iframe title="Menu Orbit — Static Shop" id="shop" src="./static-orbit-no-motion.html" allow="clipboard-write"></iframe>
+<script>
+/* Same-origin presentation correction: leaves the original shop's shopping logic intact. */
+const frame=document.getElementById('shop');
+frame.addEventListener('load',()=>{
+ try{
+  const d=frame.contentDocument;
+  if(!d||d.getElementById('static-layout-repair'))return;
+  const css=d.createElement('style');css.id='static-layout-repair';css.textContent=`
+   html,body{overflow-x:hidden!important}
+   /* Full-screen, solid backdrop: no underlying homepage text or cards bleed through. */
+   .screen,.screen.open{background:#03291f!important;isolation:isolate!important}
+   .screen.open{z-index:100!important;min-height:100dvh!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding:76px 20px 36px!important}
+   .screen.open .panel{position:relative!important;z-index:1!important;width:min(900px,100%)!important;max-width:100%!important;margin:0 auto!important;border-radius:23px!important;background:#073a2e!important;padding:26px!important;box-shadow:0 12px 36px rgba(0,0,0,.25)!important}
+   .screen.open .panel h2{font-size:clamp(27px,4vw,40px)!important;line-height:1.1!important;overflow-wrap:anywhere!important}
+   .screen.open .categoryGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;margin-top:20px!important}
+   .screen.open .categoryGrid .cat{min-width:0!important;min-height:108px!important;padding:17px!important;border-radius:16px!important;background:#064334!important;overflow-wrap:anywhere!important}
+   .screen.open .categoryGrid .cat b{font-size:14px!important;line-height:1.35!important}
+   .screen.open .close{position:fixed!important;top:15px!important;right:18px!important;z-index:150!important;width:46px!important;height:46px!important;display:grid!important;place-items:center!important;background:#0c4c3b!important;border:1px solid #e0bd77!important;box-shadow:0 4px 16px rgba(0,0,0,.3)!important}
+   .screen.open .back{z-index:150!important}
+   .orbitPanel{max-width:100%!important}
+   .node{animation:none!important;transition:none!important}
+   @media(max-width:760px){
+     .screen.open{padding:75px 12px 24px!important}
+     .screen.open .panel{padding:20px 16px!important;border-radius:19px!important}
+     .screen.open .categoryGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+     .screen.open .categoryGrid .cat{min-height:98px!important;padding:13px!important}
+     .screen.open .categoryGrid .cat b{font-size:13px!important}
+     .screen.open .categoryGrid .cat span{font-size:11px!important}
+   }
+   @media(max-width:390px){.screen.open .categoryGrid{grid-template-columns:1fr!important}.screen.open .categoryGrid .cat{min-height:75px!important}}
+   @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:0s!important;transition-duration:0s!important}}
+  `;
+  d.head.appendChild(css);
+  const sync=()=>{
+   const opened=[...d.querySelectorAll('.screen.open')];
+   d.body.classList.toggle('static-modal-visible',opened.length>0);
+   const foreground=opened[opened.length-1];
+   opened.forEach(s=>{s.style.zIndex=s===foreground?'100':'60';});
+  };
+  const observer=new MutationObserver(sync);
+  observer.observe(d.body,{attributes:true,attributeFilter:['class'],subtree:true});
+  sync();
+ }catch(e){console.warn('Layout repair unavailable:',e)}
+});
+</script></body></html>
